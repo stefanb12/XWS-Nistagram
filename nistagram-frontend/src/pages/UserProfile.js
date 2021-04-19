@@ -1,11 +1,189 @@
 import React, { Component } from "react";
 import "../assets/styles/profile.css";
 import { Link } from "react-router-dom";
+import { Button, Modal } from "react-bootstrap";
 
 export default class UserProfile extends Component {
+  state = {
+    isOpen: false,
+  };
+
+  openModal = () => this.setState({ isOpen: true });
+  closeModal = () => this.setState({ isOpen: false });
+
   render() {
     return (
       <div>
+        <Modal
+          show={this.state.isOpen}
+          onHide={this.closeModal}
+          style={{ marginTop: "120px", maxHeight: "500px", overflow: "hidden" }}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Modal heading</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div style={{ overflow: "auto", maxHeight: "300px" }}>
+              <div class="list-group-item d-flex align-items-center">
+                <img
+                  src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                  alt=""
+                  width="50px"
+                  class="rounded-sm ml-n2"
+                />
+                <div class="flex-fill pl-3 pr-3">
+                  <div>
+                    <a href="#" class="text-dark font-weight-600">
+                      Ethel Wilkes
+                    </a>
+                  </div>
+                  <div class="text-muted fs-13px">North Raundspic</div>
+                </div>
+                <a href="#" class="btn btn-outline-primary">
+                  Follow
+                </a>
+              </div>
+              <div class="list-group-item d-flex align-items-center">
+                <img
+                  src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                  alt=""
+                  width="50px"
+                  class="rounded-sm ml-n2"
+                />
+                <div class="flex-fill pl-3 pr-3">
+                  <div>
+                    <a href="#" class="text-dark font-weight-600">
+                      Ethel Wilkes
+                    </a>
+                  </div>
+                  <div class="text-muted fs-13px">North Raundspic</div>
+                </div>
+                <a href="#" class="btn btn-outline-primary">
+                  Follow
+                </a>
+              </div>
+              <div class="list-group-item d-flex align-items-center">
+                <img
+                  src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                  alt=""
+                  width="50px"
+                  class="rounded-sm ml-n2"
+                />
+                <div class="flex-fill pl-3 pr-3">
+                  <div>
+                    <a href="#" class="text-dark font-weight-600">
+                      Ethel Wilkes
+                    </a>
+                  </div>
+                  <div class="text-muted fs-13px">North Raundspic</div>
+                </div>
+                <a href="#" class="btn btn-outline-primary">
+                  Follow
+                </a>
+              </div>
+              <div class="list-group-item d-flex align-items-center">
+                <img
+                  src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                  alt=""
+                  width="50px"
+                  class="rounded-sm ml-n2"
+                />
+                <div class="flex-fill pl-3 pr-3">
+                  <div>
+                    <a href="#" class="text-dark font-weight-600">
+                      Ethel Wilkes
+                    </a>
+                  </div>
+                  <div class="text-muted fs-13px">North Raundspic</div>
+                </div>
+                <a href="#" class="btn btn-outline-primary">
+                  Follow
+                </a>
+              </div>
+              <div class="list-group-item d-flex align-items-center">
+                <img
+                  src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                  alt=""
+                  width="50px"
+                  class="rounded-sm ml-n2"
+                />
+                <div class="flex-fill pl-3 pr-3">
+                  <div>
+                    <a href="#" class="text-dark font-weight-600">
+                      Ethel Wilkes
+                    </a>
+                  </div>
+                  <div class="text-muted fs-13px">North Raundspic</div>
+                </div>
+                <a href="#" class="btn btn-outline-primary">
+                  Follow
+                </a>
+              </div>
+              <div class="list-group-item d-flex align-items-center">
+                <img
+                  src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                  alt=""
+                  width="50px"
+                  class="rounded-sm ml-n2"
+                />
+                <div class="flex-fill pl-3 pr-3">
+                  <div>
+                    <a href="#" class="text-dark font-weight-600">
+                      Ethel Wilkes
+                    </a>
+                  </div>
+                  <div class="text-muted fs-13px">North Raundspic</div>
+                </div>
+                <a href="#" class="btn btn-outline-primary">
+                  Follow
+                </a>
+              </div>
+              <div class="list-group-item d-flex align-items-center">
+                <img
+                  src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                  alt=""
+                  width="50px"
+                  class="rounded-sm ml-n2"
+                />
+                <div class="flex-fill pl-3 pr-3">
+                  <div>
+                    <a href="#" class="text-dark font-weight-600">
+                      Ethel Wilkes
+                    </a>
+                  </div>
+                  <div class="text-muted fs-13px">North Raundspic</div>
+                </div>
+                <a href="#" class="btn btn-outline-primary">
+                  Follow
+                </a>
+              </div>
+              <div class="list-group-item d-flex align-items-center">
+                <img
+                  src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                  alt=""
+                  width="50px"
+                  class="rounded-sm ml-n2"
+                />
+                <div class="flex-fill pl-3 pr-3">
+                  <div>
+                    <a href="#" class="text-dark font-weight-600">
+                      Ethel Wilkes
+                    </a>
+                  </div>
+                  <div class="text-muted fs-13px">North Raundspic</div>
+                </div>
+                <a href="#" class="btn btn-outline-primary">
+                  Follow
+                </a>
+              </div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.closeModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
         <div class="container">
           <div class="profile-page tx-13">
             <div class="row">
@@ -93,7 +271,7 @@ export default class UserProfile extends Component {
                         </svg>
                         <Link
                           class="pt-1px d-none d-md-block"
-                          to="/user/profile/followers"
+                          onClick={this.openModal}
                         >
                           Followers
                         </Link>
@@ -866,7 +1044,7 @@ export default class UserProfile extends Component {
               </div>
               <div class="d-none d-xl-block col-xl-3 right-wrapper">
                 <div class="row">
-                  <div class="col-md-12 grid-margin">
+                  {/* <div class="col-md-12 grid-margin">
                     <div class="card rounded">
                       <div class="card-body">
                         <h6 class="card-title">latest photos</h6>
@@ -957,11 +1135,11 @@ export default class UserProfile extends Component {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                   <div class="col-md-12 grid-margin">
                     <div class="card rounded">
                       <div class="card-body">
-                        <h6 class="card-title">suggestions for you</h6>
+                        <h6 class="card-title">Higlights</h6>
                         <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
                           <div class="d-flex align-items-center hover-pointer">
                             <img
