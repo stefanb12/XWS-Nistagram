@@ -244,3 +244,9 @@ ul.friend-list .right p {
   color: #6c757d;
   margin: 0;
 }
+
+.comments {
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

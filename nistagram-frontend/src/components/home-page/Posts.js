@@ -6,11 +6,13 @@ export default class Posts extends Component {
     super(props);
     this.state = {
       isDislike: false,
+      isLike: false,
     };
   }
 
   render() {
     const isDislike = this.state.isDislike;
+    const isLike = this.state.isLike;
     return (
       <div>
         <div class="container">
@@ -74,7 +76,9 @@ export default class Posts extends Component {
                               <div class="timeline-options">
                                 <a href="#">
                                   <i
-                                    class="fa fa-heart"
+                                    class={
+                                      isLike ? "fa fa-heart" : "fa fa-heart-o"
+                                    }
                                     style={{
                                       fontSize: "20px",
                                     }}
@@ -106,37 +110,69 @@ export default class Posts extends Component {
                                   <span /> Comment (4)
                                 </a>
                               </div>
-                              <div class="timeline-comment">
-                                <div class="timeline-comment-header">
-                                  <img
-                                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                    alt=""
-                                  />
-                                  <p>
-                                    Jamara Karle <small>1 hour ago</small>
+                              <div class="comments">
+                                <div class="timeline-comment">
+                                  <div class="timeline-comment-header">
+                                    <img
+                                      src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                                      alt=""
+                                    />
+                                    <p>
+                                      Jamara Karle <small>1 hour ago</small>
+                                    </p>
+                                  </div>
+                                  <p class="timeline-comment-text">
+                                    Xullamco laboris nisi ut aliquip ex ea
+                                    commodo consequat.
                                   </p>
                                 </div>
-                                <p class="timeline-comment-text">
-                                  Xullamco laboris nisi ut aliquip ex ea commodo
-                                  consequat.
-                                </p>
-                              </div>
-                              <div class="timeline-comment">
-                                <div class="timeline-comment-header">
-                                  <img
-                                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                    alt=""
-                                  />
-                                  <p>
-                                    Lois Anderson <small>3 hours ago</small>
+                                <div class="timeline-comment">
+                                  <div class="timeline-comment-header">
+                                    <img
+                                      src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                                      alt=""
+                                    />
+                                    <p>
+                                      Jamara Karle <small>1 hour ago</small>
+                                    </p>
+                                  </div>
+                                  <p class="timeline-comment-text">
+                                    Xullamco laboris nisi ut aliquip ex ea
+                                    commodo consequat.
                                   </p>
                                 </div>
-                                <p class="timeline-comment-text">
-                                  Coluptate velit esse cillum dolore eu fugiat
-                                  nulla pariatur. Excepteur sint occaecat
-                                  cupidatat non proident, sunt in culpa qui
-                                  officia.
-                                </p>
+                                <div class="timeline-comment">
+                                  <div class="timeline-comment-header">
+                                    <img
+                                      src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                                      alt=""
+                                    />
+                                    <p>
+                                      Jamara Karle <small>1 hour ago</small>
+                                    </p>
+                                  </div>
+                                  <p class="timeline-comment-text">
+                                    Xullamco laboris nisi ut aliquip ex ea
+                                    commodo consequat.
+                                  </p>
+                                </div>
+                                <div class="timeline-comment">
+                                  <div class="timeline-comment-header">
+                                    <img
+                                      src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                                      alt=""
+                                    />
+                                    <p>
+                                      Lois Anderson <small>3 hours ago</small>
+                                    </p>
+                                  </div>
+                                  <p class="timeline-comment-text">
+                                    Coluptate velit esse cillum dolore eu fugiat
+                                    nulla pariatur. Excepteur sint occaecat
+                                    cupidatat non proident, sunt in culpa qui
+                                    officia.
+                                  </p>
+                                </div>
                               </div>
                               <textarea
                                 class="form-control"
