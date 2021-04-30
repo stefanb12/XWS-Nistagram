@@ -14,14 +14,25 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
-import { CameraAlt, Home, Notifications } from "@material-ui/icons";
+import {
+  BookmarkBorder,
+  ExitToApp,
+  FavoriteBorder,
+  Home,
+  Instagram,
+  SettingsOutlined,
+} from "@material-ui/icons";
+import { withStyles } from "@material-ui/core/styles";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Avatar from "@material-ui/core/Avatar";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
   },
   menuButton: {
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(1.3),
   },
   title: {
     display: "none",
@@ -77,12 +88,57 @@ const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+  avatar: {
+    display: "flex",
+    "& > *": {
+      margin: theme.spacing(1),
+    },
+  },
+  small: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+  },
 }));
+
+const StyledMenu = withStyles({
+  paper: {
+    border: "1px solid #d3d4d5",
+  },
+})((props) => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "center",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "center",
+    }}
+    {...props}
+  />
+));
+
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    // "&:focus": {
+    //   backgroundColor: theme.palette.common.white,
+    //   "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+    //     color: theme.palette.common.white,
+    //   },
+    // },
+  },
+}))(MenuItem);
 
 export default function UserNavbar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -106,18 +162,38 @@ export default function UserNavbar() {
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
-    <Menu
+    <StyledMenu
+      id="customized-menu"
       anchorEl={anchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={menuId}
       keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
+      <StyledMenuItem onClick={handleMenuClose}>
+        <ListItemIcon>
+          <AccountCircle fontSize="medium" />
+        </ListItemIcon>
+        <ListItemText primary="Profile" style={{ marginRight: "33px" }} />
+      </StyledMenuItem>
+      <StyledMenuItem onClick={handleMenuClose}>
+        <ListItemIcon>
+          <SettingsOutlined fontSize="medium" />
+        </ListItemIcon>
+        <ListItemText primary="Settings" />
+      </StyledMenuItem>
+      <StyledMenuItem onClick={handleMenuClose}>
+        <ListItemIcon>
+          <BookmarkBorder fontSize="medium" />
+        </ListItemIcon>
+        <ListItemText primary="Saved" />
+      </StyledMenuItem>
+      <StyledMenuItem onClick={handleMenuClose}>
+        <ListItemIcon>
+          <ExitToApp fontSize="medium" />
+        </ListItemIcon>
+        <ListItemText primary="Log Out" />
+      </StyledMenuItem>
+    </StyledMenu>
   );
 
   const mobileMenuId = "primary-search-account-menu-mobile";
@@ -147,7 +223,7 @@ export default function UserNavbar() {
         </IconButton>
         <p>Notifications</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem onClick={handleClick}>
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
@@ -171,7 +247,7 @@ export default function UserNavbar() {
             color="inherit"
             aria-label="open drawer"
           >
-            <CameraAlt />
+            <Instagram />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
             Nistagram
@@ -203,7 +279,7 @@ export default function UserNavbar() {
             </IconButton>
             <IconButton aria-label="show 12 new notifications" color="inherit">
               <Badge badgeContent={17} color="secondary">
-                <Notifications />
+                <FavoriteBorder />
               </Badge>
             </IconButton>
             <IconButton
@@ -214,7 +290,13 @@ export default function UserNavbar() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
+              <div className={classes.avatar}>
+                <Avatar
+                  className={classes.small}
+                  alt="profile"
+                  src="https://bootdey.com/img/Content/avatar/avatar6.png"
+                />
+              </div>
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>
