@@ -1,7 +1,90 @@
 body {
-  background-color: #f9fafb;
-  /* margin-top: 20px; */
+  background-color: #f0f6ff;
+  color: #28384d;
 }
+
+.card {
+  margin-bottom: 35px;
+  box-shadow: 0 10px 20px 0 rgba(26, 44, 57, 0.14);
+  border: none;
+}
+.card .nav > li {
+  position: relative;
+  display: block;
+}
+
+.card .nav > li > a {
+  position: relative;
+  display: block;
+  padding: 10px 15px;
+  font-weight: 300;
+  border-radius: 4px;
+}
+
+.card .nav > li > a:focus,
+.card .nav > li > a:hover {
+  text-decoration: none;
+  background-color: #eee;
+}
+
+.card .s-nav > li > a.active {
+  text-decoration: none;
+  background-color: #3afe;
+  color: #fff;
+}
+
+ul.friend-list {
+  margin: 0;
+  padding: 0;
+}
+
+ul.friend-list li {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+}
+
+ul.friend-list li:hover {
+  background: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+ul.friend-list .left img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+ul.friend-list li {
+  padding: 10px;
+}
+
+ul.friend-list .right h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+ul.friend-list .right p {
+  font-size: 11px;
+  color: #6c757d;
+  margin: 0;
+}
+
+.social-timeline-card .dropdown-toggle::after {
+  display: none;
+}
+
+.card-title,
+.card .card-title,
+.card-2 .card-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/*end social*/
 
 .profile-page .profile-header {
   box-shadow: 0 0 10px 0 rgba(183, 192, 206, 0.2);

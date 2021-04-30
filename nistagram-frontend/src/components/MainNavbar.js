@@ -14,7 +14,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
-import { CameraAlt } from "@material-ui/icons";
+import { CameraAlt, Instagram } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   menuButton: {
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(1.3),
   },
   title: {
     display: "none",
@@ -184,7 +184,7 @@ export default function MainNavbar() {
             color="inherit"
             aria-label="open drawer"
           >
-            <CameraAlt />
+            <Instagram />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
             Nistagram
