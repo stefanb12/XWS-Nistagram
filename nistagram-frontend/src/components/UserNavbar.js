@@ -135,6 +135,7 @@ export default function UserNavbar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [notificationEl, setNotificationEl] = React.useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -142,6 +143,7 @@ export default function UserNavbar() {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const isNotificationsOpen = Boolean(notificationEl);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -159,6 +161,113 @@ export default function UserNavbar() {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+  const handleNotificationListOpen = (event) => {
+    setNotificationEl(event.currentTarget);
+    handleMenuClose();
+  };
+
+  const handleNotificationListClose = (event) => {
+    setNotificationEl(null);
+  };
+
+
+  const renderNotifications = (
+    <StyledMenu
+      anchorEl={notificationEl}
+      keepMounted
+      open={isNotificationsOpen}
+      onClose={handleNotificationListClose}>
+        <StyledMenuItem>
+          <div class="dropdown-list-image mr-3">
+            <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" />
+          </div>
+          <div class="font-weight-bold mr-3">
+              <div class="text-truncate">DAILY RUNDOWN: WEDNESDAY</div>
+              <div class="small">Income tax sops on the cards, The bias in VC funding, and other top news for you</div>
+          </div>
+          <span class="ml-auto mb-auto">
+            <div class="btn-group">
+                <button type="button" class="btn btn-light btn-sm rounded" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="mdi mdi-dots-vertical"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <button class="dropdown-item" type="button"><i class="mdi mdi-delete"></i> Delete</button>
+                    <button class="dropdown-item" type="button"><i class="mdi mdi-close"></i> Turn Off</button>
+                </div>
+            </div>
+            <br />
+            <div class="text-right text-muted pt-1">3d</div>
+          </span>
+        </StyledMenuItem>
+        <StyledMenuItem>
+          <div class="dropdown-list-image mr-3">
+              <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" />
+          </div>
+          <div class="font-weight-bold mr-3">
+              <div class="text-truncate">DAILY RUNDOWN: WEDNESDAY</div>
+              <div class="small">Income tax sops on the cards, The bias in VC funding, and other top news for you</div>
+          </div>
+          <span class="ml-auto mb-auto">
+            <div class="btn-group">
+                <button type="button" class="btn btn-light btn-sm rounded" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="mdi mdi-dots-vertical"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <button class="dropdown-item" type="button"><i class="mdi mdi-delete"></i> Delete</button>
+                    <button class="dropdown-item" type="button"><i class="mdi mdi-close"></i> Turn Off</button>
+                </div>
+            </div>
+            <br />
+            <div class="text-right text-muted pt-1">3d</div>
+          </span>
+        </StyledMenuItem>
+        <StyledMenuItem>
+          <div class="dropdown-list-image mr-3">
+              <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" />
+          </div>
+          <div class="font-weight-bold mr-3">
+              <div class="text-truncate">DAILY RUNDOWN: WEDNESDAY</div>
+              <div class="small">Income tax sops on the cards, The bias in VC funding, and other top news for you</div>
+          </div>
+          <span class="ml-auto mb-auto">
+            <div class="btn-group">
+                <button type="button" class="btn btn-light btn-sm rounded" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="mdi mdi-dots-vertical"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <button class="dropdown-item" type="button"><i class="mdi mdi-delete"></i> Delete</button>
+                    <button class="dropdown-item" type="button"><i class="mdi mdi-close"></i> Turn Off</button>
+                </div>
+            </div>
+            <br />
+            <div class="text-right text-muted pt-1">3d</div>
+          </span>
+        </StyledMenuItem>
+        <StyledMenuItem>
+          <div class="dropdown-list-image mr-3">
+              <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="" />
+          </div>
+          <div class="font-weight-bold mr-3">
+              <div class="mb-2"><span class="font-weight-normal">Congratulate Gurdeep Singh Osahan (iamgurdeeposahan)</span> for 5 years at Askbootsrap Pvt.</div>
+              <button type="button" class="btn btn-outline-success btn-sm">Say congrats</button>
+          </div>
+          <span class="ml-auto mb-auto">
+              <div class="btn-group">
+                  <button type="button" class="btn btn-light btn-sm rounded" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="mdi mdi-dots-vertical"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-right">
+                      <button class="dropdown-item" type="button"><i class="mdi mdi-delete"></i> Delete</button>
+                      <button class="dropdown-item" type="button"><i class="mdi mdi-close"></i> Turn Off</button>
+                  </div>
+              </div>
+              <br />
+              <div class="text-right text-muted pt-1">4d</div>
+          </span>
+        </StyledMenuItem>
+    </StyledMenu>
+  );
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -277,7 +386,10 @@ export default function UserNavbar() {
                 <Telegram />
               </Badge>
             </IconButton>
-            <IconButton aria-label="show 12 new notifications" color="inherit">
+            <IconButton 
+              aria-label="show 12 new notifications" 
+              color="inherit"
+              onClick={handleNotificationListOpen}>
               <Badge badgeContent={17} color="secondary">
                 <FavoriteBorder />
               </Badge>
@@ -314,6 +426,7 @@ export default function UserNavbar() {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
+      {renderNotifications}
     </div>
   );
 }
