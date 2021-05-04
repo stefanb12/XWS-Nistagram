@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import ListGroup from "react-bootstrap/ListGroup";
 import Card from "react-bootstrap/Card";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
 import "../assets/styles/profileSettings.css";
-import UserAccount from "./UserAccount";
-import UserPassword from "./UserPassword";
+import UserAccount from "../components/profile-settings/UserAccount";
+import UserPassword from "../components/profile-settings/UserPassword";
 
 export default class UserProfileSettings extends Component {
   state = {

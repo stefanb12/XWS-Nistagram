@@ -164,6 +164,10 @@ export default function UserNavbar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const navigateToHome = () => {
+    history.push("/user/home");
+  };
+
   const navigateToProfile = () => {
     history.push("/user/profile");
     handleMenuClose();
@@ -463,7 +467,7 @@ export default function UserNavbar() {
             <IconButton
               aria-label="show 12 new notifications"
               color="inherit"
-              onClick={navigateToProfile}
+              onClick={navigateToHome}
             >
               <Badge color="secondary">
                 <Home />
