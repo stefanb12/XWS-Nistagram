@@ -4,8 +4,6 @@ import { Switch, Route } from "react-router-dom";
 import NotFound from "../pages/NotFound";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
-import UserProfileSettings from "../pages/UserProfileSettings";
-import HomePage from "../pages/HomePage";
 
 const MainLayoutRoot = {
   height: "100%",
@@ -51,12 +49,6 @@ export default function MainLayout({ routes }) {
               </Route>
               <Route path="/app/404">
                 <NotFound />
-              </Route>
-              <Route path="/app/settings">
-                <UserProfileSettings />
-              </Route>
-              <Route path="/app/home-page">
-                <HomePage />
               </Route>
             </Switch>
           </div>
