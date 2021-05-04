@@ -26,6 +26,7 @@ import { withStyles } from "@material-ui/core/styles";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -132,6 +133,7 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 export default function UserNavbar() {
+  const history = useHistory();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -162,6 +164,20 @@ export default function UserNavbar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const navigateToHome = () => {
+    history.push("/user/home");
+  };
+
+  const navigateToProfile = () => {
+    history.push("/user/profile");
+    handleMenuClose();
+  };
+
+  const navigateToSettings = () => {
+    history.push("/user/settings");
+    handleMenuClose();
+  };
+
   const handleNotificationListOpen = (event) => {
     setNotificationEl(event.currentTarget);
     handleMenuClose();
@@ -171,101 +187,173 @@ export default function UserNavbar() {
     setNotificationEl(null);
   };
 
-
   const renderNotifications = (
     <StyledMenu
       anchorEl={notificationEl}
       keepMounted
       open={isNotificationsOpen}
-      onClose={handleNotificationListClose}>
-        <StyledMenuItem>
-          <div class="dropdown-list-image mr-3">
-            <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" />
+      onClose={handleNotificationListClose}
+    >
+      <StyledMenuItem>
+        <div class="dropdown-list-image mr-3">
+          <img
+            class="img-xs rounded-circle"
+            src="https://bootdey.com/img/Content/avatar/avatar1.png"
+            alt=""
+          />
+        </div>
+        <div class="font-weight-bold mr-3">
+          <div class="text-truncate">DAILY RUNDOWN: WEDNESDAY</div>
+          <div class="small">
+            Income tax sops on the cards, The bias in VC funding, and other top
+            news for you
           </div>
-          <div class="font-weight-bold mr-3">
-              <div class="text-truncate">DAILY RUNDOWN: WEDNESDAY</div>
-              <div class="small">Income tax sops on the cards, The bias in VC funding, and other top news for you</div>
-          </div>
-          <span class="ml-auto mb-auto">
-            <div class="btn-group">
-                <button type="button" class="btn btn-light btn-sm rounded" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="mdi mdi-dots-vertical"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <button class="dropdown-item" type="button"><i class="mdi mdi-delete"></i> Delete</button>
-                    <button class="dropdown-item" type="button"><i class="mdi mdi-close"></i> Turn Off</button>
-                </div>
+        </div>
+        <span class="ml-auto mb-auto">
+          <div class="btn-group">
+            <button
+              type="button"
+              class="btn btn-light btn-sm rounded"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <i class="mdi mdi-dots-vertical"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+              <button class="dropdown-item" type="button">
+                <i class="mdi mdi-delete"></i> Delete
+              </button>
+              <button class="dropdown-item" type="button">
+                <i class="mdi mdi-close"></i> Turn Off
+              </button>
             </div>
-            <br />
-            <div class="text-right text-muted pt-1">3d</div>
-          </span>
-        </StyledMenuItem>
-        <StyledMenuItem>
-          <div class="dropdown-list-image mr-3">
-              <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" />
           </div>
-          <div class="font-weight-bold mr-3">
-              <div class="text-truncate">DAILY RUNDOWN: WEDNESDAY</div>
-              <div class="small">Income tax sops on the cards, The bias in VC funding, and other top news for you</div>
+          <br />
+          <div class="text-right text-muted pt-1">3d</div>
+        </span>
+      </StyledMenuItem>
+      <StyledMenuItem>
+        <div class="dropdown-list-image mr-3">
+          <img
+            class="img-xs rounded-circle"
+            src="https://bootdey.com/img/Content/avatar/avatar1.png"
+            alt=""
+          />
+        </div>
+        <div class="font-weight-bold mr-3">
+          <div class="text-truncate">DAILY RUNDOWN: WEDNESDAY</div>
+          <div class="small">
+            Income tax sops on the cards, The bias in VC funding, and other top
+            news for you
           </div>
-          <span class="ml-auto mb-auto">
-            <div class="btn-group">
-                <button type="button" class="btn btn-light btn-sm rounded" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="mdi mdi-dots-vertical"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <button class="dropdown-item" type="button"><i class="mdi mdi-delete"></i> Delete</button>
-                    <button class="dropdown-item" type="button"><i class="mdi mdi-close"></i> Turn Off</button>
-                </div>
+        </div>
+        <span class="ml-auto mb-auto">
+          <div class="btn-group">
+            <button
+              type="button"
+              class="btn btn-light btn-sm rounded"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <i class="mdi mdi-dots-vertical"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+              <button class="dropdown-item" type="button">
+                <i class="mdi mdi-delete"></i> Delete
+              </button>
+              <button class="dropdown-item" type="button">
+                <i class="mdi mdi-close"></i> Turn Off
+              </button>
             </div>
-            <br />
-            <div class="text-right text-muted pt-1">3d</div>
-          </span>
-        </StyledMenuItem>
-        <StyledMenuItem>
-          <div class="dropdown-list-image mr-3">
-              <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" />
           </div>
-          <div class="font-weight-bold mr-3">
-              <div class="text-truncate">DAILY RUNDOWN: WEDNESDAY</div>
-              <div class="small">Income tax sops on the cards, The bias in VC funding, and other top news for you</div>
+          <br />
+          <div class="text-right text-muted pt-1">3d</div>
+        </span>
+      </StyledMenuItem>
+      <StyledMenuItem>
+        <div class="dropdown-list-image mr-3">
+          <img
+            class="img-xs rounded-circle"
+            src="https://bootdey.com/img/Content/avatar/avatar1.png"
+            alt=""
+          />
+        </div>
+        <div class="font-weight-bold mr-3">
+          <div class="text-truncate">DAILY RUNDOWN: WEDNESDAY</div>
+          <div class="small">
+            Income tax sops on the cards, The bias in VC funding, and other top
+            news for you
           </div>
-          <span class="ml-auto mb-auto">
-            <div class="btn-group">
-                <button type="button" class="btn btn-light btn-sm rounded" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="mdi mdi-dots-vertical"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <button class="dropdown-item" type="button"><i class="mdi mdi-delete"></i> Delete</button>
-                    <button class="dropdown-item" type="button"><i class="mdi mdi-close"></i> Turn Off</button>
-                </div>
+        </div>
+        <span class="ml-auto mb-auto">
+          <div class="btn-group">
+            <button
+              type="button"
+              class="btn btn-light btn-sm rounded"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <i class="mdi mdi-dots-vertical"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+              <button class="dropdown-item" type="button">
+                <i class="mdi mdi-delete"></i> Delete
+              </button>
+              <button class="dropdown-item" type="button">
+                <i class="mdi mdi-close"></i> Turn Off
+              </button>
             </div>
-            <br />
-            <div class="text-right text-muted pt-1">3d</div>
-          </span>
-        </StyledMenuItem>
-        <StyledMenuItem>
-          <div class="dropdown-list-image mr-3">
-              <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="" />
           </div>
-          <div class="font-weight-bold mr-3">
-              <div class="mb-2"><span class="font-weight-normal">Congratulate Gurdeep Singh Osahan (iamgurdeeposahan)</span> for 5 years at Askbootsrap Pvt.</div>
-              <button type="button" class="btn btn-outline-success btn-sm">Say congrats</button>
+          <br />
+          <div class="text-right text-muted pt-1">3d</div>
+        </span>
+      </StyledMenuItem>
+      <StyledMenuItem>
+        <div class="dropdown-list-image mr-3">
+          <img
+            class="img-xs rounded-circle"
+            src="https://bootdey.com/img/Content/avatar/avatar2.png"
+            alt=""
+          />
+        </div>
+        <div class="font-weight-bold mr-3">
+          <div class="mb-2">
+            <span class="font-weight-normal">
+              Congratulate Gurdeep Singh Osahan (iamgurdeeposahan)
+            </span>{" "}
+            for 5 years at Askbootsrap Pvt.
           </div>
-          <span class="ml-auto mb-auto">
-              <div class="btn-group">
-                  <button type="button" class="btn btn-light btn-sm rounded" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="mdi mdi-dots-vertical"></i>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right">
-                      <button class="dropdown-item" type="button"><i class="mdi mdi-delete"></i> Delete</button>
-                      <button class="dropdown-item" type="button"><i class="mdi mdi-close"></i> Turn Off</button>
-                  </div>
-              </div>
-              <br />
-              <div class="text-right text-muted pt-1">4d</div>
-          </span>
-        </StyledMenuItem>
+          <button type="button" class="btn btn-outline-success btn-sm">
+            Say congrats
+          </button>
+        </div>
+        <span class="ml-auto mb-auto">
+          <div class="btn-group">
+            <button
+              type="button"
+              class="btn btn-light btn-sm rounded"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <i class="mdi mdi-dots-vertical"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+              <button class="dropdown-item" type="button">
+                <i class="mdi mdi-delete"></i> Delete
+              </button>
+              <button class="dropdown-item" type="button">
+                <i class="mdi mdi-close"></i> Turn Off
+              </button>
+            </div>
+          </div>
+          <br />
+          <div class="text-right text-muted pt-1">4d</div>
+        </span>
+      </StyledMenuItem>
     </StyledMenu>
   );
 
@@ -278,13 +366,13 @@ export default function UserNavbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <StyledMenuItem onClick={handleMenuClose}>
+      <StyledMenuItem onClick={navigateToProfile}>
         <ListItemIcon>
           <AccountCircle fontSize="medium" />
         </ListItemIcon>
         <ListItemText primary="Profile" style={{ marginRight: "33px" }} />
       </StyledMenuItem>
-      <StyledMenuItem onClick={handleMenuClose}>
+      <StyledMenuItem onClick={navigateToSettings}>
         <ListItemIcon>
           <SettingsOutlined fontSize="medium" />
         </ListItemIcon>
@@ -376,7 +464,11 @@ export default function UserNavbar() {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 12 new notifications" color="inherit">
+            <IconButton
+              aria-label="show 12 new notifications"
+              color="inherit"
+              onClick={navigateToHome}
+            >
               <Badge color="secondary">
                 <Home />
               </Badge>
@@ -386,10 +478,11 @@ export default function UserNavbar() {
                 <Telegram />
               </Badge>
             </IconButton>
-            <IconButton 
-              aria-label="show 12 new notifications" 
+            <IconButton
+              aria-label="show 12 new notifications"
               color="inherit"
-              onClick={handleNotificationListOpen}>
+              onClick={handleNotificationListOpen}
+            >
               <Badge badgeContent={17} color="secondary">
                 <FavoriteBorder />
               </Badge>

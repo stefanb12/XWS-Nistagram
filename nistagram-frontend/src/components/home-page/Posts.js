@@ -49,7 +49,7 @@ export default class Posts extends Component {
     return (
       <div>
         <div class="container">
-          <div class="page-inner no-page-title">
+          <div class="no-page-title">
             <div id="main-wrapper">
               <div class="row">
                 <div class="col-lg-7 col-xl-8">
