@@ -26,6 +26,7 @@ import { withStyles } from "@material-ui/core/styles";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -132,6 +133,7 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 export default function UserNavbar() {
+  const history = useHistory();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -160,6 +162,16 @@ export default function UserNavbar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const navigateToProfile = () => {
+    history.push("/user/profile");
+    handleMenuClose();
+  };
+
+  const navigateToSettings = () => {
+    history.push("/user/settings");
+    handleMenuClose();
+  };
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <StyledMenu
@@ -169,13 +181,13 @@ export default function UserNavbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <StyledMenuItem onClick={handleMenuClose}>
+      <StyledMenuItem onClick={navigateToProfile}>
         <ListItemIcon>
           <AccountCircle fontSize="medium" />
         </ListItemIcon>
         <ListItemText primary="Profile" style={{ marginRight: "33px" }} />
       </StyledMenuItem>
-      <StyledMenuItem onClick={handleMenuClose}>
+      <StyledMenuItem onClick={navigateToSettings}>
         <ListItemIcon>
           <SettingsOutlined fontSize="medium" />
         </ListItemIcon>
@@ -267,7 +279,11 @@ export default function UserNavbar() {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 12 new notifications" color="inherit">
+            <IconButton
+              aria-label="show 12 new notifications"
+              color="inherit"
+              onClick={navigateToProfile}
+            >
               <Badge color="secondary">
                 <Home />
               </Badge>

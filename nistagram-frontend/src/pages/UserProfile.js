@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import "../assets/styles/profile.css";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
+import { BookmarkBorder } from "@material-ui/icons";
 
 export default class UserProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: false,
+      isOpenFollowersModal: false,
+      isOpenFollowingModal: false,
       followers: [
         { username: "username1" },
         { username: "username2" },
@@ -16,15 +18,17 @@ export default class UserProfile extends Component {
     };
   }
 
-  openModal = () => this.setState({ isOpen: true });
-  closeModal = () => this.setState({ isOpen: false });
+  openFollowersModal = () => this.setState({ isOpenFollowersModal: true });
+  closeFollowersModal = () => this.setState({ isOpenFollowersModal: false });
+  openFollowingModal = () => this.setState({ isOpenFollowingModal: true });
+  closeFollowingModal = () => this.setState({ isOpenFollowingModal: false });
 
   render() {
     return (
       <div>
         <Modal
-          show={this.state.isOpen}
-          onHide={this.closeModal}
+          show={this.state.isOpenFollowersModal}
+          onHide={this.closeFollowersModal}
           style={{ marginTop: "120px", maxHeight: "500px", overflow: "hidden" }}
         >
           <Modal.Header closeButton>
@@ -58,7 +62,48 @@ export default class UserProfile extends Component {
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.closeModal}>
+            <Button variant="secondary" onClick={this.closeFollowersModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        <Modal
+          show={this.state.isOpenFollowingModal}
+          onHide={this.closeFollowingModal}
+          style={{ marginTop: "120px", maxHeight: "500px", overflow: "hidden" }}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Following</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div style={{ overflow: "auto", maxHeight: "300px" }}>
+              {this.state.followers.map((follower) => {
+                return (
+                  <div class="list-group-item d-flex align-items-center">
+                    <img
+                      src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                      alt=""
+                      width="50px"
+                      class="rounded-sm ml-n2"
+                    />
+                    <div class="flex-fill pl-3 pr-3">
+                      <div>
+                        <a href="#" class="text-dark font-weight-600">
+                          {follower.username}
+                        </a>
+                      </div>
+                      <div class="text-muted fs-13px">North Raundspic</div>
+                    </div>
+                    <a href="#" class="btn btn-outline-primary">
+                      Follow
+                    </a>
+                  </div>
+                );
+              })}
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.closeFollowingModal}>
               Close
             </Button>
           </Modal.Footer>
@@ -87,7 +132,10 @@ export default class UserProfile extends Component {
                         <span class="profile-name">username</span>
                       </div>
                       <div class="d-none d-md-block">
-                        <button class="btn btn-primary btn-icon-text btn-edit-profile">
+                        <Link
+                          class="btn btn-primary btn-icon-text btn-edit-profile"
+                          to="/user/settings"
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -104,7 +152,7 @@ export default class UserProfile extends Component {
                             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                           </svg>{" "}
                           Edit profile
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -150,7 +198,7 @@ export default class UserProfile extends Component {
                         </svg>
                         <Link
                           class="pt-1px d-none d-md-block"
-                          onClick={this.openModal}
+                          onClick={this.openFollowersModal}
                         >
                           Followers <span class="text-muted tx-12">2,765</span>
                         </Link>
@@ -173,9 +221,12 @@ export default class UserProfile extends Component {
                           <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                           <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                         </svg>
-                        <a class="pt-1px d-none d-md-block" href="#">
+                        <Link
+                          class="pt-1px d-none d-md-block"
+                          onClick={this.openFollowingModal}
+                        >
                           Following <span class="text-muted tx-12">1,765</span>
-                        </a>
+                        </Link>
                       </li>
                       <li class="header-link-item ml-3 pl-3 border-left d-flex align-items-center">
                         <svg
@@ -202,34 +253,13 @@ export default class UserProfile extends Component {
                           <polyline points="21 15 16 10 5 21"></polyline>
                         </svg>
                         <a class="pt-1px d-none d-md-block" href="#">
-                          Photos
+                          Stories
                         </a>
                       </li>
                       <li class="header-link-item ml-3 pl-3 border-left d-flex align-items-center">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="feather feather-video mr-1 icon-md"
-                        >
-                          <polygon points="23 7 16 12 23 17 23 7"></polygon>
-                          <rect
-                            x="1"
-                            y="5"
-                            width="15"
-                            height="14"
-                            rx="2"
-                            ry="2"
-                          ></rect>
-                        </svg>
+                        <BookmarkBorder />
                         <a class="pt-1px d-none d-md-block" href="#">
-                          Videos
+                          Saved
                         </a>
                       </li>
                     </ul>
@@ -369,98 +399,6 @@ export default class UserProfile extends Component {
               </div>
               <div class="d-none d-xl-block col-xl-3 right-wrapper">
                 <div class="row">
-                  {/* <div class="col-md-12 grid-margin">
-                    <div class="card rounded">
-                      <div class="card-body">
-                        <h6 class="card-title">latest photos</h6>
-                        <div class="latest-photos">
-                          <div class="row">
-                            <div class="col-md-4">
-                              <figure>
-                                <img
-                                  class="img-fluid"
-                                  src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                                  alt=""
-                                />
-                              </figure>
-                            </div>
-                            <div class="col-md-4">
-                              <figure>
-                                <img
-                                  class="img-fluid"
-                                  src="https://bootdey.com/img/Content/avatar/avatar2.png"
-                                  alt=""
-                                />
-                              </figure>
-                            </div>
-                            <div class="col-md-4">
-                              <figure>
-                                <img
-                                  class="img-fluid"
-                                  src="https://bootdey.com/img/Content/avatar/avatar3.png"
-                                  alt=""
-                                />
-                              </figure>
-                            </div>
-                            <div class="col-md-4">
-                              <figure>
-                                <img
-                                  class="img-fluid"
-                                  src="https://bootdey.com/img/Content/avatar/avatar4.png"
-                                  alt=""
-                                />
-                              </figure>
-                            </div>
-                            <div class="col-md-4">
-                              <figure>
-                                <img
-                                  class="img-fluid"
-                                  src="https://bootdey.com/img/Content/avatar/avatar5.png"
-                                  alt=""
-                                />
-                              </figure>
-                            </div>
-                            <div class="col-md-4">
-                              <figure>
-                                <img
-                                  class="img-fluid"
-                                  src="https://bootdey.com/img/Content/avatar/avatar6.png"
-                                  alt=""
-                                />
-                              </figure>
-                            </div>
-                            <div class="col-md-4">
-                              <figure class="mb-0">
-                                <img
-                                  class="img-fluid"
-                                  src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                  alt=""
-                                />
-                              </figure>
-                            </div>
-                            <div class="col-md-4">
-                              <figure class="mb-0">
-                                <img
-                                  class="img-fluid"
-                                  src="https://bootdey.com/img/Content/avatar/avatar8.png"
-                                  alt=""
-                                />
-                              </figure>
-                            </div>
-                            <div class="col-md-4">
-                              <figure class="mb-0">
-                                <img
-                                  class="img-fluid"
-                                  src="https://bootdey.com/img/Content/avatar/avatar9.png"
-                                  alt=""
-                                />
-                              </figure>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div> */}
                   <div class="col-md-12 grid-margin">
                     <div class="card social-timeline-card">
                       <div class="card-body">
