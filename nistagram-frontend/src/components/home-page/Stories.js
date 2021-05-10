@@ -12,6 +12,7 @@ export default class Stories extends Component {
               maxHeight: "200px",
               overflow: "auto",
               whiteSpace: "nowrap",
+              backgroundColor: "white",
             }}
           >
             <div class="row">

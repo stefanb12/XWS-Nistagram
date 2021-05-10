@@ -4,19 +4,52 @@ import "../../assets/styles/posts.css";
 export default class Posts extends Component {
   constructor(props) {
     super(props);
+    this.dropdownRef = React.createRef();
     this.state = {
       isDislike: false,
       isLike: false,
+      isSaved: false,
+      isActive: false,
     };
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  componentDidMount() {
+    document.addEventListener("mousedown", this.handleClickOutside);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("mousedown", this.handleClickOutside);
+  }
+
+  handleClickOutside = (event) => {
+    if (
+      this.dropdownRef.current &&
+      !this.dropdownRef.current.contains(event.target)
+    ) {
+      this.setState({
+        isActive: false,
+      });
+    }
+  };
+
+  handleClick() {
+    this.setState((state) => ({
+      isActive: !this.state.isActive,
+    }));
   }
 
   render() {
     const isDislike = this.state.isDislike;
     const isLike = this.state.isLike;
+    const isSaved = this.state.isSaved;
+    const dropdownRef = this.dropdownRef;
+    const isActive = this.state.isActive;
+
     return (
       <div>
         <div class="container">
-          <div class="page-inner no-page-title">
+          <div class="no-page-title">
             <div id="main-wrapper">
               <div class="row">
                 <div class="col-lg-7 col-xl-8">
@@ -60,6 +93,57 @@ export default class Posts extends Component {
                               </p>
                               <small>3 hours ago</small>
                             </div>
+
+                            <div class="dropdown" ref={dropdownRef}>
+                              <button
+                                class="btn p-0"
+                                type="button"
+                                id="dropdownMenuButton"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                onClick={this.handleClick}
+                                className="menu-trigger"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="34"
+                                  height="34"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  stroke-width="2"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  class="feather feather-more-horizontal icon-lg pb-3px"
+                                >
+                                  <circle cx="12" cy="12" r="1"></circle>
+                                  <circle cx="19" cy="12" r="1"></circle>
+                                  <circle cx="5" cy="12" r="1"></circle>
+                                </svg>
+                              </button>
+                              <nav
+                                className={`menu ${
+                                  isActive ? "active" : "inactive"
+                                }`}
+                              >
+                                <ul>
+                                  <li>
+                                    <a href="/user/home">Report</a>
+                                  </li>
+                                  <li>
+                                    <a href="/user/home">Save</a>
+                                  </li>
+                                  <li>
+                                    <a href="/user/home">View profile</a>
+                                  </li>
+                                  <li>
+                                    <a href="/user/home">Unfollow</a>
+                                  </li>
+                                </ul>
+                              </nav>
+                            </div>
+
                             <div class="timeline-item-post">
                               <img
                                 class="img-thumbnail"
@@ -108,6 +192,19 @@ export default class Posts extends Component {
                                     }}
                                   ></i>
                                   <span /> Comment (4)
+                                </a>
+                                <a href="#" style={{ float: "right" }}>
+                                  <i
+                                    class={
+                                      isSaved
+                                        ? "fa fa-bookmark"
+                                        : "fa fa-bookmark-o"
+                                    }
+                                    style={{
+                                      fontSize: "20px",
+                                      paddingLeft: "20px",
+                                    }}
+                                  ></i>
                                 </a>
                               </div>
                               <div class="comments">
