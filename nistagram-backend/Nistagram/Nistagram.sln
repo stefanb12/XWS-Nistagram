@@ -3,7 +3,55 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfileMicroservice", "ProfileMicroservice\ProfileMicroservice.csproj", "{AB318217-A2B0-42B5-80B1-47DEFEC7DBC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostMicroservice", "PostMicroservice\PostMicroservice.csproj", "{18B45581-F2EA-4EF4-9A58-C03B5C2CCE93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryMicroservice", "StoryMicroservice\StoryMicroservice.csproj", "{45377A5D-3C0F-40B3-A648-ED02FA6C77BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InappropriateContentMicroservice", "InappropriateContentMicroservice\InappropriateContentMicroservice.csproj", "{990805FD-83F5-41CA-A1AB-E8E71461B9C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CampaignMicroservice", "CampaignMicroservice\CampaignMicroservice.csproj", "{54286F42-58B0-4A00-B39B-51D3FA4A29B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatMicroservice", "ChatMicroservice\ChatMicroservice.csproj", "{563948BD-7BCD-4442-BE4A-CCF608E1B118}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationMicroservice", "NotificationMicroservice\NotificationMicroservice.csproj", "{76061494-24F8-47A3-8C7C-C448DA912E8C}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB318217-A2B0-42B5-80B1-47DEFEC7DBC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB318217-A2B0-42B5-80B1-47DEFEC7DBC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB318217-A2B0-42B5-80B1-47DEFEC7DBC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB318217-A2B0-42B5-80B1-47DEFEC7DBC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18B45581-F2EA-4EF4-9A58-C03B5C2CCE93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18B45581-F2EA-4EF4-9A58-C03B5C2CCE93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18B45581-F2EA-4EF4-9A58-C03B5C2CCE93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18B45581-F2EA-4EF4-9A58-C03B5C2CCE93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45377A5D-3C0F-40B3-A648-ED02FA6C77BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45377A5D-3C0F-40B3-A648-ED02FA6C77BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45377A5D-3C0F-40B3-A648-ED02FA6C77BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45377A5D-3C0F-40B3-A648-ED02FA6C77BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{990805FD-83F5-41CA-A1AB-E8E71461B9C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{990805FD-83F5-41CA-A1AB-E8E71461B9C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{990805FD-83F5-41CA-A1AB-E8E71461B9C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{990805FD-83F5-41CA-A1AB-E8E71461B9C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54286F42-58B0-4A00-B39B-51D3FA4A29B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54286F42-58B0-4A00-B39B-51D3FA4A29B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54286F42-58B0-4A00-B39B-51D3FA4A29B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54286F42-58B0-4A00-B39B-51D3FA4A29B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{563948BD-7BCD-4442-BE4A-CCF608E1B118}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{563948BD-7BCD-4442-BE4A-CCF608E1B118}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{563948BD-7BCD-4442-BE4A-CCF608E1B118}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{563948BD-7BCD-4442-BE4A-CCF608E1B118}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76061494-24F8-47A3-8C7C-C448DA912E8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76061494-24F8-47A3-8C7C-C448DA912E8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76061494-24F8-47A3-8C7C-C448DA912E8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76061494-24F8-47A3-8C7C-C448DA912E8C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
