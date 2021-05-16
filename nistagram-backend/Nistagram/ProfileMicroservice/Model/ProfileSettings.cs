@@ -7,7 +7,7 @@ namespace ProfileMicroservice.Model
 {
     public class ProfileSettings
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public bool PrivateProfile { get; set; }
         public bool ReceiveAllMessages { get; set; }
         public bool TagAllowed { get; set; }

@@ -7,7 +7,7 @@ namespace ProfileMicroservice.Model
 {
     public class RegistrationRequest
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string ValidEmail { get; set; }
         public string WebsiteLink { get; set; }
         public bool Accepted { get; set; }

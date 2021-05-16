@@ -2,7 +2,7 @@
 {
     public class InappropriateContentRequest
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string ReportComment { get; set; }
         public bool Processed { get; set; }
         public Profile Sender { get; set; }
