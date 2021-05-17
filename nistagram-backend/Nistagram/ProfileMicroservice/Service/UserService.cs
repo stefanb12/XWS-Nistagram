@@ -1,6 +1,7 @@
 ﻿using ProfileMicroservice.Model;
 using ProfileMicroservice.Repository;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProfileMicroservice.Service
 {
@@ -13,31 +14,30 @@ namespace ProfileMicroservice.Service
             UserRepository = userRepository;
         }
 
-        public IEnumerable<User> GetAll()
+        public async Task<User> GetById(int id)
         {
-            return UserRepository.GetAll();
+            return await UserRepository.GetById(id);
         }
 
-        public User GetById(int id)
+        public async Task<IEnumerable<User>> GetAll()
         {
-            return UserRepository.GetById(id);
+            return await UserRepository.GetAll();
         }
 
-        public User Insert(User entity)
+        public async Task<User> Insert(User entity)
         {
-            return UserRepository.Insert(entity);
+            return await UserRepository.Insert(entity);
         }
 
-        public User Update(User entity)
+        public async Task<User> Update(User entity)
         {
-            UserRepository.Update(entity);
+            await UserRepository.Update(entity);
             return entity;
         }
 
-        public void Delete(User entity)
+        public async Task Delete(User entity)
         {
-            User u = GetById(entity.Id);
-            UserRepository.Delete(u);
+            await UserRepository.Delete(entity);
         }
     }
 }

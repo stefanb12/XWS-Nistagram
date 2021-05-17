@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProfileMicroservice.Model;
 using ProfileMicroservice.Service;
+using System.Threading.Tasks;
 
 namespace ProfileMicroservice.Controllers
 {
@@ -16,33 +17,40 @@ namespace ProfileMicroservice.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(_userService.GetAll());
+            return Ok(await _userService.GetAll());
         }
 
-        [HttpGet("/{id}")]
-        public IActionResult GetById(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            return Ok(_userService.GetById(id));
+            User user = await _userService.GetById(id);
+
+            if(user == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(user);
         }
 
         [HttpPost]
-        public IActionResult Insert(User user)
+        public async Task<IActionResult> Insert(User user)
         {
-            return Ok(_userService.Insert(user));
+            return Ok(await _userService.Insert(user));
         }
 
         [HttpPut]
-        public IActionResult Update(User user)
+        public async Task<IActionResult> Update(User user)
         {
-            return Ok(_userService.Update(user));
+            return Ok(await _userService.Update(user));
         }
 
         [HttpDelete]
-        public IActionResult Delete(User user)
+        public async Task<IActionResult> Delete(User user)
         {
-            _userService.Delete(user);
+            await _userService.Delete(user);
             return Ok();
         }
 

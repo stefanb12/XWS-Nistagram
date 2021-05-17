@@ -7,7 +7,10 @@ namespace ProfileMicroservice.Database
 {
     public class ProfileDbContext : DbContext
     {
+        public DbSet<User> Users { get; set; }
+
         public ProfileDbContext() : base() { }
+
         public ProfileDbContext(DbContextOptions<ProfileDbContext> options) : base(options) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

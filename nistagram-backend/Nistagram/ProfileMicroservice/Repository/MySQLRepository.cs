@@ -16,34 +16,34 @@ namespace ProfileMicroservice.Repository
             _context = context;
         }
 
-        public E GetById(int id)
+        public async Task<E> GetById(int id)
         {
-            return _context.Set<E>().Find(id);
+            return await _context.Set<E>().FindAsync(id);
         }
 
-        public IEnumerable<E> GetAll()
+        public async Task<IEnumerable<E>> GetAll()
         {
-            return _context.Set<E>();
+            return await _context.Set<E>().ToListAsync();
         }
 
-        public E Insert(E entity)
+        public async Task<E> Insert(E entity)
         {
             _context.Set<E>().Add(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return entity;
         }
 
-        public E Update(E entity)
+        public async Task<E> Update(E entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return entity;
         }
 
-        public void Delete(E entity)
+        public async Task Delete(E entity)
         {
             _context.Set<E>().Remove(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
     }

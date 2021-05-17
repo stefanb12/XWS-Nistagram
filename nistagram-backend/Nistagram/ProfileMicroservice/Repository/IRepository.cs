@@ -7,10 +7,10 @@ namespace ProfileMicroservice.Repository
 {
     public interface IRepository<E> where E : class
     {
-        E GetById(int id);
-        IEnumerable<E> GetAll();
-        E Insert(E entity);
-        E Update(E entity);
-        void Delete(E entity);
+        Task<E> GetById(int id);
+        Task<IEnumerable<E>> GetAll();
+        Task<E> Insert(E entity);
+        Task<E> Update(E entity);
+        Task Delete(E entity);
     }
 }

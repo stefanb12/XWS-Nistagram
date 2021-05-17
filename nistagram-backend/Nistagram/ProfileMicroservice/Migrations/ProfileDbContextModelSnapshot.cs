@@ -19,9 +19,9 @@ namespace ProfileMicroservice.Migrations
 
             modelBuilder.Entity("ProfileMicroservice.Model.User", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime(6)");
@@ -43,12 +43,12 @@ namespace ProfileMicroservice.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
 
                     b.HasData(
                         new
                         {
-                            Id = 1L,
+                            Id = 1,
                             DateOfBirth = new DateTime(1998, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user1@gmail.com",
                             Gender = 0,
@@ -58,7 +58,7 @@ namespace ProfileMicroservice.Migrations
                         },
                         new
                         {
-                            Id = 2L,
+                            Id = 2,
                             DateOfBirth = new DateTime(1998, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user2@gmail.com",
                             Gender = 0,
@@ -68,7 +68,7 @@ namespace ProfileMicroservice.Migrations
                         },
                         new
                         {
-                            Id = 3L,
+                            Id = 3,
                             DateOfBirth = new DateTime(1998, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user3@gmail.com",
                             Gender = 0,
