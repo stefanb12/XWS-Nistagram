@@ -4,7 +4,7 @@ namespace CampaignMicroservice.Model
 {
     public class Campaign
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public List<Profile> TargetGroup { get; set; }
         public int NumberOfComments { get; set; }
         public int NumberOfLikes { get; set; }

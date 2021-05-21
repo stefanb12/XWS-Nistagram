@@ -5,7 +5,7 @@ namespace StoryMicroservice.Model
 {
     public class Story
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public bool Visible { get; set; }
         public bool ForCloseFriends { get; set; }
         public List<string> Tags { get; set; }

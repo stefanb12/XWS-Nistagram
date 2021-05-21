@@ -1,11 +1,12 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 
 namespace PostMicroservice.Model
 {
-    public class Post
+    public class Post : Document
     {
-        public long Id { get; set; }
         public List<string> Tags { get; set; }
         public string Description { get; set; }
         public DateTime PublishingDate { get; set; }
@@ -15,6 +16,7 @@ namespace PostMicroservice.Model
         public List<Profile> Dislikes { get; set; }
         public List<Profile> Likes { get; set; }
         public List<Profile> Favorites { get; set; }
+        public Profile Profile { get; set; }
 
         public Post()
         {

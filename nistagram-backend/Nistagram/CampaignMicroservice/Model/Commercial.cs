@@ -2,7 +2,7 @@
 {
     public class Commercial
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string WebsiteLink { get; set; }
         public Content Content { get; set; }
 

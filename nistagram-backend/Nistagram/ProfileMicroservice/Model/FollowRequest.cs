@@ -7,7 +7,7 @@ namespace ProfileMicroservice.Model
 {
     public class FollowRequest
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public bool Accepted { get; set; }
         public bool Processed { get; set; }
         public Profile Receiver { get; set; }
