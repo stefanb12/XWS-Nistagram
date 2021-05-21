@@ -30,18 +30,18 @@ namespace ProfileMicroservice
 
             services.AddCors();
 
-            services.AddDbContext<ProfileDbContext>(options =>
+            services.AddDbContext<UserDbContext>(options =>
                   options.UseMySql(CreateConnectionStringFromEnvironment()).UseLazyLoadingProxies(), ServiceLifetime.Transient);
 
             services.AddSingleton<IUserService, UserService>(service =>
-                    new UserService(new UserRepository(new ProfileDbContext())));
+                    new UserService(new UserRepository(new UserDbContext())));
         }
 
         private string CreateConnectionStringFromEnvironment()
         {
             string server = Environment.GetEnvironmentVariable("DATABASE_HOST") ?? "localhost";
             string port = Environment.GetEnvironmentVariable("DATABASE_PORT") ?? "3306";
-            string database = Environment.GetEnvironmentVariable("DATABASE_SCHEMA") ?? "ProfileMicroserviceDb";
+            string database = Environment.GetEnvironmentVariable("DATABASE_SCHEMA") ?? "UserMicroserviceDb";
             string user = Environment.GetEnvironmentVariable("DATABASE_USERNAME") ?? "root";
             string password = Environment.GetEnvironmentVariable("DATABASE_PASSWORD") ?? "root";
             string sslMode = Environment.GetEnvironmentVariable("DATABASE_SSL_MODE") ?? "None";

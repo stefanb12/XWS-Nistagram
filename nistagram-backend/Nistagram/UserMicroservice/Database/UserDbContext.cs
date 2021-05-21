@@ -5,13 +5,13 @@ using System;
 
 namespace ProfileMicroservice.Database
 {
-    public class ProfileDbContext : DbContext
+    public class UserDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
 
-        public ProfileDbContext() : base() { }
+        public UserDbContext() : base() { }
 
-        public ProfileDbContext(DbContextOptions<ProfileDbContext> options) : base(options) { }
+        public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -26,7 +26,7 @@ namespace ProfileMicroservice.Database
         {
             string server = Environment.GetEnvironmentVariable("DATABASE_HOST") ?? "localhost";
             string port = Environment.GetEnvironmentVariable("DATABASE_PORT") ?? "3306";
-            string database = Environment.GetEnvironmentVariable("DATABASE_SCHEMA") ?? "ProfileMicroserviceDb";
+            string database = Environment.GetEnvironmentVariable("DATABASE_SCHEMA") ?? "UserMicroserviceDb";
             string user = Environment.GetEnvironmentVariable("DATABASE_USERNAME") ?? "root";
             string password = Environment.GetEnvironmentVariable("DATABASE_PASSWORD") ?? "root";
             string sslMode = Environment.GetEnvironmentVariable("DATABASE_SSL_MODE") ?? "None";
