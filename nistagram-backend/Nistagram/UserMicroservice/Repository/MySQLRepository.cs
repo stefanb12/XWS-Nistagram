@@ -9,9 +9,9 @@ namespace ProfileMicroservice.Repository
 {
     public class MySqlRepository<E> : IRepository<E> where E : class
     {
-        protected readonly ProfileDbContext _context;
+        protected readonly UserDbContext _context;
 
-        public MySqlRepository(ProfileDbContext context)
+        public MySqlRepository(UserDbContext context)
         {
             _context = context;
         }

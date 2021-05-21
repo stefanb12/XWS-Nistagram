@@ -5,7 +5,7 @@ namespace ProfileMicroservice.Repository
 {
     public class UserRepository : MySqlRepository<User>, IUserRepository
     {
-        public UserRepository(ProfileDbContext context)
+        public UserRepository(UserDbContext context)
                : base(context)
         {
         }
