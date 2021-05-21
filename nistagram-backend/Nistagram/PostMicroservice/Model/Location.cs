@@ -1,8 +1,7 @@
 ﻿namespace PostMicroservice.Model
 {
-    public class Location
+    public class Location : Document
     {
-        public int Id { get; set; }
         public string Address { get; set; }
         public City City { get; set; }
 

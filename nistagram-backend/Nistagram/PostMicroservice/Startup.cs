@@ -43,8 +43,12 @@ namespace PostMicroservice
                 sp.GetRequiredService<IOptions<MongoDbSettings>>().Value);
 
             services.AddSingleton<IMongoDbContext, MongoDbContext>();
+
             services.AddSingleton<IPostRepository, PostRepository>();
             services.AddSingleton<IPostService, PostService>();
+
+            services.AddSingleton<ILocationRepository, LocationRepository>();
+            services.AddSingleton<ILocationService, LocationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

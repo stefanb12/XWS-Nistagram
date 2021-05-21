@@ -16,6 +16,7 @@ namespace PostMicroservice.Model
         public List<Profile> Dislikes { get; set; }
         public List<Profile> Likes { get; set; }
         public List<Profile> Favorites { get; set; }
+        public Profile Profile { get; set; }
 
         public Post()
         {

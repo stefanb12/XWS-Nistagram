@@ -23,9 +23,7 @@ namespace PostMicroservice.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            Console.WriteLine("aaaaaaaaaaaaa");
-            var c = await _postService.GetAll();
-            return Ok(c);
+            return Ok(await _postService.GetAll());
         }
 
         [HttpGet("{id}")]
