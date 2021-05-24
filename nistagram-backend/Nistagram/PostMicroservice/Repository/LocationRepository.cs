@@ -8,6 +8,7 @@ namespace PostMicroservice.Repository
         public LocationRepository(IMongoDbContext context)
                : base(context)
         {
+            _dbCollection = context.GetDatabase().GetCollection<Location>(typeof(Location).Name);
         }
     }
 }

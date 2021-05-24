@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using PostMicroservice.Model;
 
 namespace PostMicroservice.Database
 {
@@ -17,6 +18,11 @@ namespace PostMicroservice.Database
         public IMongoCollection<T> GetCollection<T>(string name)
         {
             return _db.GetCollection<T>(name);
+        }
+
+        public IMongoDatabase GetDatabase()
+        {
+            return _db;
         }
     }
 }

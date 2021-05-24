@@ -11,13 +11,13 @@ namespace PostMicroservice.Repository
 {
     public abstract class MongoDbRepository<TDocument> : IRepository<TDocument> where TDocument : IDocument
     {
-        protected readonly IMongoDbContext _context;
+        protected readonly IMongoDatabase _db;
         protected IMongoCollection<TDocument> _dbCollection;
 
         protected MongoDbRepository(IMongoDbContext context)
         {
-            _context = context;
-            _dbCollection = _context.GetCollection<TDocument>(typeof(TDocument).Name);
+            _db = context.GetDatabase();
+            _dbCollection = _db.GetCollection<TDocument>(typeof(TDocument).Name);
         }
 
         public async Task<TDocument> GetById(string id)
