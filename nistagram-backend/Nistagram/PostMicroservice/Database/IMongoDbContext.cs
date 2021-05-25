@@ -10,5 +10,6 @@ namespace PostMicroservice.Database
     public interface IMongoDbContext
     {
         IMongoCollection<Post> GetCollection<Post>(string name);
+        IMongoDatabase GetDatabase();
     }
 }

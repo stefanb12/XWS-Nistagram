@@ -14,10 +14,12 @@ namespace PostMicroservice.Controllers
     public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
+        private readonly ILocationService _locationService;
 
-        public PostController(IPostService postService)
+        public PostController(IPostService postService, ILocationService locationService)
         {
             _postService = postService;
+            _locationService = locationService;
         }
 
         [HttpGet]

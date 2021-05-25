@@ -1,16 +1,17 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 
 namespace PostMicroservice.Model
 {
-    public class Comment
+    public class Comment : Document
     {
-        public int Id { get; set; }
         public string Text { get; set; }
         public DateTime Date { get; set; }
-        public Profile Profile { get; set; }
+        public Profile Publisher { get; set; }
 
         public Comment()
         {
+            Id = ObjectId.GenerateNewId().ToString();
         }
     }
 }

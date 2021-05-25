@@ -10,7 +10,7 @@ namespace PostMicroservice.Model
     public interface IDocument
     {
         [BsonId]
-        [BsonRepresentation(BsonType.String)]
-        ObjectId Id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
     }
 }
