@@ -9,37 +9,37 @@ namespace PostMicroservice.Service
 {
     public class PostService : IPostService
     {
-        public IPostRepository PostRepository;
+        private IPostRepository _postRepository;
 
         public PostService(IPostRepository postRepository)
         {
-            PostRepository = postRepository;
+            _postRepository = postRepository;
         }
 
         public async Task<Post> GetById(string id)
         {
-            return await PostRepository.GetById(id);
+            return await _postRepository.GetById(id);
         }
 
         public async Task<IEnumerable<Post>> GetAll()
         {
-            return await PostRepository.GetAll();
+            return await _postRepository.GetAll();
         }
 
         public async Task<Post> Insert(Post entity)
         {
-            return await PostRepository.Insert(entity);
+            return await _postRepository.Insert(entity);
         }
 
         public async Task<Post> Update(Post entity)
         {
-            await PostRepository.Update(entity);
+            await _postRepository.Update(entity);
             return entity;
         }
 
         public async Task Delete(String id)
         {
-            await PostRepository.Delete(id);
+            await _postRepository.Delete(id);
         }
     }
 }

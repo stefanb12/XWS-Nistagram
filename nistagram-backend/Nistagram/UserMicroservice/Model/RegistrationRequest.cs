@@ -12,7 +12,8 @@ namespace ProfileMicroservice.Model
         public string WebsiteLink { get; set; }
         public bool Accepted { get; set; }
         public bool Processed { get; set; }
-        public Agent Agent { get; set; }
+        public int AgentId { get; set; }
+        public Profile Agent { get; set; }
 
         public RegistrationRequest()
         {

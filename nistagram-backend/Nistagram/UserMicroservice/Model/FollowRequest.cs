@@ -10,8 +10,10 @@ namespace ProfileMicroservice.Model
         public int Id { get; set; }
         public bool Accepted { get; set; }
         public bool Processed { get; set; }
-        public Profile Receiver { get; set; }
-        public Profile Sender { get; set; }
+        public int ReceiverId { get; set; }
+        public virtual Profile Receiver { get; set; }
+        public int SenderId { get; set; }
+        public virtual Profile Sender { get; set; }
 
         public FollowRequest()
         {
