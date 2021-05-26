@@ -1,16 +1,15 @@
 ﻿using ProfileMicroservice.Model.Enum;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using UserMicroservice.Model.Enum;
 
-namespace ProfileMicroservice.Model
+namespace UserMicroservice.Dto
 {
-    public class User
+    public class ProfileDto
     {
+        public int Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string Name { get; set; }
@@ -18,13 +17,14 @@ namespace ProfileMicroservice.Model
         public string MobilePhone { get; set; }
         public DateTime DateOfBirth { get; set; }
         public Gender Gender { get; set; }
-        public UserRole UserRole{ get; set; }
+        public UserRole UserRole { get; set; }
+        public string ProfilePicture { get; set; }
+        public bool Private { get; set; }
+        public string Website { get; set; }
+        public string Biography { get; set; }
+        public bool Deactivated { get; set; }
+        public UserCategory Category { get; set; }
 
-        [NotMapped]
-        public string Token { get; set; }
-
-        public User()
-        {
-        }
+        public ProfileDto() { }
     }
 }

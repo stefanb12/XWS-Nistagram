@@ -1,13 +1,19 @@
 using System;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using ProfileMicroservice.Database;
 using ProfileMicroservice.Repository;
 using ProfileMicroservice.Service;
+using UserMicroservice;
+using UserMicroservice.Repository;
+using UserMicroservice.Service;
 
 namespace ProfileMicroservice
 {
@@ -35,6 +41,35 @@ namespace ProfileMicroservice
 
             services.AddSingleton<IUserService, UserService>(service =>
                     new UserService(new UserRepository(new UserDbContext())));
+            services.AddSingleton<IProfileService, ProfileService>(service =>
+                    new ProfileService(new ProfileRepository(new UserDbContext())));
+
+            // JWT Token
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            var appSettings = appSettingsSection.Get<AppSettings>();
+
+            var authenticationProviderKey = "Key";
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(authenticationProviderKey, x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
         }
 
         private string CreateConnectionStringFromEnvironment()

@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ProfileMicroservice.Model
+namespace UserMicroservice.Model.Enum
 {
-    public class Administrator : User
+    public enum UserRole
     {
+        User,
+        Agent,
+        Admin
     }
 }

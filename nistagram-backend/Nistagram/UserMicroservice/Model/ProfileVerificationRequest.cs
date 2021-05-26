@@ -15,7 +15,8 @@ namespace ProfileMicroservice.Model
         public string DocumentPicture { get; set; }
         public bool Accepted { get; set; }
         public bool Processed { get; set; }
-        public Profile profile { get; set; }
+        public int ProfileId { get; set; }
+        public virtual  Profile Profile { get; set; }
 
         public ProfileVerificationRequest()
         {

@@ -8,37 +8,37 @@ namespace PostMicroservice.Service
 {
     public class LocationService : ILocationService
     {
-        public ILocationRepository LocationRepository;
+        private ILocationRepository _locationRepository;
 
         public LocationService(ILocationRepository locationRepository)
         {
-            LocationRepository = locationRepository;
+            _locationRepository = locationRepository;
         }
 
         public async Task<Location> GetById(string id)
         {
-            return await LocationRepository.GetById(id);
+            return await _locationRepository.GetById(id);
         }
 
         public async Task<IEnumerable<Location>> GetAll()
         {
-            return await LocationRepository.GetAll();
+            return await _locationRepository.GetAll();
         }
 
         public async Task<Location> Insert(Location entity)
         {
-            return await LocationRepository.Insert(entity);
+            return await _locationRepository.Insert(entity);
         }
 
         public async Task<Location> Update(Location entity)
         {
-            await LocationRepository.Update(entity);
+            await _locationRepository.Update(entity);
             return entity;
         }
 
         public async Task Delete(String id)
         {
-            await LocationRepository.Delete(id);
+            await _locationRepository.Delete(id);
         }
     }
 }

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ProfileMicroservice.Model
+namespace GatewayWebApi
 {
-    public class Agent : Profile
+    public class AppSettings
     {
+        public string Secret { get; set; }
     }
 }
