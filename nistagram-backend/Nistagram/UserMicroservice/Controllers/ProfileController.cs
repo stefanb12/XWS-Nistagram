@@ -27,6 +27,13 @@ namespace UserMicroservice.Controllers
             return Ok(await _profileService.GetAll());
         }
 
+        [HttpPost("registration")]
+        public async Task<IActionResult> RegisterProfile(RegistrationDto registrationDto)
+        {
+            Profile profile = await _profileService.Insert(RegistrationMapper.RegistrationDtoToProfile(registrationDto));
+            return Ok(profile);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
