@@ -16,6 +16,8 @@ namespace ProfileMicroservice.Model
 
         public ProfileSettings()
         {
+            ReceiveAllMessages = true;
+            TagAllowed = true;
         }
     }
 }

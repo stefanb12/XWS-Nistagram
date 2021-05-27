@@ -19,7 +19,7 @@ namespace UserMicroservice.Mapper
         {
             ProfileDto dto = new ProfileDto();
             dto.Username = profile.Username;
-            dto.Name = profile.Name;
+            dto.FullName = profile.FullName;
 
             return dto;
         }

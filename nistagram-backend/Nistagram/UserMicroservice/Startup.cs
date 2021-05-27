@@ -12,6 +12,7 @@ using ProfileMicroservice.Database;
 using ProfileMicroservice.Repository;
 using ProfileMicroservice.Service;
 using UserMicroservice;
+using UserMicroservice.Messaging;
 using UserMicroservice.Repository;
 using UserMicroservice.Service;
 
@@ -42,7 +43,7 @@ namespace ProfileMicroservice
             services.AddSingleton<IUserService, UserService>(service =>
                     new UserService(new UserRepository(new UserDbContext())));
             services.AddSingleton<IProfileService, ProfileService>(service =>
-                    new ProfileService(new ProfileRepository(new UserDbContext())));
+                    new ProfileService(new ProfileRepository(new UserDbContext()), new ProfileCreatedMessageSender()));
 
             // JWT Token
             var appSettingsSection = Configuration.GetSection("AppSettings");

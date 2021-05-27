@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PostMicroservice.Database;
+using PostMicroservice.Messaging;
 using PostMicroservice.Repository;
 using PostMicroservice.Service;
 
@@ -47,8 +48,11 @@ namespace PostMicroservice
             services.AddSingleton<IPostRepository, PostRepository>();
             services.AddSingleton<IPostService, PostService>();
 
-            services.AddSingleton<ILocationRepository, LocationRepository>();
-            services.AddSingleton<ILocationService, LocationService>();
+            services.AddSingleton<IProfileRepository, ProfileRepository>();
+            services.AddSingleton<IProfileService, ProfileService>();
+
+           
+            services.AddHostedService<ProfileMessageReceiver>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
