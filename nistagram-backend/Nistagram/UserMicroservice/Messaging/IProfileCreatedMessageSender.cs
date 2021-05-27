@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UserMicroservice.Messaging
 {
-    public interface IProfileCreatedSender
+    public interface IProfileCreatedMessageSender
     {
         public void SendCreatedProfile(Profile profile);
     }

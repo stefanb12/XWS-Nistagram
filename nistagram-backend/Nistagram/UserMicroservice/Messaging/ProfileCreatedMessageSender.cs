@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace UserMicroservice.Messaging
 {
-    public class ProfileCreatedSender : IProfileCreatedSender
+    public class ProfileCreatedMessageSender : IProfileCreatedMessageSender
     {
-        public ProfileCreatedSender()
+        public ProfileCreatedMessageSender()
         {
 
         }

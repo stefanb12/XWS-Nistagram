@@ -15,9 +15,9 @@ namespace UserMicroservice.Service
     public class ProfileService : IProfileService
     {
         private IProfileRepository _profileRepository;
-        private IProfileCreatedSender _profileCreatedSender;
+        private IProfileCreatedMessageSender _profileCreatedSender;
 
-        public ProfileService(IProfileRepository userRepository, IProfileCreatedSender profileCreatedSender)
+        public ProfileService(IProfileRepository userRepository, IProfileCreatedMessageSender profileCreatedSender)
         {
             _profileRepository = userRepository;
             _profileCreatedSender = profileCreatedSender;
