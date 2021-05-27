@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using ProfileMicroservice.Model;
-using ProfileMicroservice.Service;
 using System.Text;
 using System.Threading.Tasks;
 using UserMicroservice.Dto;

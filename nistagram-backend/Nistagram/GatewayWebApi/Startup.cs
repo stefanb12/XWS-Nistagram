@@ -28,13 +28,6 @@ namespace GatewayWebApi
 
             services.AddOcelot();
 
-            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
-            {
-                builder.AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       .AllowAnyHeader();
-            }));
-
             // JWT Token
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -61,11 +54,20 @@ namespace GatewayWebApi
                     ClockSkew = TimeSpan.Zero
                 };
             });
+
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors("MyPolicy");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -83,8 +85,6 @@ namespace GatewayWebApi
             });
 
             await app.UseOcelot();
-
-            app.UseCors("MyPolicy");
         }
     }
 }

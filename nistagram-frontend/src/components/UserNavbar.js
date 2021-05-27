@@ -27,6 +27,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
 import { useHistory } from "react-router";
+import AuthService from "../services/AuthService";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -175,6 +176,12 @@ export default function UserNavbar() {
 
   const navigateToSettings = () => {
     history.push("/user/settings");
+    handleMenuClose();
+  };
+
+  const handleLogout = () => {
+    AuthService.logout();
+    history.push("/app");
     handleMenuClose();
   };
 
@@ -384,7 +391,7 @@ export default function UserNavbar() {
         </ListItemIcon>
         <ListItemText primary="Saved" />
       </StyledMenuItem>
-      <StyledMenuItem onClick={handleMenuClose}>
+      <StyledMenuItem onClick={handleLogout}>
         <ListItemIcon>
           <ExitToApp fontSize="medium" />
         </ListItemIcon>
