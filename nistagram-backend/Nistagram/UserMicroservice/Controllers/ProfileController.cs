@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ProfileMicroservice.Model;
+using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using UserMicroservice.Dto;
 using UserMicroservice.Mapper;
@@ -31,8 +35,32 @@ namespace UserMicroservice.Controllers
         public async Task<IActionResult> RegisterProfile(RegistrationDto registrationDto)
         {
             Profile profile = await _profileService.Insert(RegistrationMapper.RegistrationDtoToProfile(registrationDto));
-            return Ok(profile);
+
+            /*var integrationEventData = JsonConvert.SerializeObject(new
+            {
+                id = profile.Id,
+                name = profile.FullName
+            });
+            PublishToMessageQueue("user.postservice", integrationEventData);*/
+            if (profile != null) 
+            {
+                return CreatedAtAction(nameof(GetById), new { id = profile.Id }, profile);
+            }
+            return BadRequest();
         }
+
+       /* private void PublishToMessageQueue(string integrationEvent, string eventData)
+        {
+            // TOOO: Reuse and close connections and channel, etc, 
+            var factory = new ConnectionFactory();
+            var connection = factory.CreateConnection();
+            var channel = connection.CreateModel();
+            var body = Encoding.UTF8.GetBytes(eventData);
+            channel.BasicPublish(exchange: "",
+                                 routingKey: integrationEvent,
+                                 basicProperties: null,
+                                 body: body);
+        }*/
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)

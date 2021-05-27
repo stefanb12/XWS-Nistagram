@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using UserMicroservice.Messaging;
 using UserMicroservice.Model;
 using UserMicroservice.Repository;
 
@@ -14,10 +15,12 @@ namespace UserMicroservice.Service
     public class ProfileService : IProfileService
     {
         private IProfileRepository _profileRepository;
+        private IProfileCreatedSender _profileCreatedSender;
 
-        public ProfileService(IProfileRepository userRepository)
+        public ProfileService(IProfileRepository userRepository, IProfileCreatedSender profileCreatedSender)
         {
             _profileRepository = userRepository;
+            _profileCreatedSender = profileCreatedSender;
         }
 
         public async Task<List<Profile>> GetFollowers(int id)
@@ -54,7 +57,14 @@ namespace UserMicroservice.Service
 
         public async Task<Profile> Insert(Profile entity)
         {
-            return await _profileRepository.Insert(entity);
+            IEnumerable<Profile> profiles = await GetAll();
+            if (!profiles.ToList().Any(p => p.Username.Equals(entity.Username)))
+            {
+                Profile profile = await _profileRepository.Insert(entity);
+                _profileCreatedSender.SendCreatedProfile(profile);
+                return profile;
+            }
+            return null;
         }
 
         public async Task<Profile> Update(Profile entity)
