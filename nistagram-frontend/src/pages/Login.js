@@ -1,6 +1,6 @@
-import { Link as RouterLink } from 'react-router-dom';
-import * as Yup from 'yup';
-import { Formik } from 'formik';
+import { Link as RouterLink, useHistory } from "react-router-dom";
+import * as Yup from "yup";
+import { Formik } from "formik";
 import {
   Box,
   Button,
@@ -8,51 +8,68 @@ import {
   Grid,
   Link,
   TextField,
-  Typography
-} from '@material-ui/core';
+  Typography,
+} from "@material-ui/core";
+import React from "react";
+import AuthService from "../services/AuthService";
 
 const Login = () => {
+  const history = useHistory();
+
+  const handleLogin = (username, password) => {
+    let resStatus = 0;
+    AuthService.login(username, password)
+      .then((res) => {
+        resStatus = res.status;
+        return res.json();
+      })
+      .then((result) => {
+        if (resStatus === 200) {
+          console.log(result);
+          localStorage.setItem("currentUser", JSON.stringify(result));
+          history.push("/user/home");
+        } else if (resStatus === 401) {
+          console.log("nevalidno");
+        }
+
+        return result;
+      });
+  };
 
   return (
     <>
       <Box
         sx={{
-          backgroundColor: 'background.default',
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          justifyContent: 'center'
+          backgroundColor: "background.default",
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          justifyContent: "center",
         }}
       >
         <Container maxWidth="sm">
           <Formik
             initialValues={{
-              email: 'demo@devias.io',
-              password: 'Password123'
+              email: "",
+              password: "",
             }}
             validationSchema={Yup.object().shape({
-              email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-              password: Yup.string().max(255).required('Password is required')
+              email: Yup.string().max(255).required("Username is required"),
+              password: Yup.string().max(255).required("Password is required"),
             })}
-            onSubmit={() => {
-              // navigate('/app/dashboard', { replace: true });
-            }}
+            onSubmit={() => {}}
           >
             {({
               errors,
               handleBlur,
               handleChange,
               handleSubmit,
-              isSubmitting,
               touched,
-              values
+              values,
             }) => (
               <form onSubmit={handleSubmit}>
                 <Box sx={{ mb: 3 }}>
-                  <Typography
-                    color="textPrimary"
-                    variant="h2"
-                  >
+                  <Typography color="textPrimary" variant="h2">
                     Sign in
                   </Typography>
                   <Typography
@@ -63,15 +80,8 @@ const Login = () => {
                     Sign in on the internal platform
                   </Typography>
                 </Box>
-                <Grid
-                  container
-                  spacing={3}
-                >
-                  <Grid
-                    item
-                    xs={12}
-                    md={6}
-                  >
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={6}>
                     <Button
                       color="primary"
                       fullWidth
@@ -83,11 +93,7 @@ const Login = () => {
                       Login with Facebook
                     </Button>
                   </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    md={6}
-                  >
+                  <Grid item xs={12} md={6}>
                     <Button
                       fullWidth
                       // startIcon={<GoogleIcon />}
@@ -102,7 +108,7 @@ const Login = () => {
                 <Box
                   sx={{
                     pb: 1,
-                    pt: 3
+                    pt: 3,
                   }}
                 >
                   <Typography
@@ -117,7 +123,7 @@ const Login = () => {
                   error={Boolean(touched.email && errors.email)}
                   fullWidth
                   helperText={touched.email && errors.email}
-                  label="Email Address"
+                  label="Username"
                   margin="normal"
                   name="email"
                   onBlur={handleBlur}
@@ -142,26 +148,18 @@ const Login = () => {
                 <Box sx={{ py: 2 }}>
                   <Button
                     color="primary"
-                    disabled={isSubmitting}
                     fullWidth
                     size="large"
                     type="submit"
                     variant="contained"
+                    onClick={() => handleLogin(values.email, values.password)}
                   >
                     Sign in now
                   </Button>
                 </Box>
-                <Typography
-                  color="textSecondary"
-                  variant="body1"
-                >
-                  Don&apos;t have an account?
-                  {' '}
-                  <Link
-                    component={RouterLink}
-                    to="/register"
-                    variant="h6"
-                  >
+                <Typography color="textSecondary" variant="body1">
+                  Don&apos;t have an account?{" "}
+                  <Link component={RouterLink} to="/app/register" variant="h6">
                     Sign up
                   </Link>
                 </Typography>
