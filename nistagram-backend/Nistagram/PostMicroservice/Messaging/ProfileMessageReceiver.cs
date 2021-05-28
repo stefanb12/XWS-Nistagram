@@ -5,8 +5,6 @@ using PostMicroservice.Service;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,48 +14,56 @@ namespace PostMicroservice.Messaging
     public class ProfileMessageReceiver : BackgroundService, IProfileMessageReciver
     {
         private IProfileService _profileService;
+        private IConnection _connection;
+        private IModel _channel;
 
         public ProfileMessageReceiver(IProfileService profileService)
         {
             _profileService = profileService;
+            InitRabbitMQ();
+        }
+
+        private void InitRabbitMQ()
+        {
+            var factory = new ConnectionFactory { HostName = "localhost" };
+
+            _connection = factory.CreateConnection();
+            _channel = _connection.CreateModel();
+            _channel.QueueDeclare(queue: "profile.created",
+                                  durable: false,
+                                  exclusive: false,
+                                  autoDelete: false,
+                                  arguments: null);
         }
 
         public void ReceiveMessage()
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
+
+            var consumer = new EventingBasicConsumer(_channel);
+            consumer.Received += (model, ea) =>
             {
-                channel.QueueDeclare(queue: "profile.created",
-                                     durable: false,
-                                     exclusive: false,
-                                     autoDelete: false,
-                                     arguments: null);
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+                Console.WriteLine(" [x] Received {0}", message);
 
-                var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (model, ea) =>
+                var data = JObject.Parse(message);
+                _profileService.Insert(new Profile()
                 {
-                    var body = ea.Body.ToArray();
-                    var message = Encoding.UTF8.GetString(body);
-                    Console.WriteLine(" [x] Received {0}", message);
+                    OriginalId = data["id"].Value<int>(),
+                    Name = data["name"].Value<string>()
+                });
 
-                    var data = JObject.Parse(message);
-                    _profileService.Insert(new Profile()
-                    {
-                        OriginalId = data["id"].Value<int>(),
-                        Name = data["name"].Value<string>()
-                    });
+                _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+            };
 
-                    channel.BasicAck(ea.DeliveryTag, false);
-                };
-                channel.BasicConsume(queue: "profile.created",
-                                     autoAck: false,
-                                     consumer: consumer);
-            }
+            _channel.BasicConsume(queue: "profile.created",
+                                  autoAck: false,
+                                  consumer: consumer);
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            stoppingToken.ThrowIfCancellationRequested();
             ReceiveMessage();
             return Task.CompletedTask;
         }
