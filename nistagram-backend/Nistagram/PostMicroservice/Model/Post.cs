@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,12 @@ namespace PostMicroservice.Model
         public List<Profile> Likes { get; set; }
         public List<Profile> Favorites { get; set; }
         public Profile Publisher { get; set; }
+
+        public string ImageName { get; set; }
+        [BsonIgnore]
+        public IFormFile ImageFile { get; set; }
+        [BsonIgnore]
+        public string ImageSrc { get; set; }
 
         public Post()
         {
