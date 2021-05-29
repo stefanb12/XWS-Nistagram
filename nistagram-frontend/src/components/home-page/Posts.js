@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import "../../assets/styles/posts.css";
+import { Button, Modal } from "react-bootstrap";
+import UploadImage from "./UploadImage";
 
 export default class Posts extends Component {
   constructor(props) {
@@ -10,6 +12,7 @@ export default class Posts extends Component {
       isLike: false,
       isSaved: false,
       isActive: false,
+      isOpenImagesInfoModal: false,
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -39,6 +42,14 @@ export default class Posts extends Component {
     }));
   }
 
+  openImagesModal = () => this.setState({ isOpenImagesInfoModal: true });
+
+  closeImagesModal = () => this.setState({ isOpenImagesInfoModal: false });
+
+  parentFunction = (data_from_child) => {
+    console.log(data_from_child);
+  };
+
   render() {
     const isDislike = this.state.isDislike;
     const isLike = this.state.isLike;
@@ -46,8 +57,38 @@ export default class Posts extends Component {
     const dropdownRef = this.dropdownRef;
     const isActive = this.state.isActive;
 
+    const imagesModalDialog = (
+      <Modal
+        show={this.state.isOpenImagesInfoModal}
+        onHide={this.closeImagesModal}
+        style={{ marginTop: "120px", minHeight: "560px", overflow: "hidden" }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title style={{ marginLeft: "20px" }}>
+            Single or multiple image selection
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div
+            style={{
+              overflow: "auto",
+              height: "350px",
+            }}
+          >
+            <UploadImage />
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={this.closeImagesModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+
     return (
       <div>
+        {imagesModalDialog}
         <div class="container">
           <div class="no-page-title">
             <div id="main-wrapper">
@@ -58,19 +99,20 @@ export default class Posts extends Component {
                       <div class="post">
                         <textarea
                           class="form-control"
-                          placeholder="Post"
+                          placeholder="Add a description for post"
                           rows="4"
+                          style={{ marginLeft: "15px", maxWidth: "625px" }}
                         ></textarea>
                         <div class="post-options">
-                          <a href="#">
+                          <button
+                            class="btn btn-outline-primary float-left"
+                            onClick={this.openImagesModal}
+                          >
                             <i class="fa fa-camera"></i>
-                          </a>
-                          <a href="#">
-                            <i class="fas fa-video"></i>
-                          </a>
-                          <a href="#">
-                            <i class="fa fa-music"></i>
-                          </a>
+                            <span style={{ marginLeft: "10px" }}>
+                              Add images
+                            </span>
+                          </button>
                           <button class="btn btn-outline-primary float-right">
                             Post
                           </button>
