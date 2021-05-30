@@ -22,18 +22,32 @@ const Register = () => {
   const [showSnackbar, setShowSnackbar] = React.useState(false);
   const [snackBarMessage, setSnackBarMessage] = React.useState(false);
 
-  const handleRegistration = (fullName, username, email, password, gender) => {
-    AuthService.registerUser(fullName, username, email, password, gender).then(
-      (result) => {
-        if (result.status === 201) {
-          setSnackBarMessage("Registration successful!");
-          setShowSnackbar(true);
-        } else if (result.status === 400) {
-          setSnackBarMessage("Profile with entered username already exists!");
-          setShowSnackbar(true);
-        }
+  const handleRegistration = async (
+    fullName,
+    username,
+    email,
+    password,
+    gender
+  ) => {
+    let resStatus = false;
+    await AuthService.registerUser(
+      fullName,
+      username,
+      email,
+      password,
+      gender
+    ).then((result) => {
+      if (result.status === 201) {
+        setSnackBarMessage("Registration successful!");
+        setShowSnackbar(true);
+        resStatus = true;
+      } else if (result.status === 400) {
+        setSnackBarMessage("Profile with entered username already exists!");
+        setShowSnackbar(true);
+        resStatus = false;
       }
-    );
+    });
+    return resStatus;
   };
 
   const handleClose = (event, reason) => {
@@ -69,7 +83,6 @@ const Register = () => {
               fullName: "",
               password: "",
               gender: "male",
-              policy: false,
             }}
             validationSchema={Yup.object().shape({
               username: Yup.string().max(255).required("Username is required"),
@@ -81,10 +94,22 @@ const Register = () => {
                 .max(255)
                 .required("First name is required"),
               password: Yup.string().max(255).required("password is required"),
-              policy: Yup.boolean().oneOf([true], "This field must be checked"),
             })}
-            onSubmit={() => {
-              // navigate('/app/dashboard', { replace: true });
+            onSubmit={async (values) => {
+              let res = await handleRegistration(
+                values.fullName,
+                values.username,
+                values.email,
+                values.password,
+                values.gender
+              );
+              if (res) {
+                values.username = "";
+                values.email = "";
+                values.fullName = "";
+                values.password = "";
+                values.gender = "male";
+              }
             }}
           >
             {({
@@ -130,7 +155,7 @@ const Register = () => {
                   name="username"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.lastName}
+                  value={values.username}
                   variant="outlined"
                 />
                 <TextField
@@ -180,20 +205,11 @@ const Register = () => {
                 <Box sx={{ py: 2 }}>
                   <Button
                     color="primary"
-                    disabled={isSubmitting}
+                    //disabled={isSubmitting}
                     fullWidth
                     size="large"
                     type="submit"
                     variant="contained"
-                    onClick={() =>
-                      handleRegistration(
-                        values.fullName,
-                        values.username,
-                        values.email,
-                        values.password,
-                        values.gender
-                      )
-                    }
                   >
                     Sign up now
                   </Button>

@@ -158,6 +158,44 @@
             "RouteClaimsRequirement": {
                 "UserRole": "User"
             }*/
+    },
+    {
+      "DownstreamPathTemplate": "/api/profile/update",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55988
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/profile/update",
+      "UpstreamHttpMethod": [ "PUT" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
+    {
+      "DownstreamPathTemplate": "/api/profile/{id}/profileForUpdating",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55988
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/profile/{id}/profileForUpdating",
+      "UpstreamHttpMethod": [ "GET" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
     }
 
   ],
