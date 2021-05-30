@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UserMicroservice.Dto;
 using UserMicroservice.Mapper;
+using UserMicroservice.Model;
 using UserMicroservice.Service;
 
 namespace UserMicroservice.Controllers
@@ -94,6 +95,28 @@ namespace UserMicroservice.Controllers
             List<ProfileDto> result = new List<ProfileDto>();
             followingProfiles.ToList().ForEach(followingProfile => result.Add(ProfileMapper.ProfileToProfileDto(followingProfile)));
 
+            return Ok(result);
+        }
+
+        [HttpPut("{profileId}/follow/{id}")]
+        public async Task<IActionResult> FollowAnotherProfile(int profileId, int id)
+        {
+            ProfileFollower result = await _profileService.FollowAnotherProfile(profileId, id);
+            if(result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("{profileId}/unfollow/{id}")]
+        public async Task<IActionResult> UnfollowAnotherProfile(int profileId, int id)
+        {
+            ProfileFollower result = await _profileService.UnfollowAnotherProfile(profileId, id);
+            if (result == null)
+            {
+                return BadRequest();
+            }
             return Ok(result);
         }
     }
