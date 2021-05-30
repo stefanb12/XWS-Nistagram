@@ -10,7 +10,7 @@ namespace ProfileMicroservice.Database
     {
         public DbSet<ProfileSettings> ProfileSettings { get; set; }
         public DbSet<Profile> Profiles { get; set; }
-        public DbSet<ProfileFollower> FollowerProfiles { get; set; }
+        public DbSet<ProfileFollower> ProfileFollowers { get; set; }
         public DbSet<ProfileFollowing> ProfileFollowings { get; set; }
         public DbSet<ProfileCloseFriend> ProfileCloseFriends { get; set; }
         public DbSet<ProfileMutedProfile> ProfileMutedProfiles { get; set; }
@@ -52,10 +52,10 @@ namespace ProfileMicroservice.Database
 
             modelBuilder.Entity<Profile>().HasData(
                 new Profile { Id = 1, Username = "user1", Password = "pass1", FullName = "name1", Email = "user1@gmail.com", MobilePhone = "+381 60 55 88 444", Gender = Gender.Male, DateOfBirth = new DateTime(1998, 12, 20), UserRole = UserMicroservice.Model.Enum.UserRole.User, ProfilePicture = "path", Private = false, Website = "WebSite", Biography = "bio", Deactivated = false, Category = UserCategory.Regular, ProfileSettingsId = 1 },
-                new Profile { Id = 2, Username = "user2", Password = "pass2", FullName = "name2", Email = "user2@gmail.com", MobilePhone = "+381 60 55 88 444", Gender = Gender.Male, DateOfBirth = new DateTime(1998, 12, 20), UserRole = UserMicroservice.Model.Enum.UserRole.Agent, ProfilePicture = "path", Private = false, Website = "WebSite", Biography = "bio", Deactivated = false, Category = UserCategory.Regular, ProfileSettingsId = 2 },
-                new Profile { Id = 3, Username = "user3", Password = "pass3", FullName = "name3", Email = "user3@gmail.com", MobilePhone = "+381 60 55 88 444", Gender = Gender.Male, DateOfBirth = new DateTime(1998, 12, 20), UserRole = UserMicroservice.Model.Enum.UserRole.Admin, ProfileSettingsId = 3 },
-                new Profile { Id = 4, Username = "user4", Password = "pass4", FullName = "name4", Email = "user2@gmail.com", MobilePhone = "+381 60 55 88 444", Gender = Gender.Male, DateOfBirth = new DateTime(1998, 12, 20), UserRole = UserMicroservice.Model.Enum.UserRole.Agent, ProfilePicture = "path", Private = false, Website = "WebSite", Biography = "bio", Deactivated = false, Category = UserCategory.Regular, ProfileSettingsId = 4 },
-                new Profile { Id = 5, Username = "user5", Password = "pass5", FullName = "name5", Email = "user2@gmail.com", MobilePhone = "+381 60 55 88 444", Gender = Gender.Male, DateOfBirth = new DateTime(1998, 12, 20), UserRole = UserMicroservice.Model.Enum.UserRole.Agent, ProfilePicture = "path", Private = false, Website = "WebSite", Biography = "bio", Deactivated = false, Category = UserCategory.Regular, ProfileSettingsId = 5 }
+                new Profile { Id = 2, Username = "user2", Password = "pass2", FullName = "name2", Email = "user2@gmail.com", MobilePhone = "+381 60 55 88 444", Gender = Gender.Male, DateOfBirth = new DateTime(1998, 12, 20), UserRole = UserMicroservice.Model.Enum.UserRole.User, ProfilePicture = "path", Private = false, Website = "WebSite", Biography = "bio", Deactivated = false, Category = UserCategory.Regular, ProfileSettingsId = 2 },
+                new Profile { Id = 3, Username = "user3", Password = "pass3", FullName = "name3", Email = "user3@gmail.com", MobilePhone = "+381 60 55 88 444", Gender = Gender.Male, DateOfBirth = new DateTime(1998, 12, 20), UserRole = UserMicroservice.Model.Enum.UserRole.Agent, ProfilePicture = "path", Private = true, Website = "WebSite", Biography = "bio", Deactivated = false, Category = UserCategory.Regular, ProfileSettingsId = 3 },
+                new Profile { Id = 4, Username = "user4", Password = "pass4", FullName = "name4", Email = "user4@gmail.com", MobilePhone = "+381 60 55 88 444", Gender = Gender.Male, DateOfBirth = new DateTime(1998, 12, 20), UserRole = UserMicroservice.Model.Enum.UserRole.Agent, ProfilePicture = "path", Private = false, Website = "WebSite", Biography = "bio", Deactivated = false, Category = UserCategory.Regular, ProfileSettingsId = 4 },
+                new Profile { Id = 5, Username = "user5", Password = "pass5", FullName = "name5", Email = "user5@gmail.com", MobilePhone = "+381 60 55 88 444", Gender = Gender.Male, DateOfBirth = new DateTime(1998, 12, 20), UserRole = UserMicroservice.Model.Enum.UserRole.Admin, ProfileSettingsId = 5 }          
             );
 
             // Followers
@@ -80,9 +80,10 @@ namespace ProfileMicroservice.Database
                 .HasForeignKey(pt => pt.ProfileId);
 
             modelBuilder.Entity<ProfileFollowing>().HasData(
-                new ProfileFollowing { ProfileId = 1, FollowingId = 2 },
                 new ProfileFollowing { ProfileId = 2, FollowingId = 1 },
-                new ProfileFollowing { ProfileId = 2, FollowingId = 3 }
+                new ProfileFollowing { ProfileId = 3, FollowingId = 1 },
+                new ProfileFollowing { ProfileId = 1, FollowingId = 2 },
+                new ProfileFollowing { ProfileId = 3, FollowingId = 2 }
             );
 
             // CloseFriends
@@ -118,6 +119,10 @@ namespace ProfileMicroservice.Database
 
             modelBuilder.Entity<ProfileBlockedProfile>().HasData(
                 new ProfileBlockedProfile { ProfileSettingsId = 1, BlockedProfileId = 4 }
+            );
+
+            modelBuilder.Entity<FollowRequest>().HasData(
+                new FollowRequest { Id = 1, Accepted = false, Processed = false, ReceiverId = 3, SenderId = 4 }
             );
         }
     }

@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UserMicroservice.Dto;
 using UserMicroservice.Mapper;
+using UserMicroservice.Model;
 using UserMicroservice.Service;
 
 namespace UserMicroservice.Controllers
@@ -19,10 +20,12 @@ namespace UserMicroservice.Controllers
     public class ProfileController : Controller
     {
         private readonly IProfileService _profileService;
+        private readonly IFollowRequestService _followRequestService;
 
-        public ProfileController(IProfileService profileService)
+        public ProfileController(IProfileService profileService, IFollowRequestService followRequestService)
         {
             _profileService = profileService;
+            _followRequestService = followRequestService;
         }
 
         [HttpGet]
@@ -76,6 +79,57 @@ namespace UserMicroservice.Controllers
             followingProfiles.ToList().ForEach(followingProfile => result.Add(ProfileMapper.ProfileToProfileDto(followingProfile)));
 
             return Ok(result);
+        }
+
+        [HttpPut("{profileId}/follow/{id}")]
+        public async Task<IActionResult> FollowAnotherProfile(int profileId, int id)
+        {
+            ProfileFollower result = await _profileService.FollowAnotherProfile(profileId, id);
+            if(result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("{profileId}/unfollow/{id}")]
+        public async Task<IActionResult> UnfollowAnotherProfile(int profileId, int id)
+        {
+            ProfileFollower result = await _profileService.UnfollowAnotherProfile(profileId, id);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
+
+        [HttpPost("followRequest")]
+        public async Task<IActionResult> SendFollowRequest([FromBody] FollowRequestDto dto)
+        {
+            FollowRequest result = await _followRequestService.Insert(FollowRequestMapper.FollowRequestDtoToFollowRequest(dto));
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
+
+        [HttpDelete("followRequest")]
+        public async Task<IActionResult> DeleteFollowRequest([FromBody] FollowRequestDto dto)
+        {
+            await _followRequestService.Delete(FollowRequestMapper.FollowRequestDtoToFollowRequest(dto));
+            return Ok();
+        }
+
+        [HttpGet("followRequest/{receiverId}/{senderId}")]
+        public async Task<IActionResult> FindFollowRequest(int receiverId, int senderId)
+        {
+            FollowRequest result = await _followRequestService.FindFollowRequest(receiverId, senderId);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(FollowRequestMapper.FollowRequestToFollowRequestDto(result));
         }
 
         [HttpPut("update")]

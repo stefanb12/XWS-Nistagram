@@ -1,6 +1,6 @@
-import { Link as RouterLink } from 'react-router-dom';
-import * as Yup from 'yup';
-import { Formik } from 'formik';
+import { Link as RouterLink } from "react-router-dom";
+import * as Yup from "yup";
+import { Formik } from "formik";
 import {
   Box,
   Button,
@@ -13,91 +13,102 @@ import {
   Typography,
   RadioGroup,
   Radio,
-  Snackbar
-} from '@material-ui/core';
+  Snackbar,
+} from "@material-ui/core";
 import React from "react";
-import AuthService from '../services/AuthService';
+import AuthService from "../services/AuthService";
 
 const Register = () => {
   const [showSnackbar, setShowSnackbar] = React.useState(false);
   const [snackBarMessage, setSnackBarMessage] = React.useState(false);
 
-  const handleRegistration = async (fullName, username, email, password, gender) => {
+  const handleRegistration = async (
+    fullName,
+    username,
+    email,
+    password,
+    gender
+  ) => {
     let resStatus = false;
-    await AuthService.registerUser(fullName, username, email, password, gender)
-      .then((result) => {
-        if (result.status === 201) {
-          setSnackBarMessage('Registration successful!')
-          setShowSnackbar(true);
-          resStatus = true;
-        } else if(result.status === 400) {
-          setSnackBarMessage("Profile with entered username already exists!");
-          setShowSnackbar(true);
-          resStatus = false;
-        }
-      })
-      return resStatus;
-  }
+    await AuthService.registerUser(
+      fullName,
+      username,
+      email,
+      password,
+      gender
+    ).then((result) => {
+      if (result.status === 201) {
+        setSnackBarMessage("Registration successful!");
+        setShowSnackbar(true);
+        resStatus = true;
+      } else if (result.status === 400) {
+        setSnackBarMessage("Profile with entered username already exists!");
+        setShowSnackbar(true);
+        resStatus = false;
+      }
+    });
+    return resStatus;
+  };
 
   const handleClose = (event, reason) => {
     setShowSnackbar(false);
-  }
+  };
 
   return (
     <>
       <Snackbar
         anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center'
+          vertical: "bottom",
+          horizontal: "center",
         }}
         open={showSnackbar}
         autoHideDuration={3000}
         onClose={handleClose}
         message={snackBarMessage}
-        >
-      </Snackbar>
+      ></Snackbar>
       <Box
         sx={{
-          backgroundColor: 'background.default',
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          justifyContent: 'center'
+          backgroundColor: "background.default",
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          justifyContent: "center",
         }}
       >
         <Container maxWidth="sm">
           <Formik
             initialValues={{
-              username: '',
-              email: '',
-              fullName: '',
-              password: '',
-              gender: 'male'
+              username: "",
+              email: "",
+              fullName: "",
+              password: "",
+              gender: "male",
             }}
-            validationSchema={
-              Yup.object().shape({
-                username: Yup.string().max(255).required('Username is required'),
-                email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-                fullName: Yup.string().max(255).required('First name is required'),
-                password: Yup.string().max(255).required('password is required')
-              })
-            }
+            validationSchema={Yup.object().shape({
+              username: Yup.string().max(255).required("Username is required"),
+              email: Yup.string()
+                .email("Must be a valid email")
+                .max(255)
+                .required("Email is required"),
+              fullName: Yup.string()
+                .max(255)
+                .required("First name is required"),
+              password: Yup.string().max(255).required("password is required"),
+            })}
             onSubmit={async (values) => {
-
-              // if (handleRegistration(values.fullName, values.username, values.email, values.password, values.gender)) {
-              //   values.username = '';
-              //   values.email = '';
-              //   values.fullName = '';
-              //   values.password = '';
-              //   values.gender = 'male';
-              // }
-              let res = await handleRegistration(values.fullName, values.username, values.email, values.password, values.gender);
+              let res = await handleRegistration(
+                values.fullName,
+                values.username,
+                values.email,
+                values.password,
+                values.gender
+              );
               if (res) {
-                values.username = '';
-                values.email = '';
-                values.fullName = '';
-                values.password = '';
-                values.gender = 'male';
+                values.username = "";
+                values.email = "";
+                values.fullName = "";
+                values.password = "";
+                values.gender = "male";
               }
             }}
           >
@@ -108,14 +119,11 @@ const Register = () => {
               handleSubmit,
               isSubmitting,
               touched,
-              values
+              values,
             }) => (
               <form onSubmit={handleSubmit}>
                 <Box sx={{ mb: 3 }}>
-                  <Typography
-                    color="textPrimary"
-                    variant="h2"
-                  >
+                  <Typography color="textPrimary" variant="h2">
                     Create new account
                   </Typography>
                   <Typography
@@ -183,8 +191,16 @@ const Register = () => {
                   value={values.gender}
                   row
                 >
-                  <FormControlLabel value="male" control={<Radio />} label="Male" />
-                  <FormControlLabel value="female" control={<Radio />} label="Female" />
+                  <FormControlLabel
+                    value="male"
+                    control={<Radio />}
+                    label="Male"
+                  />
+                  <FormControlLabel
+                    value="female"
+                    control={<Radio />}
+                    label="Female"
+                  />
                 </RadioGroup>
                 <Box sx={{ py: 2 }}>
                   <Button
@@ -198,17 +214,9 @@ const Register = () => {
                     Sign up now
                   </Button>
                 </Box>
-                <Typography
-                  color="textSecondary"
-                  variant="body1"
-                >
-                  Have an account?
-                  {' '}
-                  <Link
-                    component={RouterLink}
-                    to="/login"
-                    variant="h6"
-                  >
+                <Typography color="textSecondary" variant="body1">
+                  Have an account?{" "}
+                  <Link component={RouterLink} to="/app/login" variant="h6">
                     Sign in
                   </Link>
                 </Typography>

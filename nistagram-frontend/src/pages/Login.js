@@ -25,11 +25,10 @@ const Login = () => {
       })
       .then((result) => {
         if (resStatus === 200) {
-          console.log(result);
           localStorage.setItem("currentUser", JSON.stringify(result));
           history.push("/user/home");
         } else if (resStatus === 401) {
-          console.log("nevalidno");
+          console.log("Uneliste nevalidan username/lozinku");
         }
 
         return result;

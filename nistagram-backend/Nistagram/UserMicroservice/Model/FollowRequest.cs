@@ -17,6 +17,8 @@ namespace ProfileMicroservice.Model
 
         public FollowRequest()
         {
+            Accepted = false;
+            Processed = false;
         }
     }
 }
