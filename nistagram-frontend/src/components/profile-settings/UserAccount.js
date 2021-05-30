@@ -1,9 +1,172 @@
 import React, { Component } from "react";
+import ProfileService from "../../services/ProfileService"
+import Alert from 'react-bootstrap/Alert'
+import { Button, IconButton, Snackbar } from "@material-ui/core";
 
 class UserAccount extends Component {
-  state = {};
+  //state = {};
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+        profileForUpdating:{},
+        username: "",
+        biography: "",
+        website: "",
+        fullname: "",
+        email: "",
+        phoneNumber: "", 
+        dateOfBirth: "",
+        gender: 15,
+        open: false,
+        snackBarMessage: "",
+        snackBarSeverity: ""
+    };
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleOptionChange = this.handleOptionChange.bind(this);
+
+  }
+
+  componentDidMount(){
+    ProfileService.getUserForUpdating(4)
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          this.setProfile(result);
+          this.setState({
+            profileForUpdating: result,
+            dateOfBirth : this.formattedDate(result.dateOfBirth)
+          });
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+      //this.state.dateOfBirth = this.formattedDate(this.state.profileForUpdating.dateOfBirth);
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value    
+    });
+  }
+  
+  handleOptionChange(changeEvent) {
+    this.setState({
+      gender: changeEvent.target.value
+    });
+  }
+
+  handleSubmit(event) {
+    console.log('username: ' + this.state.username);
+    console.log('biography: ' + this.state.biography);
+    event.preventDefault();
+  }
+
+  setProfile(profile){
+    this.state.username = profile.username;
+    this.state.biography = profile.biography;
+    this.state.website = profile.website;
+    this.state.fullname = profile.fullName;
+    this.state.email = profile.email;
+    this.state.phoneNumber = profile.mobilePhone;
+    this.state.dateOfBirth = profile.dateOfBirth;
+    this.state.gender = profile.gender;
+  }
+
+  formattedDate(date) {
+    var d = new Date(date)
+    let month = String(d.getMonth() + 1);
+    let day = String(d.getDate());
+    const year = String(d.getFullYear());
+  
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+  
+    return year + "-" + month + "-" + day;
+    //console.log(formattedDate)
+    //return `${year}-${month}-${day}`;
+  }
+
+  updateProfile(){
+    if(this.state.username == "" || this.state.biography == "" || this.state.biography == "" || this.state.fullname == "" ||
+      this.state.email == "" || this.state.phoneNumber == "" || this.state.dateOfBirth == ""){
+        this.setState({
+          open: true,
+          snackBarMessage: "Enter values in all inputs!",
+          snackBarSeverity: "error"
+        });
+    }else{
+      this.setState({
+        open: true,
+        snackBarMessage: "Profile updated!",
+        snackBarSeverity: "success"
+      });
+      ProfileService.updateProfile(4, this.state.username, this.state.biography, this.state.website, this.state.fullname, 
+                                  this.state.email, this.state.phoneNumber, this.state.dateOfBirth, this.state.gender)
+        .then((res) => res.json())
+        .then(
+          (result) => {
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+    }
+  }
+
+  inputValidated(){
+    if(this.state.username == "" || this.state.biography == "" || this.state.biography == "" || this.state.fullname == "" ||
+      this.state.email == "" || this.state.phoneNumber == "" || this.state.dateOfBirth == ""){
+      this.state.showAlert = false;
+    }
+    this.state.showAlert = true;
+  }
+
   render() {
+    let usernameValidation;
+    if(this.state.username == ""){
+      usernameValidation = <label style={{color:"red"}}>Enter your username</label>
+    }
+    let biographyValidation;
+    if(this.state.biography == ""){
+      biographyValidation = <label style={{color:"red"}}>Enter your biography</label>
+    }
+    let websiteValidation;
+    if(this.state.website == ""){
+      websiteValidation = <label style={{color:"red"}}>Enter your website</label>
+    }
+    let fullnameValidation;
+    if(this.state.fullname == ""){
+      fullnameValidation = <label style={{color:"red"}}>Enter your full name</label>
+    }
+    let emailValidation;
+    if(this.state.email == ""){
+      emailValidation = <label style={{color:"red"}}>Enter your email</label>
+    }
+    let phoneNumberValidation;
+    if(this.state.phoneNumber == ""){
+      phoneNumberValidation = <label style={{color:"red"}}>Enter your phone number</label>
+    }
+    let dateOfBirthValidation;
+    if(this.state.dateOfBirth == ""){
+      dateOfBirthValidation = <label style={{color:"red"}}>Enter your date of birth</label>
+    }
+
+    let alert;
+    if(this.state.showAlert == true){
+      alert = <Alert variant="primary">This is a alertlike.</Alert>
+    }
+
     return (
+      
       <div
         className="tab-pane fade show active"
         id="account"
@@ -21,20 +184,41 @@ class UserAccount extends Component {
                   <div className="form-group">
                     <label>Username</label>
                     <input
+                      name="username"
                       type="text"
+                      value={this.state.username} 
+                      onChange={this.handleInputChange}
                       className="form-control"
                       id="inputUsername"
                       placeholder="Username"
                     />
+                    {usernameValidation}
                   </div>
                   <div className="form-group">
                     <label>Biography</label>
                     <textarea
+                      name="biography"
+                      value={this.state.biography} 
+                      onChange={this.handleInputChange}
                       rows="2"
                       className="form-control"
                       id="inputBio"
                       placeholder="Tell something about yourself"
                     ></textarea>
+                    {biographyValidation}
+                  </div>
+                  <div className="form-group">
+                    <label>Website</label>
+                    <input
+                      name="website"
+                      type="text"
+                      value={this.state.website} 
+                      onChange={this.handleInputChange}
+                      className="form-control"
+                      id="inputUsername"
+                      placeholder="Username"
+                    />
+                    {websiteValidation}
                   </div>
                 </div>
                 <div className="col-md-4">
@@ -50,10 +234,6 @@ class UserAccount extends Component {
                   </div>
                 </div>
               </div>
-
-              <button type="submit" className="btn btn-primary">
-                Save changes
-              </button>
             </form>
           </div>
         </div>
@@ -63,75 +243,96 @@ class UserAccount extends Component {
             <h5 className="card-title mb-0">Private info</h5>
           </div>
           <div className="card-body">
-            <form>
-              <div className="form-row">
-                <div className="form-group col-md-6">
-                  <label>First name</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="inputFirstName"
-                    placeholder="First name"
-                  />
-                </div>
-                <div className="form-group col-md-6">
-                  <label>Last name</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="inputLastName"
-                    placeholder="Last name"
-                  />
-                </div>
-              </div>
+                          
+              <div className="form-group">
+                <label>Full name</label>
+                <input
+                  name="fullname"
+                  type="text"
+                  value={this.state.fullname}
+                  onChange={this.handleInputChange}
+                  className="form-control"
+                  id="inputFirstName"
+                  placeholder="Full name"
+                />
+                {fullnameValidation}
+              </div>               
               <div className="form-group">
                 <label>Email</label>
                 <input
+                  name="email"
                   type="email"
+                  value={this.state.email}
+                  onChange={this.handleInputChange}
                   className="form-control"
                   id="inputEmail4"
                   placeholder="Email"
                 />
+                {emailValidation}
               </div>
               <div className="form-group">
-                <label>Address</label>
+                <label>Phone number</label>
                 <input
+                  name="phoneNumber"
                   type="text"
+                  value={this.state.phoneNumber}
+                  onChange={this.handleInputChange}
                   className="form-control"
                   id="inputAddress"
-                  placeholder="1234 Main St"
+                  placeholder="Phone number"
                 />
+                {phoneNumberValidation}
               </div>
               <div className="form-group">
-                <label>Address 2</label>
+                <label>Date of birth</label>
                 <input
-                  type="text"
+                  name="dateOfBirth"
+                  type="date"
+                  value={this.state.dateOfBirth}
+                  onChange={this.handleInputChange}
                   className="form-control"
-                  id="inputAddress2"
-                  placeholder="Apartment, studio, or floor"
+                  id="inputAddress"
+                  placeholder="Date of birth"
+                />
+                {dateOfBirthValidation}
+              </div>
+              <div style={{ marginBottom: "1%" }}>
+                <h6>Gender</h6>
+                <label>Male</label>
+                <input
+                  name="gender"
+                  checked = {this.state.gender == 0}
+                  type="radio"
+                  value={0}
+                  onChange={this.handleOptionChange}
+                  id="inputAddress"
+                  placeholder="Date of birth"
+                  style={{ marginLeft: "1%" }}
+                />
+                <label style={{ marginLeft: "3%" }}>Female</label>
+                <input
+                  name="gender"
+                  checked = {this.state.gender == 1}
+                  type="radio"
+                  value={1}
+                  onChange={this.handleOptionChange}
+                  id="inputAddress"
+                  placeholder="Date of birth"
+                  style={{ marginLeft: "1%" }}
                 />
               </div>
-              <div className="form-row">
-                <div className="form-group col-md-6">
-                  <label>City</label>
-                  <input type="text" className="form-control" id="inputCity" />
-                </div>
-                <div className="form-group col-md-4">
-                  <label>State</label>
-                  <select id="inputState" className="form-control">
-                    <option>Choose...</option>
-                    <option>...</option>
-                  </select>
-                </div>
-                <div className="form-group col-md-2">
-                  <label>Zip</label>
-                  <input type="text" className="form-control" id="inputZip" />
-                </div>
-              </div>
-              <button type="submit" className="btn btn-primary">
+              <button className="btn btn-primary" onClick={() => this.updateProfile()}>
                 Save changes
               </button>
-            </form>
+              <Snackbar
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
+                open={this.state.open}
+                autoHideDuration={6000}
+                message={this.state.snackBarMessage}
+              />
           </div>
         </div>
       </div>
