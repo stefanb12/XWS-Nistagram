@@ -77,5 +77,35 @@ namespace UserMicroservice.Controllers
 
             return Ok(result);
         }
+
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateProfile(ProfileDto profileDto)
+        {
+            Profile profile = await _profileService.GetById(profileDto.Id);
+
+            if (profile == null)
+            {
+                return NoContent();
+            }
+            //profile.Username = profileDto.Username;
+            //Profile updatedProfile = await _profileService.Update(profile);
+            Profile updatedProfile = await _profileService.Update(UpdateProfileMapper.ProfileDtoToProfile(profile, profileDto));
+            return Ok(updatedProfile);  
+        }
+
+        [HttpGet("{id}/profileForUpdating")]
+        public async Task<IActionResult> GetProfileForUpdating(int id)
+        {
+            Profile profile = await _profileService.GetById(id);
+
+            if (profile == null)
+            {
+                return NoContent();
+            }
+
+            ProfileDto dto = UpdateProfileMapper.ProfileToProfileDto(profile);
+
+            return Ok(dto);
+        }
     }
 }
