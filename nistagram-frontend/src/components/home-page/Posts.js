@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "../../assets/styles/posts.css";
 import { Button, Modal } from "react-bootstrap";
 import UloadImages from "./UloadImages";
+import AlgoliaPlaces from "algolia-places-react";
 
 export default class Posts extends Component {
   constructor(props) {
@@ -16,8 +17,14 @@ export default class Posts extends Component {
       isOpenLocationAndTagsModal: false,
       imageFiles: [],
       currentChosenImageFiles: [],
-      location: "",
-      currentEnteredLocation: "",
+      location: "Enter location",
+      currentLocation: "",
+      address: "",
+      city: "",
+      country: "",
+      currentAddress: "",
+      currentCity: "",
+      currentCountry: "",
       tags: "",
       currentEnteredTags: "",
       description: "",
@@ -74,11 +81,6 @@ export default class Posts extends Component {
       isOpenLocationAndTagsModal: true,
     });
 
-    if (this.state.location === "") {
-      this.setState({
-        currentEnteredLocation: "",
-      });
-    }
     if (this.state.tags === "") {
       this.setState({
         currentEnteredTags: "",
@@ -96,6 +98,13 @@ export default class Posts extends Component {
     this.closeImagesModal();
   };
 
+  cancelImages = () => {
+    this.setState({
+      imageFiles: [],
+    });
+    this.closeImagesModal();
+  };
+
   getUploadedImages = (images) => {
     this.setState({
       currentChosenImageFiles: images,
@@ -104,8 +113,22 @@ export default class Posts extends Component {
 
   addLocationAndTags = () => {
     this.setState({
-      location: this.state.currentEnteredLocation,
       tags: this.state.currentEnteredTags,
+      address: this.state.currentAddress,
+      city: this.state.currentCity,
+      country: this.state.currentCountry,
+      location: this.state.currentLocation,
+    });
+    this.closeLocationAndTagsModal();
+  };
+
+  cancelLocationAndTags = () => {
+    this.setState({
+      tags: "",
+      address: "",
+      city: "",
+      country: "",
+      location: "Enter location",
     });
     this.closeLocationAndTagsModal();
   };
@@ -113,6 +136,9 @@ export default class Posts extends Component {
   addPost = () => {
     console.log("Images:", this.state.imageFiles);
     console.log("Location:", this.state.location);
+    console.log("Address:", this.state.address);
+    console.log("City:", this.state.city);
+    console.log("Country:", this.state.country);
     console.log("Tags:", this.state.tags);
     console.log("Description:", this.state.description);
 
@@ -122,7 +148,7 @@ export default class Posts extends Component {
     } else {
       this.setState({
         imageFiles: [],
-        location: "",
+        location: "Enter location",
         tags: "",
         description: "",
       });
@@ -161,6 +187,9 @@ export default class Posts extends Component {
           </div>
         </Modal.Body>
         <Modal.Footer>
+          <Button variant="danger" onClick={this.cancelImages}>
+            Cancel
+          </Button>
           <Button variant="success" onClick={this.addImages}>
             Add
           </Button>
@@ -191,14 +220,35 @@ export default class Posts extends Component {
                 <label style={{ marginLeft: "40%" }}>
                   <b>Location</b>
                 </label>
-                <input
-                  name="currentEnteredLocation"
-                  type="text"
-                  checked={this.state.currentEnteredLocation}
-                  onChange={this.handleInputChange}
-                  className="form-control"
-                  placeholder="Enter the location (e.g. Belgrade)"
-                  value={this.state.currentEnteredLocation}
+                <AlgoliaPlaces
+                  placeholder={this.state.location}
+                  options={{
+                    appId: "plQ4P1ZY8JUZ",
+                    apiKey: "bc14d56a6d158cbec4cdf98c18aced26",
+                    language: "en",
+                    type: ["city", "address"],
+                  }}
+                  onChange={({ suggestion }) => {
+                    if (suggestion.city === undefined) {
+                      suggestion.city = suggestion.name;
+                      suggestion.name = "";
+                    }
+
+                    this.setState({
+                      currentAddress: suggestion.name,
+                      currentCity: suggestion.city,
+                      currentCountry: suggestion.country,
+                      currentLocation: suggestion.value,
+                    });
+                  }}
+                  onClear={() => {
+                    this.setState({
+                      address: "",
+                      city: "",
+                      country: "",
+                      location: "Enter location",
+                    });
+                  }}
                 />
               </div>
               <br />
@@ -219,6 +269,9 @@ export default class Posts extends Component {
           </div>
         </Modal.Body>
         <Modal.Footer>
+          <Button variant="danger" onClick={this.cancelLocationAndTags}>
+            Cancel
+          </Button>
           <Button variant="success" onClick={this.addLocationAndTags}>
             Add
           </Button>
