@@ -17,7 +17,10 @@ export default class Posts extends Component {
       imageFiles: [],
       currentChosenImageFiles: [],
       location: "",
+      currentEnteredLocation: "",
       tags: "",
+      currentEnteredTags: "",
+      description: "",
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -70,6 +73,17 @@ export default class Posts extends Component {
     this.setState({
       isOpenLocationAndTagsModal: true,
     });
+
+    if (this.state.location === "") {
+      this.setState({
+        currentEnteredLocation: "",
+      });
+    }
+    if (this.state.tags === "") {
+      this.setState({
+        currentEnteredTags: "",
+      });
+    }
   };
 
   closeLocationAndTagsModal = () =>
@@ -89,13 +103,30 @@ export default class Posts extends Component {
   };
 
   addLocationAndTags = () => {
+    this.setState({
+      location: this.state.currentEnteredLocation,
+      tags: this.state.currentEnteredTags,
+    });
     this.closeLocationAndTagsModal();
   };
 
   addPost = () => {
-    console.log(this.state.imageFiles);
-    console.log(this.state.location);
-    console.log(this.state.tags);
+    console.log("Images:", this.state.imageFiles);
+    console.log("Location:", this.state.location);
+    console.log("Tags:", this.state.tags);
+    console.log("Description:", this.state.description);
+
+    if (this.state.imageFiles.length == 0) {
+      // Zabrani dodavanje posta
+      // Napisi obavestenje da je slika obavezna za izbacivanje posta
+    } else {
+      this.setState({
+        imageFiles: [],
+        location: "",
+        tags: "",
+        description: "",
+      });
+    }
   };
 
   render() {
@@ -161,13 +192,13 @@ export default class Posts extends Component {
                   <b>Location</b>
                 </label>
                 <input
-                  name="location"
+                  name="currentEnteredLocation"
                   type="text"
-                  checked={this.state.location}
+                  checked={this.state.currentEnteredLocation}
                   onChange={this.handleInputChange}
                   className="form-control"
                   placeholder="Enter the location (e.g. Belgrade)"
-                  value={this.state.location}
+                  value={this.state.currentEnteredLocation}
                 />
               </div>
               <br />
@@ -175,14 +206,14 @@ export default class Posts extends Component {
                 <b>Tags</b>
               </label>
               <textarea
-                name="tags"
+                name="currentEnteredTags"
                 type="text"
-                checked={this.state.tags}
+                checked={this.state.currentEnteredTags}
                 onChange={this.handleInputChange}
                 rows="4"
                 className="form-control"
                 placeholder="Enter tags - each tag must begin with # (e.g. #cat#dog)"
-                value={this.state.tags}
+                value={this.state.currentEnteredTags}
               ></textarea>
             </form>
           </div>
@@ -208,8 +239,14 @@ export default class Posts extends Component {
                     <div class="card-body">
                       <div class="post">
                         <textarea
+                          name="description"
+                          type="text"
+                          checked={this.state.description}
+                          onChange={this.handleInputChange}
+                          className="form-control"
+                          value={this.state.description}
                           class="form-control"
-                          placeholder="Add a description for post"
+                          placeholder="Enter description for post"
                           rows="4"
                           style={{ marginLeft: "15px", maxWidth: "625px" }}
                         ></textarea>
