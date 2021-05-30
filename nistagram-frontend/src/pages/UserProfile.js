@@ -2,7 +2,11 @@ import React, { Component } from "react";
 import "../assets/styles/profile.css";
 import { Link } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
-import { BookmarkBorder, LockOutlined } from "@material-ui/icons";
+import {
+  BookmarkBorder,
+  ContactlessOutlined,
+  LockOutlined,
+} from "@material-ui/icons";
 import "../assets/styles/posts.css";
 import AuthService from "../services/AuthService";
 import ProfileService from "../services/ProfileService";
@@ -21,6 +25,7 @@ export default class UserProfile extends Component {
       isLike: false,
       isSaved: false,
       isActive: false,
+      doesFollowRequestExist: false,
       followers: [
         { username: "username1" },
         { username: "username2" },
@@ -35,11 +40,11 @@ export default class UserProfile extends Component {
   openFollowingModal = () => this.setState({ isOpenFollowingModal: true });
   closeFollowingModal = () => this.setState({ isOpenFollowingModal: false });
 
-  componentDidMount() {
+  async componentDidMount() {
     document.addEventListener("mousedown", this.handleClickOutside);
 
-    let loggedUser = AuthService.getCurrentUser();
-    ProfileService.getUser(loggedUser.id)
+    let loggedUser = await AuthService.getCurrentUser();
+    await ProfileService.getUser(loggedUser.id)
       .then((res) => res.json())
       .then((result) => {
         this.setState({
@@ -47,13 +52,32 @@ export default class UserProfile extends Component {
         });
       });
 
-    ProfileService.getUser(this.state.userProfileId)
+    await ProfileService.getUser(this.state.userProfileId)
       .then((res) => res.json())
       .then((result) => {
         this.setState({
           userProfile: result,
         });
       });
+
+    if (this.state.userProfile.private == true) {
+      let resStatus = 0;
+      ProfileService.getFollowRequest(
+        this.state.userProfileId,
+        this.state.loggedUser.id
+      )
+        .then((res) => {
+          resStatus = res.status;
+          return res.json();
+        })
+        .then((result) => {
+          if (resStatus == 200) {
+            this.setState({
+              doesFollowRequestExist: true,
+            });
+          }
+        });
+    }
   }
 
   componentWillUnmount() {
@@ -103,9 +127,32 @@ export default class UserProfile extends Component {
       });
   };
 
+  handleFollowRequest = (followerId, followingId) => {
+    ProfileService.followRequest(followerId, followingId)
+      .then((res) => {
+        return res.json();
+      })
+      .then(() => {
+        this.setState({
+          doesFollowRequestExist: true,
+        });
+      });
+  };
+
+  handleDeleteFollowRequest = (followerId, followingId) => {
+    ProfileService.deleteFollowRequest(followerId, followingId)
+      .then(() => {})
+      .then(() => {
+        this.setState({
+          doesFollowRequestExist: false,
+        });
+      });
+  };
+
   render() {
     let loggedUser = this.state.loggedUser;
     let userProfile = this.state.userProfile;
+    let doesFollowRequestExist = this.state.doesFollowRequestExist;
     const userProfileId = this.state.userProfileId;
     const isDislike = this.state.isDislike;
     const isLike = this.state.isLike;
@@ -488,11 +535,33 @@ export default class UserProfile extends Component {
       !isInFollowing
     ) {
       if (userProfile.private === true) {
-        followButton = (
-          <div>
-            <Button variant="primary">Follow Back</Button>
-          </div>
-        );
+        if (doesFollowRequestExist === true) {
+          followButton = (
+            <div>
+              <Button
+                variant="primary"
+                onClick={() =>
+                  this.handleDeleteFollowRequest(userProfile.id, loggedUser.id)
+                }
+              >
+                Cancel request
+              </Button>
+            </div>
+          );
+        } else {
+          followButton = (
+            <div>
+              <Button
+                variant="primary"
+                onClick={() =>
+                  this.handleFollowRequest(userProfile.id, loggedUser.id)
+                }
+              >
+                Follow Back
+              </Button>
+            </div>
+          );
+        }
         profileBody = (
           <div>
             <div class="row profile-body">
@@ -532,11 +601,33 @@ export default class UserProfile extends Component {
     } else {
       if (userProfile.private === true) {
         // Profile is private
-        followButton = (
-          <div>
-            <Button variant="primary">Follow</Button>
-          </div>
-        );
+        if (doesFollowRequestExist === true) {
+          followButton = (
+            <div>
+              <Button
+                variant="primary"
+                onClick={() =>
+                  this.handleDeleteFollowRequest(userProfile.id, loggedUser.id)
+                }
+              >
+                Cancel request
+              </Button>
+            </div>
+          );
+        } else {
+          followButton = (
+            <div>
+              <Button
+                variant="primary"
+                onClick={() =>
+                  this.handleFollowRequest(userProfile.id, loggedUser.id)
+                }
+              >
+                Follow
+              </Button>
+            </div>
+          );
+        }
         profileBody = (
           <div>
             <div class="row profile-body">

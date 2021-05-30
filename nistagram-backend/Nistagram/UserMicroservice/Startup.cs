@@ -44,6 +44,8 @@ namespace ProfileMicroservice
                     new UserService(new UserRepository(new UserDbContext())));
             services.AddSingleton<IProfileService, ProfileService>(service =>
                     new ProfileService(new ProfileRepository(new UserDbContext()), new ProfileCreatedMessageSender()));
+            services.AddSingleton<IFollowRequestService, FollowRequestService>(service =>
+                    new FollowRequestService(new FollowRequestRepository(new UserDbContext())));
 
             // JWT Token
             var appSettingsSection = Configuration.GetSection("AppSettings");

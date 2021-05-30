@@ -122,8 +122,7 @@ namespace ProfileMicroservice.Database
             );
 
             modelBuilder.Entity<FollowRequest>().HasData(
-                new FollowRequest { Id = 1, Accepted = false, Processed = false, ReceiverId = 3, SenderId = 4 },
-                new FollowRequest { Id = 2, Accepted = false, Processed = true, ReceiverId = 3, SenderId = 4 }
+                new FollowRequest { Id = 1, Accepted = false, Processed = false, ReceiverId = 3, SenderId = 4 }
             );
         }
     }
