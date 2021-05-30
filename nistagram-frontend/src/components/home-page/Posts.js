@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "../../assets/styles/posts.css";
 import { Button, Modal } from "react-bootstrap";
-import UploadImage from "./UploadImage";
+import UloadImages from "./UloadImages";
 
 export default class Posts extends Component {
   constructor(props) {
@@ -12,9 +12,15 @@ export default class Posts extends Component {
       isLike: false,
       isSaved: false,
       isActive: false,
-      isOpenImagesInfoModal: false,
+      isOpenImagesModal: false,
+      isOpenLocationAndTagsModal: false,
+      imageFiles: [],
+      currentChosenImageFiles: [],
+      location: "",
+      tags: "",
     };
     this.handleClick = this.handleClick.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   componentDidMount() {
@@ -42,12 +48,54 @@ export default class Posts extends Component {
     }));
   }
 
-  openImagesModal = () => this.setState({ isOpenImagesInfoModal: true });
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
 
-  closeImagesModal = () => this.setState({ isOpenImagesInfoModal: false });
+    this.setState({
+      [name]: value,
+    });
+  }
 
-  parentFunction = (data_from_child) => {
-    console.log(data_from_child);
+  openImagesModal = () => {
+    this.setState({
+      isOpenImagesModal: true,
+    });
+  };
+
+  closeImagesModal = () => this.setState({ isOpenImagesModal: false });
+
+  openLocationAndTagsModal = () => {
+    this.setState({
+      isOpenLocationAndTagsModal: true,
+    });
+  };
+
+  closeLocationAndTagsModal = () =>
+    this.setState({ isOpenLocationAndTagsModal: false });
+
+  addImages = () => {
+    this.setState({
+      imageFiles: this.state.currentChosenImageFiles,
+    });
+    this.closeImagesModal();
+  };
+
+  getUploadedImages = (images) => {
+    this.setState({
+      currentChosenImageFiles: images,
+    });
+  };
+
+  addLocationAndTags = () => {
+    this.closeLocationAndTagsModal();
+  };
+
+  addPost = () => {
+    console.log(this.state.imageFiles);
+    console.log(this.state.location);
+    console.log(this.state.tags);
   };
 
   render() {
@@ -59,12 +107,12 @@ export default class Posts extends Component {
 
     const imagesModalDialog = (
       <Modal
-        show={this.state.isOpenImagesInfoModal}
+        show={this.state.isOpenImagesModal}
         onHide={this.closeImagesModal}
         style={{ marginTop: "120px", minHeight: "560px", overflow: "hidden" }}
       >
         <Modal.Header closeButton>
-          <Modal.Title style={{ marginLeft: "20px" }}>
+          <Modal.Title style={{ marginLeft: "30px" }}>
             Single or multiple image selection
           </Modal.Title>
         </Modal.Header>
@@ -75,12 +123,73 @@ export default class Posts extends Component {
               height: "350px",
             }}
           >
-            <UploadImage />
+            <UloadImages
+              uploadedImages={this.getUploadedImages.bind(this)}
+              valueFromParent={this.state.imageFiles}
+            />
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={this.closeImagesModal}>
-            Close
+          <Button variant="success" onClick={this.addImages}>
+            Add
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+
+    const tagsAndLocationModalDialog = (
+      <Modal
+        show={this.state.isOpenLocationAndTagsModal}
+        onHide={this.closeLocationAndTagsModal}
+        style={{ marginTop: "120px", minHeight: "560px", overflow: "hidden" }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title style={{ marginLeft: "70px" }}>
+            Location and tags entering
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div
+            style={{
+              overflow: "auto",
+              height: "350px",
+            }}
+          >
+            <form>
+              <div className="form-group">
+                <label style={{ marginLeft: "40%" }}>
+                  <b>Location</b>
+                </label>
+                <input
+                  name="location"
+                  type="text"
+                  checked={this.state.location}
+                  onChange={this.handleInputChange}
+                  className="form-control"
+                  placeholder="Enter the location (e.g. Belgrade)"
+                  value={this.state.location}
+                />
+              </div>
+              <br />
+              <label style={{ marginLeft: "43%" }}>
+                <b>Tags</b>
+              </label>
+              <textarea
+                name="tags"
+                type="text"
+                checked={this.state.tags}
+                onChange={this.handleInputChange}
+                rows="4"
+                className="form-control"
+                placeholder="Enter tags - each tag must begin with # (e.g. #cat#dog)"
+                value={this.state.tags}
+              ></textarea>
+            </form>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={this.addLocationAndTags}>
+            Add
           </Button>
         </Modal.Footer>
       </Modal>
@@ -89,6 +198,7 @@ export default class Posts extends Component {
     return (
       <div>
         {imagesModalDialog}
+        {tagsAndLocationModalDialog}
         <div class="container">
           <div class="no-page-title">
             <div id="main-wrapper">
@@ -113,7 +223,22 @@ export default class Posts extends Component {
                               Add images
                             </span>
                           </button>
-                          <button class="btn btn-outline-primary float-right">
+                          <button
+                            class="btn btn-outline-primary"
+                            style={{
+                              marginLeft: "20px",
+                            }}
+                            onClick={this.openLocationAndTagsModal}
+                          >
+                            <i class="fa fa-info"></i>
+                            <span style={{ marginLeft: "10px" }}>
+                              Add more info
+                            </span>
+                          </button>
+                          <button
+                            class="btn btn-outline-success float-right"
+                            onClick={this.addPost}
+                          >
                             Post
                           </button>
                         </div>
