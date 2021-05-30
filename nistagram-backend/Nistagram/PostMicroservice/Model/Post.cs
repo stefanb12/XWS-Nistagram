@@ -8,7 +8,6 @@ namespace PostMicroservice.Model
 {
     public class Post : Document
     {
-        public List<string> ContentPaths { get; set; }
         public List<string> Tags { get; set; }
         public string Description { get; set; }
         public DateTime PublishingDate { get; set; }
@@ -18,12 +17,7 @@ namespace PostMicroservice.Model
         public List<Profile> Likes { get; set; }
         public List<Profile> Favorites { get; set; }
         public Profile Publisher { get; set; }
-
-        public string ImageName { get; set; }
-        [BsonIgnore]
-        public IFormFile ImageFile { get; set; }
-        [BsonIgnore]
-        public string ImageSrc { get; set; }
+        public List<Content> Contents { get; set; }
 
         public Post()
         {

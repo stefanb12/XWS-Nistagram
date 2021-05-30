@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using PostMicroservice.Dto;
+using PostMicroservice.Mapper;
 using PostMicroservice.Model;
 using PostMicroservice.Service;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace PostMicroservice.Controllers
@@ -16,12 +12,10 @@ namespace PostMicroservice.Controllers
     public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
-        private readonly IWebHostEnvironment _hostEnvironment;
-
-        public PostController(IPostService postService, IWebHostEnvironment hostEnvironment)
+        
+        public PostController(IPostService postService)
         {
             _postService = postService;
-            _hostEnvironment = hostEnvironment;
         }
 
         [HttpGet]
@@ -40,16 +34,19 @@ namespace PostMicroservice.Controllers
                 return NoContent();
             }
 
-            post.ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.ImageName);
+            //post.ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.ImageName);
 
             return Ok(post);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Insert([FromForm] Post post)
+        public async Task<IActionResult> Insert(PostDto postDto)
         {
-            post.ImageName = await SaveImage(post.ImageFile);
-            return Ok(await _postService.Insert(post));
+            
+            //post.ImageName = await _postService.SaveImage(post.ImageFile);
+
+
+            return Ok(await _postService.Insert(PostMapper.PostDtoToPost(postDto)));
         }
 
         [HttpPut]
@@ -63,19 +60,6 @@ namespace PostMicroservice.Controllers
         {
             await _postService.Delete(post.Id.ToString());
             return Ok();
-        }
-
-        [NonAction]
-        public async Task<string> SaveImage(IFormFile imageFile)
-        {
-            string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray()).Replace(' ', '-');
-            imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(imageFile.FileName);
-            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "Images", imageName);
-            using (var fileStream = new FileStream(imagePath, FileMode.Create))
-            {
-                await imageFile.CopyToAsync(fileStream);
-            }
-            return imageName;
         }
     }
 }

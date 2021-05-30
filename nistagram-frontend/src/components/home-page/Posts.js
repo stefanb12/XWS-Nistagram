@@ -3,6 +3,8 @@ import "../../assets/styles/posts.css";
 import { Button, Modal } from "react-bootstrap";
 import UloadImages from "./UloadImages";
 import AlgoliaPlaces from "algolia-places-react";
+import PostService from "../../services/PostService";
+import AuthService from "../../services/AuthService";
 
 export default class Posts extends Component {
   constructor(props) {
@@ -170,6 +172,38 @@ export default class Posts extends Component {
       // Zabrani dodavanje posta
       // Napisi obavestenje da je slika obavezna za izbacivanje posta
     } else {
+      let tagsList = [];
+      for (var tag of this.state.tags.split("#")) {
+        if (tag.length !== 0) {
+          tagsList.push(tag.split(" ").join(""));
+        }
+      }
+      console.log(tagsList);
+
+      let publisher = AuthService.getCurrentUser();
+      let resStatus = 0;
+
+      PostService.insert(
+        this.state.imageFiles,
+        this.state.location,
+        this.state.address,
+        this.state.city,
+        this.state.country,
+        tagsList,
+        this.state.description,
+        publisher
+      )
+        .then((res) => {
+          resStatus = res.status;
+          return res.json();
+        })
+        .then((result) => {
+          if (resStatus === 200) {
+            console.log(result);
+          }
+          return result;
+        });
+
       this.setState({
         imageFiles: [],
         location: "Enter location",
