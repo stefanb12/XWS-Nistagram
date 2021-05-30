@@ -11,6 +11,16 @@ class AuthService {
     return fetch(API_URL + "auth/login", requestOptions);
   }
 
+  registerUser(fullName, username, email, password, gender) {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fullName, username, email, password, gender })
+    };
+
+    return fetch(API_URL + "profile/registration", requestOptions)
+  }
+
   logout() {
     localStorage.removeItem("currentUser");
   }

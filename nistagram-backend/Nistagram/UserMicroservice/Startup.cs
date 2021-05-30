@@ -35,7 +35,7 @@ namespace ProfileMicroservice
                 .AddNewtonsoftJson(options =>
                      options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-            services.AddCors();
+            //services.AddCors();
 
             services.AddDbContext<UserDbContext>(options =>
                   options.UseMySql(CreateConnectionStringFromEnvironment()).UseLazyLoadingProxies(), ServiceLifetime.Transient);
@@ -44,6 +44,8 @@ namespace ProfileMicroservice
                     new UserService(new UserRepository(new UserDbContext())));
             services.AddSingleton<IProfileService, ProfileService>(service =>
                     new ProfileService(new ProfileRepository(new UserDbContext()), new ProfileCreatedMessageSender()));
+            services.AddSingleton<IFollowRequestService, FollowRequestService>(service =>
+                    new FollowRequestService(new FollowRequestRepository(new UserDbContext())));
 
             // JWT Token
             var appSettingsSection = Configuration.GetSection("AppSettings");
@@ -71,6 +73,13 @@ namespace ProfileMicroservice
                     ClockSkew = TimeSpan.Zero
                 };
             });
+
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
         }
 
         private string CreateConnectionStringFromEnvironment()
@@ -87,6 +96,8 @@ namespace ProfileMicroservice
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors("MyPolicy");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
