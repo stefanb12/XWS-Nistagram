@@ -1,204 +1,245 @@
 {
-  "Routes": [
-    {
-      "DownstreamPathTemplate": "/api/auth/login",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+    "Routes": [
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/auth/login",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
+            "DownstreamPathTemplate": "/api/auth/login",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/auth/login",
+            "UpstreamHttpMethod": [ "POST" ]
+        },
 
-    // UserMicroservice
-    {
-      "DownstreamPathTemplate": "/api/profile/registration",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        // UserMicroservice
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/registration",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/registration",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/registration",
+            "UpstreamHttpMethod": [ "POST" ]
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
-      /*"AuthenticationOptions": {
+            "DownstreamPathTemplate": "/api/profile/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{id}",
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
               "AuthenticationProviderKey": "Key",
               "AllowedScopes": []
           },
           "RouteClaimsRequirement": {
               "UserRole": "User"
           }*/
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{id}/followers",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{id}/followers",
-      "UpstreamHttpMethod": [ "GET" ]
-      /*"AuthenticationOptions": {
+            "DownstreamPathTemplate": "/api/profile/{id}/followers",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{id}/followers",
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User"
             }*/
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{id}/following",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{id}/following",
-      "UpstreamHttpMethod": [ "GET" ]
-      /*"AuthenticationOptions": {
+            "DownstreamPathTemplate": "/api/profile/{id}/following",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{id}/following",
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User"
             }*/
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{profileId}/follow/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{profileId}/follow/{id}",
-      "UpstreamHttpMethod": [ "PUT" ]
-      /*"AuthenticationOptions": {
+            "DownstreamPathTemplate": "/api/profile/{profileId}/follow/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{profileId}/follow/{id}",
+            "UpstreamHttpMethod": [ "PUT" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User"
             }*/
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{profileId}/unfollow/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{profileId}/unfollow/{id}",
-      "UpstreamHttpMethod": [ "PUT" ]
-      /*"AuthenticationOptions": {
+            "DownstreamPathTemplate": "/api/profile/{profileId}/unfollow/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{profileId}/unfollow/{id}",
+            "UpstreamHttpMethod": [ "PUT" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User"
             }*/
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/followRequest",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/followRequest",
-      "UpstreamHttpMethod": [ "POST", "DELETE" ]
-      /*"AuthenticationOptions": {
+            "DownstreamPathTemplate": "/api/profile/followRequest",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/followRequest",
+            "UpstreamHttpMethod": [ "POST", "DELETE" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User"
             }*/
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/followRequest/{receiverId}/{senderId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/followRequest/{receiverId}/{senderId}",
-      "UpstreamHttpMethod": [ "GET" ]
-      /*"AuthenticationOptions": {
+            "DownstreamPathTemplate": "/api/profile/followRequest/{receiverId}/{senderId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/followRequest/{receiverId}/{senderId}",
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User"
             }*/
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/update",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/update",
-      "UpstreamHttpMethod": [ "PUT" ]
-      /*"AuthenticationOptions": {
+            "DownstreamPathTemplate": "/api/profile/update",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/update",
+            "UpstreamHttpMethod": [ "PUT" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User"
             }*/
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{id}/profileForUpdating",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{id}/profileForUpdating",
-      "UpstreamHttpMethod": [ "GET" ]
-      /*"AuthenticationOptions": {
+            "DownstreamPathTemplate": "/api/profile/{id}/profileForUpdating",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{id}/profileForUpdating",
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User"
             }*/
-    }
+        },
 
-  ],
+        // PostMicroservice
+
+        {
+            "DownstreamPathTemplate": "/api/post",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post",
+            "UpstreamHttpMethod": [ "POST" ]
+            /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+        },
+        {
+            "DownstreamPathTemplate": "/api/post/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/{id}",
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+        }
+
+    ],
     "GlobalConfiguration": {
         "BaseUrl": "http://localhost:60370"
     }

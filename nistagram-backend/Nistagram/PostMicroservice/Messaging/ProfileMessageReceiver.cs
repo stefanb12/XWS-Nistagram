@@ -50,7 +50,7 @@ namespace PostMicroservice.Messaging
                 _profileService.Insert(new Profile()
                 {
                     OriginalId = data["id"].Value<int>(),
-                    Name = data["name"].Value<string>()
+                    Username = data["username"].Value<string>()
                 });
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
