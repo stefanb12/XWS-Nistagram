@@ -40,7 +40,7 @@ namespace PostMicroservice.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Insert(PostDto postDto)
+        public async Task<IActionResult> Insert([FromForm] PostDto postDto)
         {
             
             //post.ImageName = await _postService.SaveImage(post.ImageFile);

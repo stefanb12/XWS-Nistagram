@@ -13,11 +13,11 @@ namespace PostMicroservice.Mapper
 
             post.Tags = dto.Tags;
             post.Description = dto.Description;
-            post.Location.Address = dto.Location.Address;
-            post.Location.City = dto.Location.City;
-            post.Location.Country = dto.Location.Country;
-            post.Publisher.Id = dto.Publisher.Id;
-            post.Publisher.Username = dto.Publisher.Username;
+            /*            post.Location.Address = dto.Location.Address;
+                        post.Location.City = dto.Location.City;
+                        post.Location.Country = dto.Location.Country;
+                        post.Publisher.Id = dto.Publisher.Id;
+            post.Publisher.Username = dto.Publisher.Username;*/
 
             List<Content> contents = new List<Content>();
             foreach(IFormFile file in dto.ImageFiles)

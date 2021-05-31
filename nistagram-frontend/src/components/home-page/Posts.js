@@ -185,7 +185,6 @@ export default class Posts extends Component {
 
       PostService.insert(
         this.state.imageFiles,
-        this.state.location,
         this.state.address,
         this.state.city,
         this.state.country,
