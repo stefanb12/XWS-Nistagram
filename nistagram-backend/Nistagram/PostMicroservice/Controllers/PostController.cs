@@ -3,6 +3,7 @@ using PostMicroservice.Dto;
 using PostMicroservice.Mapper;
 using PostMicroservice.Model;
 using PostMicroservice.Service;
+using System;
 using System.Threading.Tasks;
 
 namespace PostMicroservice.Controllers
@@ -34,7 +35,10 @@ namespace PostMicroservice.Controllers
                 return NoContent();
             }
 
-            //post.ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.ImageName);
+            for(int i = 0; i < post.Contents.Count; i++)
+            {
+                post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
+            }
 
             return Ok(post);
         }
@@ -42,10 +46,6 @@ namespace PostMicroservice.Controllers
         [HttpPost]
         public async Task<IActionResult> Insert([FromForm] PostDto postDto)
         {
-            
-            //post.ImageName = await _postService.SaveImage(post.ImageFile);
-
-
             return Ok(await _postService.Insert(PostMapper.PostDtoToPost(postDto)));
         }
 

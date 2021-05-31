@@ -37,6 +37,7 @@ namespace PostMicroservice.Service
             {
                 content.ImageName = await SaveImage(content.ImageFile);
             }
+            entity.PublishingDate = DateTime.Now;
             return await _postRepository.Insert(entity);
         }
 

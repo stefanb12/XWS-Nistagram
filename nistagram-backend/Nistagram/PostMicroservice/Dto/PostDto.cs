@@ -6,7 +6,7 @@ namespace PostMicroservice.Dto
 {
     public class PostDto
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public List<string> Tags { get; set; }
         public string Description { get; set; }
         public DateTime PublishingDate { get; set; }

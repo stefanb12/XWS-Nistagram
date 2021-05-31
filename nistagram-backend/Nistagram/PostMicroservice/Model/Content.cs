@@ -11,8 +11,6 @@ namespace PostMicroservice.Model
         public IFormFile ImageFile { get; set; }
         [BsonIgnore]
         public string ImageSrc { get; set; }
-        public int PostId { get; set; }
-        public virtual Post Post { get; set; }
 
         public Content() {}
     }
