@@ -62,7 +62,7 @@ class ProfileService {
     );
   }
 
-  followRequest(receiverId, senderId) {
+  sendFollowRequest(receiverId, senderId) {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -86,6 +86,14 @@ class ProfileService {
     return fetch(
       API_URL + "profile/followRequest/" + receiverId + "/" + senderId
     );
+  }
+
+  getFollowers(profileId) {
+    return fetch(API_URL + "profile/" + profileId + "/followers");
+  }
+
+  getFollowing(profileId) {
+    return fetch(API_URL + "profile/" + profileId + "/following");
   }
 }
 

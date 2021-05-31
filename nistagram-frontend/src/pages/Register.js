@@ -147,18 +147,6 @@ const Register = () => {
                   variant="outlined"
                 />
                 <TextField
-                  error={Boolean(touched.username && errors.username)}
-                  fullWidth
-                  helperText={touched.username && errors.username}
-                  label="Username"
-                  margin="normal"
-                  name="username"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.username}
-                  variant="outlined"
-                />
-                <TextField
                   error={Boolean(touched.email && errors.email)}
                   fullWidth
                   helperText={touched.email && errors.email}
@@ -169,6 +157,18 @@ const Register = () => {
                   onChange={handleChange}
                   type="email"
                   value={values.email}
+                  variant="outlined"
+                />
+                <TextField
+                  error={Boolean(touched.username && errors.username)}
+                  fullWidth
+                  helperText={touched.username && errors.username}
+                  label="Username"
+                  margin="normal"
+                  name="username"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.username}
                   variant="outlined"
                 />
                 <TextField

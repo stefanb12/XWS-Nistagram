@@ -12,9 +12,24 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import AuthService from "../services/AuthService";
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
 
 const Login = () => {
   const history = useHistory();
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const handleLogin = (username, password) => {
     let resStatus = 0;
@@ -29,6 +44,7 @@ const Login = () => {
           history.push("/user/home");
         } else if (resStatus === 401) {
           console.log("Uneliste nevalidan username/lozinku");
+          handleClick();
         }
 
         return result;
@@ -37,6 +53,16 @@ const Login = () => {
 
   return (
     <>
+      <Snackbar
+        open={open}
+        autoHideDuration={2000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleClose} severity="error">
+          Invalid username or password!
+        </Alert>
+      </Snackbar>
       <Box
         sx={{
           backgroundColor: "background.default",
@@ -66,7 +92,7 @@ const Login = () => {
               touched,
               values,
             }) => (
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} style={{ marginTop: "80px" }}>
                 <Box sx={{ mb: 3 }}>
                   <Typography color="textPrimary" variant="h2">
                     Sign in
@@ -76,10 +102,10 @@ const Login = () => {
                     gutterBottom
                     variant="body2"
                   >
-                    Sign in on the internal platform
+                    Sign in with your username
                   </Typography>
                 </Box>
-                <Grid container spacing={3}>
+                {/* <Grid container spacing={3}>
                   <Grid item xs={12} md={6}>
                     <Button
                       color="primary"
@@ -117,7 +143,7 @@ const Login = () => {
                   >
                     or login with email address
                   </Typography>
-                </Box>
+                </Box> */}
                 <TextField
                   error={Boolean(touched.email && errors.email)}
                   fullWidth
@@ -127,7 +153,7 @@ const Login = () => {
                   name="email"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  type="email"
+                  // type="email"
                   value={values.email}
                   variant="outlined"
                 />
@@ -144,7 +170,7 @@ const Login = () => {
                   value={values.password}
                   variant="outlined"
                 />
-                <Box sx={{ py: 2 }}>
+                <Box sx={{ py: 2 }} style={{ marginTop: "10px" }}>
                   <Button
                     color="primary"
                     fullWidth
