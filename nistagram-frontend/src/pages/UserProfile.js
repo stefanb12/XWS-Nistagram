@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "../assets/styles/profile.css";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
 import {
   BookmarkBorder,
@@ -11,14 +11,14 @@ import "../assets/styles/posts.css";
 import AuthService from "../services/AuthService";
 import ProfileService from "../services/ProfileService";
 
-export default class UserProfile extends Component {
+class UserProfile extends Component {
   constructor(props) {
     super(props);
     this.dropdownRef = React.createRef();
     this.state = {
       loggedUser: { following: [], followers: [] },
       userProfile: {},
-      userProfileId: 3,
+      userProfileId: this.props.location.state.profileId,
       isOpenFollowersModal: false,
       isOpenFollowingModal: false,
       isDislike: false,
@@ -26,11 +26,8 @@ export default class UserProfile extends Component {
       isSaved: false,
       isActive: false,
       doesFollowRequestExist: false,
-      followers: [
-        { username: "username1" },
-        { username: "username2" },
-        { username: "username3" },
-      ],
+      followers: [],
+      following: [],
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -57,6 +54,22 @@ export default class UserProfile extends Component {
       .then((result) => {
         this.setState({
           userProfile: result,
+        });
+      });
+
+    await ProfileService.getFollowers(this.state.userProfileId)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          followers: result,
+        });
+      });
+
+    await ProfileService.getFollowing(this.state.userProfileId)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          following: result,
         });
       });
 
@@ -128,7 +141,7 @@ export default class UserProfile extends Component {
   };
 
   handleFollowRequest = (followerId, followingId) => {
-    ProfileService.followRequest(followerId, followingId)
+    ProfileService.sendFollowRequest(followerId, followingId)
       .then((res) => {
         return res.json();
       })
@@ -174,26 +187,20 @@ export default class UserProfile extends Component {
           <div class="d-none d-md-block col-md-4 col-xl-3 left-wrapper">
             <div class="card rounded">
               <div class="card-body">
+                <div class="mt-3">
+                  <label class="tx-11 font-weight-bold mb-0">Full name:</label>
+                  <p class="text-muted">{userProfile.fullName}</p>
+                </div>
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                  <h6 class="card-title mb-0">Bio</h6>
+                  <h6 class="card-title mb-0">Biography</h6>
                 </div>
                 <p>{userProfile.biography}</p>
                 <div class="mt-3">
-                  <label class="tx-11 font-weight-bold mb-0 text-uppercase">
-                    Name:
-                  </label>
-                  <p class="text-muted">{userProfile.fullName}</p>
-                </div>
-                <div class="mt-3">
-                  <label class="tx-11 font-weight-bold mb-0 text-uppercase">
-                    Website:
-                  </label>
+                  <label class="tx-11 font-weight-bold mb-0">Website:</label>
                   <p class="text-muted">{userProfile.website}</p>
                 </div>
                 <div class="mt-3">
-                  <label class="tx-11 font-weight-bold mb-0 text-uppercase">
-                    Email:
-                  </label>
+                  <label class="tx-11 font-weight-bold mb-0">Email:</label>
                   <p class="text-muted">{userProfile.email}</p>
                 </div>
               </div>
@@ -693,7 +700,7 @@ export default class UserProfile extends Component {
                           {follower.username}
                         </a>
                       </div>
-                      <div class="text-muted fs-13px">North Raundspic</div>
+                      {/* <div class="text-muted fs-13px">North Raundspic</div> */}
                     </div>
                     <a href="#" class="btn btn-outline-primary">
                       Follow
@@ -719,7 +726,7 @@ export default class UserProfile extends Component {
           </Modal.Header>
           <Modal.Body>
             <div style={{ overflow: "auto", maxHeight: "300px" }}>
-              {this.state.followers.map((follower) => {
+              {this.state.following.map((followingProfile) => {
                 return (
                   <div class="list-group-item d-flex align-items-center">
                     <img
@@ -731,13 +738,13 @@ export default class UserProfile extends Component {
                     <div class="flex-fill pl-3 pr-3">
                       <div>
                         <a href="#" class="text-dark font-weight-600">
-                          {follower.username}
+                          {followingProfile.username}
                         </a>
                       </div>
-                      <div class="text-muted fs-13px">North Raundspic</div>
+                      {/* <div class="text-muted fs-13px">North Raundspic</div> */}
                     </div>
                     <a href="#" class="btn btn-outline-primary">
-                      Follow
+                      Unfollow
                     </a>
                   </div>
                 );
@@ -848,7 +855,10 @@ export default class UserProfile extends Component {
                           class="pt-1px d-none d-md-block"
                           onClick={this.openFollowersModal}
                         >
-                          Followers <span class="text-muted tx-12">2,765</span>
+                          Followers{" "}
+                          <span class="text-muted tx-12">
+                            {this.state.followers.length}
+                          </span>
                         </Link>
                       </li>
                       <li class="header-link-item ml-3 pl-3 border-left d-flex align-items-center">
@@ -873,10 +883,12 @@ export default class UserProfile extends Component {
                           class="pt-1px d-none d-md-block"
                           onClick={this.openFollowingModal}
                         >
-                          Following <span class="text-muted tx-12">1,765</span>
+                          Following{" "}
+                          <span class="text-muted tx-12">
+                            {this.state.following.length}
+                          </span>
                         </Link>
                       </li>
-
                       {savedButton}
                     </ul>
                   </div>
@@ -890,3 +902,5 @@ export default class UserProfile extends Component {
     );
   }
 }
+
+export default withRouter(UserProfile);
