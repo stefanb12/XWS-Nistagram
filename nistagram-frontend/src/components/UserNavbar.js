@@ -170,7 +170,10 @@ export default function UserNavbar() {
   };
 
   const navigateToProfile = () => {
-    history.push("/user/profile");
+    history.push({
+      pathname: "/user/profile",
+      state: { profileId: AuthService.getCurrentUser().id },
+    });
     handleMenuClose();
   };
 
@@ -451,9 +454,14 @@ export default function UserNavbar() {
             color="inherit"
             aria-label="open drawer"
           >
-            <Instagram />
+            <Instagram onClick={navigateToHome} />
           </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Typography
+            onClick={navigateToHome}
+            className={classes.title}
+            variant="h6"
+            noWrap
+          >
             Nistagram
           </Typography>
           <div className={classes.search}>
