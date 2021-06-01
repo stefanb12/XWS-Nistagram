@@ -13,7 +13,7 @@ namespace ProfileMicroservice.Model
         public bool Accepted { get; set; }
         public bool Processed { get; set; }
         public int AgentId { get; set; }
-        public Profile Agent { get; set; }
+        public virtual Profile Agent { get; set; }
 
         public RegistrationRequest()
         {

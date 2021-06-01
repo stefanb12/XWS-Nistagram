@@ -10,6 +10,8 @@ import {
 import "../assets/styles/posts.css";
 import AuthService from "../services/AuthService";
 import ProfileService from "../services/ProfileService";
+import FollowRequestService from "../services/FollowRequestService";
+import NotificationService from "../services/NotificationService";
 
 class UserProfile extends Component {
   constructor(props) {
@@ -19,7 +21,7 @@ class UserProfile extends Component {
       loggedUser: { following: [], followers: [] },
       userProfile: {},
       //userProfileId: this.props.location.state.profileId,
-      userProfileId: 1,
+      userProfileId: 3,
       isOpenFollowersModal: false,
       isOpenFollowingModal: false,
       isDislike: false,
@@ -62,7 +64,7 @@ class UserProfile extends Component {
 
     if (this.state.userProfile.private == true) {
       let resStatus = 0;
-      ProfileService.getFollowRequest(
+      FollowRequestService.getFollowRequest(
         this.state.userProfileId,
         this.state.loggedUser.id
       )
@@ -148,11 +150,16 @@ class UserProfile extends Component {
   };
 
   handleFollowRequest = (followerId, followingId) => {
-    ProfileService.sendFollowRequest(followerId, followingId)
+    FollowRequestService.sendFollowRequest(followerId, followingId)
       .then((res) => {
         return res.json();
       })
       .then(() => {
+        NotificationService.sendFollowRequestNotification(
+          followerId,
+          followingId,
+          0
+        );
         this.setState({
           doesFollowRequestExist: true,
         });
@@ -160,9 +167,13 @@ class UserProfile extends Component {
   };
 
   handleDeleteFollowRequest = (followerId, followingId) => {
-    ProfileService.deleteFollowRequest(followerId, followingId)
+    FollowRequestService.deleteFollowRequest(followerId, followingId)
       .then(() => {})
       .then(() => {
+        NotificationService.deleteFollowRequestNotification(
+          followerId,
+          followingId
+        );
         this.setState({
           doesFollowRequestExist: false,
         });
