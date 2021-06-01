@@ -43,7 +43,6 @@ const Login = () => {
           localStorage.setItem("currentUser", JSON.stringify(result));
           history.push("/user/home");
         } else if (resStatus === 401) {
-          console.log("Uneliste nevalidan username/lozinku");
           handleClick();
         }
 

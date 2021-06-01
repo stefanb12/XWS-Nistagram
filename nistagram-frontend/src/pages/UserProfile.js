@@ -18,7 +18,8 @@ class UserProfile extends Component {
     this.state = {
       loggedUser: { following: [], followers: [] },
       userProfile: {},
-      userProfileId: this.props.location.state.profileId,
+      //userProfileId: this.props.location.state.profileId,
+      userProfileId: 1,
       isOpenFollowersModal: false,
       isOpenFollowingModal: false,
       isDislike: false,
@@ -57,21 +58,7 @@ class UserProfile extends Component {
         });
       });
 
-    await ProfileService.getFollowers(this.state.userProfileId)
-      .then((res) => res.json())
-      .then((result) => {
-        this.setState({
-          followers: result,
-        });
-      });
-
-    await ProfileService.getFollowing(this.state.userProfileId)
-      .then((res) => res.json())
-      .then((result) => {
-        this.setState({
-          following: result,
-        });
-      });
+    this.getFollowersAndFollowing();
 
     if (this.state.userProfile.private == true) {
       let resStatus = 0;
@@ -114,12 +101,31 @@ class UserProfile extends Component {
     }));
   }
 
+  getFollowersAndFollowing = () => {
+    ProfileService.getFollowers(this.state.userProfileId)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          followers: result,
+        });
+      });
+
+    ProfileService.getFollowing(this.state.userProfileId)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          following: result,
+        });
+      });
+  };
+
   handleFollow = (followerId, followingId) => {
     ProfileService.follow(followerId, followingId)
       .then((res) => {
         return res.json();
       })
       .then((result) => {
+        this.getFollowersAndFollowing();
         this.setState({
           loggedUser: result.follower,
           userProfile: result.profile,
@@ -133,6 +139,7 @@ class UserProfile extends Component {
         return res.json();
       })
       .then((result) => {
+        this.getFollowersAndFollowing();
         this.setState({
           loggedUser: result.follower,
           userProfile: result.profile,
