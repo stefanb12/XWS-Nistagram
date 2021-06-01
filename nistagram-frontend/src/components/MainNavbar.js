@@ -117,6 +117,10 @@ export default function MainNavbar() {
     history.push("/app/register");
   };
 
+  const navigateToHome = () => {
+    history.push("/app");
+  };
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -184,9 +188,14 @@ export default function MainNavbar() {
             color="inherit"
             aria-label="open drawer"
           >
-            <Instagram />
+            <Instagram onClick={navigateToHome} />
           </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Typography
+            onClick={navigateToHome}
+            className={classes.title}
+            variant="h6"
+            noWrap
+          >
             Nistagram
           </Typography>
           <div className={classes.search}>

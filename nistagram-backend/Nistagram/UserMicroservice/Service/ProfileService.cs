@@ -45,6 +45,65 @@ namespace UserMicroservice.Service
             return followingProfiles;
         }
 
+        public async Task<bool> DoesProfileFollowAnotherProfile(int profileId, int id)
+        {
+            List<Profile> followingProfiles = await GetFollowingProfiles(profileId);
+            if (followingProfiles.Contains(await _profileRepository.GetById(id)))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<ProfileFollower> FollowAnotherProfile(int profileId, int id)
+        {
+            Profile followerProfile = await GetById(profileId);
+            Profile followingProfile = await GetById(id);
+            if (followerProfile == null || followingProfile == null)
+            {
+                return null;
+            }
+            ProfileFollower profileFollower = new ProfileFollower();
+            profileFollower.ProfileId = followingProfile.Id;
+            profileFollower.FollowerId = followerProfile.Id;
+            followingProfile.Followers.Add(profileFollower);
+            await Update(followerProfile);
+
+            ProfileFollowing profileFollowing = new ProfileFollowing();
+            profileFollowing.ProfileId = followerProfile.Id;
+            profileFollowing.FollowingId = followingProfile.Id;
+            followerProfile.Following.Add(profileFollowing);
+            await Update(followingProfile);
+
+            return profileFollower;
+        }
+
+        public async Task<ProfileFollower> UnfollowAnotherProfile(int profileId, int id)
+        {
+            Profile followerProfile = await GetById(profileId);
+            Profile followingProfile = await GetById(id);
+            if (followerProfile == null || followingProfile == null)
+            {
+                return null;
+            }
+            ProfileFollower profileFollower = followingProfile.Followers.Where(pf =>
+                pf.ProfileId == followingProfile.Id &&
+                pf.FollowerId == followerProfile.Id).SingleOrDefault();
+            followingProfile.Followers.Remove(profileFollower);
+            await Update(followerProfile);
+
+            ProfileFollowing profileFollowing = followerProfile.Following.Where(profileFollowing =>
+                profileFollowing.ProfileId == followerProfile.Id &&
+                profileFollowing.FollowingId == followingProfile.Id).SingleOrDefault();
+            followerProfile.Following.Remove(profileFollowing);
+            await Update(followingProfile);
+
+            ProfileFollower res = new ProfileFollower();
+            res.Profile = followingProfile;
+            res.Follower = followerProfile;
+            return res;
+        }
+
         public async Task<Profile> GetById(int id)
         {
             return await _profileRepository.GetById(id);

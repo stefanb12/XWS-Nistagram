@@ -1,6 +1,10 @@
 ﻿using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using PostMicroservice.Model;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PostMicroservice.Database
 {
@@ -13,6 +17,37 @@ namespace PostMicroservice.Database
         {
             _mongoClient = new MongoClient(configuration.ConnectionString);
             _db = _mongoClient.GetDatabase(configuration.DatabaseName);
+            SeedDataAsync(_db).Wait();
+        }
+
+        private async Task SeedDataAsync(IMongoDatabase _db)
+        {
+            if (!CollectionExists(_db, "Post"))
+            {
+                _db.CreateCollection("Post");
+                var postCollection = _db.GetCollection<Post>("Post");
+                var postData = CreatePostData();
+                await postCollection.InsertManyAsync(postData);
+            }
+           
+        }
+
+        public bool CollectionExists(IMongoDatabase database, string collectionName)
+        {
+            var filter = new BsonDocument("name", collectionName);
+            var options = new ListCollectionNamesOptions { Filter = filter };
+
+            return database.ListCollectionNames(options).Any();
+        }
+
+        private IEnumerable<Post> CreatePostData()
+        {
+            var postData = new List<Post> {
+                new Post { Tags = new List<string> {"#sport"} , Description = "Football", PublishingDate = new DateTime(2021, 05, 30), Location = new Location { Address = "", City = "Belgrade", Country = "Serbia"}, Comments = new List<Comment> { new Comment { Text = "Excellent", Date = new DateTime(2021, 05, 30), Publisher = new Profile { Username = "user1" } } } },
+                new Post { Tags = new List<string> {"#tv"} , Description = "Basketball", PublishingDate = new DateTime(2021, 05, 30), Location = new Location { Address = "", City = "Belgrade", Country = "Serbia"}, Comments = new List<Comment> { new Comment { Text = "Excellent", Date = new DateTime(2021, 05, 30), Publisher = new Profile { Username = "user2" } } } }
+            };
+
+            return postData;
         }
 
         public IMongoCollection<T> GetCollection<T>(string name)
