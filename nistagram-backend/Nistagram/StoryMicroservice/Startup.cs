@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -7,8 +8,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using StoryMicroservice.Database;
+using StoryMicroservice.Repository;
+using StoryMicroservice.Service;
 
 namespace StoryMicroservice
 {
@@ -25,6 +31,26 @@ namespace StoryMicroservice
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddCors();
+
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.Configure<MongoDbSettings>(
+                Configuration.GetSection(nameof(MongoDbSettings)));
+
+            services.AddSingleton<MongoDbSettings>(sp =>
+                sp.GetRequiredService<IOptions<MongoDbSettings>>().Value);
+
+            services.AddSingleton<IMongoDbContext, MongoDbContext>();
+
+            services.AddSingleton<IStoryRepository, StoryRepository>();
+            services.AddSingleton<IStoryService, StoryService>();
+
+            services.AddSingleton<IProfileRepository, ProfileRepository>();
+            services.AddSingleton<IProfileService, ProfileService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,6 +60,12 @@ namespace StoryMicroservice
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Images")),
+                RequestPath = "/Images"
+            });
 
             app.UseRouting();
 
