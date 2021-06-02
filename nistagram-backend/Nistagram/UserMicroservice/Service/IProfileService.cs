@@ -1,4 +1,5 @@
-﻿using ProfileMicroservice.Model;
+﻿using Microsoft.AspNetCore.Http;
+using ProfileMicroservice.Model;
 using ProfileMicroservice.Service;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,5 +15,6 @@ namespace UserMicroservice.Service
         Task<bool> DoesProfileFollowAnotherProfile(int profileId, int id);
         Task<ProfileFollower> FollowAnotherProfile(int profileId, int id);
         Task<ProfileFollower> UnfollowAnotherProfile(int profileId, int id);
+        Task<Profile> UpdateWithImage(Profile profile, IFormFile imageFile);
     }
 }
