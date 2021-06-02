@@ -18,25 +18,32 @@ class ProfileService {
     email,
     mobilePhone,
     dateOfBirth,
-    gender
+    gender,
+    profileImage
   ) {
+    const formData = new FormData();
+
+    console.log(profileImage);
+
+    formData.append("id", id);
+    formData.append("username", username);
+    formData.append("biography", biography);
+    formData.append("website", website);
+    formData.append("fullName", fullName);
+    formData.append("email", email);
+    formData.append("mobilePhone", mobilePhone);
+    formData.append("dateOfBirth", dateOfBirth);
+    formData.append("gender", gender);
+    formData.append("imageFile", profileImage);
+
     const requestOptions = {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id,
-        username,
-        biography,
-        website,
-        fullName,
-        email,
-        mobilePhone,
-        dateOfBirth,
-        gender,
-      }),
+      body: formData,
     };
+    
     return fetch(API_URL + "profile/update", requestOptions);
   }
+
 
   follow(followerId, followingId) {
     const requestOptions = {
