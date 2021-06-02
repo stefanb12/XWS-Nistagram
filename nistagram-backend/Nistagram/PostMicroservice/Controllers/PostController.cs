@@ -52,7 +52,18 @@ namespace PostMicroservice.Controllers
             {
                 return NotFound();
             }
-            return Ok(publicPosts);
+
+            List<PostDto> publicPostsDto = new List<PostDto>();
+            foreach(Post post in publicPosts)
+            {
+                for (int i = 0; i < post.Contents.Count; i++)
+                {
+                    post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
+                }
+                publicPostsDto.Add(PostMapper.PostToPostDto(post));
+            }
+
+            return Ok(publicPostsDto);
         }
 
         [HttpPost]

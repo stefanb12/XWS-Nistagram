@@ -26,6 +26,7 @@ export default class Posts extends Component {
       tags: "",
       currentEnteredTags: "",
       description: "",
+      posts: "",
     };
     this.handleInputChange = this.handleInputChange.bind(this);
   }
@@ -358,7 +359,7 @@ export default class Posts extends Component {
                       </div>
                     </div>
                   </div>
-                  <PostCard />
+                  <PostCard sendPosts={this.state.posts} />
                 </div>
                 <div class="col-lg-12 col-xl-4">
                   <div class="card card-white grid-margin">
