@@ -14,7 +14,7 @@ const styles = (theme) => ({
   },
 });
 
-class UloadImages extends Component {
+class UploadImages extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,7 +42,7 @@ class UloadImages extends Component {
     return (
       <div className={classes.root}>
         <input
-          accept="image/*"
+          accept="image/*, video/*"
           className={classes.input}
           id="icon-button-file"
           type="file"
@@ -81,4 +81,4 @@ class UloadImages extends Component {
   }
 }
 
-export default withStyles(styles)(UloadImages);
+export default withStyles(styles)(UploadImages);

@@ -2,8 +2,8 @@ import React from "react";
 import UserNavbar from "./UserNavbar";
 import { Switch, Route } from "react-router-dom";
 import UserProfile from "../pages/UserProfile";
-import HomePage from "../pages/HomePage";
 import UserProfileSettings from "../pages/UserProfileSettings";
+import UserHomePage from "../pages/UserHomePage";
 
 const MainLayoutRoot = {
   height: "100%",
@@ -45,7 +45,7 @@ export default function UserLayout({ routes }) {
                 <UserProfile />
               </Route>
               <Route path="/user/home">
-                <HomePage />
+                <UserHomePage />
               </Route>
               <Route path="/user/settings">
                 <UserProfileSettings />

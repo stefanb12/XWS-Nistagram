@@ -4,6 +4,7 @@ using PostMicroservice.Mapper;
 using PostMicroservice.Model;
 using PostMicroservice.Service;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PostMicroservice.Controllers
@@ -41,6 +42,28 @@ namespace PostMicroservice.Controllers
             }
 
             return Ok(post);
+        }
+
+        [HttpGet("public")]
+        public async Task<IActionResult> GetPublicProfiles()
+        {
+            List<Post> publicPosts = await _postService.GetAllPublicPosts();
+            if (publicPosts.Count == 0)
+            {
+                return NotFound();
+            }
+
+            List<PostDto> publicPostsDto = new List<PostDto>();
+            foreach(Post post in publicPosts)
+            {
+                for (int i = 0; i < post.Contents.Count; i++)
+                {
+                    post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
+                }
+                publicPostsDto.Add(PostMapper.PostToPostDto(post));
+            }
+
+            return Ok(publicPostsDto);
         }
 
         [HttpPost]

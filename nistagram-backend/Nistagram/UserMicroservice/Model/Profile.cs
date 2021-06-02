@@ -12,7 +12,7 @@ namespace ProfileMicroservice.Model
     public class Profile : User
     {
         public int Id { get; set; }
-        public bool Private { get; set; }
+        public bool IsPrivate { get; set; }
         public string Website { get; set; }
         public string Biography { get; set; }
         public bool Deactivated { get; set; }

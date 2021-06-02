@@ -16,6 +16,12 @@ namespace PostMicroservice.Service
             _profileRepository = profileRepository;
         }
 
+        public async Task<List<Profile>> GetAllPublicProfiles()
+        {
+            IEnumerable<Profile> publicProfiles = await GetAll();
+            return publicProfiles.Where(pf => pf.IsPrivate == false).ToList();
+        }
+
         public async Task<Profile> GetById(string id)
         {
             return await _profileRepository.GetById(id);

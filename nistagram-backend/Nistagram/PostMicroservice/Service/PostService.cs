@@ -13,12 +13,30 @@ namespace PostMicroservice.Service
     public class PostService : IPostService
     {
         private IPostRepository _postRepository;
+        private IProfileService _profileService;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public PostService(IPostRepository postRepository, IWebHostEnvironment hostEnvironment)
+        public PostService(IPostRepository postRepository, IProfileService profileService, IWebHostEnvironment hostEnvironment)
         {
             _postRepository = postRepository;
+            _profileService = profileService;
             _hostEnvironment = hostEnvironment;
+        }
+
+        public async Task<List<Post>> GetAllPublicPosts()
+        {
+            List<Post> publicPosts = new List<Post>();
+            foreach (Profile profile in await _profileService.GetAllPublicProfiles())
+            {
+                foreach (Post post in await GetAll())
+                {
+                    if (profile.OriginalId == post.Publisher.OriginalId)
+                    {
+                        publicPosts.Add(post);
+                    }
+                }
+            }
+            return publicPosts;
         }
 
         public async Task<Post> GetById(string id)
