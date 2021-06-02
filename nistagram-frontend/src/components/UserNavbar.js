@@ -33,6 +33,7 @@ import { Snackbar } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import FollowRequestService from "../services/FollowRequestService";
 import ProfileService from "../services/ProfileService";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -367,7 +368,11 @@ export default function UserNavbar() {
             </div>
           </div>
           <span class="ml-auto mb-auto">
-            <div class="text-right text-muted pt-1">{notification.time}</div>
+            <div class="text-right text-muted pt-1">
+              {moment(
+                moment(Notification.time).format("YYYY-MM-DD HH:mm:ss")
+              ).fromNow()}
+            </div>
           </span>
         </StyledMenuItem>
       );
@@ -394,7 +399,11 @@ export default function UserNavbar() {
             </div>
           </div>
           <span class="ml-auto mb-auto">
-            <div class="text-right text-muted pt-1">3d</div>
+            <div class="text-right text-muted pt-1">
+              {moment(
+                moment(Notification.time).format("YYYY-MM-DD HH:mm:ss")
+              ).fromNow()}
+            </div>
           </span>
         </StyledMenuItem>
       );

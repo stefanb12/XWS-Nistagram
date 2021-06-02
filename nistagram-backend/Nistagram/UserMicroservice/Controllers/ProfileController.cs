@@ -98,7 +98,7 @@ namespace UserMicroservice.Controllers
         }   
 
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateProfile(ProfileDto profileDto)
+        public async Task<IActionResult> UpdateProfile([FromForm] UpdateDto profileDto)
         {
             Profile profile = await _profileService.GetById(profileDto.Id);
 
@@ -106,9 +106,7 @@ namespace UserMicroservice.Controllers
             {
                 return NoContent();
             }
-            //profile.Username = profileDto.Username;
-            //Profile updatedProfile = await _profileService.Update(profile);
-            Profile updatedProfile = await _profileService.Update(UpdateProfileMapper.ProfileDtoToProfile(profile, profileDto));
+            Profile updatedProfile = await _profileService.UpdateWithImage(UpdateProfileMapper.ProfileDtoToProfile(profile, profileDto), profileDto.ImageFile);
             return Ok(updatedProfile);  
         }
 
@@ -116,13 +114,14 @@ namespace UserMicroservice.Controllers
         public async Task<IActionResult> GetProfileForUpdating(int id)
         {
             Profile profile = await _profileService.GetById(id);
+            profile.ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, profile.ImageName);
 
             if (profile == null)
             {
                 return NoContent();
             }
 
-            ProfileDto dto = UpdateProfileMapper.ProfileToProfileDto(profile);
+            UpdateDto dto = UpdateProfileMapper.ProfileToProfileDto(profile);
 
             return Ok(dto);
         }

@@ -1,7 +1,21 @@
 import React, { Component } from "react";
 import ProfileService from "../../services/ProfileService"
-import Alert from 'react-bootstrap/Alert'
-import { Button, IconButton, Snackbar } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
+import { Button, Snackbar, withStyles } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import { PhotoCamera } from "@material-ui/icons";
+import AuthService from "../../services/AuthService";
+
+const styles = (theme) => ({
+  root: {
+    "& > *": {
+      margin: theme.spacing(1),
+    },
+  },
+  input: {
+    display: "none",
+  },
+});
 
 class UserAccount extends Component {
   //state = {};
@@ -21,17 +35,21 @@ class UserAccount extends Component {
         gender: 15,
         open: false,
         snackBarMessage: "",
-        snackBarSeverity: ""
+        snackBarSeverity: "",
+        profileImage: "https://bootdey.com/img/Content/avatar/avatar7.png",
+        imageForSending: null
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleOptionChange = this.handleOptionChange.bind(this);
+    //this.handlerFile = this.handlerFile.bind(this);
 
   }
 
   componentDidMount(){
-    ProfileService.getUserForUpdating(4)
+    let publisher = AuthService.getCurrentUser();
+    ProfileService.getUserForUpdating(publisher.id)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -79,6 +97,11 @@ class UserAccount extends Component {
     this.state.phoneNumber = profile.mobilePhone;
     this.state.dateOfBirth = profile.dateOfBirth;
     this.state.gender = profile.gender;
+    if(profile.imageSrc != ""){
+      this.state.profileImage = profile.imageSrc;
+    }else {
+      this.state.profileImage = "https://bootdey.com/img/Content/avatar/avatar7.png";
+    }
   }
 
   formattedDate(date) {
@@ -96,6 +119,7 @@ class UserAccount extends Component {
   }
 
   updateProfile(){
+    let publisher = AuthService.getCurrentUser();
     if(this.state.username == "" || this.state.biography == "" || this.state.biography == "" || this.state.fullname == "" ||
       this.state.email == "" || this.state.phoneNumber == "" || this.state.dateOfBirth == ""){
         this.setState({
@@ -109,8 +133,8 @@ class UserAccount extends Component {
         snackBarMessage: "Profile updated!",
         snackBarSeverity: "success"
       });
-      ProfileService.updateProfile(4, this.state.username, this.state.biography, this.state.website, this.state.fullname, 
-                                  this.state.email, this.state.phoneNumber, this.state.dateOfBirth, this.state.gender)
+      ProfileService.updateProfile(publisher.id, this.state.username, this.state.biography, this.state.website, this.state.fullname, 
+                                  this.state.email, this.state.phoneNumber, this.state.dateOfBirth, this.state.gender, this.state.imageForSending)
         .then((res) => res.json())
         .then(
           (result) => {
@@ -130,7 +154,31 @@ class UserAccount extends Component {
     this.state.showAlert = true;
   }
 
+  handlerFile = (e) => {
+    //this.state.profileImage = e.target.value
+    if (e.target.files && e.target.files[0]) {
+      let img = e.target.files[0];
+      this.setState({
+        profileImage: URL.createObjectURL(img),
+        imageForSending: img
+      });
+    }
+    e.preventDefault();
+  };
+
+  handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    this.setState({
+      open: false
+    });
+  };
+
   render() {
+    const { classes } = this.props;
+
     let usernameValidation;
     if(this.state.username == ""){
       usernameValidation = <label style={{color:"red"}}>Enter your username</label>
@@ -164,6 +212,8 @@ class UserAccount extends Component {
     if(this.state.showAlert == true){
       alert = <Alert variant="primary">This is a alertlike.</Alert>
     }
+
+    let image = this.state.profileImage;
 
     return (
       
@@ -222,15 +272,32 @@ class UserAccount extends Component {
                   </div>
                 </div>
                 <div className="col-md-4">
-                  <div className="text-center">
+                  <div className={classes.root}>
                     <img
                       alt="Andrew Jones"
-                      src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                      src={this.state.profileImage}
                       className="rounded-circle img-responsive mt-2"
                       width="128"
                       height="128"
                     />
-                    <div className="mt-2">Marko Markovic</div>
+                    <div className="mt-2">{this.state.fullname}</div>
+                    <input
+                      accept="image/*"
+                      id="icon-button-file"
+                      className={classes.input}
+                      type="file"
+                      onChange={this.handlerFile.bind(this)}
+                    />
+                    <label htmlFor="icon-button-file" style={{ marginLeft: "10%" }}>
+                      Choose images:
+                      <IconButton
+                        color="primary"
+                        aria-label="upload picture"
+                        component="span"
+                      >
+                        <PhotoCamera />
+                      </IconButton>
+                    </label>
                   </div>
                 </div>
               </div>
@@ -324,15 +391,19 @@ class UserAccount extends Component {
               <button className="btn btn-primary" onClick={() => this.updateProfile()}>
                 Save changes
               </button>
-              <Snackbar
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center',
-                }}
-                open={this.state.open}
-                autoHideDuration={6000}
-                message={this.state.snackBarMessage}
-              />
+                <Snackbar
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                  }}
+                  open={this.state.open}
+                  autoHideDuration={2000}
+                  onClose={this.handleClose}
+                >
+                  <Alert onClose={this.handleClose} severity={this.state.snackBarSeverity}>
+                    {this.state.snackBarMessage}
+                  </Alert>
+                </Snackbar>
           </div>
         </div>
       </div>
@@ -340,4 +411,4 @@ class UserAccount extends Component {
   }
 }
 
-export default UserAccount;
+export default withStyles(styles)(UserAccount);
