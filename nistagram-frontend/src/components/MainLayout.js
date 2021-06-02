@@ -48,7 +48,7 @@ export default function MainLayout({ routes }) {
               <Route path="/app/register">
                 <Register />
               </Route>
-              <Route path="/app/home">
+              <Route path="/app">
                 <HomePage />
               </Route>
               <Route path="/app/404">

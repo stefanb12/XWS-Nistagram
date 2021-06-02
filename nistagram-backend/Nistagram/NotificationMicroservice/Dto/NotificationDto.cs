@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace NotificationMicroservice.Model
+namespace NotificationMicroservice.Dto
 {
-    public class Notification
+    public class NotificationDto
     {
         public int Id { get; set; }
         public DateTime Time { get; set; }
@@ -10,14 +13,9 @@ namespace NotificationMicroservice.Model
         public bool Seen { get; set; }
         public bool FollowRequest { get; set; }
         public int ReceiverId { get; set; }
-        public virtual Profile Receiver { get; set; }
         public int SenderId { get; set; }
-        public virtual Profile Sender { get; set; }
         public int PostId { get; set; }
-        public virtual Post Post { get; set; }
 
-        public Notification()
-        {
-        }
+        public NotificationDto() { }
     }
 }

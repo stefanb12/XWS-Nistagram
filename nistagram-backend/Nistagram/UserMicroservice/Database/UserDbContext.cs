@@ -10,6 +10,9 @@ namespace ProfileMicroservice.Database
     {
         public DbSet<ProfileSettings> ProfileSettings { get; set; }
         public DbSet<Profile> Profiles { get; set; }
+        public DbSet<FollowRequest> FollowRequests { get; set; }
+        public DbSet<ProfileVerificationRequest> ProfileVerificationRequests { get; set; }
+        public DbSet<RegistrationRequest> RegistrationRequests { get; set; }
         public DbSet<ProfileFollower> ProfileFollowers { get; set; }
         public DbSet<ProfileFollowing> ProfileFollowings { get; set; }
         public DbSet<ProfileCloseFriend> ProfileCloseFriends { get; set; }

@@ -122,7 +122,7 @@
             }*/
         },
         {
-            "DownstreamPathTemplate": "/api/profile/followRequest",
+            "DownstreamPathTemplate": "/api/followRequest",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -130,7 +130,7 @@
                     "Port": 55988
                 }
             ],
-            "UpstreamPathTemplate": "/gateway/profile/followRequest",
+            "UpstreamPathTemplate": "/gateway/followRequest",
             "UpstreamHttpMethod": [ "POST", "DELETE" ]
             /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
@@ -141,7 +141,7 @@
             }*/
         },
         {
-            "DownstreamPathTemplate": "/api/profile/followRequest/{receiverId}/{senderId}",
+            "DownstreamPathTemplate": "/api/followRequest/{receiverId}/{senderId}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -149,7 +149,7 @@
                     "Port": 55988
                 }
             ],
-            "UpstreamPathTemplate": "/gateway/profile/followRequest/{receiverId}/{senderId}",
+            "UpstreamPathTemplate": "/gateway/followRequest/{receiverId}/{senderId}",
             "UpstreamHttpMethod": [ "GET" ]
             /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
@@ -218,7 +218,6 @@
                 "UserRole": "User"
             }*/
         },
-
         {
             "DownstreamPathTemplate": "/api/post",
             "DownstreamScheme": "http",
@@ -238,25 +237,84 @@
                 "UserRole": "User"
             }*/
         },
-        {
-            "DownstreamPathTemplate": "/api/post/{id}",
-            "DownstreamScheme": "http",
-            "DownstreamHostAndPorts": [
-                {
-                    "Host": "localhost",
-                    "Port": 55993
-                }
-            ],
-            "UpstreamPathTemplate": "/gateway/post/{id}",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+      {
+        "DownstreamPathTemplate": "/api/post/{id}",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "localhost",
+            "Port": 55993
+          }
+        ],
+        "UpstreamPathTemplate": "/gateway/post/{id}",
+        "UpstreamHttpMethod": [ "GET" ]
+        /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User"
             }*/
-        }
+      },
+
+      // NotificationMicroservice
+      {
+        "DownstreamPathTemplate": "/api/notification/followRequest",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "localhost",
+            "Port": 56002
+          }
+        ],
+        "UpstreamPathTemplate": "/gateway/notification/followRequest",
+        "UpstreamHttpMethod": [ "POST", "DELETE" ]
+        /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+      },
+      {
+        "DownstreamPathTemplate": "/api/notification/profile/{id}",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "localhost",
+            "Port": 56002
+          }
+        ],
+        "UpstreamPathTemplate": "/gateway/notification/profile/{id}",
+        "UpstreamHttpMethod": [ "GET" ]
+        /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+      },
+      {
+        "DownstreamPathTemplate": "/api/notification/seen/{profileId}",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "localhost",
+            "Port": 56002
+          }
+        ],
+        "UpstreamPathTemplate": "/gateway/notification/seen/{profileId}",
+        "UpstreamHttpMethod": [ "PUT" ]
+        /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+      }
 
     ],
     "GlobalConfiguration": {

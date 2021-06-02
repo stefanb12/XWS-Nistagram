@@ -69,32 +69,6 @@ class ProfileService {
     );
   }
 
-  sendFollowRequest(receiverId, senderId) {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ receiverId, senderId }),
-    };
-
-    return fetch(API_URL + "profile/followRequest", requestOptions);
-  }
-
-  deleteFollowRequest(receiverId, senderId) {
-    const requestOptions = {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ receiverId, senderId }),
-    };
-
-    return fetch(API_URL + "profile/followRequest", requestOptions);
-  }
-
-  getFollowRequest(receiverId, senderId) {
-    return fetch(
-      API_URL + "profile/followRequest/" + receiverId + "/" + senderId
-    );
-  }
-
   getFollowers(profileId) {
     return fetch(API_URL + "profile/" + profileId + "/followers");
   }
