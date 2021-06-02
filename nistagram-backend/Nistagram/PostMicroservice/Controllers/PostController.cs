@@ -4,6 +4,7 @@ using PostMicroservice.Mapper;
 using PostMicroservice.Model;
 using PostMicroservice.Service;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PostMicroservice.Controllers
@@ -41,6 +42,17 @@ namespace PostMicroservice.Controllers
             }
 
             return Ok(post);
+        }
+
+        [HttpGet("public")]
+        public async Task<IActionResult> GetPublicProfiles()
+        {
+            List<Post> publicPosts = await _postService.GetAllPublicPosts();
+            if (publicPosts.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(publicPosts);
         }
 
         [HttpPost]

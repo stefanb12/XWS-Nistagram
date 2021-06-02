@@ -26,6 +26,10 @@ class PostService {
 
     return fetch(API_URL + "post", requestOptions);
   }
+
+  getPublicPosts() {
+    return fetch(API_URL + "post/public");
+  }
 }
 
 export default new PostService();

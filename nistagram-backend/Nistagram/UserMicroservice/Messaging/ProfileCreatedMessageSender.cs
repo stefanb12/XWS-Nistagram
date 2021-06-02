@@ -31,7 +31,7 @@ namespace UserMicroservice.Messaging
                 var integrationEventData = JsonConvert.SerializeObject(new
                 {
                     id = profile.Id,
-                    name = profile.FullName
+                    username = profile.Username,
                 });
 
                 var body = Encoding.UTF8.GetBytes(integrationEventData);

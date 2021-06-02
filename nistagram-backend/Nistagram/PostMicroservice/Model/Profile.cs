@@ -2,7 +2,7 @@
 {
     public class Profile : User
     {
-        public bool Private { get; set; }
+        public bool IsPrivate { get; set; }
         public int OriginalId { get; set; }
 
         public Profile() : base()
