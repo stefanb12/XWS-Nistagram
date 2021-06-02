@@ -1,22 +1,26 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 
 namespace StoryMicroservice.Model
 {
-    public class Story
+    public class Story : Document
     {
-        public int Id { get; set; }
         public bool Visible { get; set; }
         public bool ForCloseFriends { get; set; }
-        public List<string> Tags { get; set; }
-        public string Description { get; set; }
         public DateTime PublishingDate { get; set; }
-        public List<Content> Content { get; set; }
-        public Location Location { get; set; }
-        public Profile Profile { get; set; }
+        public Profile Publisher { get; set; }
+        public string ImageName { get; set; }
+        [BsonIgnore]
+        public IFormFile ImageFile { get; set; }
+        [BsonIgnore]
+        public string ImageSrc { get; set; }
 
         public Story()
         {
+            Id = ObjectId.GenerateNewId().ToString();
         }
     }
 }

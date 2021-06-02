@@ -237,6 +237,27 @@
             "RouteClaimsRequirement": {
                 "UserRole": "User"
             }*/
+        },
+
+        //Story Microservice
+        {
+            "DownstreamPathTemplate": "/api/story",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55996
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/story",
+            "UpstreamHttpMethod": [ "POST" ]
+            /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
         }
 
     ],

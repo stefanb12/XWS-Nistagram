@@ -1,12 +1,14 @@
-﻿namespace StoryMicroservice.Model
+﻿using MongoDB.Bson;
+
+namespace StoryMicroservice.Model
 {
-    public class User
+    public class User : Document
     {
-        public string Name { get; set; }
         public string Username { get; set; }
 
         public User()
         {
+            Id = ObjectId.GenerateNewId().ToString();
         }
     }
 }
