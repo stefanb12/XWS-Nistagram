@@ -13,6 +13,7 @@ namespace PostMicroservice.Dto
         public LocationDto Location { get; set; }
         public ProfileDto Publisher { get; set; }
         public List<IFormFile> ImageFiles { get; set; }
+        public List<string> ImagesSrc { get; set; }
 
         public PostDto() {}
     }

@@ -1,14 +1,19 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NotificationMicroservice.Model
 {
     public class Post
     {
-        public List<string> Tags { get; set; }
-        public string Description { get; set; }
-        public DateTime PublishingDate { get; set; }
-        public List<Content> Content { get; set; }
+        public int Id { get; set; }
+        public string OriginalId { get; set; }
+        public string ImageName { get; set; }
+        [NotMapped]
+        public IFormFile ImageFile { get; set; }
+        [NotMapped]
+        public string ImageSrc { get; set; }
 
         public Post()
         {

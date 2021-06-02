@@ -1,8 +1,11 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 using ProfileMicroservice.Model;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -16,6 +19,7 @@ namespace UserMicroservice.Service
     {
         private IProfileRepository _profileRepository;
         private IProfileCreatedMessageSender _profileCreatedSender;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
         public ProfileService(IProfileRepository userRepository, IProfileCreatedMessageSender profileCreatedSender)
         {
@@ -132,6 +136,16 @@ namespace UserMicroservice.Service
             return entity;
         }
 
+        public async Task<Profile> UpdateWithImage(Profile entity, IFormFile imageFile)
+        {
+            if(imageFile != null)
+            {
+                entity.ImageName = await SaveImage(imageFile);
+            }
+            await _profileRepository.Update(entity);
+            return entity;
+        }
+
         public async Task Delete(Profile entity)
         {
             await _profileRepository.Delete(entity);
@@ -163,6 +177,18 @@ namespace UserMicroservice.Service
             user.Token = tokenHandler.WriteToken(token);
 
             return user;
+        }
+
+        public async Task<string> SaveImage(IFormFile imageFile)
+        {
+            string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray()).Replace(' ', '-');
+            imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(imageFile.FileName);
+            var imagePath = Path.Combine("Images", imageName);
+            using (var fileStream = new FileStream(imagePath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(fileStream);
+            }
+            return imageName;
         }
     }
 }

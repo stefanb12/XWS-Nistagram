@@ -9,14 +9,11 @@ namespace UserMicroservice.Mapper
 {
     public class UpdateProfileMapper
     {
-        public static Profile ProfileDtoToProfile(Profile profile, ProfileDto dto)
+        public static Profile ProfileDtoToProfile(Profile profile, UpdateDto dto)
         {
-            //Profile profile = new Profile();
-            //profile.Id = dto.Id;
             profile.Username = dto.Username;
             profile.Biography = dto.Biography;
             profile.Website = dto.Website;
-            //profile.Password = dto.Password;
             profile.FullName = dto.FullName;
             profile.Email = dto.Email;
             profile.MobilePhone = dto.MobilePhone;
@@ -25,9 +22,9 @@ namespace UserMicroservice.Mapper
             return profile;
         }
 
-        public static ProfileDto ProfileToProfileDto(Profile profile)
+        public static UpdateDto ProfileToProfileDto(Profile profile)
         {
-            ProfileDto dto = new ProfileDto();
+            UpdateDto dto = new UpdateDto();
             dto.Username = profile.Username;
             dto.Biography = profile.Biography;
             dto.Website = profile.Website;
@@ -37,6 +34,7 @@ namespace UserMicroservice.Mapper
             dto.MobilePhone = profile.MobilePhone;
             dto.DateOfBirth = profile.DateOfBirth;
             dto.Gender = profile.Gender;
+            dto.ImageSrc = profile.ImageSrc;
 
             return dto;
         }

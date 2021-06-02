@@ -17,6 +17,7 @@ class PostService {
     formData.append("location[country]", country);
     formData.append("publisher[id]", publisher.id);
     formData.append("publisher[username]", publisher.username);
+    formData.append("publisher[imageName]", publisher.imageName);
 
     const requestOptions = {
       method: "POST",
@@ -25,6 +26,10 @@ class PostService {
     };
 
     return fetch(API_URL + "post", requestOptions);
+  }
+
+  getPublicPosts() {
+    return fetch(API_URL + "post/public");
   }
 }
 

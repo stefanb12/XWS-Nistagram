@@ -28,8 +28,7 @@ namespace PostMicroservice.Database
                 var postCollection = _db.GetCollection<Post>("Post");
                 var postData = CreatePostData();
                 await postCollection.InsertManyAsync(postData);
-            }
-           
+            }         
         }
 
         public bool CollectionExists(IMongoDatabase database, string collectionName)
@@ -43,8 +42,8 @@ namespace PostMicroservice.Database
         private IEnumerable<Post> CreatePostData()
         {
             var postData = new List<Post> {
-                new Post { Tags = new List<string> {"#sport"} , Description = "Football", PublishingDate = new DateTime(2021, 05, 30), Location = new Location { Address = "", City = "Belgrade", Country = "Serbia"}, Comments = new List<Comment> { new Comment { Text = "Excellent", Date = new DateTime(2021, 05, 30), Publisher = new Profile { Username = "user1" } } } },
-                new Post { Tags = new List<string> {"#tv"} , Description = "Basketball", PublishingDate = new DateTime(2021, 05, 30), Location = new Location { Address = "", City = "Belgrade", Country = "Serbia"}, Comments = new List<Comment> { new Comment { Text = "Excellent", Date = new DateTime(2021, 05, 30), Publisher = new Profile { Username = "user2" } } } }
+                new Post { Tags = new List<string> {"sport"} , Description = "Football", PublishingDate = new DateTime(2021, 05, 30), Location = new Location { Address = "", City = "Belgrade", Country = "Serbia"}, Comments = new List<Comment> { new Comment { Text = "Excellent", Date = new DateTime(2021, 05, 30), Publisher = new Profile { Username = "user1", OriginalId = 1, IsPrivate = false } } },  Publisher = new Profile { Username = "user1", OriginalId = 1, IsPrivate = false } },
+                new Post { Tags = new List<string> {"tv"} , Description = "Basketball", PublishingDate = new DateTime(2021, 05, 30), Location = new Location { Address = "", City = "Belgrade", Country = "Serbia"}, Comments = new List<Comment> { new Comment { Text = "Excellent", Date = new DateTime(2021, 05, 30), Publisher = new Profile { Username = "user2", OriginalId = 2, IsPrivate = false } } },  Publisher = new Profile { Username = "user1", OriginalId = 1, IsPrivate = false } }
             };
 
             return postData;

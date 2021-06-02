@@ -19,7 +19,7 @@ namespace UserMicroservice.Service
         public async Task<FollowRequest> FindFollowRequest(int receiverId, int senderId)
         {
             IEnumerable<FollowRequest> followRequests = await GetAll();
-            FollowRequest followRequest = followRequests.Where(fr => fr.ReceiverId == receiverId && fr.SenderId == senderId).SingleOrDefault(); ;
+            FollowRequest followRequest = followRequests.Where(fr => fr.ReceiverId == receiverId && fr.SenderId == senderId).SingleOrDefault();
             return followRequest;
         }
 
