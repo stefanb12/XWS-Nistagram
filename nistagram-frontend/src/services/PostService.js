@@ -18,6 +18,7 @@ class PostService {
     formData.append("publisher[id]", publisher.id);
     formData.append("publisher[username]", publisher.username);
     formData.append("publisher[imageName]", publisher.imageName);
+    console.log(publisher);
 
     const requestOptions = {
       method: "POST",

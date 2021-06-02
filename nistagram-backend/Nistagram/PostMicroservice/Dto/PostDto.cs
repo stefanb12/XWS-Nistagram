@@ -12,6 +12,7 @@ namespace PostMicroservice.Dto
         public DateTime PublishingDate { get; set; }
         public LocationDto Location { get; set; }
         public ProfileDto Publisher { get; set; }
+        public List<CommentDto> Comments { get; set; }
         public List<IFormFile> ImageFiles { get; set; }
         public List<string> ImagesSrc { get; set; }
 

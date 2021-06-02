@@ -23,6 +23,22 @@ namespace PostMicroservice.Mapper
             post.Publisher.Username = dto.Publisher.Username;
             post.Publisher.ImageName = dto.Publisher.ImageName;
 
+            if(dto.Comments != null)
+            {
+                List<Comment> comments = new List<Comment>();
+                foreach (CommentDto commentDto in dto.Comments)
+                {
+                    Comment comment = new Comment();
+                    comment.Text = commentDto.Text;
+                    comment.Date = commentDto.Date;
+                    comment.Publisher.OriginalId = commentDto.Publisher.Id;
+                    comment.Publisher.Username = commentDto.Publisher.Username;
+                    comment.Publisher.ImageName = commentDto.Publisher.ImageName;
+                    comments.Add(comment);
+                }
+                post.Comments = comments;
+            }
+           
             List<Content> contents = new List<Content>();
             foreach(IFormFile file in dto.ImageFiles)
             {
@@ -50,6 +66,25 @@ namespace PostMicroservice.Mapper
             dto.Publisher.Username = post.Publisher.Username;
             dto.Publisher.ImageSrc = String.Format("http://localhost:55988/Images/{0}", post.Publisher.ImageName);
             dto.PublishingDate = post.PublishingDate;
+
+            
+            if(post.Comments != null)
+            {
+                List<CommentDto> commentsDto = new List<CommentDto>();
+                foreach (Comment comment in post.Comments)
+                {
+                    CommentDto commentDto = new CommentDto();
+                    commentDto.Text = comment.Text;
+                    commentDto.Date = comment.Date;
+                    commentDto.Publisher = new ProfileDto();
+                    commentDto.Publisher.Id = comment.Publisher.OriginalId;
+                    commentDto.Publisher.Username = comment.Publisher.Username;
+                    commentDto.Publisher.ImageName = comment.Publisher.ImageName;
+                    commentsDto.Add(commentDto);
+                }
+                dto.Comments = commentsDto;
+            }
+           
 
             dto.ImagesSrc = new List<string>();
             for (int i = 0; i < post.Contents.Count; i++)

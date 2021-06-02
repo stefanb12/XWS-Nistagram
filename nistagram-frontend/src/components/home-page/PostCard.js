@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import noPostsYet from "../../assets/images/no_posts_yet.jpg";
 import moment from "moment";
+import AuthService from "../../services/AuthService";
+import { Link, withRouter } from "react-router-dom";
 
-export default class PostCard extends Component {
+class PostCard extends Component {
   constructor(props) {
     super(props);
     this.dropdownRef = React.createRef();
@@ -11,12 +13,17 @@ export default class PostCard extends Component {
       isLike: false,
       isSaved: false,
       isActive: false,
+      newComment: "",
+      currentUser: null,
     };
     this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
     document.addEventListener("mousedown", this.handleClickOutside);
+    this.setState({
+      currentUser: AuthService.getCurrentUser(),
+    });
   }
 
   componentWillUnmount() {
@@ -40,6 +47,18 @@ export default class PostCard extends Component {
     }
   };
 
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value,
+    });
+  }
+
+  postNewComment = () => {};
+
   render() {
     const isDislike = this.state.isDislike;
     const isLike = this.state.isLike;
@@ -51,7 +70,7 @@ export default class PostCard extends Component {
     return (
       <div>
         {(() => {
-          if (Array.isArray(posts) || posts.length) {
+          if (Array.isArray(posts) && posts.length) {
             return (
               <div>
                 {posts.map((post, key) => {
@@ -69,66 +88,108 @@ export default class PostCard extends Component {
                                   />
                                   <p>
                                     {post.publisher.username}{" "}
-                                    <span>publish a post</span>
+                                    <small>
+                                      {moment(
+                                        moment(post.publishingDate).format(
+                                          "YYYY-MM-DD HH:mm:ss"
+                                        )
+                                      ).fromNow()}
+                                    </small>
                                   </p>
-                                  <small>
-                                    {moment(
-                                      moment(post.publishingDate).format(
-                                        "YYYY-MM-DD HH:mm:ss"
-                                      )
-                                    ).fromNow()}
-                                  </small>
+                                  <p>
+                                    <small>
+                                      {(() => {
+                                        if (post.location.address === "") {
+                                          return (
+                                            <div>
+                                              {post.location.city},{" "}
+                                              {post.location.country}{" "}
+                                            </div>
+                                          );
+                                        } else {
+                                          return (
+                                            <div>
+                                              {post.location.address},{" "}
+                                              {post.location.city},{" "}
+                                              {post.location.country}{" "}
+                                            </div>
+                                          );
+                                        }
+                                      })()}
+                                    </small>
+                                  </p>
                                 </div>
-
-                                <div class="dropdown" ref={dropdownRef}>
-                                  <button
-                                    class="btn p-0"
-                                    type="button"
-                                    id="dropdownMenuButton"
-                                    data-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
-                                    onClick={this.handleClick}
-                                    className="menu-trigger"
-                                  >
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="34"
-                                      height="34"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      stroke-width="2"
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      class="feather feather-more-horizontal icon-lg pb-3px"
-                                    >
-                                      <circle cx="12" cy="12" r="1"></circle>
-                                      <circle cx="19" cy="12" r="1"></circle>
-                                      <circle cx="5" cy="12" r="1"></circle>
-                                    </svg>
-                                  </button>
-                                  <nav
-                                    className={`menu ${
-                                      isActive ? "active" : "inactive"
-                                    }`}
-                                  >
-                                    <ul>
-                                      <li>
-                                        <a href="/user/home">Report</a>
-                                      </li>
-                                      <li>
-                                        <a href="/user/home">Save</a>
-                                      </li>
-                                      <li>
-                                        <a href="/user/home">View profile</a>
-                                      </li>
-                                      <li>
-                                        <a href="/user/home">Unfollow</a>
-                                      </li>
-                                    </ul>
-                                  </nav>
-                                </div>
+                                {(() => {
+                                  if (this.state.currentUser !== null) {
+                                    return (
+                                      <div>
+                                        <div class="dropdown" ref={dropdownRef}>
+                                          <button
+                                            class="btn p-0"
+                                            type="button"
+                                            id="dropdownMenuButton"
+                                            data-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                            onClick={this.handleClick}
+                                            className="menu-trigger"
+                                          >
+                                            <svg
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="34"
+                                              height="34"
+                                              viewBox="0 0 24 24"
+                                              fill="none"
+                                              stroke="currentColor"
+                                              stroke-width="2"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              class="feather feather-more-horizontal icon-lg pb-3px"
+                                            >
+                                              <circle
+                                                cx="12"
+                                                cy="12"
+                                                r="1"
+                                              ></circle>
+                                              <circle
+                                                cx="19"
+                                                cy="12"
+                                                r="1"
+                                              ></circle>
+                                              <circle
+                                                cx="5"
+                                                cy="12"
+                                                r="1"
+                                              ></circle>
+                                            </svg>
+                                          </button>
+                                          <nav
+                                            className={`menu ${
+                                              isActive ? "active" : "inactive"
+                                            }`}
+                                          >
+                                            <ul>
+                                              <li>
+                                                <Link
+                                                  to="/user/profile"
+                                                  params={{
+                                                    profileId:
+                                                      post.publisher.id,
+                                                  }}
+                                                >
+                                                  View profile
+                                                </Link>
+                                              </li>
+                                              <li>
+                                                <a href="/user/home">Report</a>
+                                              </li>
+                                            </ul>
+                                          </nav>
+                                        </div>
+                                      </div>
+                                    );
+                                  }
+                                })()}
 
                                 <div class="timeline-item-post">
                                   <img
@@ -136,13 +197,64 @@ export default class PostCard extends Component {
                                     src={post.imagesSrc[0]}
                                     alt=""
                                   />
+                                  {(() => {
+                                    if (
+                                      post.description !== null &&
+                                      Array.isArray(post.tags)
+                                    ) {
+                                      let tags = "";
+                                      {
+                                        post.tags.map((tag, key) => {
+                                          tags += "#" + tag;
+                                        });
+                                      }
 
-                                  <p style={{ marginTop: "20px" }}>
-                                    Elavita veritatis et quasi architecto beatae
-                                    vitae dicta sunt explicabo. Nemo enim ipsam
-                                    voluptatem quia voluptas sit aspernatur aut
-                                    odit aut fugit, sed quia consequuntur.
-                                  </p>
+                                      return (
+                                        <div>
+                                          <p style={{ marginTop: "20px" }}>
+                                            <i>Description: </i>
+                                            {post.description}
+                                          </p>
+                                          <p style={{ marginTop: "20px" }}>
+                                            <i>Tags: </i>
+                                            {tags}
+                                          </p>
+                                        </div>
+                                      );
+                                    } else if (
+                                      post.description !== null &&
+                                      !Array.isArray(post.tags)
+                                    ) {
+                                      return (
+                                        <div>
+                                          <p style={{ marginTop: "20px" }}>
+                                            <i>Description: </i>
+                                            {post.description}
+                                          </p>
+                                        </div>
+                                      );
+                                    } else if (
+                                      post.description === null &&
+                                      Array.isArray(post.tags)
+                                    ) {
+                                      let tags = "";
+                                      {
+                                        post.tags.map((tag, key) => {
+                                          tags += "#" + tag;
+                                        });
+                                      }
+
+                                      return (
+                                        <div>
+                                          <p style={{ marginTop: "20px" }}>
+                                            <i>Tags: </i>
+                                            {tags}
+                                          </p>
+                                        </div>
+                                      );
+                                    }
+                                  })()}
+
                                   <div class="timeline-options">
                                     <a href="#">
                                       <i
@@ -181,89 +293,119 @@ export default class PostCard extends Component {
                                       ></i>
                                       <span /> Comment (4)
                                     </a>
-                                    <a href="#" style={{ float: "right" }}>
-                                      <i
-                                        class={
-                                          isSaved
-                                            ? "fa fa-bookmark"
-                                            : "fa fa-bookmark-o"
-                                        }
-                                        style={{
-                                          fontSize: "20px",
-                                          paddingLeft: "20px",
-                                        }}
-                                      ></i>
-                                    </a>
+                                    {(() => {
+                                      if (this.state.currentUser !== null) {
+                                        return (
+                                          <div>
+                                            <a
+                                              href="#"
+                                              style={{ float: "right" }}
+                                            >
+                                              <i
+                                                class={
+                                                  isSaved
+                                                    ? "fa fa-bookmark"
+                                                    : "fa fa-bookmark-o"
+                                                }
+                                                style={{
+                                                  fontSize: "20px",
+                                                  paddingLeft: "20px",
+                                                }}
+                                              ></i>
+                                            </a>
+                                          </div>
+                                        );
+                                      }
+                                    })()}
                                   </div>
                                   <div class="comments">
-                                    <div class="timeline-comment">
-                                      <div class="timeline-comment-header">
-                                        <img
-                                          src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                          alt=""
-                                        />
-                                        <p>
-                                          Jamara Karle <small>1 hour ago</small>
-                                        </p>
-                                      </div>
-                                      <p class="timeline-comment-text">
-                                        Xullamco laboris nisi ut aliquip ex ea
-                                        commodo consequat.
-                                      </p>
-                                    </div>
-                                    <div class="timeline-comment">
-                                      <div class="timeline-comment-header">
-                                        <img
-                                          src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                          alt=""
-                                        />
-                                        <p>
-                                          Jamara Karle <small>1 hour ago</small>
-                                        </p>
-                                      </div>
-                                      <p class="timeline-comment-text">
-                                        Xullamco laboris nisi ut aliquip ex ea
-                                        commodo consequat.
-                                      </p>
-                                    </div>
-                                    <div class="timeline-comment">
-                                      <div class="timeline-comment-header">
-                                        <img
-                                          src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                          alt=""
-                                        />
-                                        <p>
-                                          Jamara Karle <small>1 hour ago</small>
-                                        </p>
-                                      </div>
-                                      <p class="timeline-comment-text">
-                                        Xullamco laboris nisi ut aliquip ex ea
-                                        commodo consequat.
-                                      </p>
-                                    </div>
-                                    <div class="timeline-comment">
-                                      <div class="timeline-comment-header">
-                                        <img
-                                          src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                          alt=""
-                                        />
-                                        <p>
-                                          Lois Anderson{" "}
-                                          <small>3 hours ago</small>
-                                        </p>
-                                      </div>
-                                      <p class="timeline-comment-text">
-                                        Coluptate velit esse cillum dolore eu
-                                        fugiat nulla pariatur. Excepteur sint
-                                        occaecat cupidatat non proident, sunt in
-                                        culpa qui officia.
-                                      </p>
-                                    </div>
+                                    {(() => {
+                                      if (
+                                        Array.isArray(post.comments) ||
+                                        post.comments !== null
+                                      ) {
+                                        return (
+                                          <div>
+                                            {post.comments.map(
+                                              (comment, key) => {
+                                                return (
+                                                  <div key={key}>
+                                                    <div class="timeline-comment">
+                                                      <div class="timeline-comment-header">
+                                                        <img
+                                                          src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                                                          alt=""
+                                                        />
+                                                        <p>
+                                                          {
+                                                            comment.publisher
+                                                              .username
+                                                          }
+                                                          <small
+                                                            style={{
+                                                              marginLeft:
+                                                                "10px",
+                                                            }}
+                                                          >
+                                                            {moment(
+                                                              moment(
+                                                                comment.date
+                                                              ).format(
+                                                                "YYYY-MM-DD HH:mm:ss"
+                                                              )
+                                                            ).fromNow()}
+                                                          </small>
+                                                        </p>
+                                                      </div>
+                                                      <p class="timeline-comment-text">
+                                                        {comment.text}
+                                                      </p>
+                                                    </div>
+                                                  </div>
+                                                );
+                                              }
+                                            )}
+                                          </div>
+                                        );
+                                      } else {
+                                        return (
+                                          <div>
+                                            There are currently no comments...
+                                          </div>
+                                        );
+                                      }
+                                    })()}
                                   </div>
-                                  <textarea
-                                    class="form-control"
-                                    placeholder="Replay"
-                                  ></textarea>
+                                  {(() => {
+                                    if (this.state.currentUser !== null) {
+                                      return (
+                                        <div>
+                                          <textarea
+                                            name="newComment"
+                                            type="text"
+                                            checked={this.state.newComment}
+                                            onChange={this.handleInputChange}
+                                            value={this.state.newComment}
+                                            class="form-control"
+                                            placeholder="Enter new comment"
+                                            rows="2"
+                                            style={{
+                                              marginTop: "20px",
+                                            }}
+                                          />
+                                          <button
+                                            class="btn btn-outline-success float-right"
+                                            onClick={this.postNewComment}
+                                            style={{
+                                              marginTop: "20px",
+                                            }}
+                                          >
+                                            Post a comment
+                                          </button>
+                                        </div>
+                                      );
+                                    }
+                                  })()}
                                 </div>
                               </div>
                             </div>
@@ -305,3 +447,5 @@ export default class PostCard extends Component {
     );
   }
 }
+
+export default withRouter(PostCard);
