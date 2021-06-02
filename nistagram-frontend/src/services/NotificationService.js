@@ -20,6 +20,19 @@ class NotificationService {
 
     return fetch(API_URL + "notification/followRequest", requestOptions);
   }
+
+  updateSeenNotifications(profileId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+    };
+
+    return fetch(API_URL + "notification/seen/" + profileId, requestOptions);
+  }
+
+  getNotificationForProfile(profileId) {
+    return fetch(API_URL + "notification/profile/" + profileId);
+  }
 }
 
 export default new NotificationService();

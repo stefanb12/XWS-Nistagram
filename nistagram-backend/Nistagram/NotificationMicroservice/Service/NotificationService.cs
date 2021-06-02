@@ -16,10 +16,28 @@ namespace NotificationMicroservice.Service
             _notificationRepository = notificationRepository;
         }
 
-        public async Task<Notification> FindNotification(int receiverId, int senderId)
+        public async Task<List<Notification>> UpdateSeenNotifications(int profileId)
+        {
+            IEnumerable<Notification> notifications = await FindNotificationsForProfile(profileId);
+            List<Notification> updatedNotifications = new List<Notification>();
+            foreach(Notification notification in notifications)
+            {
+                notification.Seen = true;
+                updatedNotifications.Add(await Update(notification));
+            }
+            return updatedNotifications;
+        }
+
+        public async Task<List<Notification>> FindNotificationsForProfile(int profileId)
         {
             IEnumerable<Notification> notifications = await GetAll();
-            Notification notification = notifications.Where(notification => notification.ReceiverId == receiverId && notification.SenderId == senderId).SingleOrDefault();
+            return notifications.ToList().Where(notification => notification.ReceiverId == profileId).ToList();
+        }
+
+        public async Task<Notification> FindFollowRequestNotification(int receiverId, int senderId)
+        {
+            IEnumerable<Notification> notifications = await GetAll();
+            Notification notification = notifications.Where(notification => notification.ReceiverId == receiverId && notification.SenderId == senderId && notification.FollowRequest == true).SingleOrDefault();
             return notification;
         }
 

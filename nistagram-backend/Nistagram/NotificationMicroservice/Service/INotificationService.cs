@@ -8,6 +8,8 @@ namespace NotificationMicroservice.Service
 {
     public interface INotificationService : IService<Notification>
     {
-        Task<Notification> FindNotification(int receiverId, int senderId);
+        Task<List<Notification>> UpdateSeenNotifications(int profileId);
+        Task<List<Notification>> FindNotificationsForProfile(int profileId);
+        Task<Notification> FindFollowRequestNotification(int receiverId, int senderId);
     }
 }

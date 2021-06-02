@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -28,6 +28,11 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
 import { useHistory } from "react-router";
 import AuthService from "../services/AuthService";
+import NotificationService from "../services/NotificationService";
+import { Snackbar } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
+import FollowRequestService from "../services/FollowRequestService";
+import ProfileService from "../services/ProfileService";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -132,6 +137,39 @@ export default function UserNavbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [notificationEl, setNotificationEl] = React.useState(null);
+  const [notifications, setNotifications] = React.useState([]);
+  const [numberOfNotSeenNotifications, setNumberOfNotSeenNotifications] =
+    React.useState(0);
+  const [open, setOpen] = React.useState(false);
+
+  const handleAlertClick = () => {
+    setOpen(true);
+  };
+
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    let status;
+    NotificationService.getNotificationForProfile(
+      AuthService.getCurrentUser().id
+    )
+      .then((res) => {
+        status = res.status;
+        return res.json();
+      })
+      .then((result) => {
+        if (status === 200) {
+          setNotifications(result);
+          countOfNotSeenNotifications(result);
+        }
+      });
+  }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -181,7 +219,92 @@ export default function UserNavbar() {
     handleMenuClose();
   };
 
+  const handleConfirmFollowRequest = (followerId, followingId) => {
+    ProfileService.follow(followerId, followingId)
+      .then((res) => {
+        return res.json();
+      })
+      .then(() => {
+        FollowRequestService.deleteFollowRequest(followingId, followerId)
+          .then(() => {})
+          .then(() => {
+            NotificationService.deleteFollowRequestNotification(
+              followingId,
+              followerId
+            )
+              .then(() => {})
+              .then(() => {
+                handleNotificationListClose();
+                let status;
+                NotificationService.getNotificationForProfile(
+                  AuthService.getCurrentUser().id
+                )
+                  .then((res) => {
+                    status = res.status;
+                    return res.json();
+                  })
+                  .then((result) => {
+                    if (status === 200) {
+                      setNotifications(result);
+                      countOfNotSeenNotifications(result);
+                    } else if (status === 404) {
+                      setNotifications([]);
+                    }
+                  });
+              });
+          });
+      });
+  };
+
+  const handleDeleteFollowRequest = (receiverId, senderId) => {
+    FollowRequestService.deleteFollowRequest(receiverId, senderId)
+      .then(() => {})
+      .then(() => {
+        NotificationService.deleteFollowRequestNotification(
+          receiverId,
+          senderId
+        )
+          .then(() => {})
+          .then(() => {
+            handleNotificationListClose();
+            let status;
+            NotificationService.getNotificationForProfile(
+              AuthService.getCurrentUser().id
+            )
+              .then((res) => {
+                status = res.status;
+                return res.json();
+              })
+              .then((result) => {
+                if (status === 200) {
+                  setNotifications(result);
+                  countOfNotSeenNotifications(result);
+                } else if (status === 404) {
+                  setNotifications([]);
+                }
+              });
+          });
+      });
+  };
+
   const handleNotificationListOpen = (event) => {
+    let status = 0;
+    NotificationService.updateSeenNotifications(AuthService.getCurrentUser().id)
+      .then((res) => {
+        status = res.status;
+        return res.json();
+      })
+      .then((result) => {
+        if (status === 200) {
+          setNotifications(result);
+          if (notifications.length === 0) {
+            handleAlertClick();
+          }
+        } else if (status == 404) {
+          handleAlertClick();
+        }
+        setNumberOfNotSeenNotifications(0);
+      });
     setNotificationEl(event.currentTarget);
     handleMenuClose();
   };
@@ -190,6 +313,94 @@ export default function UserNavbar() {
     setNotificationEl(null);
   };
 
+  const countOfNotSeenNotifications = (notifications) => {
+    let notSeenNotifications = [];
+    notifications.map((notification) => {
+      if (notification.seen === false) {
+        notSeenNotifications.push(notification);
+      }
+    });
+    setNumberOfNotSeenNotifications(notSeenNotifications.length);
+  };
+
+  const notificationItems = notifications.map((notification) => {
+    if (notification.followRequest === true) {
+      return (
+        <StyledMenuItem>
+          <div class="dropdown-list-image mr-3">
+            <img
+              class="img-xs rounded-circle"
+              src="https://bootdey.com/img/Content/avatar/avatar1.png"
+              alt=""
+            />
+          </div>
+          <div class="font-weight mr-3">
+            <div>
+              {" "}
+              {notification.content}
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                style={{ marginLeft: "8px" }}
+                onClick={() => {
+                  handleConfirmFollowRequest(
+                    notification.senderId,
+                    notification.receiverId
+                  );
+                }}
+              >
+                Confirm
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary btn-sm"
+                style={{ marginLeft: "5px" }}
+                onClick={() => {
+                  handleDeleteFollowRequest(
+                    notification.receiverId,
+                    notification.senderId
+                  );
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+          <span class="ml-auto mb-auto">
+            <div class="text-right text-muted pt-1">{notification.time}</div>
+          </span>
+        </StyledMenuItem>
+      );
+    } else {
+      return (
+        <StyledMenuItem>
+          <div class="dropdown-list-image mr-3">
+            <img
+              class="img-xs rounded-circle"
+              src="https://bootdey.com/img/Content/avatar/avatar1.png"
+              alt=""
+            />
+          </div>
+          <div class="font-weight mr-3">
+            <div>
+              {" "}
+              {notification.content}
+              <img
+                style={{ marginLeft: "12px" }}
+                class="img-xs"
+                src="https://bootdey.com/img/Content/avatar/avatar2.png"
+                alt=""
+              />
+            </div>
+          </div>
+          <span class="ml-auto mb-auto">
+            <div class="text-right text-muted pt-1">3d</div>
+          </span>
+        </StyledMenuItem>
+      );
+    }
+  });
+
   const renderNotifications = (
     <StyledMenu
       anchorEl={notificationEl}
@@ -197,166 +408,7 @@ export default function UserNavbar() {
       open={isNotificationsOpen}
       onClose={handleNotificationListClose}
     >
-      <StyledMenuItem>
-        <div class="dropdown-list-image mr-3">
-          <img
-            class="img-xs rounded-circle"
-            src="https://bootdey.com/img/Content/avatar/avatar1.png"
-            alt=""
-          />
-        </div>
-        <div class="font-weight-bold mr-3">
-          <div class="text-truncate">DAILY RUNDOWN: WEDNESDAY</div>
-          <div class="small">
-            Income tax sops on the cards, The bias in VC funding, and other top
-            news for you
-          </div>
-        </div>
-        <span class="ml-auto mb-auto">
-          <div class="btn-group">
-            <button
-              type="button"
-              class="btn btn-light btn-sm rounded"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              <i class="mdi mdi-dots-vertical"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right">
-              <button class="dropdown-item" type="button">
-                <i class="mdi mdi-delete"></i> Delete
-              </button>
-              <button class="dropdown-item" type="button">
-                <i class="mdi mdi-close"></i> Turn Off
-              </button>
-            </div>
-          </div>
-          <br />
-          <div class="text-right text-muted pt-1">3d</div>
-        </span>
-      </StyledMenuItem>
-      <StyledMenuItem>
-        <div class="dropdown-list-image mr-3">
-          <img
-            class="img-xs rounded-circle"
-            src="https://bootdey.com/img/Content/avatar/avatar1.png"
-            alt=""
-          />
-        </div>
-        <div class="font-weight-bold mr-3">
-          <div class="text-truncate">DAILY RUNDOWN: WEDNESDAY</div>
-          <div class="small">
-            Income tax sops on the cards, The bias in VC funding, and other top
-            news for you
-          </div>
-        </div>
-        <span class="ml-auto mb-auto">
-          <div class="btn-group">
-            <button
-              type="button"
-              class="btn btn-light btn-sm rounded"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              <i class="mdi mdi-dots-vertical"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right">
-              <button class="dropdown-item" type="button">
-                <i class="mdi mdi-delete"></i> Delete
-              </button>
-              <button class="dropdown-item" type="button">
-                <i class="mdi mdi-close"></i> Turn Off
-              </button>
-            </div>
-          </div>
-          <br />
-          <div class="text-right text-muted pt-1">3d</div>
-        </span>
-      </StyledMenuItem>
-      <StyledMenuItem>
-        <div class="dropdown-list-image mr-3">
-          <img
-            class="img-xs rounded-circle"
-            src="https://bootdey.com/img/Content/avatar/avatar1.png"
-            alt=""
-          />
-        </div>
-        <div class="font-weight-bold mr-3">
-          <div class="text-truncate">DAILY RUNDOWN: WEDNESDAY</div>
-          <div class="small">
-            Income tax sops on the cards, The bias in VC funding, and other top
-            news for you
-          </div>
-        </div>
-        <span class="ml-auto mb-auto">
-          <div class="btn-group">
-            <button
-              type="button"
-              class="btn btn-light btn-sm rounded"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              <i class="mdi mdi-dots-vertical"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right">
-              <button class="dropdown-item" type="button">
-                <i class="mdi mdi-delete"></i> Delete
-              </button>
-              <button class="dropdown-item" type="button">
-                <i class="mdi mdi-close"></i> Turn Off
-              </button>
-            </div>
-          </div>
-          <br />
-          <div class="text-right text-muted pt-1">3d</div>
-        </span>
-      </StyledMenuItem>
-      <StyledMenuItem>
-        <div class="dropdown-list-image mr-3">
-          <img
-            class="img-xs rounded-circle"
-            src="https://bootdey.com/img/Content/avatar/avatar2.png"
-            alt=""
-          />
-        </div>
-        <div class="font-weight-bold mr-3">
-          <div class="mb-2">
-            <span class="font-weight-normal">
-              Congratulate Gurdeep Singh Osahan (iamgurdeeposahan)
-            </span>{" "}
-            for 5 years at Askbootsrap Pvt.
-          </div>
-          <button type="button" class="btn btn-outline-success btn-sm">
-            Say congrats
-          </button>
-        </div>
-        <span class="ml-auto mb-auto">
-          <div class="btn-group">
-            <button
-              type="button"
-              class="btn btn-light btn-sm rounded"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              <i class="mdi mdi-dots-vertical"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right">
-              <button class="dropdown-item" type="button">
-                <i class="mdi mdi-delete"></i> Delete
-              </button>
-              <button class="dropdown-item" type="button">
-                <i class="mdi mdi-close"></i> Turn Off
-              </button>
-            </div>
-          </div>
-          <br />
-          <div class="text-right text-muted pt-1">4d</div>
-        </span>
-      </StyledMenuItem>
+      {notificationItems}
     </StyledMenu>
   );
 
@@ -440,6 +492,16 @@ export default function UserNavbar() {
   return (
     <div className={classes.grow}>
       <AppBar position="static" style={{ position: "fixed" }}>
+        <Snackbar
+          open={open}
+          autoHideDuration={1800}
+          onClose={handleAlertClose}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert onClose={handleAlertClose} severity="error">
+            You dont have any notifications
+          </Alert>
+        </Snackbar>
         <Toolbar>
           <IconButton
             edge="start"
@@ -491,7 +553,10 @@ export default function UserNavbar() {
               color="inherit"
               onClick={handleNotificationListOpen}
             >
-              <Badge badgeContent={17} color="secondary">
+              <Badge
+                badgeContent={numberOfNotSeenNotifications}
+                color="secondary"
+              >
                 <FavoriteBorder />
               </Badge>
             </IconButton>
@@ -527,7 +592,13 @@ export default function UserNavbar() {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
-      {renderNotifications}
+      {(() => {
+        if (notifications.length === 0) {
+          return <div></div>;
+        } else {
+          return renderNotifications;
+        }
+      })()}
     </div>
   );
 }

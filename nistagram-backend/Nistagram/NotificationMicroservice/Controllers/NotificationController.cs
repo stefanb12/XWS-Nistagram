@@ -21,17 +21,23 @@ namespace NotificationMicroservice.Controllers
             _notificationService = notificationService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> get()
+        [HttpGet("profile/{profileId}")]
+        public async Task<IActionResult> GetNotificationsForProfile(int profileId)
         {
-            return Ok(await _notificationService.GetAll());
+            List<Notification> notifications = await _notificationService.FindNotificationsForProfile(profileId);
+            List<Notification> result = notifications.OrderByDescending(notification => notification.Time).ToList();
+            if (!result.Any())
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
 
         [HttpPost("followRequest")]
         public async Task<IActionResult> SendFollowRequestNotification([FromBody] NotificationDto dto)
         {
-            Notification notification = NotificationMapper.NotificationDtoToNotification(dto);
-            notification.Content = dto.SenderId.ToString() + " wants to follow you";
+            Notification notification = NotificationMapper.NotificationDtoToNotification(dto); 
+            notification.Content = dto.SenderId.ToString() + " wants to follow you"; // Dobavi korisnikov username i sliku
             notification.FollowRequest = true;
             return Ok(await _notificationService.Insert(notification));
         }
@@ -39,9 +45,21 @@ namespace NotificationMicroservice.Controllers
         [HttpDelete("followRequest")]
         public async Task<IActionResult> DeleteFollowRequestNotification([FromBody] NotificationDto dto)
         {
-            Notification notification = await _notificationService.FindNotification(dto.ReceiverId, dto.SenderId);
+            Notification notification = await _notificationService.FindFollowRequestNotification(dto.ReceiverId, dto.SenderId);
             await _notificationService.Delete(notification);
             return Ok();
+        }
+
+        [HttpPut("seen/{profileId}")]
+        public async Task<IActionResult> UpdateSeenNotifications(int profileId)
+        {
+            List<Notification> notifications = await _notificationService.UpdateSeenNotifications(profileId);
+            List<Notification> result = notifications.OrderByDescending(notification => notification.Time).ToList();
+            if (!result.Any())
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
     }
 }
