@@ -335,6 +335,25 @@
             "RouteClaimsRequirement": {
                 "UserRole": "User"
             }*/
+        },
+        {
+            "DownstreamPathTemplate": "/api/story/getAll",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55996
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/story/getAll",
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
         }
 
 

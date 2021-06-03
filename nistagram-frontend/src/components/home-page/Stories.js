@@ -5,18 +5,39 @@ import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import AddCircle from "@material-ui/icons/AddCircle"
 import "../../assets/styles/stories.css";
 import { Modal, Button } from "react-bootstrap";
-import { Checkbox, FormControlLabel } from "@material-ui/core";
+import { Checkbox, FormControlLabel, Slider, Snackbar } from "@material-ui/core";
 import StoryService from "../../services/StoryService";
 import AuthService from "../../services/AuthService";
+import { Alert } from "@material-ui/lab";
 
 export default class Stories extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isAddStoryDialogOpen : false,
+      isShowStoryDialogOpen : false,
       storyImages : [],
-      closeFriendsOnly : false
+      closeFriendsOnly : false,
+      storyAddedSnackbarShown : false,
+      stories : [],
+      currentStoryImage: null,
+      currentStoryPublisher: '',
+      currentTimeout: null,
+      timeCounter: 0
     }
+  }
+
+componentWillMount() {
+    this.timeCounter = 0;
+    StoryService.getAllStories()
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        this.setState({
+           stories : data
+        })
+      })
   }
 
   handleStoryAdding = () => {
@@ -38,11 +59,30 @@ export default class Stories extends Component {
     });
   }
 
+  closeShowStoryDialog = () => {
+    this.setState({
+      isShowStoryDialogOpen : false
+    });
+    clearTimeout(this.currentTimeout);
+    this.setState({
+      timeCounter : 0
+    })
+  }
+
   addImages = () => {
     let publisher = AuthService.getCurrentUser();
     StoryService.addImagesToStory(this.state.storyImages, this.state.closeFriendsOnly, publisher)
     .then((res) => {
-      
+      if (res.status === 200) {
+        this.clearImages();
+        this.closeAddStoryModal();
+        this.setState({
+          closeFriendsOnly : false
+        });
+        this.setState({
+          storyAddedSnackbarShown : true
+        });
+      }
     })
   }
 
@@ -65,10 +105,105 @@ export default class Stories extends Component {
     e.preventDefault();
   };
 
-  render() {
-    const { classes } = this.props;
+  handleCloseSnackBar = (event, reason) => {
+    this.setState({
+      storyAddedSnackbarShown : false
+    });
+    
+  };
 
-    console.log(classes)
+  showNextStory = (story) => {
+    clearInterval(this.currentTimeout);
+    let i = 0;
+    while (story.id !== this.state.stories[i].id) {
+      i++;
+    }
+    if (i + 1 < this.state.stories.length) {
+      this.showImage(this.state.stories[i + 1]);
+    } else {
+      this.closeShowStoryDialog();
+    }
+    this.setState({
+      timeCounter : 0
+    })
+  }
+
+  showImage = (story) => {
+    this.setState({
+      currentStoryImage : story.imageSrc,
+      isShowStoryDialogOpen : true
+    })
+    this.currentStoryPublisher = story.publisher.username;
+    this.currentTimeout = window.setInterval(() => {
+      this.setState({
+        timeCounter : this.state.timeCounter + 1
+      })
+      if (this.state.timeCounter >= 90) {
+        this.setState({
+          timeCounter : 0
+        })
+        this.showNextStory(story);
+      }
+     }, 30);
+  }
+
+  render() {
+    var renderStories = this.state.stories.map((story, key) => {
+      return (
+        <div class="col-md-2" key={key}>
+                <div class="team text-center rounded p-4 py-1">
+                  <img
+                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                    class="img-fluid avatar avatar-medium shadow rounded-pill"
+                    alt=""
+                    onClick = {() => {this.showImage(story)}}
+                    style = {{
+                      border : "2px solid red"
+                    }}
+                  />
+                  <div class="content mt-2">
+                    <h4 class="title mb-0">{story.publisher.username}</h4>
+                  </div>
+                </div>
+        </div>
+      )
+    })
+
+    var showStoryModalDialog = (
+      <Modal
+        show={this.state.isShowStoryDialogOpen}
+        onHide={this.closeShowStoryDialog}
+        contentClassName="story-modal"
+        centered>
+        <Modal.Header
+          closeButton>
+          <Modal.Title>
+            {this.currentStoryPublisher}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body
+          style={{
+           display: "flex",
+           justifyContent: "center",
+           alignItems: "center"
+          }}>
+          <div>
+            <img
+              style={{
+                float: "left",
+                maxWidth: "400px",
+                maxHeight: "700px",
+              }}
+              src={this.state.currentStoryImage}
+              class="img-thumbnail"
+            />
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Slider value={this.state.timeCounter} step={1} max={89}></Slider>
+        </Modal.Footer>
+      </Modal>
+    )
 
     var addStoryModalDialog = (
       <Modal 
@@ -162,7 +297,21 @@ export default class Stories extends Component {
 
     return (
       <div>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          open={this.storyAddedSnackbarShown}
+          autoHideDuration={3000}
+          onClose={this.handleCloseSnackBar}
+          >
+            <Alert severity="sucess">
+              Story added successfully!
+            </Alert>
+        </Snackbar>
         {addStoryModalDialog}
+        {showStoryModalDialog}
         <div class="container">
           <div
             class="page-inner"
@@ -182,91 +331,7 @@ export default class Stories extends Component {
                   </div>
                 </div>
               </div>
-              <div class="col-md-2">
-                <div class="team text-center rounded p-4 py-1">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                    class="img-fluid avatar avatar-medium shadow rounded-pill"
-                    alt=""
-                  />
-                  <div class="content mt-2">
-                    <h4 class="title mb-0">Lisa Martin</h4>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-2">
-                <div class="team text-center rounded p-4 py-1">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                    class="img-fluid avatar avatar-medium shadow rounded-pill"
-                    alt=""
-                  />
-                  <div class="content mt-2">
-                    <h4 class="title mb-0">Lisa Martin</h4>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-2">
-                <div class="team text-center rounded p-4 py-1">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                    class="img-fluid avatar avatar-medium shadow rounded-pill"
-                    alt=""
-                  />
-                  <div class="content mt-2">
-                    <h4 class="title mb-0">Lisa Martin</h4>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-2">
-                <div class="team text-center rounded p-4 py-1">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                    class="img-fluid avatar avatar-medium shadow rounded-pill"
-                    alt=""
-                  />
-                  <div class="content mt-2">
-                    <h4 class="title mb-0">Lisa Martin</h4>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-2">
-                <div class="team text-center rounded p-4 py-1">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                    class="img-fluid avatar avatar-medium shadow rounded-pill"
-                    alt=""
-                  />
-                  <div class="content mt-2">
-                    <h4 class="title mb-0">Lisa Martin</h4>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-2">
-                <div class="team text-center rounded p-4 py-1">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                    class="img-fluid avatar avatar-medium shadow rounded-pill"
-                    alt=""
-                  />
-                  <div class="content mt-2">
-                    <h4 class="title mb-0">Lisa Martin</h4>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-2">
-                <div class="team text-center rounded p-4 py-1">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                    class="img-fluid avatar avatar-medium shadow rounded-pill"
-                    alt=""
-                  />
-                  <div class="content mt-2">
-                    <h4 class="title mb-0">Lisa Martin</h4>
-                  </div>
-                </div>
-              </div>
+              {renderStories}
             </div>
           </div>
         </div>

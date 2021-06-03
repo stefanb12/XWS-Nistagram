@@ -19,6 +19,10 @@ class StoryService {
 
         return fetch(API_URL + "story", requestOptions);
     } 
+
+    getAllStories() {
+        return fetch(API_URL + "story/getAll");
+    }
 }
 
 export default new StoryService(); 

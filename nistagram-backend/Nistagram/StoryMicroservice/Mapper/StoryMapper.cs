@@ -28,5 +28,21 @@ namespace StoryMicroservice.Mapper
 
             return stories;
         }
+
+        public static StoryDto StoryToStoryDto(Story story)
+        {
+            StoryDto dto = new StoryDto();
+
+            dto.Id = story.Id;
+            dto.PublishingDate = story.PublishingDate;
+            dto.ForCloseFriends = story.ForCloseFriends;
+            dto.Publisher = new ProfileDto()
+            {
+                Id = story.Publisher.OriginalId,
+                Username = story.Publisher.Username
+            };
+
+            return dto;
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace StoryMicroservice.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StoryController : Controller
+    public class StoryController : ControllerBase
     {
         private readonly IStoryService _storyService;
 
@@ -28,6 +28,20 @@ namespace StoryMicroservice.Controllers
             foreach (Story story in StoryMapper.StoryDtoToStories(dto))
             {
                 returnValue.Add(await _storyService.Insert(story));
+            }
+            return Ok(returnValue);
+        }
+
+        [HttpGet("getAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            var stories = await _storyService.GetAll();
+            List<StoryDto> returnValue = new List<StoryDto>();
+            foreach (Story s in stories)
+            {
+                StoryDto dto = StoryMapper.StoryToStoryDto(s);
+                dto.ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, s.ImageName);
+                returnValue.Add(dto);
             }
             return Ok(returnValue);
         }
