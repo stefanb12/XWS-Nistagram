@@ -125,5 +125,20 @@ namespace UserMicroservice.Controllers
 
             return Ok(dto);
         }
+
+        [HttpGet("getAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            //List<Profile> profiles = await _profileService.GetAll();
+            List<UpdateDto> dtos = new List<UpdateDto>();
+            foreach(Profile profile in await _profileService.GetAll())
+            {
+                profile.ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, profile.ImageName);
+                UpdateDto dto = UpdateProfileMapper.ProfileToProfileDto(profile);
+                dtos.Add(dto);
+            }
+
+            return Ok(dtos);
+        }
     }
 }

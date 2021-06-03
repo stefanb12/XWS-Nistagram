@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -16,6 +16,11 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import { Instagram } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
+import { Autocomplete } from "@material-ui/lab";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, withStyles } from "@material-ui/core";
+import Paper from '@material-ui/core/Paper';
+import SelectSearch from 'react-select-search';
+import ProfileService from "../services/ProfileService";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -81,16 +86,58 @@ const useStyles = makeStyles((theme) => ({
   buttonMargin: {
     marginLeft: "12px",
   },
+  container: {
+    maxHeight: 10,
+  },
 }));
+
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+}))(TableRow);
 
 export default function MainNavbar() {
   const history = useHistory();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [searchValue, setSearchValue] = React.useState("");
+  const [allUsers, setAllUsers] = React.useState([]);
+  const [mounted, setMounted] = React.useState(false);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  useEffect(() => {
+    ProfileService.getAllUsers()
+    .then((res) => res.json())
+    .then(
+      (result) => {
+        setAllUsers(result);
+        console.log(allUsers);
+      });
+    //loadData();
+  }, []);
+
+  /*const loadData = async () => {
+    const response = await ProfileService.getAllUsers();
+    const json = await response.json();
+    setAllUsers(json.data);
+    console.log(json.data);
+  }*/
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -178,6 +225,73 @@ export default function MainNavbar() {
     </Menu>
   );
 
+  const onChoseSearchResult = (event, row) =>{
+    console.log(row.username);
+  };
+
+  const onSearchChange = (event) => {
+    setSearchValue(event.target.value);
+    if(searchValue == "" && mounted == false){
+      ProfileService.getAllUsers()
+        .then((res) => res.json())
+        .then(
+          (result) => {
+            setAllUsers(result);
+            console.log(allUsers);
+          });
+    }
+    setMounted(true);
+  };
+
+  const handleSearhClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const renderSearchResults = (
+    <TableContainer style={{width: "16%", marginLeft: "12%"}}
+    anchorEl={anchorEl}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'center',
+    }}
+    open={isMenuOpen}
+    >                 
+                <Table className={classes.table} aria-label="simple table" style={{width: "16%", marginTop: "4%", position: "absolute", zIndex: 10, backgroundColor: "white", border: "1px solid grey"}}>
+                <div style={{height: "150px", width: "100%", overflow: "auto"}}> 
+                <TableBody style={{width: "100%"}}>
+                  {allUsers.filter((val) => {
+                    if(searchValue == ""){
+                      return val
+                    }else if(val.username.toLowerCase().includes(searchValue.toLowerCase())){
+                      return val
+                    }
+                  }).map((row) => (
+                    <StyledTableRow style={{width: "100%"}} key={row.username} onClick={(event) => onChoseSearchResult(event, row)}>
+                      <StyledTableCell style={{width: "40%"}} align="center">
+                        <img
+                          src={row.imageSrc}
+                          className="rounded-circle img-responsive mt-2"
+                          width="30"
+                          height="30"
+                        />
+                        <label style={{marginLeft: "4%"}}>{row.username}</label>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+                </div>
+              </Table>
+            </TableContainer>
+  );
+
   return (
     <div className={classes.grow}>
       <AppBar position="static" style={{ position: "fixed" }}>
@@ -198,19 +312,24 @@ export default function MainNavbar() {
           >
             Nistagram
           </Typography>
+          
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
             <InputBase
+              autoFocus
               placeholder="Search…"
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
+              value={searchValue}
+              onChange={(event) => onSearchChange(event)}
             />
           </div>
+
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <Button
@@ -244,6 +363,13 @@ export default function MainNavbar() {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
+      {(() => {
+        if (searchValue == "") {
+          return <div></div>;
+        } else {
+          return renderSearchResults;
+        }
+      })()}
     </div>
   );
 }

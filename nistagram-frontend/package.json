@@ -22,6 +22,7 @@
     "react-moment": "^1.1.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "react-select-search": "^3.0.7",
     "web-vitals": "^1.1.1",
     "yup": "^0.29.3"
   },
