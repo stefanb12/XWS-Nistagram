@@ -4,7 +4,6 @@ using PostMicroservice.Database;
 using PostMicroservice.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace PostMicroservice.Repository
@@ -47,7 +46,7 @@ namespace PostMicroservice.Repository
 
         public async Task<TDocument> Update(TDocument obj)
         {
-            await _dbCollection.ReplaceOneAsync(Builders<TDocument>.Filter.Eq("_id", obj.Id), obj);
+            await _dbCollection.ReplaceOneAsync(Builders<TDocument>.Filter.Eq("_id", new ObjectId(obj.Id)), obj);
             return obj;
         }
 

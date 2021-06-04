@@ -5,6 +5,7 @@ import NotFound from "../pages/NotFound";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import HomePage from "../pages/HomePage";
+import SearchResultPage from "../pages/SearchResultPage";
 
 const MainLayoutRoot = {
   height: "100%",
@@ -48,11 +49,14 @@ export default function MainLayout({ routes }) {
               <Route path="/app/register">
                 <Register />
               </Route>
-              <Route path="/app">
-                <HomePage />
+              <Route path="/app/search" component={SearchResultPage}>
+                <SearchResultPage />
               </Route>
               <Route path="/app/404">
                 <NotFound />
+              </Route>
+              <Route path="/app">
+                <HomePage />
               </Route>
             </Switch>
           </div>
