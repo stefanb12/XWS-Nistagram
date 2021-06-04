@@ -3,6 +3,9 @@ import noPostsYet from "../../assets/images/no_posts_yet.jpg";
 import moment from "moment";
 import AuthService from "../../services/AuthService";
 import { Link, withRouter } from "react-router-dom";
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
+import PostService from "../../services/PostService";
 
 class PostCard extends Component {
   constructor(props) {
@@ -15,8 +18,14 @@ class PostCard extends Component {
       isActive: false,
       newComment: "",
       currentUser: null,
+      open: false,
+      posts: [],
     };
     this.handleClick = this.handleClick.bind(this);
+  }
+
+  static getDerivedStateFromProps(props) {
+    return { posts: props.sendPosts };
   }
 
   componentDidMount() {
@@ -57,7 +66,50 @@ class PostCard extends Component {
     });
   }
 
-  postNewComment = () => {};
+  postNewComment = (postId) => {
+    let text = document.getElementById("newComment" + postId).value;
+    let resStatus = 0;
+    if (text !== "") {
+      PostService.insertNewComment(postId, text, this.state.currentUser)
+        .then((res) => {
+          resStatus = res.status;
+          return res.json();
+        })
+        .then((result) => {
+          if (resStatus === 200) {
+            const index = this.state.posts.findIndex((p) => p.id === postId);
+            let updatedPosts = [...this.state.posts];
+            updatedPosts[index] = result;
+
+            this.setState({
+              posts: updatedPosts,
+            });
+
+            console.log("Posts after: ", updatedPosts);
+          }
+          return result;
+        });
+      document.getElementById("newComment" + postId).value = "";
+    } else {
+      this.handleClickSnackBar();
+    }
+  };
+
+  handleClickSnackBar = () => {
+    this.setState({
+      open: true,
+    });
+  };
+
+  handleCloseSnackBar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    this.setState({
+      open: false,
+    });
+  };
 
   render() {
     const isDislike = this.state.isDislike;
@@ -65,12 +117,24 @@ class PostCard extends Component {
     const isSaved = this.state.isSaved;
     const dropdownRef = this.dropdownRef;
     const isActive = this.state.isActive;
-    const posts = this.props.sendPosts;
+    const posts = this.state.posts;
+    // const posts = this.props.sendPosts;
+    console.log("Updated posts: ", this.state.posts);
 
     return (
       <div>
+        <Snackbar
+          open={this.state.open}
+          autoHideDuration={2000}
+          onClose={this.handleCloseSnackBar}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert onClose={this.handleCloseSnackBar} severity="error">
+            You have to enter a comment!
+          </Alert>
+        </Snackbar>
         {(() => {
-          if (Array.isArray(posts) && posts.length) {
+          if (Array.isArray(posts)) {
             return (
               <div>
                 {posts.map((post, key) => {
@@ -256,43 +320,127 @@ class PostCard extends Component {
                                   })()}
 
                                   <div class="timeline-options">
-                                    <a href="#">
-                                      <i
-                                        class={
-                                          isLike
-                                            ? "fa fa-heart"
-                                            : "fa fa-heart-o"
-                                        }
-                                        style={{
-                                          fontSize: "20px",
-                                        }}
-                                      ></i>
-                                      <span /> Like (15)
-                                    </a>
-                                    <a href="#">
-                                      <i
-                                        class={
-                                          isDislike
-                                            ? "fa fa-thumbs-down"
-                                            : "fa fa-thumbs-o-down"
-                                        }
-                                        style={{
-                                          fontSize: "20px",
-                                          paddingLeft: "20px",
-                                        }}
-                                      ></i>
-                                      <span /> Dislike (6)
-                                    </a>
-                                    <a href="#">
-                                      <i
-                                        class="fa fa-comment-o"
-                                        style={{
-                                          fontSize: "20px",
-                                          paddingLeft: "20px",
-                                        }}
-                                      ></i>
-                                      <span /> Comment (4)
-                                    </a>
+                                    {(() => {
+                                      if (post.likes !== null) {
+                                        return (
+                                          <div>
+                                            <a href="#">
+                                              <i
+                                                class={
+                                                  isLike
+                                                    ? "fa fa-heart"
+                                                    : "fa fa-heart-o"
+                                                }
+                                                style={{
+                                                  fontSize: "20px",
+                                                }}
+                                              ></i>
+                                              <span /> Like ({post.likes.length}
+                                              )
+                                            </a>
+                                          </div>
+                                        );
+                                      } else {
+                                        return (
+                                          <div>
+                                            <a href="#">
+                                              <i
+                                                class={
+                                                  isLike
+                                                    ? "fa fa-heart"
+                                                    : "fa fa-heart-o"
+                                                }
+                                                style={{
+                                                  fontSize: "20px",
+                                                }}
+                                              ></i>
+                                              <span /> Like (0)
+                                            </a>
+                                          </div>
+                                        );
+                                      }
+                                    })()}
+
+                                    {(() => {
+                                      if (post.dislikes !== null) {
+                                        return (
+                                          <div>
+                                            {" "}
+                                            <a href="#">
+                                              <i
+                                                class={
+                                                  isDislike
+                                                    ? "fa fa-thumbs-down"
+                                                    : "fa fa-thumbs-o-down"
+                                                }
+                                                style={{
+                                                  fontSize: "20px",
+                                                  paddingLeft: "20px",
+                                                }}
+                                              ></i>
+                                              <span /> Dislike (
+                                              {post.dislikes.length})
+                                            </a>
+                                          </div>
+                                        );
+                                      } else {
+                                        return (
+                                          <div>
+                                            <a href="#">
+                                              <i
+                                                class={
+                                                  isDislike
+                                                    ? "fa fa-thumbs-down"
+                                                    : "fa fa-thumbs-o-down"
+                                                }
+                                                style={{
+                                                  fontSize: "20px",
+                                                  paddingLeft: "20px",
+                                                }}
+                                              ></i>
+                                              <span /> Dislike (0)
+                                            </a>
+                                          </div>
+                                        );
+                                      }
+                                    })()}
+
+                                    {(() => {
+                                      if (post.comments !== null) {
+                                        return (
+                                          <div>
+                                            <a href="#">
+                                              <i
+                                                class="fa fa-comment-o"
+                                                style={{
+                                                  fontSize: "20px",
+                                                  paddingLeft: "20px",
+                                                }}
+                                              ></i>
+                                              <span />
+                                              Comment ({post.comments.length})
+                                            </a>
+                                          </div>
+                                        );
+                                      } else {
+                                        return (
+                                          <div>
+                                            <a href="#">
+                                              <i
+                                                class="fa fa-comment-o"
+                                                style={{
+                                                  fontSize: "20px",
+                                                  paddingLeft: "20px",
+                                                }}
+                                              ></i>
+                                              <span />
+                                              Comment (0)
+                                            </a>
+                                          </div>
+                                        );
+                                      }
+                                    })()}
+
                                     {(() => {
                                       if (this.state.currentUser !== null) {
                                         return (
@@ -381,11 +529,9 @@ class PostCard extends Component {
                                       return (
                                         <div>
                                           <textarea
-                                            name="newComment"
+                                            id={"newComment" + post.id}
+                                            name={"newComment" + post.id}
                                             type="text"
-                                            checked={this.state.newComment}
-                                            onChange={this.handleInputChange}
-                                            value={this.state.newComment}
                                             class="form-control"
                                             placeholder="Enter new comment"
                                             rows="2"
@@ -395,7 +541,9 @@ class PostCard extends Component {
                                           />
                                           <button
                                             class="btn btn-outline-success float-right"
-                                            onClick={this.postNewComment}
+                                            onClick={() => {
+                                              this.postNewComment(post.id);
+                                            }}
                                             style={{
                                               marginTop: "20px",
                                             }}

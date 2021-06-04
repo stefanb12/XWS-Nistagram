@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using PostMicroservice.Dto;
 using PostMicroservice.Model;
 using PostMicroservice.Repository;
 using System;
@@ -47,6 +48,12 @@ namespace PostMicroservice.Service
         public async Task<IEnumerable<Post>> GetAll()
         {
             return await _postRepository.GetAll();
+        }
+
+        public async Task<Post> InsertNewComment(Post post, Comment comment)
+        {
+            post.Comments.Add(comment);
+            return await Update(post);
         }
 
         public async Task<Post> Insert(Post entity)

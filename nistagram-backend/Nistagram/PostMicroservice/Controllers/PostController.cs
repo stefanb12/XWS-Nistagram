@@ -66,6 +66,14 @@ namespace PostMicroservice.Controllers
             return Ok(publicPostsDto);
         }
 
+        [HttpPost("newComment")]
+        public async Task<IActionResult> InsertNewComment([FromBody] NewCommentDto commentDto)
+        {
+            Post post = await _postService.GetById(commentDto.PostId);
+            post.Description = "novaa";
+            return Ok(await _postService.InsertNewComment(post, CommentMapper.CommentDtoToComment(commentDto)));
+        }
+
         [HttpPost]
         public async Task<IActionResult> Insert([FromForm] PostDto postDto)
         {

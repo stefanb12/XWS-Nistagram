@@ -29,6 +29,16 @@ class PostService {
     return fetch(API_URL + "post", requestOptions);
   }
 
+  insertNewComment(postId, text, publisher) {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ postId, text, publisher }),
+    };
+
+    return fetch(API_URL + "post/newComment", requestOptions);
+  }
+
   getPublicPosts() {
     return fetch(API_URL + "post/public");
   }
