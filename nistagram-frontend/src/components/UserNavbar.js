@@ -331,7 +331,7 @@ export default function UserNavbar() {
           <div class="dropdown-list-image mr-3">
             <img
               class="img-xs rounded-circle"
-              src="https://bootdey.com/img/Content/avatar/avatar1.png"
+              src={notification.sender.imageSrc}
               alt=""
             />
           </div>
@@ -370,7 +370,7 @@ export default function UserNavbar() {
           <span class="ml-auto mb-auto">
             <div class="text-right text-muted pt-1">
               {moment(
-                moment(Notification.time).format("YYYY-MM-DD HH:mm:ss")
+                moment(notification.time).format("YYYY-MM-DD HH:mm:ss")
               ).fromNow()}
             </div>
           </span>
@@ -382,7 +382,7 @@ export default function UserNavbar() {
           <div class="dropdown-list-image mr-3">
             <img
               class="img-xs rounded-circle"
-              src="https://bootdey.com/img/Content/avatar/avatar1.png"
+              src={notification.sender.imageSrc}
               alt=""
             />
           </div>
@@ -390,18 +390,28 @@ export default function UserNavbar() {
             <div>
               {" "}
               {notification.content}
-              <img
-                style={{ marginLeft: "12px" }}
-                class="img-xs"
-                src="https://bootdey.com/img/Content/avatar/avatar2.png"
-                alt=""
-              />
+              {(() => {
+                if (notification.post !== null) {
+                  if (notification.post.imageSrc !== null) {
+                    return (
+                      <div>
+                        <img
+                          style={{ marginLeft: "12px" }}
+                          class="img-xs"
+                          src={notification.post.imageSrc}
+                          alt=""
+                        />
+                      </div>
+                    );
+                  }
+                }
+              })()}
             </div>
           </div>
           <span class="ml-auto mb-auto">
             <div class="text-right text-muted pt-1">
               {moment(
-                moment(Notification.time).format("YYYY-MM-DD HH:mm:ss")
+                moment(notification.time).format("YYYY-MM-DD HH:mm:ss")
               ).fromNow()}
             </div>
           </span>
@@ -412,6 +422,10 @@ export default function UserNavbar() {
 
   const renderNotifications = (
     <StyledMenu
+      style={{
+        overflow: "auto",
+        height: "330px",
+      }}
       anchorEl={notificationEl}
       keepMounted
       open={isNotificationsOpen}
