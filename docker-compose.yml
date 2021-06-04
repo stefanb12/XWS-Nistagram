@@ -6,8 +6,8 @@ services:
     image: mysql:latest
     container_name: mysql-user-microservice
     volumes:
-        - mysql-db:/var/lib/mysql
-        - app-sql:/docker-entrypoint-initdb.d/
+        - mysql-db-user:/var/lib/mysql
+        - sql-user:/docker-entrypoint-initdb.d/
     restart: always
     environment:
       MYSQL_DATABASE: "UserMicroserviceDb"
@@ -18,6 +18,25 @@ services:
       - '3306'
     ports:
       - '3307:3306'
+    networks:
+      - public_net
+
+  mysql-notification-microservice:
+    image: mysql:latest
+    container_name: mysql-notification-microservice
+    volumes:
+        - mysql-db-notification:/var/lib/mysql
+        - sql-notification:/docker-entrypoint-initdb.d/
+    restart: always
+    environment:
+      MYSQL_DATABASE: "NotificationMicroserviceDb"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "user"
+      MYSQL_ROOT_PASSWORD: "root"
+    expose:
+      - '3306'
+    ports:
+      - '3308:3306'
     networks:
       - public_net
 
@@ -33,7 +52,6 @@ services:
       DATABASE_HOST: "mysql-user-microservice"
       DATABASE_SCHEMA: "UserMicroserviceDb"
       STATIC_FILES: "false"
-      #SHOW_ENV: "TRUE"
     depends_on:
       - mysql-user-microservice
     expose: 
@@ -43,7 +61,29 @@ services:
     networks:
       - public_net
     volumes:
-    - app-sql:/app/sql
+      - sql-user:/app/sql-user
+
+  notification-microservice:
+    build: 
+      context: .
+      dockerfile: nistagram-backend/Nistagram/NotificationMicroservice/Dockerfile
+    image: notificationmicroservice:latest
+    restart: on-failure
+    environment:
+      DATABASE_USERNAME: "user"
+      DATABASE_PASSWORD: "user"
+      DATABASE_HOST: "mysql-notification-microservice"
+      DATABASE_SCHEMA: "NotificationMicroserviceDb"
+    depends_on:
+      - mysql-notification-microservice
+    expose: 
+      - "80"
+    ports:
+      - "56002:80"
+    networks:
+      - public_net
+    volumes:
+      - sql-notification:/app/sql-notification
 
   gateway-web-api:
     build: 
@@ -78,5 +118,7 @@ networks:
     driver: bridge
 
 volumes:
-  mysql-db:
-  app-sql:
+  mysql-db-user:
+  mysql-db-notification:
+  sql-user:
+  sql-notification:

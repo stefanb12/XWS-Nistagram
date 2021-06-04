@@ -263,7 +263,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "notification-microservice",
           "Port": 80
         }
       ],
@@ -282,7 +282,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "notification-microservice",
           "Port": 80
         }
       ],
@@ -301,7 +301,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "notification-microservice",
           "Port": 80
         }
       ],

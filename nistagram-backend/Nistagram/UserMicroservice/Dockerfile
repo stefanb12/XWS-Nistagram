@@ -13,11 +13,11 @@ FROM build AS publish
 ENV PATH $PATH:/root/.dotnet/tools
 RUN dotnet tool install -g dotnet-ef --version 3.1.0 && \
 	dotnet publish "nistagram-backend/Nistagram/UserMicroservice/UserMicroservice.csproj" -c Release -o /app/publish && \
-    dotnet-ef dbcontext script -p "nistagram-backend/Nistagram/UserMicroservice/UserMicroservice.csproj" -o /app/sql/init.sql
+    dotnet-ef dbcontext script -p "nistagram-backend/Nistagram/UserMicroservice/UserMicroservice.csproj" -o /app/sql-user/init-user.sql
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
 WORKDIR /app/publish
-VOLUME /app/sql
+VOLUME /app/sql-user
 CMD ASPNETCORE_URLS=http://:$PORT dotnet UserMicroservice.dll
