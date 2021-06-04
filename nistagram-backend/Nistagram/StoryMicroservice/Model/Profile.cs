@@ -1,4 +1,7 @@
-﻿namespace StoryMicroservice.Model
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System.Collections.Generic;
+
+namespace StoryMicroservice.Model
 {
     public class Profile : User
     {

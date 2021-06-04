@@ -61,5 +61,11 @@ namespace StoryMicroservice.Service
             }
             return imageName;
         }
+
+        public async Task<List<StoryProfile>> GetAllStoryProfiles()
+        {
+            var result = await _storyRepository.GetAggregatedCollection();
+            return result;
+        }
     }
 }

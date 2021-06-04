@@ -1,4 +1,5 @@
-﻿using StoryMicroservice.Database;
+﻿using MongoDB.Driver;
+using StoryMicroservice.Database;
 using StoryMicroservice.Model;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,17 @@ namespace StoryMicroservice.Repository
         public StoryRepository(IMongoDbContext context)
             : base(context)
         {
+        }
+
+        public Task<List<StoryProfile>> GetAggregatedCollection()
+        {
+            return _dbCollection.Aggregate()
+                    .Lookup<Story, Profile,  StoryProfile>(
+                       _db.GetCollection<Profile>("Profile"),
+                       x => x.PublisherId,
+                       y => y.OriginalId,
+                       z => z.Publisher
+                     ).ToListAsync();
         }
     }
 }

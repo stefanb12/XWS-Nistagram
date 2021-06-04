@@ -21,7 +21,7 @@ class StoryService {
     } 
 
     getAllStories() {
-        return fetch(API_URL + "story/getAll");
+        return fetch(API_URL + "story/getAllProfileStories");
     }
 }
 

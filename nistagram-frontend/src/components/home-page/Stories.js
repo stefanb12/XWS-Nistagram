@@ -19,7 +19,7 @@ export default class Stories extends Component {
       storyImages : [],
       closeFriendsOnly : false,
       storyAddedSnackbarShown : false,
-      stories : [],
+      allProfileStories : [],
       currentStoryImage: null,
       currentStoryPublisher: '',
       currentTimeout: null,
@@ -35,7 +35,7 @@ componentWillMount() {
       })
       .then((data) => {
         this.setState({
-           stories : data
+          allProfileStories : data
         })
       })
   }
@@ -112,28 +112,45 @@ componentWillMount() {
     
   };
 
-  showNextStory = (story) => {
+  showNextStory = (profileStories, storyNumber) => {
     clearInterval(this.currentTimeout);
-    let i = 0;
-    while (story.id !== this.state.stories[i].id) {
-      i++;
+    if (storyNumber + 1 < profileStories.stories.length) {
+      this.showImage(profileStories, storyNumber + 1);
+      return;
     }
-    if (i + 1 < this.state.stories.length) {
-      this.showImage(this.state.stories[i + 1]);
-    } else {
-      this.closeShowStoryDialog();
+
+    let nextProfleStories = this.findNextProfileStories(profileStories);
+    
+    if (nextProfleStories !== null) {
+      this.showImage(nextProfleStories, 0);
+      return;
     }
+    
+    this.closeShowStoryDialog();
     this.setState({
       timeCounter : 0
     })
   }
 
-  showImage = (story) => {
+  findNextProfileStories = (profileStories) => {
+    let i = 0;
+    while (profileStories.originalId !== this.state.allProfileStories[i].originalId) {
+      i++;
+    }
+    if (i + 1 < this.state.allProfileStories.length) {
+      console.log(this.state.allProfileStories.length)
+      return this.state.allProfileStories[i+1];
+    } else {
+      return null;
+    }
+  }
+
+  showImage = (profileStories, storyNumber) => {
     this.setState({
-      currentStoryImage : story.imageSrc,
+      currentStoryImage : profileStories.stories[storyNumber].imageSrc,
       isShowStoryDialogOpen : true
     })
-    this.currentStoryPublisher = story.publisher.username;
+    this.currentStoryPublisher = profileStories.username;
     this.currentTimeout = window.setInterval(() => {
       this.setState({
         timeCounter : this.state.timeCounter + 1
@@ -142,13 +159,13 @@ componentWillMount() {
         this.setState({
           timeCounter : 0
         })
-        this.showNextStory(story);
+        this.showNextStory(profileStories, storyNumber);
       }
      }, 30);
   }
 
   render() {
-    var renderStories = this.state.stories.map((story, key) => {
+    var renderStories = this.state.allProfileStories.map((profileStories, key) => {
       return (
         <div class="col-md-2" key={key}>
                 <div class="team text-center rounded p-4 py-1">
@@ -156,13 +173,13 @@ componentWillMount() {
                     src="https://bootdey.com/img/Content/avatar/avatar7.png"
                     class="img-fluid avatar avatar-medium shadow rounded-pill"
                     alt=""
-                    onClick = {() => {this.showImage(story)}}
+                    onClick = {() => {this.showImage(profileStories, 0)}}
                     style = {{
                       border : "2px solid red"
                     }}
                   />
                   <div class="content mt-2">
-                    <h4 class="title mb-0">{story.publisher.username}</h4>
+                    <h4 class="title mb-0">{profileStories.username}</h4>
                   </div>
                 </div>
         </div>

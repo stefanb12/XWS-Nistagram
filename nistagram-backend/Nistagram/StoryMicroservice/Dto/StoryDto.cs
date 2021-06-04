@@ -11,8 +11,7 @@ namespace StoryMicroservice.Dto
         public string Id { get; set; }
         public bool ForCloseFriends { get; set; }
         public DateTime PublishingDate { get; set; }
-        public ProfileDto Publisher { get; set; }
-        public IFormFile Image { get; set; }
+        public string ImageName { get; set; }
         public string ImageSrc { get; set; }
 
         public StoryDto()
