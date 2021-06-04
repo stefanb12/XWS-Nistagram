@@ -18,6 +18,7 @@ class PostService {
     formData.append("publisher[id]", publisher.id);
     formData.append("publisher[username]", publisher.username);
     formData.append("publisher[imageName]", publisher.imageName);
+    console.log(publisher);
 
     const requestOptions = {
       method: "POST",
@@ -28,8 +29,42 @@ class PostService {
     return fetch(API_URL + "post", requestOptions);
   }
 
+  insertNewComment(postId, text, publisher) {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ postId, text, publisher }),
+    };
+
+    return fetch(API_URL + "post/newComment", requestOptions);
+  }
+
+  likePost(postId, publisher) {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ postId, publisher }),
+    };
+
+    return fetch(API_URL + "post/like", requestOptions);
+  }
+
+  dislikePost(postId, publisher) {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ postId, publisher }),
+    };
+
+    return fetch(API_URL + "post/dislike", requestOptions);
+  }
+
   getPublicPosts() {
     return fetch(API_URL + "post/public");
+  }
+
+  getAllPosts() {
+    return fetch(API_URL + "post");
   }
 }
 

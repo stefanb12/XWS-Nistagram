@@ -1,5 +1,6 @@
 {
   "Routes": [
+    // UserMicroservice
     {
       "DownstreamPathTemplate": "/api/auth/login",
       "DownstreamScheme": "http",
@@ -12,8 +13,6 @@
       "UpstreamPathTemplate": "/gateway/auth/login",
       "UpstreamHttpMethod": [ "POST" ]
     },
-
-    // UserMicroservice
     {
       "DownstreamPathTemplate": "/api/profile/registration",
       "DownstreamScheme": "http",
@@ -200,6 +199,25 @@
 
     // PostMicroservice
     {
+      "DownstreamPathTemplate": "/api/post",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55993
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/post",
+      "UpstreamHttpMethod": [ "POST", "GET" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
+    {
       "DownstreamPathTemplate": "/api/post/public",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -210,25 +228,6 @@
       ],
       "UpstreamPathTemplate": "/gateway/post/public",
       "UpstreamHttpMethod": [ "GET" ]
-      /*"AuthenticationOptions": {
-                "AuthenticationProviderKey": "Key",
-                "AllowedScopes": []
-            },
-            "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
-    },
-    {
-      "DownstreamPathTemplate": "/api/post",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post",
-      "UpstreamHttpMethod": [ "POST" ]
       /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
@@ -256,6 +255,63 @@
                 "UserRole": "User"
             }*/
     },
+    {
+      "DownstreamPathTemplate": "/api/post/newComment",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55993
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/post/newComment",
+      "UpstreamHttpMethod": [ "PUT" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
+    {
+      "DownstreamPathTemplate": "/api/post/like",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55993
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/post/like",
+      "UpstreamHttpMethod": [ "PUT" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
+    {
+      "DownstreamPathTemplate": "/api/post/dislike",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55993
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/post/dislike",
+      "UpstreamHttpMethod": [ "PUT" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
 
     // NotificationMicroservice
     {
@@ -263,8 +319,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 56002
+          "Host": "notification-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/notification/follow",
@@ -355,7 +411,6 @@
                 "UserRole": "User"
             }*/
     }
-
 
   ],
   "GlobalConfiguration": {

@@ -26,7 +26,7 @@ export default class Posts extends Component {
       tags: "",
       currentEnteredTags: "",
       description: "",
-      posts: "",
+      posts: [],
     };
     this.handleInputChange = this.handleInputChange.bind(this);
   }
@@ -133,13 +133,13 @@ export default class Posts extends Component {
   };
 
   addPost = () => {
-    console.log("Images:", this.state.imageFiles);
-    console.log("Location:", this.state.location);
-    console.log("Address:", this.state.address);
-    console.log("City:", this.state.city);
-    console.log("Country:", this.state.country);
-    console.log("Tags:", this.state.tags);
-    console.log("Description:", this.state.description);
+    // console.log("Images:", this.state.imageFiles);
+    // console.log("Location:", this.state.location);
+    // console.log("Address:", this.state.address);
+    // console.log("City:", this.state.city);
+    // console.log("Country:", this.state.country);
+    // console.log("Tags:", this.state.tags);
+    // console.log("Description:", this.state.description);
 
     if (this.state.imageFiles.length == 0) {
       // Zabrani dodavanje posta

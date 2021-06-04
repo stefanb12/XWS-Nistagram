@@ -76,6 +76,10 @@ class ProfileService {
   getFollowing(profileId) {
     return fetch(API_URL + "profile/" + profileId + "/following");
   }
+
+  getAllUsers() {
+    return fetch(API_URL + "profile/" + "getAll");
+  }
 }
 
 export default new ProfileService();
