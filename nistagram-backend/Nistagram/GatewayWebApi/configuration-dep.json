@@ -204,7 +204,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "post-microservice",
           "Port": 80
         }
       ],
@@ -223,7 +223,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "post-microservice",
           "Port": 80
         }
       ],
@@ -242,7 +242,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "post-microservice",
           "Port": 80
         }
       ],
@@ -322,7 +322,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "story-microservice",
           "Port": 80
         }
       ],

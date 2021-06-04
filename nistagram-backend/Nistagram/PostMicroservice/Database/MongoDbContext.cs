@@ -15,9 +15,19 @@ namespace PostMicroservice.Database
         public IClientSessionHandle Session { get; set; }
         public MongoDbContext(IMongoDbSettings configuration)
         {
-            _mongoClient = new MongoClient(configuration.ConnectionString);
-            _db = _mongoClient.GetDatabase(configuration.DatabaseName);
+            _mongoClient = new MongoClient(CreateConnectionStringFromEnvironment());
+            _db = _mongoClient.GetDatabase(CreateDatabaseNameFromEnvironment());
             SeedDataAsync(_db).Wait();
+        }
+
+        private string CreateConnectionStringFromEnvironment()
+        {
+            string server = Environment.GetEnvironmentVariable("DATABASE_HOST") ?? "localhost"; 
+            return $"mongodb://{server}:27017";
+        }
+        private string CreateDatabaseNameFromEnvironment()
+        {
+            return Environment.GetEnvironmentVariable("DATABASE_NAME") ?? "PostMicroserviceDb"; ;
         }
 
         private async Task SeedDataAsync(IMongoDatabase _db)
