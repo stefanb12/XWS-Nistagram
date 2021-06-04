@@ -23,6 +23,28 @@ namespace PostMicroservice.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
+            /*List<Post> publicPosts = new List<Post>();
+
+            foreach(Post post in await _postService.GetAll()) {
+                publicPosts.Add(post);
+            }
+
+            if (publicPosts.Count == 0)
+            {
+                return NotFound();
+            }
+
+            List<PostDto> publicPostsDto = new List<PostDto>();
+            foreach (Post post in publicPosts)
+            {
+                for (int i = 0; i < post.Contents.Count; i++)
+                {
+                    post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
+                }
+                publicPostsDto.Add(PostMapper.PostToPostDto(post));
+            }
+
+            return Ok(publicPostsDto);*/
             return Ok(await _postService.GetAll());
         }
 
