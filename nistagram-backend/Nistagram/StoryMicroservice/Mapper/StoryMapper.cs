@@ -19,6 +19,7 @@ namespace StoryMicroservice.Mapper
                 Story story = new Story();
                 story.ForCloseFriends = dto.ForCloseFriends;
                 story.ImageFile = image;
+                story.PublisherId = dto.Publisher.Id;
                 story.Publisher = new Profile();
                 story.Publisher.OriginalId = dto.Publisher.Id;
                 story.Publisher.Username = dto.Publisher.Username;
@@ -27,6 +28,18 @@ namespace StoryMicroservice.Mapper
             }
 
             return stories;
+        }
+
+        public static StoryDto StoryToStoryDto(Story story)
+        {
+            StoryDto dto = new StoryDto();
+
+            dto.Id = story.Id;
+            dto.PublishingDate = story.PublishingDate;
+            dto.ForCloseFriends = story.ForCloseFriends;
+            dto.ImageName = story.ImageName;
+
+            return dto;
         }
     }
 }
