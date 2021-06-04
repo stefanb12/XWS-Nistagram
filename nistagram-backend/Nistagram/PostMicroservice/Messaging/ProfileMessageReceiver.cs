@@ -29,11 +29,15 @@ namespace PostMicroservice.Messaging
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
-            _channel.QueueDeclare(queue: "profile.created",
+            _channel.ExchangeDeclare(exchange: "profile", type: ExchangeType.Fanout);
+            _channel.QueueDeclare(queue: "post.profile.created",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: false,
                                   arguments: null);
+            _channel.QueueBind(queue: "post.profile.created",
+                              exchange: "profile",
+                              routingKey: "");
         }
 
         public void ReceiveMessage()
@@ -56,7 +60,7 @@ namespace PostMicroservice.Messaging
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };
 
-            _channel.BasicConsume(queue: "profile.created",
+            _channel.BasicConsume(queue: "post.profile.created",
                                   autoAck: false,
                                   consumer: consumer);
         }
