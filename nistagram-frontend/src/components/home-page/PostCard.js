@@ -97,8 +97,6 @@ class PostCard extends Component {
   likePost = (postId) => {
     if (document.getElementById("like" + postId).className === "fa fa-heart") {
       document.getElementById("like" + postId).className = "fa fa-heart-o";
-      document.getElementById("dislike" + postId).className =
-        "fa fa-thumbs-down";
     } else {
       document.getElementById("like" + postId).className = "fa fa-heart";
       document.getElementById("dislike" + postId).className =
@@ -129,7 +127,6 @@ class PostCard extends Component {
     ) {
       document.getElementById("dislike" + postId).className =
         "fa fa-thumbs-o-down";
-      document.getElementById("like" + postId).className = "fa fa-heart";
     } else {
       document.getElementById("dislike" + postId).className =
         "fa fa-thumbs-down";
@@ -378,16 +375,15 @@ class PostCard extends Component {
                                   <div class="timeline-options">
                                     {(() => {
                                       if (post.likes !== null) {
-                                        // var classForLike = "fa fa-heart-o";
+                                        var classForLike = "fa fa-heart-o";
 
-                                        // if (post.likes !== null) {
-                                        //   var index = post.likes.findIndex(
-                                        //     (p) =>
-                                        //       p.id == this.state.currentUser.id
-                                        //   );
-                                        //   if (index !== -1) {
-                                        //     classForLike = "fa fa-heart";
-                                        //   }
+                                        var index = post.likes.findIndex(
+                                          (p) =>
+                                            p.id == this.state.currentUser.id
+                                        );
+                                        if (index !== -1) {
+                                          classForLike = "fa fa-heart";
+                                        }
 
                                         return (
                                           <div>
@@ -399,11 +395,7 @@ class PostCard extends Component {
                                             >
                                               <i
                                                 id={"like" + post.id}
-                                                class={
-                                                  isLike
-                                                    ? "fa fa-heart"
-                                                    : "fa fa-heart-o"
-                                                }
+                                                class={classForLike}
                                                 style={{
                                                   fontSize: "20px",
                                                 }}
@@ -430,11 +422,7 @@ class PostCard extends Component {
                                             >
                                               <i
                                                 id={"like" + post.id}
-                                                class={
-                                                  isLike
-                                                    ? "fa fa-heart"
-                                                    : "fa fa-heart-o"
-                                                }
+                                                class={"fa fa-heart-o"}
                                                 style={{
                                                   fontSize: "20px",
                                                 }}
@@ -455,6 +443,17 @@ class PostCard extends Component {
 
                                     {(() => {
                                       if (post.dislikes !== null) {
+                                        var classForDislike =
+                                          "fa fa-thumbs-o-down";
+
+                                        var index = post.dislikes.findIndex(
+                                          (p) =>
+                                            p.id == this.state.currentUser.id
+                                        );
+                                        if (index !== -1) {
+                                          classForDislike = "fa fa-thumbs-down";
+                                        }
+
                                         return (
                                           <div>
                                             {" "}
@@ -466,11 +465,7 @@ class PostCard extends Component {
                                             >
                                               <i
                                                 id={"dislike" + post.id}
-                                                class={
-                                                  isDislike
-                                                    ? "fa fa-thumbs-down"
-                                                    : "fa fa-thumbs-o-down"
-                                                }
+                                                class={classForDislike}
                                                 style={{
                                                   fontSize: "20px",
                                                   paddingLeft: "20px",
@@ -498,11 +493,7 @@ class PostCard extends Component {
                                             >
                                               <i
                                                 id={"dislike" + post.id}
-                                                class={
-                                                  isDislike
-                                                    ? "fa fa-thumbs-down"
-                                                    : "fa fa-thumbs-o-down"
-                                                }
+                                                class={"fa fa-thumbs-o-down"}
                                                 style={{
                                                   fontSize: "20px",
                                                   paddingLeft: "20px",
