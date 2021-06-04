@@ -219,6 +219,25 @@
             }*/
         },
         {
+            "DownstreamPathTemplate": "/api/post/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/{id}",
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+        },
+        {
             "DownstreamPathTemplate": "/api/post",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
@@ -238,7 +257,7 @@
             }*/
         },
         {
-            "DownstreamPathTemplate": "/api/post/{id}",
+            "DownstreamPathTemplate": "/api/post/newComment",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -246,8 +265,46 @@
                     "Port": 55993
                 }
             ],
-            "UpstreamPathTemplate": "/gateway/post/{id}",
-            "UpstreamHttpMethod": [ "GET" ]
+            "UpstreamPathTemplate": "/gateway/post/newComment",
+            "UpstreamHttpMethod": [ "PUT" ]
+            /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+        },
+        {
+            "DownstreamPathTemplate": "/api/post/like",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/like",
+            "UpstreamHttpMethod": [ "PUT" ]
+            /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+        },
+        {
+            "DownstreamPathTemplate": "/api/post/dislike",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/dislike",
+            "UpstreamHttpMethod": [ "PUT" ]
             /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
@@ -336,8 +393,6 @@
                 "UserRole": "User"
             }*/
         }
-
-
     ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:58809"
