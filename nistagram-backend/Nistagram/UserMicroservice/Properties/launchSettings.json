@@ -1,5 +1,4 @@
-﻿{
-  "$schema": "http://json.schemastore.org/launchsettings.json",
+{
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
@@ -8,23 +7,40 @@
       "sslPort": 0
     }
   },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchBrowser": false,
       "launchUrl": "weatherforecast",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "DATABASE_SSL_MODE": "None",
+        "DATABASE_HOST": "localhost",
+        "DATABASE_PASSWORD": "root",
+        "DATABASE_USERNAME": "root",
+        "DATABASE_SCHEMA": "UserMicroserviceDb",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DATABASE_PORT": "3306"
       }
     },
     "ProfileMicroservice": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "weatherforecast",
-      "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+        "DATABASE_SSL_MODE": "None",
+        "DATABASE_HOST": "localhost",
+        "DATABASE_PASSWORD": "root",
+        "DATABASE_USERNAME": "root",
+        "DATABASE_SCHEMA": "UserMicroserviceDb",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DATABASE_PORT": "3306"
+      },
+      "applicationUrl": "http://localhost:5000"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "publishAllPorts": true
     }
   }
 }

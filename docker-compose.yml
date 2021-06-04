@@ -1,0 +1,82 @@
+version: "3.8"
+
+services:
+
+  mysql-user-microservice:
+    image: mysql:latest
+    container_name: mysql-user-microservice
+    volumes:
+        - mysql-db:/var/lib/mysql
+        - app-sql:/docker-entrypoint-initdb.d/
+    restart: always
+    environment:
+      MYSQL_DATABASE: "UserMicroserviceDb"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "user"
+      MYSQL_ROOT_PASSWORD: "root"
+    expose:
+      - '3306'
+    ports:
+      - '3307:3306'
+    networks:
+      - public_net
+
+  user-microservice:
+    build: 
+      context: .
+      dockerfile: nistagram-backend/Nistagram/UserMicroservice/Dockerfile
+    image: usermicroservice:latest
+    restart: on-failure
+    environment:
+      DATABASE_USERNAME: "user"
+      DATABASE_PASSWORD: "user"
+      DATABASE_HOST: "mysql-user-microservice"
+      DATABASE_SCHEMA: "UserMicroserviceDb"
+      STATIC_FILES: "false"
+      #SHOW_ENV: "TRUE"
+    depends_on:
+      - mysql-user-microservice
+    expose: 
+      - "80"
+    ports:
+      - "55988:80"
+    networks:
+      - public_net
+    volumes:
+    - app-sql:/app/sql
+
+  gateway-web-api:
+    build: 
+        context: .
+        dockerfile: nistagram-backend/Nistagram/GatewayWebApi/Dockerfile
+    image: gatewaywebapi:latest
+    restart: on-failure
+    environment:
+        PURPOSE: dep
+    expose: 
+        - "80"
+    ports:
+        - "58809:80"
+    networks:
+        - public_net
+
+  nistagram-frontend:
+    build: 
+      context: .
+      dockerfile: nistagram-frontend/Dockerfile
+    image: nistagramfrontend:latest
+    restart: on-failure
+    expose: 
+      - "3000"
+    ports:
+      - "3000:3000"
+    networks:
+      - public_net
+      
+networks:
+  public_net:
+    driver: bridge
+
+volumes:
+  mysql-db:
+  app-sql:
