@@ -6,7 +6,7 @@ namespace PostMicroservice.Mapper
 {
     public class CommentMapper
     {
-        public static Comment CommentDtoToComment(NewCommentDto dto)
+        public static Comment CommentDtoToComment(UpdatePostDto dto)
         {
             Comment comment = new Comment();
             comment.Publisher = new Profile();

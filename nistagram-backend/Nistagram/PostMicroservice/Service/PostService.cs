@@ -52,8 +52,69 @@ namespace PostMicroservice.Service
 
         public async Task<Post> InsertNewComment(Post post, Comment comment)
         {
+            if (post.Comments == null)
+            {
+                post.Comments = new List<Comment>();
+            }
             post.Comments.Add(comment);
             return await Update(post);
+        }
+
+        public async Task<Post> LikePost(Post post, Profile profile)
+        {
+            if(post.Likes == null)
+            {
+                post.Likes = new List<Profile>();
+            }
+
+            if(CheckIfUserHasAlreadyLikedPost(post, profile.OriginalId))
+            {
+                int index = post.Likes.FindIndex(p => p.OriginalId == profile.OriginalId);
+                post.Likes.RemoveAt(index);
+            } else
+            {
+                post = DeleteUserFromDislikesIfExistThere(post, profile);
+                post.Likes.Add(profile);
+            }
+
+            return await Update(post);
+        }
+
+        private Post DeleteUserFromDislikesIfExistThere(Post post, Profile profile)
+        {
+            if (post.Dislikes != null)
+            {
+                if (CheckIfUserHasAlreadyDislikedPost(post, profile.OriginalId))
+                {
+                    int index = post.Dislikes.FindIndex(p => p.OriginalId == profile.OriginalId);
+                    post.Dislikes.RemoveAt(index);
+                }
+            }
+            return post;
+        }
+
+        private bool CheckIfUserHasAlreadyLikedPost(Post post, int originalId)
+        {
+            foreach(Profile profile in post.Likes)
+            {
+                if (profile.OriginalId == originalId)
+                {
+                    return true; 
+                }
+            }
+            return false;
+        }
+
+        private bool CheckIfUserHasAlreadyDislikedPost(Post post, int originalId)
+        {
+            foreach (Profile profile in post.Dislikes)
+            {
+                if (profile.OriginalId == originalId)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public async Task<Post> Insert(Post entity)

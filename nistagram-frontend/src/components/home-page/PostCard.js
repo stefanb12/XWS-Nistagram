@@ -94,6 +94,29 @@ class PostCard extends Component {
     this.props.updatePost(updatedPosts);
   };
 
+  likePost = (postId) => {
+    // this.setState({
+    //   isLike: true,
+    //   isDislike: false,
+    // });
+
+    let resStatus = 0;
+
+    PostService.likePost(postId, this.state.currentUser)
+      .then((res) => {
+        resStatus = res.status;
+        return res.json();
+      })
+      .then((result) => {
+        if (resStatus === 200) {
+          const index = this.state.posts.findIndex((p) => p.id === postId);
+          const updatedPosts = [...this.state.posts];
+          updatedPosts[index] = result;
+          this.updatePost(updatedPosts);
+        }
+      });
+  };
+
   handleClickSnackBar = () => {
     this.setState({
       open: true,
@@ -321,7 +344,12 @@ class PostCard extends Component {
                                       if (post.likes !== null) {
                                         return (
                                           <div>
-                                            <a href="#">
+                                            <a
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.likePost(post.id);
+                                              }}
+                                            >
                                               <i
                                                 class={
                                                   isLike
@@ -332,15 +360,26 @@ class PostCard extends Component {
                                                   fontSize: "20px",
                                                 }}
                                               ></i>
-                                              <span /> Like ({post.likes.length}
-                                              )
+                                            </a>
+                                            <a
+                                              href="#"
+                                              style={{
+                                                marginLeft: "-10px",
+                                              }}
+                                            >
+                                              Like ({post.likes.length})
                                             </a>
                                           </div>
                                         );
                                       } else {
                                         return (
                                           <div>
-                                            <a href="#">
+                                            <a
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.likePost(post.id);
+                                              }}
+                                            >
                                               <i
                                                 class={
                                                   isLike
@@ -351,7 +390,14 @@ class PostCard extends Component {
                                                   fontSize: "20px",
                                                 }}
                                               ></i>
-                                              <span /> Like (0)
+                                            </a>
+                                            <a
+                                              href="#"
+                                              style={{
+                                                marginLeft: "-10px",
+                                              }}
+                                            >
+                                              Like (0)
                                             </a>
                                           </div>
                                         );
@@ -375,8 +421,14 @@ class PostCard extends Component {
                                                   paddingLeft: "20px",
                                                 }}
                                               ></i>
-                                              <span /> Dislike (
-                                              {post.dislikes.length})
+                                            </a>
+                                            <a
+                                              href="#"
+                                              style={{
+                                                marginLeft: "-10px",
+                                              }}
+                                            >
+                                              Dislike ({post.dislikes.length})
                                             </a>
                                           </div>
                                         );
@@ -395,7 +447,14 @@ class PostCard extends Component {
                                                   paddingLeft: "20px",
                                                 }}
                                               ></i>
-                                              <span /> Dislike (0)
+                                            </a>
+                                            <a
+                                              href="#"
+                                              style={{
+                                                marginLeft: "-10px",
+                                              }}
+                                            >
+                                              Dislike (0)
                                             </a>
                                           </div>
                                         );
@@ -406,7 +465,7 @@ class PostCard extends Component {
                                       if (post.comments !== null) {
                                         return (
                                           <div>
-                                            <a href="#">
+                                            <a>
                                               <i
                                                 class="fa fa-comment-o"
                                                 style={{
@@ -414,7 +473,12 @@ class PostCard extends Component {
                                                   paddingLeft: "20px",
                                                 }}
                                               ></i>
-                                              <span />
+                                            </a>
+                                            <a
+                                              style={{
+                                                marginLeft: "-10px",
+                                              }}
+                                            >
                                               Comment ({post.comments.length})
                                             </a>
                                           </div>
@@ -422,7 +486,7 @@ class PostCard extends Component {
                                       } else {
                                         return (
                                           <div>
-                                            <a href="#">
+                                            <a>
                                               <i
                                                 class="fa fa-comment-o"
                                                 style={{
@@ -430,7 +494,12 @@ class PostCard extends Component {
                                                   paddingLeft: "20px",
                                                 }}
                                               ></i>
-                                              <span />
+                                            </a>
+                                            <a
+                                              style={{
+                                                marginLeft: "-10px",
+                                              }}
+                                            >
                                               Comment (0)
                                             </a>
                                           </div>

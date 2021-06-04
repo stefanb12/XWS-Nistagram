@@ -266,7 +266,26 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/post/newComment",
-            "UpstreamHttpMethod": [ "POST" ]
+            "UpstreamHttpMethod": [ "PUT" ]
+            /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+        },
+        {
+            "DownstreamPathTemplate": "/api/post/like",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/like",
+            "UpstreamHttpMethod": [ "PUT" ]
             /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []

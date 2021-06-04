@@ -31,12 +31,22 @@ class PostService {
 
   insertNewComment(postId, text, publisher) {
     const requestOptions = {
-      method: "POST",
+      method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ postId, text, publisher }),
     };
 
     return fetch(API_URL + "post/newComment", requestOptions);
+  }
+
+  likePost(postId, publisher) {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ postId, publisher }),
+    };
+
+    return fetch(API_URL + "post/like", requestOptions);
   }
 
   getPublicPosts() {
