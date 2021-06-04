@@ -1,0 +1,178 @@
+version: "3.8"
+
+services:
+
+  mysql-user-microservice:
+    image: mysql:latest
+    container_name: mysql-user-microservice
+    volumes:
+        - mysql-db-user:/var/lib/mysql
+        - sql-user:/docker-entrypoint-initdb.d/
+    restart: always
+    environment:
+      MYSQL_DATABASE: "UserMicroserviceDb"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "user"
+      MYSQL_ROOT_PASSWORD: "root"
+    expose:
+      - '3306'
+    ports:
+      - '3307:3306'
+    networks:
+      - public_net
+
+  mysql-notification-microservice:
+    image: mysql:latest
+    container_name: mysql-notification-microservice
+    volumes:
+        - mysql-db-notification:/var/lib/mysql
+        - sql-notification:/docker-entrypoint-initdb.d/
+    restart: always
+    environment:
+      MYSQL_DATABASE: "NotificationMicroserviceDb"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "user"
+      MYSQL_ROOT_PASSWORD: "root"
+    expose:
+      - '3306'
+    ports:
+      - '3308:3306'
+    networks:
+      - public_net
+
+  mongodb-post-microservice:
+    image: mongo:latest
+    container_name: mongodb-post-microservice
+    # volumes:
+    #   - ./init-post:/data/db
+    restart: unless-stopped
+    #environment: 
+    #   # MONGO_INITDB_ROOT_USERNAME: root
+    #   # MONGO_INITDB_ROOT_PASSWORD: root
+    # expose:
+    #   - '27017'
+    ports:
+      - 27017:27017   
+    networks:
+      - public_net 
+
+  user-microservice:
+    build: 
+      context: .
+      dockerfile: nistagram-backend/Nistagram/UserMicroservice/Dockerfile
+    image: usermicroservice:latest
+    restart: on-failure
+    environment:
+      DATABASE_USERNAME: "user"
+      DATABASE_PASSWORD: "user"
+      DATABASE_HOST: "mysql-user-microservice"
+      DATABASE_SCHEMA: "UserMicroserviceDb"
+      STATIC_FILES: "false"
+    depends_on:
+      - mysql-user-microservice
+    expose: 
+      - "80"
+    ports:
+      - "55988:80"
+    networks:
+      - public_net
+    volumes:
+      - sql-user:/app/sql-user
+
+  notification-microservice:
+    build: 
+      context: .
+      dockerfile: nistagram-backend/Nistagram/NotificationMicroservice/Dockerfile
+    image: notificationmicroservice:latest
+    restart: on-failure
+    environment:
+      DATABASE_USERNAME: "user"
+      DATABASE_PASSWORD: "user"
+      DATABASE_HOST: "mysql-notification-microservice"
+      DATABASE_SCHEMA: "NotificationMicroserviceDb"
+    depends_on:
+      - mysql-notification-microservice
+    expose: 
+      - "80"
+    ports:
+      - "56002:80"
+    networks:
+      - public_net
+    volumes:
+      - sql-notification:/app/sql-notification
+
+  post-microservice:
+    build: 
+      context: .
+      dockerfile: nistagram-backend/Nistagram/PostMicroservice/Dockerfile
+    image: postmicroservice:latest
+    restart: on-failure
+    environment:
+      DATABASE_HOST: "mongodb-post-microservice"
+      DATABASE_NAME: "PostMicroserviceDb"
+      STATIC_FILES: "false"
+      HOSTED_SERVICE: "false"
+    depends_on:
+      - mongodb-post-microservice
+    expose: 
+      - "80"
+    ports:
+      - "55993:80"
+    networks:
+      - public_net
+
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+  #   container_name: rabbitmq
+  #   restart: on-failure
+  #   # environment: 
+  #   #   RABBITMQ_DEFAULT_USER : "guest"
+  #   #   RABBITMQ_DEFAULT_PASS : "guest"
+  #   ports:
+  #     - "15672:15672"
+  #     - "5672:5672"
+  #     # - "4369:4369"
+  #     # - "5671:5671"
+  #     # - "25672:25672"
+  #     # - "15671:15671"
+
+  gateway-web-api:
+    build: 
+        context: .
+        dockerfile: nistagram-backend/Nistagram/GatewayWebApi/Dockerfile
+    image: gatewaywebapi:latest
+    restart: on-failure
+    environment:
+        PURPOSE: dep
+    depends_on:
+      - user-microservice
+      - notification-microservice
+    expose: 
+        - "80"
+    ports:
+        - "58809:80"
+    networks:
+        - public_net
+
+  nistagram-frontend:
+    build: 
+      context: .
+      dockerfile: nistagram-frontend/Dockerfile
+    image: nistagramfrontend:latest
+    restart: on-failure
+    expose: 
+      - "3000"
+    ports:
+      - "3000:3000"
+    networks:
+      - public_net
+      
+networks:
+  public_net:
+    driver: bridge
+
+volumes:
+  mysql-db-user:
+  mysql-db-notification:
+  sql-user:
+  sql-notification:

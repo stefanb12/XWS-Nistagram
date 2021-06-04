@@ -62,7 +62,7 @@ class UserProfile extends Component {
 
     this.getFollowersAndFollowing();
 
-    if (this.state.userProfile.private == true) {
+    if (this.state.userProfile.isPrivate == true) {
       let resStatus = 0;
       FollowRequestService.getFollowRequest(
         this.state.userProfileId,
@@ -559,7 +559,7 @@ class UserProfile extends Component {
       isInFollowers &&
       !isInFollowing
     ) {
-      if (userProfile.private === true) {
+      if (userProfile.isPrivate === true) {
         if (doesFollowRequestExist === true) {
           followButton = (
             <div>
@@ -624,7 +624,7 @@ class UserProfile extends Component {
         );
       }
     } else {
-      if (userProfile.private === true) {
+      if (userProfile.isPrivate === true) {
         // Profile is private
         if (doesFollowRequestExist === true) {
           followButton = (
