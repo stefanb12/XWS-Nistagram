@@ -219,6 +219,25 @@
 
     // PostMicroservice
     {
+      "DownstreamPathTemplate": "/api/post",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55993
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/post",
+      "UpstreamHttpMethod": [ "GET" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
+    {
       "DownstreamPathTemplate": "/api/post/public",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

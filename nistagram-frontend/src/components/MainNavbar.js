@@ -21,6 +21,8 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextF
 import Paper from '@material-ui/core/Paper';
 import SelectSearch from 'react-select-search';
 import ProfileService from "../services/ProfileService";
+import PostService from "../services/PostService";
+import hash from "../assets/images/hash.svg";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -117,6 +119,8 @@ export default function MainNavbar() {
   const [searchValue, setSearchValue] = React.useState("");
   const [allUsers, setAllUsers] = React.useState([]);
   const [mounted, setMounted] = React.useState(false);
+  const [publicPosts, setPublicPosts] = React.useState([]);
+  const [searchData, setSearchData] = React.useState([]);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -129,6 +133,16 @@ export default function MainNavbar() {
         setAllUsers(result);
         console.log(allUsers);
       });
+
+      PostService.getAllPosts()
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setPublicPosts(result);
+          console.log(publicPosts);
+      });
+
+      setMounted(false);
     //loadData();
   }, []);
 
@@ -226,21 +240,74 @@ export default function MainNavbar() {
   );
 
   const onChoseSearchResult = (event, row) =>{
-    console.log(row.username);
+    if(row.type == "user"){
+      console.log(row.id);
+      history.push({
+       pathname: "/user/profile",
+       state: row.id
+      });
+    }else if(row.type == "tag" || row.type == "location"){
+      setSearchValue("");
+      console.log(row.searchParam);
+      history.push({
+        pathname: "/app/search",
+        state: row
+       });
+    }
   };
 
-  const onSearchChange = (event) => {
+  const onSearchChange = async (event) => {
     setSearchValue(event.target.value);
     if(searchValue == "" && mounted == false){
-      ProfileService.getAllUsers()
+
+      await ProfileService.getAllUsers()
         .then((res) => res.json())
         .then(
           (result) => {
             setAllUsers(result);
             console.log(allUsers);
-          });
+        });
+      
+      await PostService.getAllPosts()
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setPublicPosts(result);
+          console.log(publicPosts);
+      });
     }
-    setMounted(true);
+
+    if(mounted == false){
+       for (let i = 0; i < allUsers.length; i++) {
+         var user = {id: allUsers[i].id, searchParam: allUsers[i].username, imageSrc: allUsers[i].imageSrc, type: "user"}    
+         searchData.push(user);
+        } 
+
+      for (let i = 0; i < publicPosts.length; i++) {
+        for (let j = 0; j < publicPosts[i].tags.length; j++){
+          var tag = {id: null, searchParam:publicPosts[i].tags[j], imageSrc: hash, type: "tag"}  
+          searchData.push(tag);
+        }
+        if(publicPosts[i].location.address === "" || publicPosts[i].location.address === null){
+          let flag = false;
+          for(let k = 0; k < searchData.length; k++){
+            if(searchData[k].searchParam == (publicPosts[i].location.city + ", " + publicPosts[i].location.country)){
+              flag = true;
+            }
+          }
+          if(flag == false){
+            var location = {id: null, searchParam: publicPosts[i].location.city + ", " + publicPosts[i].location.country, imageSrc: "https://i.pinimg.com/564x/4e/dc/b4/4edcb460a940ff726549077935f57168.jpg", type: "location"}  
+            searchData.push(location);
+          }
+        }else{
+        var location = {id: null, searchParam: publicPosts[i].location.address + ", " + publicPosts[i].location.city + ", " + publicPosts[i].location.country, imageSrc: "https://i.pinimg.com/564x/4e/dc/b4/4edcb460a940ff726549077935f57168.jpg", type: "location"}  
+          searchData.push(location);
+        }
+      } 
+     
+    }
+
+    await setMounted(true);
   };
 
   const handleSearhClick = (event) => {
@@ -265,16 +332,16 @@ export default function MainNavbar() {
     open={isMenuOpen}
     >                 
                 <Table className={classes.table} aria-label="simple table" style={{width: "16%", marginTop: "4%", position: "absolute", zIndex: 10, backgroundColor: "white", border: "1px solid grey"}}>
-                <div style={{height: "150px", width: "100%", overflow: "auto"}}> 
+                <div style={{height: "400px", width: "100%", overflow: "auto"}}> 
                 <TableBody style={{width: "100%"}}>
-                  {allUsers.filter((val) => {
+                  {searchData.filter((val) => {
                     if(searchValue == ""){
                       return val
-                    }else if(val.username.toLowerCase().includes(searchValue.toLowerCase())){
+                    }else if(val.searchParam.toLowerCase().includes(searchValue.toLowerCase())){
                       return val
                     }
                   }).map((row) => (
-                    <StyledTableRow style={{width: "100%"}} key={row.username} onClick={(event) => onChoseSearchResult(event, row)}>
+                    <StyledTableRow style={{width: "100%"}} key={row.searchParam} onClick={(event) => onChoseSearchResult(event, row)}>
                       <StyledTableCell style={{width: "40%"}} align="center">
                         <img
                           src={row.imageSrc}
@@ -282,7 +349,7 @@ export default function MainNavbar() {
                           width="30"
                           height="30"
                         />
-                        <label style={{marginLeft: "4%"}}>{row.username}</label>
+                        <label style={{marginLeft: "4%"}}>{row.searchParam}</label>
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}
