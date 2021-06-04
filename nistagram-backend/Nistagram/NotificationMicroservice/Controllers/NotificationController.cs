@@ -46,6 +46,15 @@ namespace NotificationMicroservice.Controllers
             return Ok(result);
         }
 
+        [HttpPost("follow")]
+        public async Task<IActionResult> SendFollowNotification([FromBody] NotificationDto dto)
+        {
+            Notification notification = NotificationMapper.NotificationDtoToNotification(dto);
+            Profile sender = await _profileService.GetById(dto.SenderId);
+            notification.Content = sender.Username + " follow you";
+            return Ok(await _notificationService.Insert(notification));
+        }
+
         [HttpPost("followRequest")]
         public async Task<IActionResult> SendFollowRequestNotification([FromBody] NotificationDto dto)
         {

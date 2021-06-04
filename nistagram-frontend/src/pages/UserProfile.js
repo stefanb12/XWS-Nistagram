@@ -12,6 +12,8 @@ import AuthService from "../services/AuthService";
 import ProfileService from "../services/ProfileService";
 import FollowRequestService from "../services/FollowRequestService";
 import NotificationService from "../services/NotificationService";
+import { Snackbar } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 
 class UserProfile extends Component {
   constructor(props) {
@@ -31,13 +33,49 @@ class UserProfile extends Component {
       doesFollowRequestExist: false,
       followers: [],
       following: [],
+      followingSnackBarOpen: false,
+      followersSnackBarOpen: false,
     };
     this.handleClick = this.handleClick.bind(this);
   }
 
-  openFollowersModal = () => this.setState({ isOpenFollowersModal: true });
+  handleClickFollowingSnackBar = () => {
+    this.setState({ followingSnackBarOpen: true });
+  };
+
+  handleCloseFollowingSnackBar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ followingSnackBarOpen: false });
+  };
+
+  handleClickFollowersSnackBar = () => {
+    this.setState({ followersSnackBarOpen: true });
+  };
+
+  handleCloseFollowersSnackBar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ followersSnackBarOpen: false });
+  };
+
+  openFollowersModal = () => {
+    if (this.state.userProfile.isPrivate === true) {
+      this.handleClickFollowersSnackBar();
+    } else {
+      this.setState({ isOpenFollowersModal: true });
+    }
+  };
   closeFollowersModal = () => this.setState({ isOpenFollowersModal: false });
-  openFollowingModal = () => this.setState({ isOpenFollowingModal: true });
+  openFollowingModal = () => {
+    if (this.state.userProfile.isPrivate === true) {
+      this.handleClickFollowingSnackBar();
+    } else {
+      this.setState({ isOpenFollowingModal: true });
+    }
+  };
   closeFollowingModal = () => this.setState({ isOpenFollowingModal: false });
 
   async componentDidMount() {
@@ -127,6 +165,7 @@ class UserProfile extends Component {
         return res.json();
       })
       .then((result) => {
+        NotificationService.sendFollowNotification(followingId, followerId, 0);
         this.getFollowersAndFollowing();
         this.setState({
           loggedUser: result.follower,
@@ -693,6 +732,26 @@ class UserProfile extends Component {
     }
     return (
       <div>
+        <Snackbar
+          open={this.state.followersSnackBarOpen}
+          autoHideDuration={2000}
+          onClose={this.handleCloseFollowersSnackBar}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert onClose={this.handleCloseFollowersSnackBar} severity="error">
+            Follow this account to see their followers
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={this.state.followingSnackBarOpen}
+          autoHideDuration={2000}
+          onClose={this.handleCloseFollowingSnackBar}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert onClose={this.handleCloseFollowingSnackBar} severity="error">
+            Follow this account to see their following
+          </Alert>
+        </Snackbar>
         <Modal
           show={this.state.isOpenFollowersModal}
           onHide={this.closeFollowersModal}
@@ -718,11 +777,11 @@ class UserProfile extends Component {
                           {follower.username}
                         </a>
                       </div>
-                      {/* <div class="text-muted fs-13px">North Raundspic</div> */}
+                      {/* <div class="text-muted fs-13px">{follower.fullName}</div> */}
                     </div>
-                    <a href="#" class="btn btn-outline-primary">
+                    {/* <a href="#" class="btn btn-outline-primary">
                       Follow
-                    </a>
+                    </a> */}
                   </div>
                 );
               })}
@@ -759,11 +818,13 @@ class UserProfile extends Component {
                           {followingProfile.username}
                         </a>
                       </div>
-                      {/* <div class="text-muted fs-13px">North Raundspic</div> */}
+                      {/* <div class="text-muted fs-13px">
+                        {followingProfile.fullName}
+                      </div> */}
                     </div>
-                    <a href="#" class="btn btn-outline-primary">
+                    {/* <a href="#" class="btn btn-outline-primary">
                       Unfollow
-                    </a>
+                    </a> */}
                   </div>
                 );
               })}

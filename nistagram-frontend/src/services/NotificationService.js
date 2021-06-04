@@ -1,6 +1,16 @@
 const API_URL = "http://localhost:58809/gateway/";
 
 class NotificationService {
+  sendFollowNotification(receiverId, senderId, postId) {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ receiverId, senderId, postId }),
+    };
+
+    return fetch(API_URL + "notification/follow", requestOptions);
+  }
+
   sendFollowRequestNotification(receiverId, senderId, postId) {
     const requestOptions = {
       method: "POST",

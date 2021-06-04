@@ -392,7 +392,7 @@ export default function UserNavbar() {
               {notification.content}
               {(() => {
                 if (notification.post !== null) {
-                  if (notification.post.imageSrc !== null) {
+                  if (notification.post.id !== 1) {
                     return (
                       <div>
                         <img
