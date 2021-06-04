@@ -80,6 +80,27 @@ namespace PostMicroservice.Service
             return await Update(post);
         }
 
+        public async Task<Post> DisikePost(Post post, Profile profile)
+        {
+            if (post.Dislikes == null)
+            {
+                post.Dislikes = new List<Profile>();
+            }
+
+            if (CheckIfUserHasAlreadyDislikedPost(post, profile.OriginalId))
+            {
+                int index = post.Dislikes.FindIndex(p => p.OriginalId == profile.OriginalId);
+                post.Dislikes.RemoveAt(index);
+            }
+            else
+            {
+                post = DeleteUserFromLikesIfExistThere(post, profile);
+                post.Dislikes.Add(profile);
+            }
+
+            return await Update(post);
+        }
+
         private Post DeleteUserFromDislikesIfExistThere(Post post, Profile profile)
         {
             if (post.Dislikes != null)
@@ -88,6 +109,19 @@ namespace PostMicroservice.Service
                 {
                     int index = post.Dislikes.FindIndex(p => p.OriginalId == profile.OriginalId);
                     post.Dislikes.RemoveAt(index);
+                }
+            }
+            return post;
+        }
+
+        private Post DeleteUserFromLikesIfExistThere(Post post, Profile profile)
+        {
+            if (post.Dislikes != null)
+            {
+                if (CheckIfUserHasAlreadyLikedPost(post, profile.OriginalId))
+                {
+                    int index = post.Likes.FindIndex(p => p.OriginalId == profile.OriginalId);
+                    post.Likes.RemoveAt(index);
                 }
             }
             return post;

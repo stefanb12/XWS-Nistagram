@@ -92,6 +92,19 @@ namespace PostMicroservice.Controllers
             return Ok(PostMapper.PostToPostDto(updatedPost));
         }
 
+        [HttpPut("dislike")]
+        public async Task<IActionResult> DisikePost([FromBody] UpdatePostDto updatePostDto)
+        {
+            Post post = await _postService.GetById(updatePostDto.PostId);
+            for (int i = 0; i < post.Contents.Count; i++)
+            {
+                post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
+            }
+
+            Post updatedPost = await _postService.DisikePost(post, ProfileMapper.ProfileDtoToProfile(updatePostDto));
+            return Ok(PostMapper.PostToPostDto(updatedPost));
+        }
+
         [HttpPost]
         public async Task<IActionResult> Insert([FromForm] PostDto postDto)
         {

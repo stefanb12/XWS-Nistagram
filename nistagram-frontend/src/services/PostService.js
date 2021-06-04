@@ -49,6 +49,16 @@ class PostService {
     return fetch(API_URL + "post/like", requestOptions);
   }
 
+  dislikePost(postId, publisher) {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ postId, publisher }),
+    };
+
+    return fetch(API_URL + "post/dislike", requestOptions);
+  }
+
   getPublicPosts() {
     return fetch(API_URL + "post/public");
   }

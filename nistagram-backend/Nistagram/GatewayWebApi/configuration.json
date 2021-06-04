@@ -294,6 +294,25 @@
                 "UserRole": "User"
             }*/
         },
+        {
+            "DownstreamPathTemplate": "/api/post/dislike",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/dislike",
+            "UpstreamHttpMethod": [ "PUT" ]
+            /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+        },
 
         // NotificationMicroservice
         {

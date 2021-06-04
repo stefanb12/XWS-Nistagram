@@ -11,5 +11,6 @@ namespace PostMicroservice.Service
         Task<string> SaveImage(IFormFile imageFile);
         Task<Post> InsertNewComment(Post post, Comment comment);
         Task<Post> LikePost(Post post, Profile profile);
+        Task<Post> DisikePost(Post post, Profile profile);
     }
 }

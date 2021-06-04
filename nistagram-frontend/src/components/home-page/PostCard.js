@@ -19,7 +19,7 @@ class PostCard extends Component {
       newComment: "",
       currentUser: null,
       open: false,
-      posts: [{ post: { imagesSrc: [] } }],
+      posts: [],
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -95,14 +95,50 @@ class PostCard extends Component {
   };
 
   likePost = (postId) => {
-    // this.setState({
-    //   isLike: true,
-    //   isDislike: false,
-    // });
+    if (document.getElementById("like" + postId).className === "fa fa-heart") {
+      document.getElementById("like" + postId).className = "fa fa-heart-o";
+      document.getElementById("dislike" + postId).className =
+        "fa fa-thumbs-down";
+    } else {
+      document.getElementById("like" + postId).className = "fa fa-heart";
+      document.getElementById("dislike" + postId).className =
+        "fa fa-thumbs-o-down";
+    }
 
     let resStatus = 0;
 
     PostService.likePost(postId, this.state.currentUser)
+      .then((res) => {
+        resStatus = res.status;
+        return res.json();
+      })
+      .then((result) => {
+        if (resStatus === 200) {
+          const index = this.state.posts.findIndex((p) => p.id === postId);
+          const updatedPosts = [...this.state.posts];
+          updatedPosts[index] = result;
+          this.updatePost(updatedPosts);
+        }
+      });
+  };
+
+  dislikePost = (postId) => {
+    if (
+      document.getElementById("dislike" + postId).className ===
+      "fa fa-thumbs-down"
+    ) {
+      document.getElementById("dislike" + postId).className =
+        "fa fa-thumbs-o-down";
+      document.getElementById("like" + postId).className = "fa fa-heart";
+    } else {
+      document.getElementById("dislike" + postId).className =
+        "fa fa-thumbs-down";
+      document.getElementById("like" + postId).className = "fa fa-heart-o";
+    }
+
+    let resStatus = 0;
+
+    PostService.dislikePost(postId, this.state.currentUser)
       .then((res) => {
         resStatus = res.status;
         return res.json();
@@ -342,6 +378,17 @@ class PostCard extends Component {
                                   <div class="timeline-options">
                                     {(() => {
                                       if (post.likes !== null) {
+                                        // var classForLike = "fa fa-heart-o";
+
+                                        // if (post.likes !== null) {
+                                        //   var index = post.likes.findIndex(
+                                        //     (p) =>
+                                        //       p.id == this.state.currentUser.id
+                                        //   );
+                                        //   if (index !== -1) {
+                                        //     classForLike = "fa fa-heart";
+                                        //   }
+
                                         return (
                                           <div>
                                             <a
@@ -351,6 +398,7 @@ class PostCard extends Component {
                                               }}
                                             >
                                               <i
+                                                id={"like" + post.id}
                                                 class={
                                                   isLike
                                                     ? "fa fa-heart"
@@ -381,6 +429,7 @@ class PostCard extends Component {
                                               }}
                                             >
                                               <i
+                                                id={"like" + post.id}
                                                 class={
                                                   isLike
                                                     ? "fa fa-heart"
@@ -409,8 +458,14 @@ class PostCard extends Component {
                                         return (
                                           <div>
                                             {" "}
-                                            <a href="#">
+                                            <a
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.dislikePost(post.id);
+                                              }}
+                                            >
                                               <i
+                                                id={"dislike" + post.id}
                                                 class={
                                                   isDislike
                                                     ? "fa fa-thumbs-down"
@@ -435,8 +490,14 @@ class PostCard extends Component {
                                       } else {
                                         return (
                                           <div>
-                                            <a href="#">
+                                            <a
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.dislikePost(post.id);
+                                              }}
+                                            >
                                               <i
+                                                id={"dislike" + post.id}
                                                 class={
                                                   isDislike
                                                     ? "fa fa-thumbs-down"
