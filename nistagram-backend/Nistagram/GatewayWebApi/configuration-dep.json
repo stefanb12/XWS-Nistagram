@@ -5,8 +5,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 55988
+          "Host": "user-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/auth/login",
@@ -19,8 +19,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 55988
+          "Host": "user-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/profile/registration",
@@ -31,8 +31,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 55988
+          "Host": "user-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/profile/{id}",
@@ -50,8 +50,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 55988
+          "Host": "user-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/profile/{id}/followers",
@@ -69,8 +69,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 55988
+          "Host": "user-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/profile/{id}/following",
@@ -88,8 +88,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 55988
+          "Host": "user-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/profile/{profileId}/follow/{id}",
@@ -107,8 +107,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 55988
+          "Host": "user-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/profile/{profileId}/unfollow/{id}",
@@ -126,8 +126,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 55988
+          "Host": "user-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/followRequest",
@@ -145,8 +145,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 55988
+          "Host": "user-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/followRequest/{receiverId}/{senderId}",
@@ -164,8 +164,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 55988
+          "Host": "user-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/profile/update",
@@ -183,8 +183,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 55988
+          "Host": "user-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/profile/{id}/profileForUpdating",
@@ -200,31 +200,12 @@
 
     // PostMicroservice
     {
-      "DownstreamPathTemplate": "/api/post",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post",
-      "UpstreamHttpMethod": [ "GET" ]
-      /*"AuthenticationOptions": {
-                "AuthenticationProviderKey": "Key",
-                "AllowedScopes": []
-            },
-            "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
-    },
-    {
       "DownstreamPathTemplate": "/api/post/public",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 55993
+          "Host": "post-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/post/public",
@@ -238,31 +219,12 @@
             }*/
     },
     {
-      "DownstreamPathTemplate": "/api/post/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
-      /*"AuthenticationOptions": {
-                "AuthenticationProviderKey": "Key",
-                "AllowedScopes": []
-            },
-            "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
-    },
-    {
       "DownstreamPathTemplate": "/api/post",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 55993
+          "Host": "post-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/post",
@@ -276,54 +238,16 @@
             }*/
     },
     {
-      "DownstreamPathTemplate": "/api/post/newComment",
+      "DownstreamPathTemplate": "/api/post/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 55993
+          "Host": "post-microservice",
+          "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/gateway/post/newComment",
-      "UpstreamHttpMethod": [ "PUT" ]
-      /*"AuthenticationOptions": {
-                "AuthenticationProviderKey": "Key",
-                "AllowedScopes": []
-            },
-            "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
-    },
-    {
-      "DownstreamPathTemplate": "/api/post/like",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post/like",
-      "UpstreamHttpMethod": [ "PUT" ]
-      /*"AuthenticationOptions": {
-                "AuthenticationProviderKey": "Key",
-                "AllowedScopes": []
-            },
-            "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
-    },
-    {
-      "DownstreamPathTemplate": "/api/post/dislike",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post/dislike",
-      "UpstreamHttpMethod": [ "PUT" ]
+      "UpstreamPathTemplate": "/gateway/post/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
       /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
@@ -339,8 +263,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 56002
+          "Host": "notification-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/notification/followRequest",
@@ -358,8 +282,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 56002
+          "Host": "notification-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/notification/profile/{id}",
@@ -377,8 +301,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 56002
+          "Host": "notification-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/notification/seen/{profileId}",
@@ -398,8 +322,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 55996
+          "Host": "story-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/story",
@@ -412,6 +336,8 @@
                 "UserRole": "User"
             }*/
     }
+
+
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:58809"

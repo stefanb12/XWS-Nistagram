@@ -38,6 +38,10 @@ namespace NotificationMicroservice
 
             services.AddSingleton<INotificationService, NotificationService>(service =>
                     new NotificationService(new NotificationRepository(new NotificationDbContext())));
+            services.AddSingleton<IProfileService, ProfileService>(service =>
+                    new ProfileService(new ProfileRepository(new NotificationDbContext())));
+            services.AddSingleton<IPostService, PostService>(service =>
+                    new PostService(new PostRepository(new NotificationDbContext())));
         }
 
         private string CreateConnectionStringFromEnvironment()

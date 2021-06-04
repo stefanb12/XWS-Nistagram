@@ -20,6 +20,12 @@ export default class HomePage extends Component {
       });
   }
 
+  updatePosts = async (updatedPosts) => {
+    await this.setState({
+      publicPosts: updatedPosts,
+    });
+  };
+
   render() {
     return (
       <div>
@@ -28,7 +34,10 @@ export default class HomePage extends Component {
             <div id="main-wrapper">
               <div class="row">
                 <div class="col-lg-9 col-xl-20">
-                  <PostCard sendPosts={this.state.publicPosts} />
+                  <PostCard
+                    sendPosts={this.state.publicPosts}
+                    updatePost={this.updatePosts.bind(this)}
+                  />
                 </div>
               </div>
             </div>

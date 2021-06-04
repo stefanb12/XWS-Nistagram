@@ -1,8 +1,13 @@
 import React, { Component } from "react";
 import noPostsYet from "../../assets/images/no_posts_yet.jpg";
 import moment from "moment";
+import AuthService from "../../services/AuthService";
+import { Link, withRouter } from "react-router-dom";
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
+import PostService from "../../services/PostService";
 
-export default class PostCard extends Component {
+class PostCard extends Component {
   constructor(props) {
     super(props);
     this.dropdownRef = React.createRef();
@@ -11,12 +16,23 @@ export default class PostCard extends Component {
       isLike: false,
       isSaved: false,
       isActive: false,
+      newComment: "",
+      currentUser: null,
+      open: false,
+      posts: [],
     };
     this.handleClick = this.handleClick.bind(this);
   }
 
+  static getDerivedStateFromProps(props) {
+    return { posts: props.sendPosts };
+  }
+
   componentDidMount() {
     document.addEventListener("mousedown", this.handleClickOutside);
+    this.setState({
+      currentUser: AuthService.getCurrentUser(),
+    });
   }
 
   componentWillUnmount() {
@@ -40,18 +56,141 @@ export default class PostCard extends Component {
     }
   };
 
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value,
+    });
+  }
+
+  postNewComment = (postId) => {
+    let text = document.getElementById("newComment" + postId).value;
+    let resStatus = 0;
+    if (text !== "") {
+      PostService.insertNewComment(postId, text, this.state.currentUser)
+        .then((res) => {
+          resStatus = res.status;
+          return res.json();
+        })
+        .then((result) => {
+          if (resStatus === 200) {
+            const index = this.state.posts.findIndex((p) => p.id === postId);
+            const updatedPosts = [...this.state.posts];
+            updatedPosts[index] = result;
+            this.updatePost(updatedPosts);
+          }
+          return result;
+        });
+      document.getElementById("newComment" + postId).value = "";
+    } else {
+      this.handleClickSnackBar();
+    }
+  };
+
+  updatePost = (updatedPosts) => {
+    this.props.updatePost(updatedPosts);
+  };
+
+  likePost = (postId) => {
+    if (document.getElementById("like" + postId).className === "fa fa-heart") {
+      document.getElementById("like" + postId).className = "fa fa-heart-o";
+      document.getElementById("dislike" + postId).className =
+        "fa fa-thumbs-down";
+    } else {
+      document.getElementById("like" + postId).className = "fa fa-heart";
+      document.getElementById("dislike" + postId).className =
+        "fa fa-thumbs-o-down";
+    }
+
+    let resStatus = 0;
+
+    PostService.likePost(postId, this.state.currentUser)
+      .then((res) => {
+        resStatus = res.status;
+        return res.json();
+      })
+      .then((result) => {
+        if (resStatus === 200) {
+          const index = this.state.posts.findIndex((p) => p.id === postId);
+          const updatedPosts = [...this.state.posts];
+          updatedPosts[index] = result;
+          this.updatePost(updatedPosts);
+        }
+      });
+  };
+
+  dislikePost = (postId) => {
+    if (
+      document.getElementById("dislike" + postId).className ===
+      "fa fa-thumbs-down"
+    ) {
+      document.getElementById("dislike" + postId).className =
+        "fa fa-thumbs-o-down";
+      document.getElementById("like" + postId).className = "fa fa-heart";
+    } else {
+      document.getElementById("dislike" + postId).className =
+        "fa fa-thumbs-down";
+      document.getElementById("like" + postId).className = "fa fa-heart-o";
+    }
+
+    let resStatus = 0;
+
+    PostService.dislikePost(postId, this.state.currentUser)
+      .then((res) => {
+        resStatus = res.status;
+        return res.json();
+      })
+      .then((result) => {
+        if (resStatus === 200) {
+          const index = this.state.posts.findIndex((p) => p.id === postId);
+          const updatedPosts = [...this.state.posts];
+          updatedPosts[index] = result;
+          this.updatePost(updatedPosts);
+        }
+      });
+  };
+
+  handleClickSnackBar = () => {
+    this.setState({
+      open: true,
+    });
+  };
+
+  handleCloseSnackBar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    this.setState({
+      open: false,
+    });
+  };
+
   render() {
     const isDislike = this.state.isDislike;
     const isLike = this.state.isLike;
     const isSaved = this.state.isSaved;
     const dropdownRef = this.dropdownRef;
     const isActive = this.state.isActive;
-    const posts = this.props.sendPosts;
+    const posts = this.state.posts;
 
     return (
       <div>
+        <Snackbar
+          open={this.state.open}
+          autoHideDuration={2000}
+          onClose={this.handleCloseSnackBar}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert onClose={this.handleCloseSnackBar} severity="error">
+            You have to enter a comment!
+          </Alert>
+        </Snackbar>
         {(() => {
-          if (Array.isArray(posts) || posts.length) {
+          if (Array.isArray(posts)) {
             return (
               <div>
                 {posts.map((post, key) => {
@@ -69,66 +208,108 @@ export default class PostCard extends Component {
                                   />
                                   <p>
                                     {post.publisher.username}{" "}
-                                    <span>publish a post</span>
+                                    <small>
+                                      {moment(
+                                        moment(post.publishingDate).format(
+                                          "YYYY-MM-DD HH:mm:ss"
+                                        )
+                                      ).fromNow()}
+                                    </small>
                                   </p>
-                                  <small>
-                                    {moment(
-                                      moment(post.publishingDate).format(
-                                        "YYYY-MM-DD HH:mm:ss"
-                                      )
-                                    ).fromNow()}
-                                  </small>
+                                  <p>
+                                    <small>
+                                      {(() => {
+                                        if (post.location.address === "") {
+                                          return (
+                                            <div>
+                                              {post.location.city},{" "}
+                                              {post.location.country}{" "}
+                                            </div>
+                                          );
+                                        } else {
+                                          return (
+                                            <div>
+                                              {post.location.address},{" "}
+                                              {post.location.city},{" "}
+                                              {post.location.country}{" "}
+                                            </div>
+                                          );
+                                        }
+                                      })()}
+                                    </small>
+                                  </p>
                                 </div>
-
-                                <div class="dropdown" ref={dropdownRef}>
-                                  <button
-                                    class="btn p-0"
-                                    type="button"
-                                    id="dropdownMenuButton"
-                                    data-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
-                                    onClick={this.handleClick}
-                                    className="menu-trigger"
-                                  >
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="34"
-                                      height="34"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      stroke-width="2"
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      class="feather feather-more-horizontal icon-lg pb-3px"
-                                    >
-                                      <circle cx="12" cy="12" r="1"></circle>
-                                      <circle cx="19" cy="12" r="1"></circle>
-                                      <circle cx="5" cy="12" r="1"></circle>
-                                    </svg>
-                                  </button>
-                                  <nav
-                                    className={`menu ${
-                                      isActive ? "active" : "inactive"
-                                    }`}
-                                  >
-                                    <ul>
-                                      <li>
-                                        <a href="/user/home">Report</a>
-                                      </li>
-                                      <li>
-                                        <a href="/user/home">Save</a>
-                                      </li>
-                                      <li>
-                                        <a href="/user/home">View profile</a>
-                                      </li>
-                                      <li>
-                                        <a href="/user/home">Unfollow</a>
-                                      </li>
-                                    </ul>
-                                  </nav>
-                                </div>
+                                {(() => {
+                                  if (this.state.currentUser !== null) {
+                                    return (
+                                      <div>
+                                        <div class="dropdown" ref={dropdownRef}>
+                                          <button
+                                            class="btn p-0"
+                                            type="button"
+                                            id="dropdownMenuButton"
+                                            data-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                            onClick={this.handleClick}
+                                            className="menu-trigger"
+                                          >
+                                            <svg
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="34"
+                                              height="34"
+                                              viewBox="0 0 24 24"
+                                              fill="none"
+                                              stroke="currentColor"
+                                              stroke-width="2"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              class="feather feather-more-horizontal icon-lg pb-3px"
+                                            >
+                                              <circle
+                                                cx="12"
+                                                cy="12"
+                                                r="1"
+                                              ></circle>
+                                              <circle
+                                                cx="19"
+                                                cy="12"
+                                                r="1"
+                                              ></circle>
+                                              <circle
+                                                cx="5"
+                                                cy="12"
+                                                r="1"
+                                              ></circle>
+                                            </svg>
+                                          </button>
+                                          <nav
+                                            className={`menu ${
+                                              isActive ? "active" : "inactive"
+                                            }`}
+                                          >
+                                            <ul>
+                                              <li>
+                                                <Link
+                                                  to="/user/profile"
+                                                  params={{
+                                                    profileId:
+                                                      post.publisher.id,
+                                                  }}
+                                                >
+                                                  View profile
+                                                </Link>
+                                              </li>
+                                              <li>
+                                                <a href="/user/home">Report</a>
+                                              </li>
+                                            </ul>
+                                          </nav>
+                                        </div>
+                                      </div>
+                                    );
+                                  }
+                                })()}
 
                                 <div class="timeline-item-post">
                                   <img
@@ -136,134 +317,370 @@ export default class PostCard extends Component {
                                     src={post.imagesSrc[0]}
                                     alt=""
                                   />
+                                  {(() => {
+                                    if (
+                                      post.description !== null &&
+                                      Array.isArray(post.tags)
+                                    ) {
+                                      let tags = "";
+                                      {
+                                        post.tags.map((tag, key) => {
+                                          tags += "#" + tag;
+                                        });
+                                      }
 
-                                  <p style={{ marginTop: "20px" }}>
-                                    Elavita veritatis et quasi architecto beatae
-                                    vitae dicta sunt explicabo. Nemo enim ipsam
-                                    voluptatem quia voluptas sit aspernatur aut
-                                    odit aut fugit, sed quia consequuntur.
-                                  </p>
+                                      return (
+                                        <div>
+                                          <p style={{ marginTop: "20px" }}>
+                                            <i>Description: </i>
+                                            {post.description}
+                                          </p>
+                                          <p style={{ marginTop: "20px" }}>
+                                            <i>Tags: </i>
+                                            {tags}
+                                          </p>
+                                        </div>
+                                      );
+                                    } else if (
+                                      post.description !== null &&
+                                      !Array.isArray(post.tags)
+                                    ) {
+                                      return (
+                                        <div>
+                                          <p style={{ marginTop: "20px" }}>
+                                            <i>Description: </i>
+                                            {post.description}
+                                          </p>
+                                        </div>
+                                      );
+                                    } else if (
+                                      post.description === null &&
+                                      Array.isArray(post.tags)
+                                    ) {
+                                      let tags = "";
+                                      {
+                                        post.tags.map((tag, key) => {
+                                          tags += "#" + tag;
+                                        });
+                                      }
+
+                                      return (
+                                        <div>
+                                          <p style={{ marginTop: "20px" }}>
+                                            <i>Tags: </i>
+                                            {tags}
+                                          </p>
+                                        </div>
+                                      );
+                                    }
+                                  })()}
+
                                   <div class="timeline-options">
-                                    <a href="#">
-                                      <i
-                                        class={
-                                          isLike
-                                            ? "fa fa-heart"
-                                            : "fa fa-heart-o"
-                                        }
-                                        style={{
-                                          fontSize: "20px",
-                                        }}
-                                      ></i>
-                                      <span /> Like (15)
-                                    </a>
-                                    <a href="#">
-                                      <i
-                                        class={
-                                          isDislike
-                                            ? "fa fa-thumbs-down"
-                                            : "fa fa-thumbs-o-down"
-                                        }
-                                        style={{
-                                          fontSize: "20px",
-                                          paddingLeft: "20px",
-                                        }}
-                                      ></i>
-                                      <span /> Dislike (6)
-                                    </a>
-                                    <a href="#">
-                                      <i
-                                        class="fa fa-comment-o"
-                                        style={{
-                                          fontSize: "20px",
-                                          paddingLeft: "20px",
-                                        }}
-                                      ></i>
-                                      <span /> Comment (4)
-                                    </a>
-                                    <a href="#" style={{ float: "right" }}>
-                                      <i
-                                        class={
-                                          isSaved
-                                            ? "fa fa-bookmark"
-                                            : "fa fa-bookmark-o"
-                                        }
-                                        style={{
-                                          fontSize: "20px",
-                                          paddingLeft: "20px",
-                                        }}
-                                      ></i>
-                                    </a>
+                                    {(() => {
+                                      if (post.likes !== null) {
+                                        // var classForLike = "fa fa-heart-o";
+
+                                        // if (post.likes !== null) {
+                                        //   var index = post.likes.findIndex(
+                                        //     (p) =>
+                                        //       p.id == this.state.currentUser.id
+                                        //   );
+                                        //   if (index !== -1) {
+                                        //     classForLike = "fa fa-heart";
+                                        //   }
+
+                                        return (
+                                          <div>
+                                            <a
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.likePost(post.id);
+                                              }}
+                                            >
+                                              <i
+                                                id={"like" + post.id}
+                                                class={
+                                                  isLike
+                                                    ? "fa fa-heart"
+                                                    : "fa fa-heart-o"
+                                                }
+                                                style={{
+                                                  fontSize: "20px",
+                                                }}
+                                              ></i>
+                                            </a>
+                                            <a
+                                              href="#"
+                                              style={{
+                                                marginLeft: "-10px",
+                                              }}
+                                            >
+                                              Like ({post.likes.length})
+                                            </a>
+                                          </div>
+                                        );
+                                      } else {
+                                        return (
+                                          <div>
+                                            <a
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.likePost(post.id);
+                                              }}
+                                            >
+                                              <i
+                                                id={"like" + post.id}
+                                                class={
+                                                  isLike
+                                                    ? "fa fa-heart"
+                                                    : "fa fa-heart-o"
+                                                }
+                                                style={{
+                                                  fontSize: "20px",
+                                                }}
+                                              ></i>
+                                            </a>
+                                            <a
+                                              href="#"
+                                              style={{
+                                                marginLeft: "-10px",
+                                              }}
+                                            >
+                                              Like (0)
+                                            </a>
+                                          </div>
+                                        );
+                                      }
+                                    })()}
+
+                                    {(() => {
+                                      if (post.dislikes !== null) {
+                                        return (
+                                          <div>
+                                            {" "}
+                                            <a
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.dislikePost(post.id);
+                                              }}
+                                            >
+                                              <i
+                                                id={"dislike" + post.id}
+                                                class={
+                                                  isDislike
+                                                    ? "fa fa-thumbs-down"
+                                                    : "fa fa-thumbs-o-down"
+                                                }
+                                                style={{
+                                                  fontSize: "20px",
+                                                  paddingLeft: "20px",
+                                                }}
+                                              ></i>
+                                            </a>
+                                            <a
+                                              href="#"
+                                              style={{
+                                                marginLeft: "-10px",
+                                              }}
+                                            >
+                                              Dislike ({post.dislikes.length})
+                                            </a>
+                                          </div>
+                                        );
+                                      } else {
+                                        return (
+                                          <div>
+                                            <a
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.dislikePost(post.id);
+                                              }}
+                                            >
+                                              <i
+                                                id={"dislike" + post.id}
+                                                class={
+                                                  isDislike
+                                                    ? "fa fa-thumbs-down"
+                                                    : "fa fa-thumbs-o-down"
+                                                }
+                                                style={{
+                                                  fontSize: "20px",
+                                                  paddingLeft: "20px",
+                                                }}
+                                              ></i>
+                                            </a>
+                                            <a
+                                              href="#"
+                                              style={{
+                                                marginLeft: "-10px",
+                                              }}
+                                            >
+                                              Dislike (0)
+                                            </a>
+                                          </div>
+                                        );
+                                      }
+                                    })()}
+
+                                    {(() => {
+                                      if (post.comments !== null) {
+                                        return (
+                                          <div>
+                                            <a>
+                                              <i
+                                                class="fa fa-comment-o"
+                                                style={{
+                                                  fontSize: "20px",
+                                                  paddingLeft: "20px",
+                                                }}
+                                              ></i>
+                                            </a>
+                                            <a
+                                              style={{
+                                                marginLeft: "-10px",
+                                              }}
+                                            >
+                                              Comment ({post.comments.length})
+                                            </a>
+                                          </div>
+                                        );
+                                      } else {
+                                        return (
+                                          <div>
+                                            <a>
+                                              <i
+                                                class="fa fa-comment-o"
+                                                style={{
+                                                  fontSize: "20px",
+                                                  paddingLeft: "20px",
+                                                }}
+                                              ></i>
+                                            </a>
+                                            <a
+                                              style={{
+                                                marginLeft: "-10px",
+                                              }}
+                                            >
+                                              Comment (0)
+                                            </a>
+                                          </div>
+                                        );
+                                      }
+                                    })()}
+
+                                    {(() => {
+                                      if (this.state.currentUser !== null) {
+                                        return (
+                                          <div>
+                                            <a
+                                              href="#"
+                                              style={{ float: "right" }}
+                                            >
+                                              <i
+                                                class={
+                                                  isSaved
+                                                    ? "fa fa-bookmark"
+                                                    : "fa fa-bookmark-o"
+                                                }
+                                                style={{
+                                                  fontSize: "20px",
+                                                  paddingLeft: "20px",
+                                                }}
+                                              ></i>
+                                            </a>
+                                          </div>
+                                        );
+                                      }
+                                    })()}
                                   </div>
                                   <div class="comments">
-                                    <div class="timeline-comment">
-                                      <div class="timeline-comment-header">
-                                        <img
-                                          src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                          alt=""
-                                        />
-                                        <p>
-                                          Jamara Karle <small>1 hour ago</small>
-                                        </p>
-                                      </div>
-                                      <p class="timeline-comment-text">
-                                        Xullamco laboris nisi ut aliquip ex ea
-                                        commodo consequat.
-                                      </p>
-                                    </div>
-                                    <div class="timeline-comment">
-                                      <div class="timeline-comment-header">
-                                        <img
-                                          src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                          alt=""
-                                        />
-                                        <p>
-                                          Jamara Karle <small>1 hour ago</small>
-                                        </p>
-                                      </div>
-                                      <p class="timeline-comment-text">
-                                        Xullamco laboris nisi ut aliquip ex ea
-                                        commodo consequat.
-                                      </p>
-                                    </div>
-                                    <div class="timeline-comment">
-                                      <div class="timeline-comment-header">
-                                        <img
-                                          src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                          alt=""
-                                        />
-                                        <p>
-                                          Jamara Karle <small>1 hour ago</small>
-                                        </p>
-                                      </div>
-                                      <p class="timeline-comment-text">
-                                        Xullamco laboris nisi ut aliquip ex ea
-                                        commodo consequat.
-                                      </p>
-                                    </div>
-                                    <div class="timeline-comment">
-                                      <div class="timeline-comment-header">
-                                        <img
-                                          src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                          alt=""
-                                        />
-                                        <p>
-                                          Lois Anderson{" "}
-                                          <small>3 hours ago</small>
-                                        </p>
-                                      </div>
-                                      <p class="timeline-comment-text">
-                                        Coluptate velit esse cillum dolore eu
-                                        fugiat nulla pariatur. Excepteur sint
-                                        occaecat cupidatat non proident, sunt in
-                                        culpa qui officia.
-                                      </p>
-                                    </div>
+                                    {(() => {
+                                      if (
+                                        Array.isArray(post.comments) ||
+                                        post.comments !== null
+                                      ) {
+                                        return (
+                                          <div>
+                                            {post.comments.map(
+                                              (comment, key) => {
+                                                return (
+                                                  <div key={key}>
+                                                    <div class="timeline-comment">
+                                                      <div class="timeline-comment-header">
+                                                        <img
+                                                          src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                                                          alt=""
+                                                        />
+                                                        <p>
+                                                          {
+                                                            comment.publisher
+                                                              .username
+                                                          }
+                                                          <small
+                                                            style={{
+                                                              marginLeft:
+                                                                "10px",
+                                                            }}
+                                                          >
+                                                            {moment(
+                                                              moment(
+                                                                comment.date
+                                                              ).format(
+                                                                "YYYY-MM-DD HH:mm:ss"
+                                                              )
+                                                            ).fromNow()}
+                                                          </small>
+                                                        </p>
+                                                      </div>
+                                                      <p class="timeline-comment-text">
+                                                        {comment.text}
+                                                      </p>
+                                                    </div>
+                                                  </div>
+                                                );
+                                              }
+                                            )}
+                                          </div>
+                                        );
+                                      } else {
+                                        return (
+                                          <div>
+                                            There are currently no comments...
+                                          </div>
+                                        );
+                                      }
+                                    })()}
                                   </div>
-                                  <textarea
-                                    class="form-control"
-                                    placeholder="Replay"
-                                  ></textarea>
+                                  {(() => {
+                                    if (this.state.currentUser !== null) {
+                                      return (
+                                        <div>
+                                          <textarea
+                                            id={"newComment" + post.id}
+                                            name={"newComment" + post.id}
+                                            type="text"
+                                            class="form-control"
+                                            placeholder="Enter new comment"
+                                            rows="2"
+                                            style={{
+                                              marginTop: "20px",
+                                            }}
+                                          />
+                                          <button
+                                            class="btn btn-outline-success float-right"
+                                            onClick={() => {
+                                              this.postNewComment(post.id);
+                                            }}
+                                            style={{
+                                              marginTop: "20px",
+                                            }}
+                                          >
+                                            Post a comment
+                                          </button>
+                                        </div>
+                                      );
+                                    }
+                                  })()}
                                 </div>
                               </div>
                             </div>
@@ -305,3 +722,5 @@ export default class PostCard extends Component {
     );
   }
 }
+
+export default withRouter(PostCard);
