@@ -19,7 +19,7 @@ class PostCard extends Component {
       newComment: "",
       currentUser: null,
       open: false,
-      posts: [],
+      posts: [{ post: { imagesSrc: [] } }],
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -78,14 +78,9 @@ class PostCard extends Component {
         .then((result) => {
           if (resStatus === 200) {
             const index = this.state.posts.findIndex((p) => p.id === postId);
-            let updatedPosts = [...this.state.posts];
+            const updatedPosts = [...this.state.posts];
             updatedPosts[index] = result;
-
-            this.setState({
-              posts: updatedPosts,
-            });
-
-            console.log("Posts after: ", updatedPosts);
+            this.updatePost(updatedPosts);
           }
           return result;
         });
@@ -93,6 +88,10 @@ class PostCard extends Component {
     } else {
       this.handleClickSnackBar();
     }
+  };
+
+  updatePost = (updatedPosts) => {
+    this.props.updatePost(updatedPosts);
   };
 
   handleClickSnackBar = () => {
@@ -118,8 +117,6 @@ class PostCard extends Component {
     const dropdownRef = this.dropdownRef;
     const isActive = this.state.isActive;
     const posts = this.state.posts;
-    // const posts = this.props.sendPosts;
-    console.log("Updated posts: ", this.state.posts);
 
     return (
       <div>

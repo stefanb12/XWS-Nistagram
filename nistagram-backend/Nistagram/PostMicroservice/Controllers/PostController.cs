@@ -70,8 +70,8 @@ namespace PostMicroservice.Controllers
         public async Task<IActionResult> InsertNewComment([FromBody] NewCommentDto commentDto)
         {
             Post post = await _postService.GetById(commentDto.PostId);
-            post.Description = "novaa";
-            return Ok(await _postService.InsertNewComment(post, CommentMapper.CommentDtoToComment(commentDto)));
+            Post updatedPost = await _postService.InsertNewComment(post, CommentMapper.CommentDtoToComment(commentDto));
+            return Ok(PostMapper.PostToPostDto(updatedPost));
         }
 
         [HttpPost]
