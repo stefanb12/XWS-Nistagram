@@ -339,7 +339,7 @@
 
 
     ],
-    "GlobalConfiguration": {
-        "BaseUrl": "http://localhost:60370"
-    }
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:58809"
+  }
 }
