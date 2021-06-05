@@ -5,7 +5,7 @@ import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import AddCircle from "@material-ui/icons/AddCircle"
 import "../../assets/styles/stories.css";
 import { Modal, Button } from "react-bootstrap";
-import { Checkbox, FormControlLabel, Slider, Snackbar } from "@material-ui/core";
+import { Checkbox, FormControlLabel, Slider, Snackbar, Typography } from "@material-ui/core";
 import StoryService from "../../services/StoryService";
 import AuthService from "../../services/AuthService";
 import { Alert } from "@material-ui/lab";
@@ -23,7 +23,10 @@ export default class Stories extends Component {
       currentStoryImage: null,
       currentStoryPublisher: '',
       currentTimeout: null,
-      timeCounter: 0
+      currentProfileStories: null,
+      timeCounter: 0,
+      currentStoryNumber: 0,
+      numberOfStoriesForCurrentProfile: 0
     }
   }
 
@@ -82,6 +85,15 @@ componentWillMount() {
         this.setState({
           storyAddedSnackbarShown : true
         });
+        StoryService.getAllStories()
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          this.setState({
+            allProfileStories : data
+          })
+        })
       }
     })
   }
@@ -112,24 +124,63 @@ componentWillMount() {
     
   };
 
-  showNextStory = (profileStories, storyNumber) => {
+  resetClockAndCounter = () => {
+    this.setState({
+      timeCounter : 0
+    })
     clearInterval(this.currentTimeout);
+  }
+
+  showPreviousStory = (profileStories, storyNumber) => {
+    
+    this.resetClockAndCounter();
+
+    if (storyNumber > -1) {
+      this.showStory(profileStories, storyNumber);
+      return;
+    }
+
+    let previousProfleStories = this.findPreviousProfileStories(profileStories);
+
+    if (previousProfleStories !== null) {
+      this.showStory(previousProfleStories, previousProfleStories.stories.length - 1);
+      return;
+    }
+
+    this.showStory(this.state.currentProfileStories, 0);
+
+  }
+
+
+  showNextStory = (profileStories, storyNumber) => {
+
+    this.resetClockAndCounter();
+    
     if (storyNumber + 1 < profileStories.stories.length) {
-      this.showImage(profileStories, storyNumber + 1);
+      this.showStory(profileStories, storyNumber + 1);
       return;
     }
 
     let nextProfleStories = this.findNextProfileStories(profileStories);
     
     if (nextProfleStories !== null) {
-      this.showImage(nextProfleStories, 0);
+      this.showStory(nextProfleStories, 0);
       return;
     }
     
     this.closeShowStoryDialog();
-    this.setState({
-      timeCounter : 0
-    })
+  }
+
+  findPreviousProfileStories = (profileStories) => {
+    let i = 0;
+    while (profileStories.originalId !== this.state.allProfileStories[i].originalId) {
+      i++;
+    }
+    if (i - 1 >= 0) {
+      return this.state.allProfileStories[i - 1];
+    } else {
+      return null;
+    }
   }
 
   findNextProfileStories = (profileStories) => {
@@ -138,24 +189,26 @@ componentWillMount() {
       i++;
     }
     if (i + 1 < this.state.allProfileStories.length) {
-      console.log(this.state.allProfileStories.length)
-      return this.state.allProfileStories[i+1];
+      return this.state.allProfileStories[i + 1];
     } else {
       return null;
     }
   }
 
-  showImage = (profileStories, storyNumber) => {
+  showStory = (profileStories, storyNumber) => {
     this.setState({
       currentStoryImage : profileStories.stories[storyNumber].imageSrc,
-      isShowStoryDialogOpen : true
+      isShowStoryDialogOpen : true,
+      currentStoryNumber : storyNumber,
+      numberOfStoriesForCurrentProfile : profileStories.stories.length,
+      currentProfileStories : profileStories
     })
     this.currentStoryPublisher = profileStories.username;
     this.currentTimeout = window.setInterval(() => {
       this.setState({
         timeCounter : this.state.timeCounter + 1
       })
-      if (this.state.timeCounter >= 90) {
+      if (this.state.timeCounter >= 180) {
         this.setState({
           timeCounter : 0
         })
@@ -173,7 +226,7 @@ componentWillMount() {
                     src="https://bootdey.com/img/Content/avatar/avatar7.png"
                     class="img-fluid avatar avatar-medium shadow rounded-pill"
                     alt=""
-                    onClick = {() => {this.showImage(profileStories, 0)}}
+                    onClick = {() => {this.showStory(profileStories, 0)}}
                     style = {{
                       border : "2px solid red"
                     }}
@@ -191,6 +244,7 @@ componentWillMount() {
         show={this.state.isShowStoryDialogOpen}
         onHide={this.closeShowStoryDialog}
         contentClassName="story-modal"
+        id="myModal"
         centered>
         <Modal.Header
           closeButton>
@@ -208,16 +262,32 @@ componentWillMount() {
             <img
               style={{
                 float: "left",
-                maxWidth: "400px",
-                maxHeight: "700px",
+                maxWidth: "300px",
+                maxHeight: "380px",
               }}
               src={this.state.currentStoryImage}
               class="img-thumbnail"
             />
           </div>
         </Modal.Body>
-        <Modal.Footer>
-          <Slider value={this.state.timeCounter} step={1} max={89}></Slider>
+        <Modal.Footer
+          style={{
+            float: "left",
+            alignContent: "left",
+            alignItems: "left"
+          }}>
+          <Typography style={{
+            float: "left"
+          }}>{this.state.currentStoryNumber + 1} of {this.state.numberOfStoriesForCurrentProfile}</Typography>
+          <Slider value={this.state.timeCounter} step={1} max={179}></Slider>
+          <Button color="primary" onClick={() => { this.showPreviousStory(this.state.currentProfileStories, 
+                                                                      this.state.currentStoryNumber - 1); }}>
+            Previous
+          </Button>
+          <Button color="primary" onClick={() => { this.showNextStory(this.state.currentProfileStories, 
+                                                                      this.state.currentStoryNumber); }}>
+            Next
+          </Button>
         </Modal.Footer>
       </Modal>
     )

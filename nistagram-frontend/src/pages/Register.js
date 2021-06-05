@@ -17,10 +17,12 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import AuthService from "../services/AuthService";
+import { Alert } from "@material-ui/lab";
 
 const Register = () => {
   const [showSnackbar, setShowSnackbar] = React.useState(false);
   const [snackBarMessage, setSnackBarMessage] = React.useState(false);
+  const [alertSeverity, setAlertSeverity] = React.useState('success');
 
   const handleRegistration = async (
     fullName,
@@ -39,10 +41,12 @@ const Register = () => {
     ).then((result) => {
       if (result.status === 201) {
         setSnackBarMessage("Registration successful!");
+        setAlertSeverity('success');
         setShowSnackbar(true);
         resStatus = true;
       } else if (result.status === 400) {
         setSnackBarMessage("Profile with entered username already exists!");
+        setAlertSeverity('error');
         setShowSnackbar(true);
         resStatus = false;
       }
@@ -58,14 +62,15 @@ const Register = () => {
     <>
       <Snackbar
         anchorOrigin={{
-          vertical: "bottom",
+          vertical: "top",
           horizontal: "center",
         }}
         open={showSnackbar}
         autoHideDuration={3000}
         onClose={handleClose}
-        message={snackBarMessage}
-      ></Snackbar>
+      >
+        <Alert severity={alertSeverity}>{snackBarMessage}</Alert>
+      </Snackbar>
       <Box
         sx={{
           backgroundColor: "background.default",
