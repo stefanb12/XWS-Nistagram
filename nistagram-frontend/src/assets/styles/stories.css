@@ -117,6 +117,14 @@
   width: 600px;
 }
 
+#myModal .modal-footer {  
+  justify-content: space-between;  
+}
+
+#myModal .modal-body {  
+  height: 390px;  
+}
+
 .section-title .title {
   letter-spacing: 0.5px;
   font-size: 30px;
