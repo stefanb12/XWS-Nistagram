@@ -66,8 +66,30 @@ namespace PostMicroservice.Controllers
             return Ok(post);
         }
 
+        [HttpGet("profile/{profileId}")]
+        public async Task<IActionResult> GetPostsForProfile(int profileId)
+        {
+            List<Post> postsForProfile = await _postService.GetPostsForProfile(profileId);
+            if (postsForProfile.Count == 0)
+            {
+                return NotFound();
+            }
+
+            List<PostDto> postsForProfileDto = new List<PostDto>();
+            foreach (Post post in postsForProfile)
+            {
+                for (int i = 0; i < post.Contents.Count; i++)
+                {
+                    post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
+                }
+                postsForProfileDto.Add(PostMapper.PostToPostDto(post));
+            }
+
+            return Ok(postsForProfileDto);
+        }
+
         [HttpGet("public")]
-        public async Task<IActionResult> GetPublicProfiles()
+        public async Task<IActionResult> GetPublicPosts()
         {
             List<Post> publicPosts = await _postService.GetAllPublicPosts();
             if (publicPosts.Count == 0)

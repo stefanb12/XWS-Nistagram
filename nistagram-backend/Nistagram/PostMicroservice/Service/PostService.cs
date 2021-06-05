@@ -24,6 +24,19 @@ namespace PostMicroservice.Service
             _hostEnvironment = hostEnvironment;
         }
 
+        public async Task<List<Post>> GetPostsForProfile(int profileId)
+        {
+            List<Post> profilePosts = new List<Post>();
+            foreach (Post post in await GetAll())
+            {
+                if (post.Publisher.OriginalId == profileId)
+                {
+                    profilePosts.Add(post);
+                }
+            }
+            return profilePosts;
+        }
+
         public async Task<List<Post>> GetAllPublicPosts()
         {
             List<Post> publicPosts = new List<Post>();
@@ -38,16 +51,6 @@ namespace PostMicroservice.Service
                 }
             }
             return publicPosts;
-        }
-
-        public async Task<Post> GetById(string id)
-        {
-            return await _postRepository.GetById(id);
-        }
-
-        public async Task<IEnumerable<Post>> GetAll()
-        {
-            return await _postRepository.GetAll();
         }
 
         public async Task<Post> InsertNewComment(Post post, Comment comment)
@@ -149,6 +152,16 @@ namespace PostMicroservice.Service
                 }
             }
             return false;
+        }
+
+        public async Task<Post> GetById(string id)
+        {
+            return await _postRepository.GetById(id);
+        }
+
+        public async Task<IEnumerable<Post>> GetAll()
+        {
+            return await _postRepository.GetAll();
         }
 
         public async Task<Post> Insert(Post entity)

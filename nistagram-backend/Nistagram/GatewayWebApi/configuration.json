@@ -218,6 +218,25 @@
             }*/
     },
     {
+      "DownstreamPathTemplate": "/api/post/profile/{profileId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55993
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/post/profile/{profileId}",
+      "UpstreamHttpMethod": [ "GET" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
+    {
       "DownstreamPathTemplate": "/api/post/public",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

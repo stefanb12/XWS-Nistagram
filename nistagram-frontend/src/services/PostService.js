@@ -59,6 +59,10 @@ class PostService {
     return fetch(API_URL + "post/dislike", requestOptions);
   }
 
+  getPostsForProfile(profileId) {
+    return fetch(API_URL + "post/profile/" + profileId);
+  }
+
   getPublicPosts() {
     return fetch(API_URL + "post/public");
   }

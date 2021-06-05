@@ -53,8 +53,8 @@ namespace NotificationMicroservice.Database
             );
 
             modelBuilder.Entity<Notification>().HasData(
-                new Notification { Id = 1, Time = new DateTime(2021, 06, 01), Content = "user2 follow you.", Seen = false, FollowRequest = false, ReceiverId = 1, SenderId = 2, PostId = 1 },
-                new Notification { Id = 2, Time = new DateTime(2021, 06, 01), Content = "user3 follow you.", Seen = false, FollowRequest = false, ReceiverId = 1, SenderId = 3, PostId = 1 },
+                new Notification { Id = 1, Time = new DateTime(2021, 06, 01), Content = "user2 started following you.", Seen = false, FollowRequest = false, ReceiverId = 1, SenderId = 2, PostId = 1 },
+                new Notification { Id = 2, Time = new DateTime(2021, 06, 01), Content = "user3 started following you.", Seen = false, FollowRequest = false, ReceiverId = 1, SenderId = 3, PostId = 1 },
                 new Notification { Id = 3, Time = new DateTime(2021, 06, 01), Content = "user4 want to follow you.", Seen = false, FollowRequest = true, ReceiverId = 3, SenderId = 4, PostId = 3 }
             );
         }

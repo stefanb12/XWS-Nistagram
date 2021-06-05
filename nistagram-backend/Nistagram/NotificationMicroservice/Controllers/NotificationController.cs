@@ -51,7 +51,7 @@ namespace NotificationMicroservice.Controllers
         {
             Notification notification = NotificationMapper.NotificationDtoToNotification(dto);
             Profile sender = await _profileService.GetById(dto.SenderId);
-            notification.Content = sender.Username + " follow you";
+            notification.Content = sender.Username + " started following you.";
             return Ok(await _notificationService.Insert(notification));
         }
 
@@ -60,7 +60,7 @@ namespace NotificationMicroservice.Controllers
         {
             Notification notification = NotificationMapper.NotificationDtoToNotification(dto);
             Profile sender = await _profileService.GetById(dto.SenderId);
-            notification.Content = sender.Username + " wants to follow you";
+            notification.Content = sender.Username + " wants to follow you.";
             notification.FollowRequest = true;
             return Ok(await _notificationService.Insert(notification));
         }
