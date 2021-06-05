@@ -139,9 +139,64 @@ namespace PostMicroservice.Service
             return false;
         }
 
+        public async Task<List<Post>> GetSearchResult(string searchParam)
+        {
+            List<Post> searchedPosts = new List<Post>();
+            foreach (Post post in await GetAll())
+            {
+                if (post.Location != null) 
+                    if (formatAddress(post) == searchParam)
+                        searchedPosts.Add(post);
+                
+                if (post.Tags != null)
+                    if (post.Tags.Contains(searchParam))
+                        searchedPosts.Add(post);
+            }
+            return searchedPosts;
+        }
+
+        public string formatAddress(Post post) {
+            if (post.Location.Address == "" || post.Location.Address == null)
+                return post.Location.City + ", " + post.Location.Country;
+            else
+                return post.Location.Address + ", " + post.Location.City + ", " + post.Location.Country;
+        }
+
         private bool CheckIfUserHasAlreadyDislikedPost(Post post, int originalId)
         {
             foreach (Profile profile in post.Dislikes)
+            {
+                if (profile.OriginalId == originalId)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public async Task<Post> SavePostAsFavorite(Post post, Profile profile)
+        {
+            if (post.Favorites == null)
+            {
+                post.Favorites = new List<Profile>();
+            }
+
+            if (CheckIfUserHasAlreadySavePost(post, profile.OriginalId))
+            {
+                int index = post.Favorites.FindIndex(p => p.OriginalId == profile.OriginalId);
+                post.Favorites.RemoveAt(index);
+            }
+            else
+            {
+                post.Favorites.Add(profile);
+            }
+
+            return await Update(post);
+        }
+
+        private bool CheckIfUserHasAlreadySavePost(Post post, int originalId)
+        {
+            foreach (Profile profile in post.Favorites)
             {
                 if (profile.OriginalId == originalId)
                 {
@@ -182,6 +237,6 @@ namespace PostMicroservice.Service
                 await imageFile.CopyToAsync(fileStream);
             }
             return imageName;
-        }
+        }  
     }
 }
