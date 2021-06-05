@@ -120,6 +120,19 @@ namespace PostMicroservice.Mapper
                 dto.Likes = likesDto;
             }
 
+            if (post.Favorites != null)
+            {
+                List<ProfileDto> favoritesDto = new List<ProfileDto>();
+                foreach (Profile profile in post.Favorites)
+                {
+                    ProfileDto profileDto = new ProfileDto();
+                    profileDto.Id = profile.OriginalId;
+                    profileDto.Username = profile.Username;
+                    favoritesDto.Add(profileDto);
+                }
+                dto.Favorites = favoritesDto;
+            }
+
             if (post.Comments != null)
             {
                 List<CommentDto> commentsDto = new List<CommentDto>();

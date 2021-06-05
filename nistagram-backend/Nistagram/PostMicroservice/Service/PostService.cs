@@ -154,6 +154,38 @@ namespace PostMicroservice.Service
             return false;
         }
 
+        public async Task<Post> SavePostAsFavorite(Post post, Profile profile)
+        {
+            if (post.Favorites == null)
+            {
+                post.Favorites = new List<Profile>();
+            }
+
+            if (CheckIfUserHasAlreadySavePost(post, profile.OriginalId))
+            {
+                int index = post.Favorites.FindIndex(p => p.OriginalId == profile.OriginalId);
+                post.Favorites.RemoveAt(index);
+            }
+            else
+            {
+                post.Favorites.Add(profile);
+            }
+
+            return await Update(post);
+        }
+
+        private bool CheckIfUserHasAlreadySavePost(Post post, int originalId)
+        {
+            foreach (Profile profile in post.Favorites)
+            {
+                if (profile.OriginalId == originalId)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public async Task<Post> GetById(string id)
         {
             return await _postRepository.GetById(id);
@@ -195,6 +227,6 @@ namespace PostMicroservice.Service
                 await imageFile.CopyToAsync(fileStream);
             }
             return imageName;
-        }
+        }  
     }
 }

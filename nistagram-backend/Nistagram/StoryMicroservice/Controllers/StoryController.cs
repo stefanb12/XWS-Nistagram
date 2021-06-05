@@ -12,13 +12,15 @@ namespace StoryMicroservice.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StoryController : Controller
+    public class StoryController : ControllerBase
     {
         private readonly IStoryService _storyService;
+        private readonly IProfileService _profileService;
 
-        public StoryController(IStoryService storyService)
+        public StoryController(IStoryService storyService, IProfileService profileService)
         {
             _storyService = storyService;
+            _profileService = profileService;
         }
 
         [HttpPost]
@@ -32,5 +34,35 @@ namespace StoryMicroservice.Controllers
             return Ok(returnValue);
         }
 
+        [HttpGet("getAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            var stories = await _storyService.GetAll();
+            List<StoryDto> returnValue = new List<StoryDto>();
+            foreach (Story s in stories)
+            {
+                StoryDto dto = StoryMapper.StoryToStoryDto(s);
+                dto.ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, s.ImageName);
+                returnValue.Add(dto);
+            }
+            return Ok(returnValue);
+        }
+
+        [HttpGet("getAllProfileStories")]
+        public async Task<IActionResult> GetProfileStories()
+        {
+            var profilesStories = await _profileService.GetProfileStories();
+            List<ProfileStoriesDto> returnValue = new List<ProfileStoriesDto>();
+            foreach (ProfileStories ps in profilesStories)
+            {
+                ProfileStoriesDto dto = ProfileStoriesMapper.ProfileStoriesToProfileStoriesDto(ps);
+                foreach (StoryDto storyDto in dto.Stories)
+                {
+                    storyDto.ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, storyDto.ImageName);
+                }
+                returnValue.Add(dto);
+            }
+            return Ok(returnValue);
+        }
     }
 }

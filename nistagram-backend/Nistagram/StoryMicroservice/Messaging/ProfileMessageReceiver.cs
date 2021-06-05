@@ -1,17 +1,19 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Linq;
-using PostMicroservice.Model;
-using PostMicroservice.Service;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using StoryMicroservice.Model;
+using StoryMicroservice.Service;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PostMicroservice.Messaging
+namespace StoryMicroservice.Messaging
 {
-    public class ProfileMessageReceiver : BackgroundService, IProfileMessageReciver
+    public class ProfileMessageReceiver : BackgroundService, IProfileMessageReceiver
     {
         private IProfileService _profileService;
         private IConnection _connection;
@@ -30,12 +32,12 @@ namespace PostMicroservice.Messaging
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
             _channel.ExchangeDeclare(exchange: "profile", type: ExchangeType.Fanout);
-            _channel.QueueDeclare(queue: "post.profile.created",
+            _channel.QueueDeclare(queue: "story.profile.created",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: false,
                                   arguments: null);
-            _channel.QueueBind(queue: "post.profile.created",
+            _channel.QueueBind(queue: "story.profile.created",
                               exchange: "profile",
                               routingKey: "");
         }
@@ -60,7 +62,7 @@ namespace PostMicroservice.Messaging
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };
 
-            _channel.BasicConsume(queue: "post.profile.created",
+            _channel.BasicConsume(queue: "story.profile.created",
                                   autoAck: false,
                                   consumer: consumer);
         }
