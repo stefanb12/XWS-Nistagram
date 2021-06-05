@@ -10,10 +10,12 @@ namespace StoryMicroservice.Service
     public class ProfileService : IProfileService
     {
         private IProfileRepository _profileRepository;
+        private IStoryRepository _storyRepository;
 
-        public ProfileService(IProfileRepository profileRepository)
+        public ProfileService(IProfileRepository profileRepository, IStoryRepository storyRepository)
         {
             _profileRepository = profileRepository;
+            _storyRepository = storyRepository;
         }
 
         public async Task<Profile> GetById(string id)
@@ -40,6 +42,20 @@ namespace StoryMicroservice.Service
         public async Task Delete(string id)
         {
             await _profileRepository.Delete(id);
+        }
+
+        public async Task<List<ProfileStories>> GetProfileStories()
+        {
+            var profileStories = await _profileRepository.GetProfileStoryAggregatedCollection(_storyRepository.GetCollection());
+            List<ProfileStories> returnValue = new List<ProfileStories>();
+            foreach(ProfileStories ps in profileStories)
+            {
+                if (ps.Stories.Count > 0)
+                {
+                    returnValue.Add(ps);
+                }
+            }
+            return returnValue;
         }
     }
 }

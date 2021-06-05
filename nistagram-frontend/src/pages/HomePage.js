@@ -29,7 +29,7 @@ export default class HomePage extends Component {
   render() {
     return (
       <div>
-        <div class="container">
+        <div class="container" style={{position: "absolute"}}>
           <div class="no-page-title" style={{ marginLeft: "200px" }}>
             <div id="main-wrapper">
               <div class="row">

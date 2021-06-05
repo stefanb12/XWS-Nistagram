@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StoryMicroservice.Database;
+using StoryMicroservice.Messaging;
 using StoryMicroservice.Repository;
 using StoryMicroservice.Service;
 
@@ -51,6 +52,8 @@ namespace StoryMicroservice
 
             services.AddSingleton<IProfileRepository, ProfileRepository>();
             services.AddSingleton<IProfileService, ProfileService>();
+
+            services.AddHostedService<ProfileMessageReceiver>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

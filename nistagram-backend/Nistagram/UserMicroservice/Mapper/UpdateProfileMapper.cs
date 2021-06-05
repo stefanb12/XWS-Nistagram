@@ -25,6 +25,7 @@ namespace UserMicroservice.Mapper
         public static UpdateDto ProfileToProfileDto(Profile profile)
         {
             UpdateDto dto = new UpdateDto();
+            dto.Id = profile.Id;
             dto.Username = profile.Username;
             dto.Biography = profile.Biography;
             dto.Website = profile.Website;

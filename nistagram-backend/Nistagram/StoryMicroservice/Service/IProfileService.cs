@@ -8,5 +8,6 @@ namespace StoryMicroservice.Service
 {
     public interface IProfileService : IService<Profile>
     {
+        Task<List<ProfileStories>> GetProfileStories();
     }
 }
