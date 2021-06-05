@@ -184,11 +184,45 @@ namespace PostMicroservice.Controllers
             return Ok(PostMapper.PostToPostDto(updatedPost));
         }
 
+        [HttpGet("search/{searchParam}")]
+        public async Task<IActionResult> GetSearchResult(string searchParam)
+        {
+            List<Post> searchedPosts = await _postService.GetSearchResult(searchParam);
+            if (searchedPosts.Count == 0)
+            {
+                return NotFound();
+            }
+
+            List<PostDto> publicPostsDto = new List<PostDto>();
+            foreach (Post post in searchedPosts)
+            {
+                for (int i = 0; i < post.Contents.Count; i++)
+                {
+                    post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
+                }
+                publicPostsDto.Add(PostMapper.PostToPostDto(post));
+            }
+
+            return Ok(publicPostsDto);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Insert([FromForm] PostDto postDto)
         {
             return Ok(await _postService.Insert(PostMapper.PostDtoToPost(postDto)));
         }
 
+        [HttpPut]
+        public async Task<IActionResult> Update(Post post)
+        {
+            return Ok(await _postService.Update(post));
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(Post post)
+        {
+            await _postService.Delete(post.Id.ToString());
+            return Ok();
+        }
     }
 }

@@ -6,20 +6,24 @@ import { Link, withRouter } from "react-router-dom";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import PostService from "../../services/PostService";
+import { Button, Modal } from "react-bootstrap";
 
 class PostCard extends Component {
   constructor(props) {
     super(props);
     this.dropdownRef = React.createRef();
     this.state = {
-      isDislike: false,
-      isLike: false,
       isSaved: false,
       isActive: false,
       newComment: "",
       currentUser: null,
       open: false,
       posts: [],
+      message: "",
+      isOpenLikesModal: false,
+      likes: [],
+      isOpenDislikesModal: false,
+      dislikes: [],
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -86,7 +90,7 @@ class PostCard extends Component {
         });
       document.getElementById("newComment" + postId).value = "";
     } else {
-      this.handleClickSnackBar();
+      this.handleClickSnackBar("You have to enter a comment!");
     }
   };
 
@@ -95,67 +99,105 @@ class PostCard extends Component {
   };
 
   likePost = (postId) => {
-    if (document.getElementById("like" + postId).className === "fa fa-heart") {
-      document.getElementById("like" + postId).className = "fa fa-heart-o";
-      document.getElementById("dislike" + postId).className =
-        "fa fa-thumbs-down";
+    if (this.state.currentUser != null) {
+      if (
+        document.getElementById("like" + postId).className === "fa fa-heart"
+      ) {
+        document.getElementById("like" + postId).className = "fa fa-heart-o";
+      } else {
+        document.getElementById("like" + postId).className = "fa fa-heart";
+        document.getElementById("dislike" + postId).className =
+          "fa fa-thumbs-o-down";
+      }
+
+      let resStatus = 0;
+
+      PostService.likePost(postId, this.state.currentUser)
+        .then((res) => {
+          resStatus = res.status;
+          return res.json();
+        })
+        .then((result) => {
+          if (resStatus === 200) {
+            const index = this.state.posts.findIndex((p) => p.id === postId);
+            const updatedPosts = [...this.state.posts];
+            updatedPosts[index] = result;
+            this.updatePost(updatedPosts);
+          }
+        });
     } else {
-      document.getElementById("like" + postId).className = "fa fa-heart";
-      document.getElementById("dislike" + postId).className =
-        "fa fa-thumbs-o-down";
+      this.handleClickSnackBar("You have to login first!");
     }
-
-    let resStatus = 0;
-
-    PostService.likePost(postId, this.state.currentUser)
-      .then((res) => {
-        resStatus = res.status;
-        return res.json();
-      })
-      .then((result) => {
-        if (resStatus === 200) {
-          const index = this.state.posts.findIndex((p) => p.id === postId);
-          const updatedPosts = [...this.state.posts];
-          updatedPosts[index] = result;
-          this.updatePost(updatedPosts);
-        }
-      });
   };
 
   dislikePost = (postId) => {
-    if (
-      document.getElementById("dislike" + postId).className ===
-      "fa fa-thumbs-down"
-    ) {
-      document.getElementById("dislike" + postId).className =
-        "fa fa-thumbs-o-down";
-      document.getElementById("like" + postId).className = "fa fa-heart";
+    if (this.state.currentUser != null) {
+      if (
+        document.getElementById("dislike" + postId).className ===
+        "fa fa-thumbs-down"
+      ) {
+        document.getElementById("dislike" + postId).className =
+          "fa fa-thumbs-o-down";
+      } else {
+        document.getElementById("dislike" + postId).className =
+          "fa fa-thumbs-down";
+        document.getElementById("like" + postId).className = "fa fa-heart-o";
+      }
+
+      let resStatus = 0;
+
+      PostService.dislikePost(postId, this.state.currentUser)
+        .then((res) => {
+          resStatus = res.status;
+          return res.json();
+        })
+        .then((result) => {
+          if (resStatus === 200) {
+            const index = this.state.posts.findIndex((p) => p.id === postId);
+            const updatedPosts = [...this.state.posts];
+            updatedPosts[index] = result;
+            this.updatePost(updatedPosts);
+          }
+        });
     } else {
-      document.getElementById("dislike" + postId).className =
-        "fa fa-thumbs-down";
-      document.getElementById("like" + postId).className = "fa fa-heart-o";
+      this.handleClickSnackBar("You have to login first!");
     }
-
-    let resStatus = 0;
-
-    PostService.dislikePost(postId, this.state.currentUser)
-      .then((res) => {
-        resStatus = res.status;
-        return res.json();
-      })
-      .then((result) => {
-        if (resStatus === 200) {
-          const index = this.state.posts.findIndex((p) => p.id === postId);
-          const updatedPosts = [...this.state.posts];
-          updatedPosts[index] = result;
-          this.updatePost(updatedPosts);
-        }
-      });
   };
 
-  handleClickSnackBar = () => {
+  savePost = (postId) => {
+    if (this.state.currentUser != null) {
+      if (
+        document.getElementById("save" + postId).className === "fa fa-bookmark"
+      ) {
+        document.getElementById("save" + postId).className = "fa fa-bookmark-o";
+      } else {
+        document.getElementById("save" + postId).className = "fa fa-bookmark";
+      }
+
+      let resStatus = 0;
+
+      PostService.savePostAsFavorite(postId, this.state.currentUser)
+        .then((res) => {
+          resStatus = res.status;
+          return res.json();
+        })
+        .then((result) => {
+          if (resStatus === 200) {
+            const index = this.state.posts.findIndex((p) => p.id === postId);
+            const updatedPosts = [...this.state.posts];
+            updatedPosts[index] = result;
+            this.updatePost(updatedPosts);
+          }
+        });
+    } else {
+      this.handleClickSnackBar("You have to login first!");
+    }
+  };
+
+  handleClickSnackBar = (message) => {
     this.setState({
       open: true,
+      message: message,
     });
   };
 
@@ -169,26 +211,163 @@ class PostCard extends Component {
     });
   };
 
+  openLikesModal = () => {
+    this.setState({
+      isOpenLikesModal: true,
+    });
+  };
+
+  closeLikesModal = () => this.setState({ isOpenLikesModal: false });
+
+  showLikesForPost = (postLikes) => {
+    if (this.state.currentUser !== null) {
+      if (postLikes.length !== 0) {
+        this.setState({
+          isOpenLikesModal: true,
+          likes: postLikes,
+        });
+      } else {
+        this.handleClickSnackBar("There are currently no likes!");
+      }
+    } else {
+      this.handleClickSnackBar("You have to login first!");
+    }
+  };
+
+  openDislikesModal = () => {
+    this.setState({
+      isOpenDislikesModal: true,
+    });
+  };
+
+  closeDislikesModal = () => this.setState({ isOpenDislikesModal: false });
+
+  showDislikesForPost = (postDislikes) => {
+    if (this.state.currentUser !== null) {
+      if (postDislikes.length !== 0) {
+        this.setState({
+          isOpenDislikesModal: true,
+          dislikes: postDislikes,
+        });
+      } else {
+        this.handleClickSnackBar("There are currently no dislikes!");
+      }
+    } else {
+      this.handleClickSnackBar("You have to login first!");
+    }
+  };
+
   render() {
-    const isDislike = this.state.isDislike;
-    const isLike = this.state.isLike;
-    const isSaved = this.state.isSaved;
     const dropdownRef = this.dropdownRef;
     const isActive = this.state.isActive;
     const posts = this.state.posts;
 
+    const likesModalDialog = (
+      <Modal
+        show={this.state.isOpenLikesModal}
+        onHide={this.closeLikesModal}
+        style={{ marginTop: "120px", minHeight: "560px", overflow: "hidden" }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title style={{ marginLeft: "190px" }}>Likes</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div style={{ overflow: "auto", maxHeight: "300px" }}>
+            {this.state.likes.map((like) => {
+              return (
+                <div class="list-group-item d-flex align-items-center">
+                  <img
+                    src={like.imageSrc}
+                    alt=""
+                    width="50px"
+                    class="rounded-sm ml-n2"
+                  />
+                  <div class="flex-fill pl-3 pr-3">
+                    <div>
+                      <a href="#" class="text-dark font-weight-600">
+                        {like.username}
+                      </a>
+                    </div>
+                    {/* <div class="text-muted fs-13px">North Raundspic</div> */}
+                  </div>
+                  {/* <a href="#" class="btn btn-outline-primary">
+                    Follow
+                  </a> */}
+                </div>
+              );
+            })}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={this.closeLikesModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+
+    const dislikesModalDialog = (
+      <Modal
+        show={this.state.isOpenDislikesModal}
+        onHide={this.closeDislikesModal}
+        style={{ marginTop: "120px", minHeight: "560px", overflow: "hidden" }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title style={{ marginLeft: "175px" }}>Dislikes</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div style={{ overflow: "auto", maxHeight: "300px" }}>
+            {this.state.dislikes.map((dislike) => {
+              return (
+                <div class="list-group-item d-flex align-items-center">
+                  <img
+                    src={dislike.imageSrc}
+                    alt=""
+                    width="50px"
+                    class="rounded-sm ml-n2"
+                  />
+                  <div class="flex-fill pl-3 pr-3">
+                    <div>
+                      <a href="#" class="text-dark font-weight-600">
+                        {dislike.username}
+                      </a>
+                    </div>
+                    {/* <div class="text-muted fs-13px">North Raundspic</div> */}
+                  </div>
+                  {/* <a href="#" class="btn btn-outline-primary">
+                    Follow
+                  </a> */}
+                </div>
+              );
+            })}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={this.closeDislikesModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+
+    const snackbar = (
+      <Snackbar
+        open={this.state.open}
+        autoHideDuration={2500}
+        onClose={this.handleCloseSnackBar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={this.handleCloseSnackBar} severity="error">
+          {this.state.message}
+        </Alert>
+      </Snackbar>
+    );
+
     return (
       <div>
-        <Snackbar
-          open={this.state.open}
-          autoHideDuration={2000}
-          onClose={this.handleCloseSnackBar}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert onClose={this.handleCloseSnackBar} severity="error">
-            You have to enter a comment!
-          </Alert>
-        </Snackbar>
+        {snackbar}
+        {likesModalDialog}
+        {dislikesModalDialog}
         {(() => {
           if (Array.isArray(posts)) {
             return (
@@ -202,10 +381,7 @@ class PostCard extends Component {
                             <div class="card card-white grid-margin">
                               <div class="card-body">
                                 <div class="timeline-item-header">
-                                  <img
-                                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                    alt=""
-                                  />
+                                  <img src={post.publisher.imageSrc} alt="" />
                                   <p>
                                     {post.publisher.username}{" "}
                                     <small>
@@ -301,7 +477,9 @@ class PostCard extends Component {
                                                 </Link>
                                               </li>
                                               <li>
-                                                <a href="/user/home">Report</a>
+                                                <a href="javascript:void(0)">
+                                                  Report
+                                                </a>
                                               </li>
                                             </ul>
                                           </nav>
@@ -378,16 +556,16 @@ class PostCard extends Component {
                                   <div class="timeline-options">
                                     {(() => {
                                       if (post.likes !== null) {
-                                        // var classForLike = "fa fa-heart-o";
-
-                                        // if (post.likes !== null) {
-                                        //   var index = post.likes.findIndex(
-                                        //     (p) =>
-                                        //       p.id == this.state.currentUser.id
-                                        //   );
-                                        //   if (index !== -1) {
-                                        //     classForLike = "fa fa-heart";
-                                        //   }
+                                        var classForLike = "fa fa-heart-o";
+                                        if (this.state.currentUser != null) {
+                                          var index = post.likes.findIndex(
+                                            (p) =>
+                                              p.id == this.state.currentUser.id
+                                          );
+                                          if (index !== -1) {
+                                            classForLike = "fa fa-heart";
+                                          }
+                                        }
 
                                         return (
                                           <div>
@@ -399,18 +577,19 @@ class PostCard extends Component {
                                             >
                                               <i
                                                 id={"like" + post.id}
-                                                class={
-                                                  isLike
-                                                    ? "fa fa-heart"
-                                                    : "fa fa-heart-o"
-                                                }
+                                                class={classForLike}
                                                 style={{
                                                   fontSize: "20px",
                                                 }}
                                               ></i>
                                             </a>
                                             <a
-                                              href="#"
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.showLikesForPost(
+                                                  post.likes
+                                                );
+                                              }}
                                               style={{
                                                 marginLeft: "-10px",
                                               }}
@@ -430,18 +609,19 @@ class PostCard extends Component {
                                             >
                                               <i
                                                 id={"like" + post.id}
-                                                class={
-                                                  isLike
-                                                    ? "fa fa-heart"
-                                                    : "fa fa-heart-o"
-                                                }
+                                                class={"fa fa-heart-o"}
                                                 style={{
                                                   fontSize: "20px",
                                                 }}
                                               ></i>
                                             </a>
                                             <a
-                                              href="#"
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.handleClickSnackBar(
+                                                  "There are currently no likes!"
+                                                );
+                                              }}
                                               style={{
                                                 marginLeft: "-10px",
                                               }}
@@ -455,6 +635,20 @@ class PostCard extends Component {
 
                                     {(() => {
                                       if (post.dislikes !== null) {
+                                        var classForDislike =
+                                          "fa fa-thumbs-o-down";
+
+                                        if (this.state.currentUser != null) {
+                                          var index = post.dislikes.findIndex(
+                                            (p) =>
+                                              p.id == this.state.currentUser.id
+                                          );
+                                          if (index !== -1) {
+                                            classForDislike =
+                                              "fa fa-thumbs-down";
+                                          }
+                                        }
+
                                         return (
                                           <div>
                                             {" "}
@@ -466,11 +660,7 @@ class PostCard extends Component {
                                             >
                                               <i
                                                 id={"dislike" + post.id}
-                                                class={
-                                                  isDislike
-                                                    ? "fa fa-thumbs-down"
-                                                    : "fa fa-thumbs-o-down"
-                                                }
+                                                class={classForDislike}
                                                 style={{
                                                   fontSize: "20px",
                                                   paddingLeft: "20px",
@@ -478,7 +668,12 @@ class PostCard extends Component {
                                               ></i>
                                             </a>
                                             <a
-                                              href="#"
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.showDislikesForPost(
+                                                  post.dislikes
+                                                );
+                                              }}
                                               style={{
                                                 marginLeft: "-10px",
                                               }}
@@ -498,11 +693,7 @@ class PostCard extends Component {
                                             >
                                               <i
                                                 id={"dislike" + post.id}
-                                                class={
-                                                  isDislike
-                                                    ? "fa fa-thumbs-down"
-                                                    : "fa fa-thumbs-o-down"
-                                                }
+                                                class={"fa fa-thumbs-o-down"}
                                                 style={{
                                                   fontSize: "20px",
                                                   paddingLeft: "20px",
@@ -510,7 +701,12 @@ class PostCard extends Component {
                                               ></i>
                                             </a>
                                             <a
-                                              href="#"
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.handleClickSnackBar(
+                                                  "There are currently no dislikes!"
+                                                );
+                                              }}
                                               style={{
                                                 marginLeft: "-10px",
                                               }}
@@ -570,18 +766,31 @@ class PostCard extends Component {
 
                                     {(() => {
                                       if (this.state.currentUser !== null) {
+                                        var classForFavorite =
+                                          "fa fa-bookmark-o";
+
+                                        if (post.favorites != null) {
+                                          var index = post.favorites.findIndex(
+                                            (p) =>
+                                              p.id == this.state.currentUser.id
+                                          );
+                                          if (index !== -1) {
+                                            classForFavorite = "fa fa-bookmark";
+                                          }
+                                        }
+
                                         return (
                                           <div>
                                             <a
-                                              href="#"
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.savePost(post.id);
+                                              }}
                                               style={{ float: "right" }}
                                             >
                                               <i
-                                                class={
-                                                  isSaved
-                                                    ? "fa fa-bookmark"
-                                                    : "fa fa-bookmark-o"
-                                                }
+                                                id={"save" + post.id}
+                                                class={classForFavorite}
                                                 style={{
                                                   fontSize: "20px",
                                                   paddingLeft: "20px",
@@ -608,7 +817,10 @@ class PostCard extends Component {
                                                     <div class="timeline-comment">
                                                       <div class="timeline-comment-header">
                                                         <img
-                                                          src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                                                          src={
+                                                            comment.publisher
+                                                              .imageSrc
+                                                          }
                                                           alt=""
                                                         />
                                                         <p>

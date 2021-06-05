@@ -369,6 +369,25 @@
                 "UserRole": "User"
             }*/
     },
+    {
+      "DownstreamPathTemplate": "/api/post/search/{searchParam}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55993
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/post/search/{searchParam}",
+      "UpstreamHttpMethod": [ "GET" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
 
     // NotificationMicroservice
     {
@@ -433,8 +452,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 56002
+          "Host": "notification-microservice",
+          "Port": 80
         }
       ],
       "UpstreamPathTemplate": "/gateway/notification/follow",

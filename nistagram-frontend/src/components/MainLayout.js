@@ -52,7 +52,10 @@ export default function MainLayout({ routes }) {
               <Route path="/app/search">
                 <SearchResultPage />
               </Route>
-              <Route path="/app/">
+              <Route path="/app/*">
+                <NotFound />
+              </Route>
+              <Route path="/app">
                 <HomePage />
               </Route>
               <Route path="/app/404">

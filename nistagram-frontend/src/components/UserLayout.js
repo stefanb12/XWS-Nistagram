@@ -45,7 +45,10 @@ export default function UserLayout({ routes }) {
               <Route path="/user/settings">
                 <UserProfileSettings />
               </Route>
-              <Route path="/user/">
+              <Route path="/user/*">
+                <NotFound />
+              </Route>
+              <Route path="/user">
                 <UserHomePage />
               </Route>
               <Route path="/user/404">

@@ -14,6 +14,7 @@ namespace PostMicroservice.Service
         Task<Post> InsertNewComment(Post post, Comment comment);
         Task<Post> LikePost(Post post, Profile profile);
         Task<Post> DisikePost(Post post, Profile profile);
+        Task<List<Post>> GetSearchResult(string searchParam);
         Task<Post> SavePostAsFavorite(Post post, Profile profile);
     }
 }

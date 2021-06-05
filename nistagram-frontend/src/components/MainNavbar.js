@@ -130,6 +130,7 @@ export default function MainNavbar() {
   const [mounted, setMounted] = React.useState(false);
   const [publicPosts, setPublicPosts] = React.useState([]);
   const [searchData, setSearchData] = React.useState([]);
+  const [searchedPosts, setsearchedPosts] = React.useState([]);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -139,14 +140,12 @@ export default function MainNavbar() {
       .then((res) => res.json())
       .then((result) => {
         setAllUsers(result);
-        console.log(allUsers);
       });
 
     PostService.getAllPosts()
       .then((res) => res.json())
       .then((result) => {
         setPublicPosts(result);
-        console.log(publicPosts);
       });
 
     setMounted(false);
@@ -157,7 +156,6 @@ export default function MainNavbar() {
     const response = await ProfileService.getAllUsers();
     const json = await response.json();
     setAllUsers(json.data);
-    console.log(json.data);
   }*/
 
   const handleProfileMenuOpen = (event) => {
@@ -246,20 +244,32 @@ export default function MainNavbar() {
     </Menu>
   );
 
-  const onChoseSearchResult = (event, row) => {
+  const onChoseSearchResult = async (event, row) => {
+    await PostService.getSearchedPosts(row.searchParam)
+      .then((res) => res.json())
+      .then((result) => {
+        setsearchedPosts(result);
+      });
+
     if (row.type == "user") {
-      console.log(row.id);
       history.push({
         pathname: "/user/profile",
         state: row.id,
       });
     } else if (row.type == "tag" || row.type == "location") {
       setSearchValue("");
-      console.log(row.searchParam);
-      history.push({
-        pathname: "/app/search",
-        state: row,
-      });
+      await PostService.getSearchedPosts(row.searchParam)
+        .then((res) => res.json())
+        .then((result) => {
+          history.push({
+            pathname: "/app/search",
+            state: {
+              searchParam: row.searchParam,
+              imageSrc: row.imageSrc,
+              posts: result,
+            },
+          });
+        });
     }
   };
 
@@ -270,14 +280,12 @@ export default function MainNavbar() {
         .then((res) => res.json())
         .then((result) => {
           setAllUsers(result);
-          console.log(allUsers);
         });
 
       await PostService.getAllPosts()
         .then((res) => res.json())
         .then((result) => {
           setPublicPosts(result);
-          console.log(publicPosts);
         });
     }
 
@@ -293,14 +301,24 @@ export default function MainNavbar() {
       }
 
       for (let i = 0; i < publicPosts.length; i++) {
-        for (let j = 0; j < publicPosts[i].tags.length; j++) {
-          var tag = {
-            id: null,
-            searchParam: publicPosts[i].tags[j],
-            imageSrc: hash,
-            type: "tag",
-          };
-          searchData.push(tag);
+        if (publicPosts[i].tags != null) {
+          for (let j = 0; j < publicPosts[i].tags.length; j++) {
+            let flag = false;
+            for (let k = 0; k < searchData.length; k++) {
+              if (searchData[k].searchParam == publicPosts[i].tags[j]) {
+                flag = true;
+              }
+            }
+            if (flag == false) {
+              var tag = {
+                id: null,
+                searchParam: publicPosts[i].tags[j],
+                imageSrc: hash,
+                type: "tag",
+              };
+              searchData.push(tag);
+            }
+          }
         }
         if (
           publicPosts[i].location.address === "" ||
