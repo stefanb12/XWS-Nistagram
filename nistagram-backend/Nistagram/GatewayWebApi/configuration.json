@@ -313,6 +313,25 @@
                 "UserRole": "User"
             }*/
         },
+        {
+            "DownstreamPathTemplate": "/api/post/favorite",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/favorite",
+            "UpstreamHttpMethod": [ "PUT" ]
+            /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+        },
 
         // NotificationMicroservice
         {
