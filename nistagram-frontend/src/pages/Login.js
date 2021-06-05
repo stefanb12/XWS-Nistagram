@@ -41,7 +41,7 @@ const Login = () => {
       .then((result) => {
         if (resStatus === 200) {
           localStorage.setItem("currentUser", JSON.stringify(result));
-          history.push("/user/home");
+          history.push("/user");
         } else if (resStatus === 401) {
           handleClick();
         }

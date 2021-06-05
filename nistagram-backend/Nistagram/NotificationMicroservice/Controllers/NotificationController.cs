@@ -46,6 +46,33 @@ namespace NotificationMicroservice.Controllers
             return Ok(result);
         }
 
+        [HttpPost("like")]
+        public async Task<IActionResult> SendLikeNotification([FromBody] NotificationDto dto)
+        {
+            Notification notification = NotificationMapper.NotificationDtoToNotification(dto);
+            Profile sender = await _profileService.GetById(dto.SenderId);
+            notification.Content = sender.Username + " like your post.";
+            return Ok(await _notificationService.Insert(notification));
+        }
+
+        [HttpPost("dislike")]
+        public async Task<IActionResult> SendDislikeNotification([FromBody] NotificationDto dto)
+        {
+            Notification notification = NotificationMapper.NotificationDtoToNotification(dto);
+            Profile sender = await _profileService.GetById(dto.SenderId);
+            notification.Content = sender.Username + " dislike your post.";
+            return Ok(await _notificationService.Insert(notification));
+        }
+
+        [HttpPost("comment")]
+        public async Task<IActionResult> SendCommentNotification([FromBody] NotificationDto dto)
+        {
+            Notification notification = NotificationMapper.NotificationDtoToNotification(dto);
+            Profile sender = await _profileService.GetById(dto.SenderId);
+            notification.Content = sender.Username + " comment your post.";
+            return Ok(await _notificationService.Insert(notification));
+        }
+
         [HttpPost("follow")]
         public async Task<IActionResult> SendFollowNotification([FromBody] NotificationDto dto)
         {

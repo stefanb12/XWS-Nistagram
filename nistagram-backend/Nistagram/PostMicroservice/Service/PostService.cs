@@ -37,6 +37,26 @@ namespace PostMicroservice.Service
             return profilePosts;
         }
 
+        public async Task<List<Post>> GetFavoritePostsForProfile(int profileId)
+        {
+            List<Post> favoritePosts = new List<Post>();
+            foreach (Post post in await GetAll())
+            {
+                if(post.Favorites != null)
+                {
+                    foreach (Profile profile in post.Favorites)
+                    {
+                        if (profile.OriginalId == profileId)
+                        {
+                            favoritePosts.Add(post);
+                            break;
+                        }
+                    }
+                }       
+            }
+            return favoritePosts;
+        }
+
         public async Task<List<Post>> GetAllPublicPosts()
         {
             List<Post> publicPosts = new List<Post>();

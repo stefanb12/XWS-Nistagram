@@ -25,17 +25,17 @@ class UserProfile extends Component {
       loggedUser: { following: [], followers: [] },
       userProfile: {},
       //userProfileId: this.props.location.state.profileId,
-      userProfileId: 3,
+      userProfileId: 1,
       isOpenFollowersModal: false,
       isOpenFollowingModal: false,
-      isDislike: false,
-      isLike: false,
-      isSaved: false,
+      isPostsButtonActive: true,
+      isSavedButtonActive: false,
       isActive: false,
       doesFollowRequestExist: false,
       followers: [],
       following: [],
       userProfilePosts: [],
+      userProfileFavoritePosts: [],
       followingSnackBarOpen: false,
       followersSnackBarOpen: false,
     };
@@ -172,6 +172,52 @@ class UserProfile extends Component {
     }));
   }
 
+  handleSavedButton() {
+    if (
+      document.getElementById("savedButton").className ===
+      "header-link-item ml-3 pl-3 border-left d-flex align-items-center"
+    ) {
+      document.getElementById("savedButton").className =
+        "header-link-item ml-3 pl-3 border-left d-flex align-items-center active";
+      document.getElementById("postsButton").className =
+        "header-link-item d-flex align-items-center";
+    }
+    PostService.getFavoritePosts(this.state.loggedUser.id)
+      .then((res) => {
+        return res.json();
+      })
+      .then((result) => {
+        this.setState({
+          isSavedButtonActive: true,
+          isPostsButtonActive: false,
+          userProfileFavoritePosts: result,
+        });
+      });
+  }
+
+  handlePostsButton() {
+    if (
+      document.getElementById("postsButton").className ===
+      "header-link-item d-flex align-items-center"
+    ) {
+      document.getElementById("postsButton").className =
+        "header-link-item d-flex align-items-center active";
+      document.getElementById("savedButton").className =
+        "header-link-item ml-3 pl-3 border-left d-flex align-items-center";
+    }
+    PostService.getPostsForProfile(this.state.loggedUser.id)
+      .then((res) => {
+        return res.json();
+      })
+      .then((result) => {
+        this.setState({
+          isPostsButtonActive: true,
+          isSavedButtonActive: false,
+          userProfilePosts: result,
+        });
+      });
+  }
+
   getFollowersAndFollowing = () => {
     ProfileService.getFollowers(this.state.userProfileId)
       .then((res) => res.json())
@@ -253,7 +299,14 @@ class UserProfile extends Component {
   updatePosts = async (updatedPosts) => {
     await this.setState({
       userProfilePosts: updatedPosts,
+      userProfileFavoritePosts: updatedPosts,
     });
+    if (
+      document.getElementById("savedButton").className ===
+      "header-link-item ml-3 pl-3 border-left d-flex align-items-center active"
+    ) {
+      this.handleSavedButton();
+    }
   };
 
   render() {
@@ -261,9 +314,6 @@ class UserProfile extends Component {
     let userProfile = this.state.userProfile;
     let doesFollowRequestExist = this.state.doesFollowRequestExist;
     const userProfileId = this.state.userProfileId;
-    const isDislike = this.state.isDislike;
-    const isLike = this.state.isLike;
-    const isSaved = this.state.isSaved;
     const dropdownRef = this.dropdownRef;
     const isActive = this.state.isActive;
 
@@ -303,10 +353,23 @@ class UserProfile extends Component {
           <div class="col-md-8 col-xl-6 middle-wrapper">
             <div class="row">
               <div class="col-md-12 grid-margin">
-                <PostCard
-                  sendPosts={this.state.userProfilePosts}
-                  updatePost={this.updatePosts.bind(this)}
-                />
+                {(() => {
+                  if (this.state.isPostsButtonActive === true) {
+                    return (
+                      <PostCard
+                        sendPosts={this.state.userProfilePosts}
+                        updatePost={this.updatePosts.bind(this)}
+                      />
+                    );
+                  } else {
+                    return (
+                      <PostCard
+                        sendPosts={this.state.userProfileFavoritePosts}
+                        updatePost={this.updatePosts.bind(this)}
+                      />
+                    );
+                  }
+                })()}
               </div>
             </div>
           </div>
@@ -345,18 +408,6 @@ class UserProfile extends Component {
                         <div class="left">
                           <img
                             src="https://bootdey.com/img/Content/avatar/avatar3.png"
-                            alt=""
-                          />
-                        </div>
-                        <div class="right">
-                          <h3>John Doe</h3>
-                          <p>10 Friends</p>
-                        </div>
-                      </li>
-                      <li>
-                        <div class="left">
-                          <img
-                            src="https://bootdey.com/img/Content/avatar/avatar4.png"
                             alt=""
                           />
                         </div>
@@ -405,9 +456,16 @@ class UserProfile extends Component {
       );
       savedButton = (
         <div>
-          <li class="header-link-item ml-3 pl-3 border-left d-flex align-items-center">
+          <li
+            id="savedButton"
+            class="header-link-item ml-3 pl-3 border-left d-flex align-items-center"
+          >
             <BookmarkBorder />
-            <a class="pt-1px d-none d-md-block" href="#">
+            <a
+              class="pt-1px d-none d-md-block"
+              href="javascript:void(0)"
+              onClick={() => this.handleSavedButton()}
+            >
               Saved
             </a>
           </li>
@@ -698,7 +756,10 @@ class UserProfile extends Component {
                   </div>
                   <div class="header-links">
                     <ul class="links d-flex align-items-center mt-3 mt-md-0">
-                      <li class="header-link-item d-flex align-items-center active">
+                      <li
+                        id="postsButton"
+                        class="header-link-item d-flex align-items-center active"
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
@@ -716,6 +777,7 @@ class UserProfile extends Component {
                         <Link
                           class="pt-1px d-none d-md-block"
                           to="/user/profile"
+                          onClick={() => this.handlePostsButton()}
                         >
                           Posts <span class="text-muted tx-12">12</span>
                         </Link>

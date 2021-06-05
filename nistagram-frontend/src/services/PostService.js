@@ -73,6 +73,10 @@ class PostService {
     return fetch(API_URL + "post/profile/" + profileId);
   }
 
+  getFavoritePosts(profileId) {
+    return fetch(API_URL + "post/favorites/" + profileId);
+  }
+
   getPublicPosts() {
     return fetch(API_URL + "post/public");
   }

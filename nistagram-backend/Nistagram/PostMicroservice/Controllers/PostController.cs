@@ -88,6 +88,28 @@ namespace PostMicroservice.Controllers
             return Ok(postsForProfileDto);
         }
 
+        [HttpGet("favorites/{profileId}")]
+        public async Task<IActionResult> GetFavoritePostsForProfile(int profileId)
+        {
+            List<Post> favoritePosts = await _postService.GetFavoritePostsForProfile(profileId);
+            if (favoritePosts.Count == 0)
+            {
+                return NotFound();
+            }
+
+            List<PostDto> favoritePostsDto = new List<PostDto>();
+            foreach (Post post in favoritePosts)
+            {
+                for (int i = 0; i < post.Contents.Count; i++)
+                {
+                    post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
+                }
+                favoritePostsDto.Add(PostMapper.PostToPostDto(post));
+            }
+
+            return Ok(favoritePostsDto);
+        }
+
         [HttpGet("public")]
         public async Task<IActionResult> GetPublicPosts()
         {
