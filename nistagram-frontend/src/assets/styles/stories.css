@@ -112,6 +112,11 @@
   color: #8492a6 !important;
 }
 
+.story-modal {
+  height: 600px;
+  width: 600px;
+}
+
 .section-title .title {
   letter-spacing: 0.5px;
   font-size: 30px;

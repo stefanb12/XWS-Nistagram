@@ -9,6 +9,7 @@ namespace StoryMicroservice.Service
 {
     public interface IStoryService : IService<Story>
     {
-        Task<string> SaveImage(IFormFile imageFile);
+        public Task<string> SaveImage(IFormFile imageFile);
+        public Task<List<StoryProfile>> GetAllStoryProfiles();
     }
 }

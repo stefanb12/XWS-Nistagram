@@ -8,7 +8,7 @@ namespace StoryMicroservice.Database
 {
     public interface IMongoDbContext
     {
-        IMongoCollection<Story> GetCollection<Story>(string name);
+        IMongoCollection<T> GetCollection<T>(string name);
         IMongoDatabase GetDatabase();
     }
 }

@@ -8,5 +8,6 @@ namespace StoryMicroservice.Repository
 {
     public interface IStoryRepository : IRepository<Story>
     {
+        public Task<List<StoryProfile>> GetAggregatedCollection();
     }
 }

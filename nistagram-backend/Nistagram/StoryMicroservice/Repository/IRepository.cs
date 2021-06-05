@@ -1,4 +1,5 @@
-﻿using StoryMicroservice.Model;
+﻿using MongoDB.Driver;
+using StoryMicroservice.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,6 @@ namespace StoryMicroservice.Repository
         Task<TDocument> Insert(TDocument obj);
         Task<TDocument> Update(TDocument obj);
         Task Delete(string id);
+        IMongoCollection<TDocument> GetCollection();
     }
 }

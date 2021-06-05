@@ -22,11 +22,13 @@ namespace UserMicroservice.Messaging
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: "profile.created",
+                channel.ExchangeDeclare(exchange: "profile", type: ExchangeType.Fanout);
+
+                /*channel.QueueDeclare(queue: "profile.created",
                                      durable: false,
                                      exclusive: false,
                                      autoDelete: false,
-                                     arguments: null);
+                                     arguments: null);*/
 
                 var integrationEventData = JsonConvert.SerializeObject(new
                 {
@@ -36,8 +38,8 @@ namespace UserMicroservice.Messaging
 
                 var body = Encoding.UTF8.GetBytes(integrationEventData);
 
-                channel.BasicPublish(exchange: "",
-                                     routingKey: "profile.created",
+                channel.BasicPublish(exchange: "profile",
+                                     routingKey: "",
                                      basicProperties: null,
                                      body: body);
             }

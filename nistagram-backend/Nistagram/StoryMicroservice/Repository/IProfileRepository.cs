@@ -1,4 +1,5 @@
-﻿using StoryMicroservice.Model;
+﻿using MongoDB.Driver;
+using StoryMicroservice.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,5 +9,6 @@ namespace StoryMicroservice.Repository
 {
     public interface IProfileRepository : IRepository<Profile>
     {
+        public Task<List<ProfileStories>> GetProfileStoryAggregatedCollection(IMongoCollection<Story> storyCollection);
     }
 }
