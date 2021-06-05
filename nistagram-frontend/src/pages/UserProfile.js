@@ -12,6 +12,10 @@ import AuthService from "../services/AuthService";
 import ProfileService from "../services/ProfileService";
 import FollowRequestService from "../services/FollowRequestService";
 import NotificationService from "../services/NotificationService";
+import { Snackbar } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
+import PostService from "../services/PostService";
+import PostCard from "../components/home-page/PostCard";
 
 class UserProfile extends Component {
   constructor(props) {
@@ -21,23 +25,80 @@ class UserProfile extends Component {
       loggedUser: { following: [], followers: [] },
       userProfile: {},
       //userProfileId: this.props.location.state.profileId,
-      userProfileId: 3,
+      userProfileId: 1,
       isOpenFollowersModal: false,
       isOpenFollowingModal: false,
-      isDislike: false,
-      isLike: false,
-      isSaved: false,
+      isPostsButtonActive: true,
+      isSavedButtonActive: false,
       isActive: false,
       doesFollowRequestExist: false,
       followers: [],
       following: [],
+      userProfilePosts: [],
+      userProfileFavoritePosts: [],
+      followingSnackBarOpen: false,
+      followersSnackBarOpen: false,
     };
     this.handleClick = this.handleClick.bind(this);
   }
 
-  openFollowersModal = () => this.setState({ isOpenFollowersModal: true });
+  handleClickFollowingSnackBar = () => {
+    this.setState({ followingSnackBarOpen: true });
+  };
+
+  handleCloseFollowingSnackBar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ followingSnackBarOpen: false });
+  };
+
+  handleClickFollowersSnackBar = () => {
+    this.setState({ followersSnackBarOpen: true });
+  };
+
+  handleCloseFollowersSnackBar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ followersSnackBarOpen: false });
+  };
+
+  openFollowersModal = () => {
+    let isInFollowing = this.state.loggedUser.following.some(
+      (followingProfile) => {
+        if (followingProfile.followingId == this.state.userProfileId)
+          return true;
+      }
+    );
+    if (
+      this.state.userProfile.isPrivate === true &&
+      isInFollowing === false &&
+      this.state.loggedUser.id !== this.state.userProfileId
+    ) {
+      this.handleClickFollowersSnackBar();
+    } else {
+      this.setState({ isOpenFollowersModal: true });
+    }
+  };
   closeFollowersModal = () => this.setState({ isOpenFollowersModal: false });
-  openFollowingModal = () => this.setState({ isOpenFollowingModal: true });
+  openFollowingModal = () => {
+    let isInFollowing = this.state.loggedUser.following.some(
+      (followingProfile) => {
+        if (followingProfile.followingId == this.state.userProfileId)
+          return true;
+      }
+    );
+    if (
+      this.state.userProfile.isPrivate === true &&
+      isInFollowing === false &&
+      this.state.loggedUser.id !== this.state.userProfileId
+    ) {
+      this.handleClickFollowingSnackBar();
+    } else {
+      this.setState({ isOpenFollowingModal: true });
+    }
+  };
   closeFollowingModal = () => this.setState({ isOpenFollowingModal: false });
 
   async componentDidMount() {
@@ -60,9 +121,17 @@ class UserProfile extends Component {
         });
       });
 
+    await PostService.getPostsForProfile(this.state.loggedUser.id)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          userProfilePosts: result,
+        });
+      });
+
     this.getFollowersAndFollowing();
 
-    if (this.state.userProfile.isPrivate == true) {
+    if (this.state.userProfile.isPrivate === true) {
       let resStatus = 0;
       FollowRequestService.getFollowRequest(
         this.state.userProfileId,
@@ -103,6 +172,52 @@ class UserProfile extends Component {
     }));
   }
 
+  handleSavedButton() {
+    if (
+      document.getElementById("savedButton").className ===
+      "header-link-item ml-3 pl-3 border-left d-flex align-items-center"
+    ) {
+      document.getElementById("savedButton").className =
+        "header-link-item ml-3 pl-3 border-left d-flex align-items-center active";
+      document.getElementById("postsButton").className =
+        "header-link-item d-flex align-items-center";
+    }
+    PostService.getFavoritePosts(this.state.loggedUser.id)
+      .then((res) => {
+        return res.json();
+      })
+      .then((result) => {
+        this.setState({
+          isSavedButtonActive: true,
+          isPostsButtonActive: false,
+          userProfileFavoritePosts: result,
+        });
+      });
+  }
+
+  handlePostsButton() {
+    if (
+      document.getElementById("postsButton").className ===
+      "header-link-item d-flex align-items-center"
+    ) {
+      document.getElementById("postsButton").className =
+        "header-link-item d-flex align-items-center active";
+      document.getElementById("savedButton").className =
+        "header-link-item ml-3 pl-3 border-left d-flex align-items-center";
+    }
+    PostService.getPostsForProfile(this.state.loggedUser.id)
+      .then((res) => {
+        return res.json();
+      })
+      .then((result) => {
+        this.setState({
+          isPostsButtonActive: true,
+          isSavedButtonActive: false,
+          userProfilePosts: result,
+        });
+      });
+  }
+
   getFollowersAndFollowing = () => {
     ProfileService.getFollowers(this.state.userProfileId)
       .then((res) => res.json())
@@ -127,6 +242,7 @@ class UserProfile extends Component {
         return res.json();
       })
       .then((result) => {
+        NotificationService.sendFollowNotification(followingId, followerId, 0);
         this.getFollowersAndFollowing();
         this.setState({
           loggedUser: result.follower,
@@ -180,14 +296,24 @@ class UserProfile extends Component {
       });
   };
 
+  updatePosts = async (updatedPosts) => {
+    await this.setState({
+      userProfilePosts: updatedPosts,
+      userProfileFavoritePosts: updatedPosts,
+    });
+    if (
+      document.getElementById("savedButton").className ===
+      "header-link-item ml-3 pl-3 border-left d-flex align-items-center active"
+    ) {
+      this.handleSavedButton();
+    }
+  };
+
   render() {
     let loggedUser = this.state.loggedUser;
     let userProfile = this.state.userProfile;
     let doesFollowRequestExist = this.state.doesFollowRequestExist;
     const userProfileId = this.state.userProfileId;
-    const isDislike = this.state.isDislike;
-    const isLike = this.state.isLike;
-    const isSaved = this.state.isSaved;
     const dropdownRef = this.dropdownRef;
     const isActive = this.state.isActive;
 
@@ -227,213 +353,23 @@ class UserProfile extends Component {
           <div class="col-md-8 col-xl-6 middle-wrapper">
             <div class="row">
               <div class="col-md-12 grid-margin">
-                <div class="profile-timeline">
-                  <ul class="list-unstyled">
-                    <li class="timeline-item">
-                      <div class="card card-white grid-margin">
-                        <div class="card-body">
-                          <div class="timeline-item-header">
-                            <img
-                              src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                              alt=""
-                            />
-                            <p>
-                              Vikash smith <span>posted a status</span>
-                            </p>
-                            <small>3 hours ago</small>
-                          </div>
-
-                          <div
-                            class="dropdown"
-                            ref={dropdownRef}
-                            style={{ marginTop: "-10.8%" }}
-                          >
-                            <button
-                              class="btn p-0"
-                              type="button"
-                              id="dropdownMenuButton"
-                              data-toggle="dropdown"
-                              aria-haspopup="true"
-                              aria-expanded="false"
-                              onClick={this.handleClick}
-                              className="menu-trigger"
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="34"
-                                height="34"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="feather feather-more-horizontal icon-lg pb-3px"
-                              >
-                                <circle cx="12" cy="12" r="1"></circle>
-                                <circle cx="19" cy="12" r="1"></circle>
-                                <circle cx="5" cy="12" r="1"></circle>
-                              </svg>
-                            </button>
-                            <nav
-                              className={`menu ${
-                                isActive ? "active" : "inactive"
-                              }`}
-                            >
-                              <ul>
-                                <li>
-                                  <a href="/user/home">Report</a>
-                                </li>
-                                <li>
-                                  <a href="/user/home">Save</a>
-                                </li>
-                                <li>
-                                  <a href="/user/home">View profile</a>
-                                </li>
-                                <li>
-                                  <a href="/user/home">Unfollow</a>
-                                </li>
-                              </ul>
-                            </nav>
-                          </div>
-
-                          <div class="timeline-item-post">
-                            <img
-                              class="img-thumbnail"
-                              src="https://bootdey.com/img/Content/avatar/avatar6.png"
-                              alt=""
-                            />
-
-                            <p style={{ marginTop: "20px" }}>
-                              Elavita veritatis et quasi architecto beatae vitae
-                              dicta sunt explicabo. Nemo enim ipsam voluptatem
-                              quia voluptas sit aspernatur aut odit aut fugit,
-                              sed quia consequuntur.
-                            </p>
-                            <div class="timeline-options">
-                              <a href="#">
-                                <i
-                                  class={
-                                    isLike ? "fa fa-heart" : "fa fa-heart-o"
-                                  }
-                                  style={{
-                                    fontSize: "20px",
-                                  }}
-                                ></i>
-                                <span /> Like (15)
-                              </a>
-                              <a href="#">
-                                <i
-                                  class={
-                                    isDislike
-                                      ? "fa fa-thumbs-down"
-                                      : "fa fa-thumbs-o-down"
-                                  }
-                                  style={{
-                                    fontSize: "20px",
-                                    paddingLeft: "20px",
-                                  }}
-                                ></i>
-                                <span /> Dislike (6)
-                              </a>
-                              <a href="#">
-                                <i
-                                  class="fa fa-comment-o"
-                                  style={{
-                                    fontSize: "20px",
-                                    paddingLeft: "20px",
-                                  }}
-                                ></i>
-                                <span /> Comment (4)
-                              </a>
-                              <a href="#" style={{ float: "right" }}>
-                                <i
-                                  class={
-                                    isSaved
-                                      ? "fa fa-bookmark"
-                                      : "fa fa-bookmark-o"
-                                  }
-                                  style={{
-                                    fontSize: "20px",
-                                    marginTop: "4px",
-                                  }}
-                                ></i>
-                              </a>
-                            </div>
-                            <div class="comments">
-                              <div class="timeline-comment">
-                                <div class="timeline-comment-header">
-                                  <img
-                                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                    alt=""
-                                  />
-                                  <p>
-                                    Jamara Karle <small>1 hour ago</small>
-                                  </p>
-                                </div>
-                                <p class="timeline-comment-text">
-                                  Xullamco laboris nisi ut aliquip ex ea commodo
-                                  consequat.
-                                </p>
-                              </div>
-                              <div class="timeline-comment">
-                                <div class="timeline-comment-header">
-                                  <img
-                                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                    alt=""
-                                  />
-                                  <p>
-                                    Jamara Karle <small>1 hour ago</small>
-                                  </p>
-                                </div>
-                                <p class="timeline-comment-text">
-                                  Xullamco laboris nisi ut aliquip ex ea commodo
-                                  consequat.
-                                </p>
-                              </div>
-                              <div class="timeline-comment">
-                                <div class="timeline-comment-header">
-                                  <img
-                                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                    alt=""
-                                  />
-                                  <p>
-                                    Jamara Karle <small>1 hour ago</small>
-                                  </p>
-                                </div>
-                                <p class="timeline-comment-text">
-                                  Xullamco laboris nisi ut aliquip ex ea commodo
-                                  consequat.
-                                </p>
-                              </div>
-                              <div class="timeline-comment">
-                                <div class="timeline-comment-header">
-                                  <img
-                                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                    alt=""
-                                  />
-                                  <p>
-                                    Lois Anderson <small>3 hours ago</small>
-                                  </p>
-                                </div>
-                                <p class="timeline-comment-text">
-                                  Coluptate velit esse cillum dolore eu fugiat
-                                  nulla pariatur. Excepteur sint occaecat
-                                  cupidatat non proident, sunt in culpa qui
-                                  officia.
-                                </p>
-                              </div>
-                            </div>
-                            <textarea
-                              class="form-control"
-                              placeholder="Replay"
-                            ></textarea>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
+                {(() => {
+                  if (this.state.isPostsButtonActive === true) {
+                    return (
+                      <PostCard
+                        sendPosts={this.state.userProfilePosts}
+                        updatePost={this.updatePosts.bind(this)}
+                      />
+                    );
+                  } else {
+                    return (
+                      <PostCard
+                        sendPosts={this.state.userProfileFavoritePosts}
+                        updatePost={this.updatePosts.bind(this)}
+                      />
+                    );
+                  }
+                })()}
               </div>
             </div>
           </div>
@@ -472,18 +408,6 @@ class UserProfile extends Component {
                         <div class="left">
                           <img
                             src="https://bootdey.com/img/Content/avatar/avatar3.png"
-                            alt=""
-                          />
-                        </div>
-                        <div class="right">
-                          <h3>John Doe</h3>
-                          <p>10 Friends</p>
-                        </div>
-                      </li>
-                      <li>
-                        <div class="left">
-                          <img
-                            src="https://bootdey.com/img/Content/avatar/avatar4.png"
                             alt=""
                           />
                         </div>
@@ -532,9 +456,16 @@ class UserProfile extends Component {
       );
       savedButton = (
         <div>
-          <li class="header-link-item ml-3 pl-3 border-left d-flex align-items-center">
+          <li
+            id="savedButton"
+            class="header-link-item ml-3 pl-3 border-left d-flex align-items-center"
+          >
             <BookmarkBorder />
-            <a class="pt-1px d-none d-md-block" href="#">
+            <a
+              class="pt-1px d-none d-md-block"
+              href="javascript:void(0)"
+              onClick={() => this.handleSavedButton()}
+            >
               Saved
             </a>
           </li>
@@ -693,6 +624,26 @@ class UserProfile extends Component {
     }
     return (
       <div>
+        <Snackbar
+          open={this.state.followersSnackBarOpen}
+          autoHideDuration={2000}
+          onClose={this.handleCloseFollowersSnackBar}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert onClose={this.handleCloseFollowersSnackBar} severity="error">
+            Follow this account to see their followers
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={this.state.followingSnackBarOpen}
+          autoHideDuration={2000}
+          onClose={this.handleCloseFollowingSnackBar}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert onClose={this.handleCloseFollowingSnackBar} severity="error">
+            Follow this account to see their following
+          </Alert>
+        </Snackbar>
         <Modal
           show={this.state.isOpenFollowersModal}
           onHide={this.closeFollowersModal}
@@ -718,11 +669,11 @@ class UserProfile extends Component {
                           {follower.username}
                         </a>
                       </div>
-                      {/* <div class="text-muted fs-13px">North Raundspic</div> */}
+                      {/* <div class="text-muted fs-13px">{follower.fullName}</div> */}
                     </div>
-                    <a href="#" class="btn btn-outline-primary">
+                    {/* <a href="#" class="btn btn-outline-primary">
                       Follow
-                    </a>
+                    </a> */}
                   </div>
                 );
               })}
@@ -759,11 +710,13 @@ class UserProfile extends Component {
                           {followingProfile.username}
                         </a>
                       </div>
-                      {/* <div class="text-muted fs-13px">North Raundspic</div> */}
+                      {/* <div class="text-muted fs-13px">
+                        {followingProfile.fullName}
+                      </div> */}
                     </div>
-                    <a href="#" class="btn btn-outline-primary">
+                    {/* <a href="#" class="btn btn-outline-primary">
                       Unfollow
-                    </a>
+                    </a> */}
                   </div>
                 );
               })}
@@ -803,7 +756,10 @@ class UserProfile extends Component {
                   </div>
                   <div class="header-links">
                     <ul class="links d-flex align-items-center mt-3 mt-md-0">
-                      <li class="header-link-item d-flex align-items-center active">
+                      <li
+                        id="postsButton"
+                        class="header-link-item d-flex align-items-center active"
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
@@ -821,6 +777,7 @@ class UserProfile extends Component {
                         <Link
                           class="pt-1px d-none d-md-block"
                           to="/user/profile"
+                          onClick={() => this.handlePostsButton()}
                         >
                           Posts <span class="text-muted tx-12">12</span>
                         </Link>

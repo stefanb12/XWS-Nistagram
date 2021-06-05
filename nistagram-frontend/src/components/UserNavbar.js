@@ -198,7 +198,7 @@ export default function UserNavbar() {
   };
 
   const navigateToHome = () => {
-    history.push("/user/home");
+    history.push("/user");
   };
 
   const navigateToProfile = () => {
@@ -216,7 +216,7 @@ export default function UserNavbar() {
 
   const handleLogout = () => {
     AuthService.logout();
-    history.push("/app");
+    history.push("/app/login");
     handleMenuClose();
   };
 
@@ -392,7 +392,7 @@ export default function UserNavbar() {
               {notification.content}
               {(() => {
                 if (notification.post !== null) {
-                  if (notification.post.imageSrc !== null) {
+                  if (notification.post.id !== 1) {
                     return (
                       <div>
                         <img

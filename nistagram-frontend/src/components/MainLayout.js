@@ -1,6 +1,6 @@
 import React from "react";
 import MainNavbar from "./MainNavbar";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import NotFound from "../pages/NotFound";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
@@ -49,15 +49,19 @@ export default function MainLayout({ routes }) {
               <Route path="/app/register">
                 <Register />
               </Route>
-              <Route path="/app/search" component={SearchResultPage}>
+              <Route path="/app/search">
                 <SearchResultPage />
               </Route>
-              <Route path="/app/404">
+              <Route path="/app/*">
                 <NotFound />
               </Route>
               <Route path="/app">
                 <HomePage />
               </Route>
+              <Route path="/app/404">
+                <NotFound />
+              </Route>
+              <Redirect to="/app/404" />
             </Switch>
           </div>
         </div>

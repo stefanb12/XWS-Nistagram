@@ -17,9 +17,18 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import { Instagram } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 import { Autocomplete } from "@material-ui/lab";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, withStyles } from "@material-ui/core";
-import Paper from '@material-ui/core/Paper';
-import SelectSearch from 'react-select-search';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  withStyles,
+} from "@material-ui/core";
+import Paper from "@material-ui/core/Paper";
+import SelectSearch from "react-select-search";
 import ProfileService from "../services/ProfileService";
 import PostService from "../services/PostService";
 import hash from "../assets/images/hash.svg";
@@ -105,7 +114,7 @@ const StyledTableCell = withStyles((theme) => ({
 
 const StyledTableRow = withStyles((theme) => ({
   root: {
-    '&:nth-of-type(odd)': {
+    "&:nth-of-type(odd)": {
       backgroundColor: theme.palette.action.hover,
     },
   },
@@ -128,20 +137,18 @@ export default function MainNavbar() {
 
   useEffect(() => {
     ProfileService.getAllUsers()
-    .then((res) => res.json())
-    .then(
-      (result) => {
+      .then((res) => res.json())
+      .then((result) => {
         setAllUsers(result);
       });
 
-      PostService.getAllPosts()
+    PostService.getAllPosts()
       .then((res) => res.json())
-      .then(
-        (result) => {
-          setPublicPosts(result);
+      .then((result) => {
+        setPublicPosts(result);
       });
 
-      setMounted(false);
+    setMounted(false);
     //loadData();
   }, []);
 
@@ -237,96 +244,126 @@ export default function MainNavbar() {
     </Menu>
   );
 
-  const onChoseSearchResult = async (event, row) =>{
+  const onChoseSearchResult = async (event, row) => {
     await PostService.getSearchedPosts(row.searchParam)
       .then((res) => res.json())
       .then((result) => {
-        setsearchedPosts(result)
+        setsearchedPosts(result);
       });
 
-    console.log(searchedPosts)
-
-    if(row.type == "user"){
+    if (row.type == "user") {
       history.push({
-       pathname: "/user/profile",
-       state: row.id
+        pathname: "/user/profile",
+        state: row.id,
       });
-    }else if(row.type == "tag" || row.type == "location"){
+    } else if (row.type == "tag" || row.type == "location") {
       setSearchValue("");
       await PostService.getSearchedPosts(row.searchParam)
-      .then((res) => res.json())
-      .then((result) => {
-        history.push({
-          pathname: "/app/search",
-          state: {searchParam: row.searchParam, imageSrc: row.imageSrc, posts: result}
-         });
-        //setsearchedPosts(result)
-      });
-      /*history.push({
-        pathname: "/app/search",
-        state: {searchParam: row.searchParam, imageSrc: row.imageSrc, posts: searchedPosts}
-       });*/
+        .then((res) => res.json())
+        .then((result) => {
+          history.push({
+            pathname: "/app/search",
+            state: {
+              searchParam: row.searchParam,
+              imageSrc: row.imageSrc,
+              posts: result,
+            },
+          });
+        });
     }
   };
 
   const onSearchChange = async (event) => {
     setSearchValue(event.target.value);
-    if(searchValue == "" && mounted == false){
-
+    if (searchValue == "" && mounted == false) {
       await ProfileService.getAllUsers()
         .then((res) => res.json())
-        .then(
-          (result) => {
-            setAllUsers(result);
+        .then((result) => {
+          setAllUsers(result);
         });
-      
+
       await PostService.getAllPosts()
-      .then((res) => res.json())
-      .then(
-        (result) => {
+        .then((res) => res.json())
+        .then((result) => {
           setPublicPosts(result);
-      });
+        });
     }
 
-    if(mounted == false){
-       for (let i = 0; i < allUsers.length; i++) {
-         var user = {id: allUsers[i].id, searchParam: allUsers[i].username, imageSrc: allUsers[i].imageSrc, type: "user"}    
-         searchData.push(user);
-        } 
+    if (mounted == false) {
+      for (let i = 0; i < allUsers.length; i++) {
+        var user = {
+          id: allUsers[i].id,
+          searchParam: allUsers[i].username,
+          imageSrc: allUsers[i].imageSrc,
+          type: "user",
+        };
+        searchData.push(user);
+      }
 
       for (let i = 0; i < publicPosts.length; i++) {
-        if(publicPosts[i].tags != null){
-          for (let j = 0; j < publicPosts[i].tags.length; j++){
-            
+        if (publicPosts[i].tags != null) {
+          for (let j = 0; j < publicPosts[i].tags.length; j++) {
             let flag = false;
-            for(let k = 0; k < searchData.length; k++){
-              if(searchData[k].searchParam == publicPosts[i].tags[j]){
+            for (let k = 0; k < searchData.length; k++) {
+              if (searchData[k].searchParam == publicPosts[i].tags[j]) {
                 flag = true;
               }
             }
-            if(flag == false){
-              var tag = {id: null, searchParam:publicPosts[i].tags[j], imageSrc: hash, type: "tag"}  
+            if (flag == false) {
+              var tag = {
+                id: null,
+                searchParam: publicPosts[i].tags[j],
+                imageSrc: hash,
+                type: "tag",
+              };
               searchData.push(tag);
-            }          
+            }
           }
         }
-        if(publicPosts[i].location.address === "" || publicPosts[i].location.address === null){
+        if (
+          publicPosts[i].location.address === "" ||
+          publicPosts[i].location.address === null
+        ) {
           let flag = false;
-          for(let k = 0; k < searchData.length; k++){
-            if(searchData[k].searchParam == (publicPosts[i].location.city + ", " + publicPosts[i].location.country)){
+          for (let k = 0; k < searchData.length; k++) {
+            if (
+              searchData[k].searchParam ==
+              publicPosts[i].location.city +
+                ", " +
+                publicPosts[i].location.country
+            ) {
               flag = true;
             }
           }
-          if(flag == false){
-            var location = {id: null, searchParam: publicPosts[i].location.city + ", " + publicPosts[i].location.country, imageSrc: "https://i.pinimg.com/564x/4e/dc/b4/4edcb460a940ff726549077935f57168.jpg", type: "location"}  
+          if (flag == false) {
+            var location = {
+              id: null,
+              searchParam:
+                publicPosts[i].location.city +
+                ", " +
+                publicPosts[i].location.country,
+              imageSrc:
+                "https://i.pinimg.com/564x/4e/dc/b4/4edcb460a940ff726549077935f57168.jpg",
+              type: "location",
+            };
             searchData.push(location);
           }
-        }else{
-        var location = {id: null, searchParam: publicPosts[i].location.address + ", " + publicPosts[i].location.city + ", " + publicPosts[i].location.country, imageSrc: "https://i.pinimg.com/564x/4e/dc/b4/4edcb460a940ff726549077935f57168.jpg", type: "location"}  
+        } else {
+          var location = {
+            id: null,
+            searchParam:
+              publicPosts[i].location.address +
+              ", " +
+              publicPosts[i].location.city +
+              ", " +
+              publicPosts[i].location.country,
+            imageSrc:
+              "https://i.pinimg.com/564x/4e/dc/b4/4edcb460a940ff726549077935f57168.jpg",
+            type: "location",
+          };
           searchData.push(location);
         }
-      } 
-     
+      }
     }
 
     await setMounted(true);
@@ -341,44 +378,68 @@ export default function MainNavbar() {
   };
 
   const renderSearchResults = (
-    <TableContainer style={{width: "16%", marginLeft: "12%"}}
-    anchorEl={anchorEl}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'center',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'center',
-    }}
-    open={isMenuOpen}
-    >                 
-                <Table className={classes.table} aria-label="simple table" style={{width: "16%", marginTop: "4%", position: "absolute", zIndex: 10, backgroundColor: "white", border: "1px solid grey"}}>
-                <div style={{height: "400px", width: "100%", overflow: "auto"}}> 
-                <TableBody style={{width: "100%"}}>
-                  {searchData.filter((val) => {
-                    if(searchValue == ""){
-                      return val
-                    }else if(val.searchParam.toLowerCase().includes(searchValue.toLowerCase())){
-                      return val
-                    }
-                  }).map((row) => (
-                    <StyledTableRow style={{width: "100%"}} key={row.searchParam} onClick={(event) => onChoseSearchResult(event, row)}>
-                      <StyledTableCell style={{width: "40%"}} align="center">
-                        <img
-                          src={row.imageSrc}
-                          className="rounded-circle img-responsive mt-2"
-                          width="30"
-                          height="30"
-                        />
-                        <label style={{marginLeft: "4%"}}>{row.searchParam}</label>
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))}
-                </TableBody>
-                </div>
-              </Table>
-            </TableContainer>
+    <TableContainer
+      style={{ width: "16%", marginLeft: "12%" }}
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "center",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "center",
+      }}
+      open={isMenuOpen}
+    >
+      <Table
+        className={classes.table}
+        aria-label="simple table"
+        style={{
+          width: "16%",
+          marginTop: "4%",
+          position: "absolute",
+          zIndex: 10,
+          backgroundColor: "white",
+          border: "1px solid grey",
+        }}
+      >
+        <div style={{ height: "400px", width: "100%", overflow: "auto" }}>
+          <TableBody style={{ width: "100%" }}>
+            {searchData
+              .filter((val) => {
+                if (searchValue == "") {
+                  return val;
+                } else if (
+                  val.searchParam
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase())
+                ) {
+                  return val;
+                }
+              })
+              .map((row) => (
+                <StyledTableRow
+                  style={{ width: "100%" }}
+                  key={row.searchParam}
+                  onClick={(event) => onChoseSearchResult(event, row)}
+                >
+                  <StyledTableCell style={{ width: "40%" }} align="center">
+                    <img
+                      src={row.imageSrc}
+                      className="rounded-circle img-responsive mt-2"
+                      width="30"
+                      height="30"
+                    />
+                    <label style={{ marginLeft: "4%" }}>
+                      {row.searchParam}
+                    </label>
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+          </TableBody>
+        </div>
+      </Table>
+    </TableContainer>
   );
 
   return (
@@ -401,7 +462,7 @@ export default function MainNavbar() {
           >
             Nistagram
           </Typography>
-          
+
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />

@@ -218,6 +218,44 @@
             }*/
     },
     {
+      "DownstreamPathTemplate": "/api/post/profile/{profileId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55993
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/post/profile/{profileId}",
+      "UpstreamHttpMethod": [ "GET" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
+    {
+      "DownstreamPathTemplate": "/api/post/favorites/{profileId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55993
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/post/favorites/{profileId}",
+      "UpstreamHttpMethod": [ "GET" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
+    {
       "DownstreamPathTemplate": "/api/post/public",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -353,6 +391,63 @@
 
     // NotificationMicroservice
     {
+      "DownstreamPathTemplate": "/api/notification/like",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 56002
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/notification/like",
+      "UpstreamHttpMethod": [ "POST" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
+    {
+      "DownstreamPathTemplate": "/api/notification/dislike",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 56002
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/notification/dislike",
+      "UpstreamHttpMethod": [ "POST" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
+    {
+      "DownstreamPathTemplate": "/api/notification/comment",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 56002
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/notification/comment",
+      "UpstreamHttpMethod": [ "POST" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
+    {
       "DownstreamPathTemplate": "/api/notification/follow",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -429,7 +524,7 @@
             }*/
     },
 
-    //Story Microservice
+    //StoryMicroservice
     {
       "DownstreamPathTemplate": "/api/story",
       "DownstreamScheme": "http",
