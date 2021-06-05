@@ -277,7 +277,7 @@ class PostCard extends Component {
               return (
                 <div class="list-group-item d-flex align-items-center">
                   <img
-                    src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                    src={like.imageSrc}
                     alt=""
                     width="50px"
                     class="rounded-sm ml-n2"
@@ -321,7 +321,7 @@ class PostCard extends Component {
               return (
                 <div class="list-group-item d-flex align-items-center">
                   <img
-                    src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                    src={dislike.imageSrc}
                     alt=""
                     width="50px"
                     class="rounded-sm ml-n2"
@@ -381,10 +381,7 @@ class PostCard extends Component {
                             <div class="card card-white grid-margin">
                               <div class="card-body">
                                 <div class="timeline-item-header">
-                                  <img
-                                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                    alt=""
-                                  />
+                                  <img src={post.publisher.imageSrc} alt="" />
                                   <p>
                                     {post.publisher.username}{" "}
                                     <small>
@@ -620,6 +617,11 @@ class PostCard extends Component {
                                             </a>
                                             <a
                                               href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.handleClickSnackBar(
+                                                  "There are currently no likes!"
+                                                );
+                                              }}
                                               style={{
                                                 marginLeft: "-10px",
                                               }}
@@ -700,6 +702,11 @@ class PostCard extends Component {
                                             </a>
                                             <a
                                               href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.handleClickSnackBar(
+                                                  "There are currently no dislikes!"
+                                                );
+                                              }}
                                               style={{
                                                 marginLeft: "-10px",
                                               }}
@@ -811,7 +818,8 @@ class PostCard extends Component {
                                                       <div class="timeline-comment-header">
                                                         <img
                                                           src={
-                                                            "https://bootdey.com/img/Content/avatar/avatar7.png"
+                                                            comment.publisher
+                                                              .imageSrc
                                                           }
                                                           alt=""
                                                         />
