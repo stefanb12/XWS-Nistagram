@@ -29,14 +29,101 @@ namespace StoryMicroservice.Database
                 var storyData = CreateStoryData();
                 await storyCollection.InsertManyAsync(storyData);
             }
+
+            if (!CollectionExists(_db, "Profile"))
+            {
+                _db.CreateCollection("Profile");
+                var profileCollection = _db.GetCollection<Profile>("Profile");
+                var profileData = CreateProfileData();
+                await profileCollection.InsertManyAsync(profileData);
+            }
         }
 
         private IEnumerable<Story> CreateStoryData()
         {
             var storyData = new List<Story> {
+                new Story
+                {
+                    Visible = true,
+                    ForCloseFriends = false,
+                    PublishingDate = new DateTime(2021, 06, 05, 23, 59, 59),
+                    PublisherId = 1,
+                    ImageName = "sc2210938836.jpg"
+                },
+                new Story
+                {
+                    Visible = true,
+                    ForCloseFriends = false,
+                    PublishingDate = new DateTime(2021, 06, 05, 22, 59, 59),
+                    PublisherId = 2,
+                    ImageName = "sc1211007001.jpg"
+                },
+                new Story
+                {
+                    Visible = true,
+                    ForCloseFriends = false,
+                    PublishingDate = new DateTime(2021, 06, 05, 21, 59, 59),
+                    PublisherId = 2,
+                    ImageName = "2212424861.png"
+                },
+                new Story
+                {
+                    Visible = true,
+                    ForCloseFriends = false,
+                    PublishingDate = new DateTime(2021, 06, 05, 20, 59, 59),
+                    PublisherId = 3,
+                    ImageName = "2212424862.png"
+                },
+                new Story
+                {
+                    Visible = true,
+                    ForCloseFriends = true,
+                    PublishingDate = new DateTime(2021, 06, 05, 21, 59, 59),
+                    PublisherId = 4,
+                    ImageName = "2212424863.png"
+                }
             };
 
             return storyData;
+        }
+
+        private IEnumerable<Profile> CreateProfileData()
+        {
+            var profileData = new List<Profile> {
+                new Profile {
+                    OriginalId = 1 ,
+                    Username = "stefanb",
+                    IsPrivate = false,
+                    ImageName = "user1213352029.jpg"
+                },
+                new Profile {
+                    OriginalId = 2 ,
+                    Username = "matijam",
+                    IsPrivate = true,
+                    ImageName = "user2213352029.jpg"
+                },
+                new Profile {
+                    OriginalId = 3 ,
+                    Username = "aleksai",
+                    IsPrivate = true,
+                    ImageName = "user3213352029.png"
+                },
+                new Profile {
+                    OriginalId = 4 ,
+                    Username = "stefans",
+                    IsPrivate = false,
+                    ImageName = "user4213352029.png"
+                },
+                new Profile {
+                    OriginalId = 5 ,
+                    Username = "majam",
+                    IsPrivate = false,
+                    ImageName = "user5213352029.jpg"
+                }
+
+            };
+
+            return profileData;
         }
 
         public bool CollectionExists(IMongoDatabase database, string collectionName)

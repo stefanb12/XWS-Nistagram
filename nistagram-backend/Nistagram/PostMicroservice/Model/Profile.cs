@@ -13,7 +13,6 @@ namespace PostMicroservice.Model
         [BsonIgnore]
         public string ImageSrc { get; set; }
 
-
         public Profile() : base()
         {
         }

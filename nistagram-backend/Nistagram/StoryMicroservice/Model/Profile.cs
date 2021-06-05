@@ -1,12 +1,17 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Http;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace StoryMicroservice.Model
 {
     public class Profile : User
     {
-        public bool Private { get; set; }
+        public bool IsPrivate { get; set; }
         public int OriginalId { get; set; }
+        public string ImageName { get; set; }
+        [BsonIgnore]
+        public IFormFile ImageFile { get; set; }
+        [BsonIgnore]
+        public string ImageSrc { get; set; }
 
         public Profile() : base()
         {
