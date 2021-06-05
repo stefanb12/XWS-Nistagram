@@ -6,6 +6,7 @@ import { Link, withRouter } from "react-router-dom";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import PostService from "../../services/PostService";
+import { Button, Modal } from "react-bootstrap";
 
 class PostCard extends Component {
   constructor(props) {
@@ -19,6 +20,10 @@ class PostCard extends Component {
       open: false,
       posts: [],
       message: "",
+      isOpenLikesModal: false,
+      likes: [],
+      isOpenDislikesModal: false,
+      dislikes: [],
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -206,24 +211,163 @@ class PostCard extends Component {
     });
   };
 
+  openLikesModal = () => {
+    this.setState({
+      isOpenLikesModal: true,
+    });
+  };
+
+  closeLikesModal = () => this.setState({ isOpenLikesModal: false });
+
+  showLikesForPost = (postLikes) => {
+    if (this.state.currentUser !== null) {
+      if (postLikes.length !== 0) {
+        this.setState({
+          isOpenLikesModal: true,
+          likes: postLikes,
+        });
+      } else {
+        this.handleClickSnackBar("There are currently no likes!");
+      }
+    } else {
+      this.handleClickSnackBar("You have to login first!");
+    }
+  };
+
+  openDislikesModal = () => {
+    this.setState({
+      isOpenDislikesModal: true,
+    });
+  };
+
+  closeDislikesModal = () => this.setState({ isOpenDislikesModal: false });
+
+  showDislikesForPost = (postDislikes) => {
+    if (this.state.currentUser !== null) {
+      if (postDislikes.length !== 0) {
+        this.setState({
+          isOpenDislikesModal: true,
+          dislikes: postDislikes,
+        });
+      } else {
+        this.handleClickSnackBar("There are currently no dislikes!");
+      }
+    } else {
+      this.handleClickSnackBar("You have to login first!");
+    }
+  };
+
   render() {
-    const isSaved = this.state.isSaved;
     const dropdownRef = this.dropdownRef;
     const isActive = this.state.isActive;
     const posts = this.state.posts;
 
+    const likesModalDialog = (
+      <Modal
+        show={this.state.isOpenLikesModal}
+        onHide={this.closeLikesModal}
+        style={{ marginTop: "120px", minHeight: "560px", overflow: "hidden" }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title style={{ marginLeft: "190px" }}>Likes</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div style={{ overflow: "auto", maxHeight: "300px" }}>
+            {this.state.likes.map((like) => {
+              return (
+                <div class="list-group-item d-flex align-items-center">
+                  <img
+                    src={like.imageSrc}
+                    alt=""
+                    width="50px"
+                    class="rounded-sm ml-n2"
+                  />
+                  <div class="flex-fill pl-3 pr-3">
+                    <div>
+                      <a href="#" class="text-dark font-weight-600">
+                        {like.username}
+                      </a>
+                    </div>
+                    {/* <div class="text-muted fs-13px">North Raundspic</div> */}
+                  </div>
+                  {/* <a href="#" class="btn btn-outline-primary">
+                    Follow
+                  </a> */}
+                </div>
+              );
+            })}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={this.closeLikesModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+
+    const dislikesModalDialog = (
+      <Modal
+        show={this.state.isOpenDislikesModal}
+        onHide={this.closeDislikesModal}
+        style={{ marginTop: "120px", minHeight: "560px", overflow: "hidden" }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title style={{ marginLeft: "175px" }}>Dislikes</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div style={{ overflow: "auto", maxHeight: "300px" }}>
+            {this.state.dislikes.map((dislike) => {
+              return (
+                <div class="list-group-item d-flex align-items-center">
+                  <img
+                    src={dislike.imageSrc}
+                    alt=""
+                    width="50px"
+                    class="rounded-sm ml-n2"
+                  />
+                  <div class="flex-fill pl-3 pr-3">
+                    <div>
+                      <a href="#" class="text-dark font-weight-600">
+                        {dislike.username}
+                      </a>
+                    </div>
+                    {/* <div class="text-muted fs-13px">North Raundspic</div> */}
+                  </div>
+                  {/* <a href="#" class="btn btn-outline-primary">
+                    Follow
+                  </a> */}
+                </div>
+              );
+            })}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={this.closeDislikesModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+
+    const snackbar = (
+      <Snackbar
+        open={this.state.open}
+        autoHideDuration={2500}
+        onClose={this.handleCloseSnackBar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={this.handleCloseSnackBar} severity="error">
+          {this.state.message}
+        </Alert>
+      </Snackbar>
+    );
+
     return (
       <div>
-        <Snackbar
-          open={this.state.open}
-          autoHideDuration={2500}
-          onClose={this.handleCloseSnackBar}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert onClose={this.handleCloseSnackBar} severity="error">
-            {this.state.message}
-          </Alert>
-        </Snackbar>
+        {snackbar}
+        {likesModalDialog}
+        {dislikesModalDialog}
         {(() => {
           if (Array.isArray(posts)) {
             return (
@@ -237,10 +381,7 @@ class PostCard extends Component {
                             <div class="card card-white grid-margin">
                               <div class="card-body">
                                 <div class="timeline-item-header">
-                                  <img
-                                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                                    alt=""
-                                  />
+                                  <img src={post.publisher.imageSrc} alt="" />
                                   <p>
                                     {post.publisher.username}{" "}
                                     <small>
@@ -443,7 +584,12 @@ class PostCard extends Component {
                                               ></i>
                                             </a>
                                             <a
-                                              href="#"
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.showLikesForPost(
+                                                  post.likes
+                                                );
+                                              }}
                                               style={{
                                                 marginLeft: "-10px",
                                               }}
@@ -470,7 +616,12 @@ class PostCard extends Component {
                                               ></i>
                                             </a>
                                             <a
-                                              href="#"
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.handleClickSnackBar(
+                                                  "There are currently no likes!"
+                                                );
+                                              }}
                                               style={{
                                                 marginLeft: "-10px",
                                               }}
@@ -517,7 +668,12 @@ class PostCard extends Component {
                                               ></i>
                                             </a>
                                             <a
-                                              href="#"
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.showDislikesForPost(
+                                                  post.dislikes
+                                                );
+                                              }}
                                               style={{
                                                 marginLeft: "-10px",
                                               }}
@@ -545,7 +701,12 @@ class PostCard extends Component {
                                               ></i>
                                             </a>
                                             <a
-                                              href="#"
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                this.handleClickSnackBar(
+                                                  "There are currently no dislikes!"
+                                                );
+                                              }}
                                               style={{
                                                 marginLeft: "-10px",
                                               }}
@@ -614,7 +775,6 @@ class PostCard extends Component {
                                               p.id == this.state.currentUser.id
                                           );
                                           if (index !== -1) {
-                                            console.log("aaaaaaaaaaaaa");
                                             classForFavorite = "fa fa-bookmark";
                                           }
                                         }
@@ -658,7 +818,8 @@ class PostCard extends Component {
                                                       <div class="timeline-comment-header">
                                                         <img
                                                           src={
-                                                            "https://bootdey.com/img/Content/avatar/avatar7.png"
+                                                            comment.publisher
+                                                              .imageSrc
                                                           }
                                                           alt=""
                                                         />
