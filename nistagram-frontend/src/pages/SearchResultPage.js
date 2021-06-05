@@ -13,6 +13,7 @@ class SearchResultPage extends Component {
         searchParam: this.props.location.state.searchParam,
         imageSrc: this.props.location.state.imageSrc,
         publicPosts: [],
+        searchedPosts: this.props.location.state.posts,
         redirect: false
     };
   }
@@ -21,11 +22,63 @@ class SearchResultPage extends Component {
     return { 
         searchParam: props.location.state.searchParam,
         imageSrc: props.location.state.imageSrc,
+        searchedPosts: props.location.state.posts
     };
   }
 
-  async componentWillMount() {
-    console.log(this.state.searchParam);
+  async componentDidMount() {
+    console.log(this.state.searchedPosts);
+    /*await PostService.getPublicPosts()
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          publicPosts: result,
+        });
+      });
+
+      console.log(this.state.publicPosts);
+
+      let temp = [];
+      let tagFound = false;
+      for(let i = 0; i < this.state.publicPosts.length; i++){
+        if(this.state.publicPosts[i].tags != null){
+          for(let j=0; j < this.state.publicPosts[i].tags.length; j++){
+            if(this.state.publicPosts[i].tags[j] == this.state.searchParam){
+              tagFound = true;
+              break;
+            }
+          }
+        }
+
+        let location = "";
+        if(this.state.publicPosts[i].location.address === "" || this.state.publicPosts[i].location.address === null){
+          location = this.state.publicPosts[i].location.city + ", " + this.state.publicPosts[i].location.country;
+        }else{
+          location = this.state.publicPosts[i].location.address + ", " + this.state.publicPosts[i].location.city + ", " + this.state.publicPosts[i].location.country;
+        }
+
+        if(tagFound == true){
+          tagFound = false;
+          temp.push(this.state.publicPosts[i]);
+        }
+
+        if(this.state.searchParam == location){
+          temp.push(this.state.publicPosts[i]);
+        }
+      }
+      this.setState({
+        searchedPosts: temp,
+      });*/
+
+      // await PostService.getSearchedPosts(this.state.searchParam)
+      // .then((res) => res.json())
+      // .then((result) => {
+      //   console.log(result)
+      //   this.setState({
+      //     searchedPosts: result,
+      //   });
+      // });
+
   }
 
   setRedirect = () => {
@@ -38,6 +91,29 @@ class SearchResultPage extends Component {
     if (this.state.redirect) {
       return <Redirect goBack />
     }
+  }
+
+  updatePosts = async () => {
+    await PostService.getSearchedPosts(this.state.searchParam)
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result)
+        this.setState({
+          searchedPosts: result,
+        });
+      });
+  };
+
+  async showResults(){
+    await PostService.getSearchedPosts(this.state.searchParam)
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result)
+        this.setState({
+          searchedPosts: result,
+        });
+      });
+      return this.state.searchedPosts;
   }
 
   render() {
@@ -64,8 +140,11 @@ class SearchResultPage extends Component {
                     onClick = {this.setRedirect}
                     startIcon={<ArrowBack />}
                 >Exit search</Button>
-                <div class="col-lg-9 col-xl-20">
-                    
+
+                <div class="col-lg-9 col-xl-20" style={{marginTop: "4%"}}>
+                  <PostCard
+                    sendPosts={this.state.searchedPosts}
+                  />
                 </div>
               </div>
             </div>

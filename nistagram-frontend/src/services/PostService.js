@@ -76,6 +76,10 @@ class PostService {
   getAllPosts() {
     return fetch(API_URL + "post");
   }
+
+  getSearchedPosts(searchParam) {
+    return fetch(API_URL + "post/search/" + searchParam);
+  }
 }
 
 export default new PostService();
