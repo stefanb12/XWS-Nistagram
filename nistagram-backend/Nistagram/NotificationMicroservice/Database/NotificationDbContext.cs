@@ -40,10 +40,11 @@ namespace NotificationMicroservice.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Profile>().HasData(
-                new Profile { Id = 1, OriginalId = 1, Username = "user1", ImageName = "user121042213857725.jpg" },
-                new Profile { Id = 2, OriginalId = 2, Username = "user2", ImageName = "user3215012267.png" },
-                new Profile { Id = 3, OriginalId = 3, Username = "user3", ImageName = "user3215012267.png" },
-                new Profile { Id = 4, OriginalId = 4, Username = "user3", ImageName = "user121042213857725.jpg" }
+                new Profile { Id = 1, OriginalId = 1, Username = "stefanb", ImageName = "user1213352029.jpg" },
+                new Profile { Id = 2, OriginalId = 2, Username = "matijam", ImageName = "user2213352029.jpg" },
+                new Profile { Id = 3, OriginalId = 3, Username = "aleksai", ImageName = "user3213352029.png" },
+                new Profile { Id = 4, OriginalId = 4, Username = "stefans", ImageName = "user4213352029.png" },
+                new Profile { Id = 5, OriginalId = 6, Username = "majam", ImageName = "user5213352029.jpg" }
             );
 
             modelBuilder.Entity<Post>().HasData(
@@ -53,9 +54,15 @@ namespace NotificationMicroservice.Database
             );
 
             modelBuilder.Entity<Notification>().HasData(
-                new Notification { Id = 1, Time = new DateTime(2021, 06, 01), Content = "user2 started following you.", Seen = false, FollowRequest = false, ReceiverId = 1, SenderId = 2, PostId = 1 },
-                new Notification { Id = 2, Time = new DateTime(2021, 06, 01), Content = "user3 started following you.", Seen = false, FollowRequest = false, ReceiverId = 1, SenderId = 3, PostId = 1 },
-                new Notification { Id = 3, Time = new DateTime(2021, 06, 01), Content = "user4 want to follow you.", Seen = false, FollowRequest = true, ReceiverId = 3, SenderId = 4, PostId = 3 }
+                new Notification { Id = 1, Time = new DateTime(2021, 06, 05), Content = "majam wants to follow you.", Seen = false, FollowRequest = true, ReceiverId = 2, SenderId = 5, PostId = 1 },
+                new Notification { Id = 2, Time = new DateTime(2021, 06, 05), Content = "majam wants to follow you.", Seen = false, FollowRequest = true, ReceiverId = 3, SenderId = 5, PostId = 1 },
+                new Notification { Id = 3, Time = new DateTime(2021, 06, 03), Content = "matijam started following you.", Seen = false, FollowRequest = false, ReceiverId = 1, SenderId = 2, PostId = 1 },
+                new Notification { Id = 4, Time = new DateTime(2021, 06, 04), Content = "aleksai started following you.", Seen = false, FollowRequest = false, ReceiverId = 1, SenderId = 3, PostId = 1 },
+                new Notification { Id = 5, Time = new DateTime(2021, 06, 05), Content = "stefanb started following you.", Seen = false, FollowRequest = false, ReceiverId = 2, SenderId = 1, PostId = 1 },
+                new Notification { Id = 6, Time = new DateTime(2021, 06, 03), Content = "aleksai started following you.", Seen = false, FollowRequest = false, ReceiverId = 2, SenderId = 3, PostId = 1 },
+                new Notification { Id = 7, Time = new DateTime(2021, 06, 04), Content = "stefanb started following you.", Seen = false, FollowRequest = false, ReceiverId = 3, SenderId = 1, PostId = 1 },
+                new Notification { Id = 8, Time = new DateTime(2021, 06, 05), Content = "matijam started following you.", Seen = false, FollowRequest = false, ReceiverId = 4, SenderId = 2, PostId = 1 },
+                new Notification { Id = 9, Time = new DateTime(2021, 06, 04), Content = "stefanb started following you.", Seen = false, FollowRequest = false, ReceiverId = 5, SenderId = 1, PostId = 1 }
             );
         }
     }

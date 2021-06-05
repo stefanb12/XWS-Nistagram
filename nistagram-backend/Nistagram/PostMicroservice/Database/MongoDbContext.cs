@@ -38,7 +38,14 @@ namespace PostMicroservice.Database
                 var postCollection = _db.GetCollection<Post>("Post");
                 var postData = CreatePostData();
                 await postCollection.InsertManyAsync(postData);
-            }         
+            }
+            if (!CollectionExists(_db, "Profile"))
+            {
+                _db.CreateCollection("Profile");
+                var profileCollection = _db.GetCollection<Profile>("Profile");
+                var profileData = CreateProfileData();
+                await profileCollection.InsertManyAsync(profileData);
+            }
         }
 
         public bool CollectionExists(IMongoDatabase database, string collectionName)
@@ -52,12 +59,84 @@ namespace PostMicroservice.Database
         private IEnumerable<Post> CreatePostData()
         {
             var postData = new List<Post> {
-                new Post { Tags = new List<string> {"Nature", "Waterfall" } , Description = "Nature", PublishingDate = new DateTime(2021, 02, 1, 1, 1, 1), Location = new Location { Address = "", City = "Belgrade", Country = "Serbia"}, Comments = new List<Comment> { new Comment { Text = "Excellent", Date = new DateTime(2021, 05, 30, 10, 10, 10), Publisher = new Profile { Username = "user1", OriginalId = 1, IsPrivate = false, ImageName= "user121042215618378.jpg" } } },  Publisher = new Profile { Username = "user1", OriginalId = 1, IsPrivate = false, ImageName= "user121042215618378.jpg" }, Contents = new List<Content> { new Content { ImageName = "2212424861.png" } }, Likes = new List<Profile> { new Profile { OriginalId = 2, Username = "user2", ImageName = "user3214652430.png" }, new Profile { OriginalId = 3, Username = "user3", ImageName = "user2211031114.jpg" } }, Dislikes = new List<Profile> { new Profile { OriginalId = 4, Username = "user4", ImageName = "user121042215618378.jpg" } },  },
-                new Post { Description = "Waterfall", PublishingDate = new DateTime(2021, 02, 2, 14, 14, 14), Location = new Location { Address = "Bulevar Cara Lazara", City = "Novi Sad", Country = "Serbia"}, Comments = new List<Comment> { new Comment { Text = "Wow!", Date = new DateTime(2021, 06, 1, 15, 16, 15), Publisher = new Profile { Username = "user2", OriginalId = 2, IsPrivate = false, ImageName = "user3214652430.png" } }, new Comment { Text = "Wooow!", Date = new DateTime(2021, 06, 1, 15, 17, 15), Publisher = new Profile { Username = "user2", OriginalId = 2, IsPrivate = false, ImageName = "user3214652430.png" } }, new Comment { Text = "Wow!", Date = new DateTime(2021, 06, 1, 15, 15, 15), Publisher = new Profile { Username = "user2", OriginalId = 2, IsPrivate = false, ImageName = "user3214652430.png" } }, new Comment { Text = "Woooow!", Date = new DateTime(2021, 06, 1, 18, 15, 15), Publisher = new Profile { Username = "user1", OriginalId = 1, IsPrivate = false, ImageName = "user121042215618378.jpg" } } },  Publisher = new Profile { Username = "user1", OriginalId = 1, IsPrivate = false, ImageName = "user121042215618378.jpg" }, Contents = new List<Content> { new Content { ImageName = "2212424862.png" } }, Likes = new List<Profile> { new Profile { OriginalId = 1, Username = "user2", ImageName = "user3214652430.png" } },  },
-                new Post { PublishingDate = new DateTime(2021, 02, 2, 14, 14, 14), Location = new Location { Address = "", City = "Novi Sad", Country = "Serbia"}, Comments = new List<Comment> { new Comment { Text = "Wooow!", Date = new DateTime(2021, 06, 1, 15, 17, 15), Publisher = new Profile { Username = "user2", OriginalId = 2, IsPrivate = false, ImageName = "user3214652430.png" } } },  Publisher = new Profile { Username = "user3", OriginalId = 3, IsPrivate = false, ImageName = "user2211031114.jpg" }, Contents = new List<Content> { new Content { ImageName = "2212424863.png" } } }
+                new Post { 
+                    Tags = new List<string> {"Nature" } , 
+                    Description = "Nature", 
+                    PublishingDate = new DateTime(2021, 05, 01, 11, 01, 01), 
+                    Location = new Location { Address = "", City = "Nis", Country = "Serbia"}, 
+                    Comments = new List<Comment> { new Comment { Text = "Excellent", Date = new DateTime(2021, 05, 30, 10, 10, 10), Publisher = new Profile { Username = "aleksai", OriginalId = 3, IsPrivate = false, ImageName= "user3213352029.png" } } },
+                    Dislikes = new List<Profile> { new Profile { OriginalId = 5, Username = "majam", ImageName = "user5213352029.jpg" } },
+                    Likes = new List<Profile> { new Profile { OriginalId = 3, Username = "aleksai", ImageName = "user3213352029.png" }, new Profile { OriginalId = 4, Username = "stefans", ImageName = "user4213352029.png" } },
+                    Favorites = new List<Profile> { new Profile { OriginalId = 2, Username = "matijam", ImageName = "user2213352029.jpg" } },
+                    Publisher = new Profile { Username = "stefanb", OriginalId = 1, IsPrivate = false, ImageName= "user1213352029.jpg" },
+                    Contents = new List<Content> { new Content { ImageName = "2212424861.png" } }   
+                },
+                new Post {
+                    Tags = new List<string> { "Waterfall" } ,
+                    Description = "Waterfall",
+                    PublishingDate = new DateTime(2021, 06, 01, 19, 10, 10),
+                    Location = new Location { Address = "", City = "Despotovac", Country = "Serbia"},
+                    Comments = new List<Comment> { new Comment { Text = "Wow :D", Date = new DateTime(2021, 06, 02, 10, 10, 10), Publisher = new Profile { OriginalId = 1, Username = "stefanb", IsPrivate = false, ImageName= "user1213352029.jpg" } } },
+                    Dislikes = new List<Profile> { },
+                    Likes = new List<Profile> { new Profile { OriginalId = 3, Username = "aleksai", IsPrivate = true, ImageName = "user3213352029.png" }, new Profile { OriginalId = 1, Username = "stefanb", IsPrivate = false, ImageName = "user1213352029.jpg" } },
+                    Favorites = new List<Profile> { new Profile { OriginalId = 3, Username = "aleksai", ImageName = "user3213352029.png" } },
+                    Publisher = new Profile { Username = "matijam", OriginalId = 2, IsPrivate = true, ImageName= "user2213352029.jpg" },
+                    Contents = new List<Content> { new Content { ImageName = "2212424862.png" } }
+                },
+                new Post {
+                    Tags = new List<string> { "Mountain", "Skiing", "Vacation" } ,
+                    Description = "Vacation",
+                    PublishingDate = new DateTime(2021, 01, 01, 18, 10, 10),
+                    Location = new Location { Address = "", City = "Kopaonik", Country = "Serbia"},
+                    Comments = new List<Comment> { new Comment { Text = "You are lucky! :D", Date = new DateTime(2021, 01, 02, 11, 11, 11), Publisher = new Profile { OriginalId = 2, Username = "matijam", IsPrivate = true, ImageName= "user2213352029.jpg" } } },
+                    Dislikes = new List<Profile> { },
+                    Likes = new List<Profile> { new Profile { OriginalId = 2, Username = "matijam", ImageName = "user2213352029.jpg" }, new Profile { OriginalId = 1, Username = "stefanb", IsPrivate = false, ImageName = "user1213352029.jpg" } },
+                    Favorites = new List<Profile> { },
+                    Publisher = new Profile { Username = "stefans", OriginalId = 4, IsPrivate = false, ImageName= "user4213352029.png" },
+                    Contents = new List<Content> { new Content { ImageName = "2212424862.png" } }
+                },
             };
 
             return postData;
+        }
+
+        private IEnumerable<Profile> CreateProfileData()
+        {
+            var profileData = new List<Profile> {
+                new Profile {
+                    OriginalId = 1 ,
+                    Username = "stefanb",
+                    IsPrivate = false,
+                    ImageName = "user1213352029.jpg"
+                },
+                new Profile {
+                    OriginalId = 2 ,
+                    Username = "matijam",
+                    IsPrivate = true,
+                    ImageName = "user2213352029.jpg"
+                },
+                new Profile {
+                    OriginalId = 3 ,
+                    Username = "aleksai",
+                    IsPrivate = true,
+                    ImageName = "user3213352029.png"
+                },
+                new Profile {
+                    OriginalId = 4 ,
+                    Username = "stefans",
+                    IsPrivate = false,
+                    ImageName = "user4213352029.png"
+                },
+                new Profile {
+                    OriginalId = 5 ,
+                    Username = "majam",
+                    IsPrivate = false,
+                    ImageName = "user5213352029.jpg"
+                }
+
+            };
+
+            return profileData;
         }
 
         public IMongoCollection<T> GetCollection<T>(string name)
