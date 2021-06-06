@@ -18,7 +18,7 @@ namespace UserMicroservice.Dto
         public DateTime DateOfBirth { get; set; }
         public Gender Gender { get; set; }
         public UserRole UserRole { get; set; }
-        public bool Private { get; set; }
+        public bool IsPrivate { get; set; }
         public string Website { get; set; }
         public string Biography { get; set; }
         public bool Deactivated { get; set; }

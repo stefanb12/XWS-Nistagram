@@ -91,7 +91,7 @@ namespace PostMicroservice.Mapper
             dto.Publisher = new ProfileDto();
             dto.Publisher.Id = post.Publisher.OriginalId;
             dto.Publisher.Username = post.Publisher.Username;
-            dto.Publisher.ImageSrc = String.Format("http://localhost:55988/Images/{0}", post.Publisher.ImageName);
+            dto.Publisher.ImageSrc = String.Format("http://localhost:55988/{0}", post.Publisher.ImageName);
             dto.PublishingDate = post.PublishingDate;
 
             if (post.Dislikes != null)
@@ -102,7 +102,7 @@ namespace PostMicroservice.Mapper
                     ProfileDto profileDto = new ProfileDto();
                     profileDto.Id = profile.OriginalId;
                     profileDto.Username = profile.Username;
-                    profileDto.ImageSrc = String.Format("http://localhost:55988/Images/{0}", profile.ImageName);
+                    profileDto.ImageSrc = String.Format("http://localhost:55988/{0}", profile.ImageName);
                     dislikesDto.Add(profileDto);
                 }
                 dto.Dislikes = dislikesDto;
@@ -116,7 +116,7 @@ namespace PostMicroservice.Mapper
                     ProfileDto profileDto = new ProfileDto();
                     profileDto.Id = profile.OriginalId;
                     profileDto.Username = profile.Username;
-                    profileDto.ImageSrc = String.Format("http://localhost:55988/Images/{0}", profile.ImageName);
+                    profileDto.ImageSrc = String.Format("http://localhost:55988/{0}", profile.ImageName);
                     likesDto.Add(profileDto);
                 }
                 dto.Likes = likesDto;
@@ -130,7 +130,7 @@ namespace PostMicroservice.Mapper
                     ProfileDto profileDto = new ProfileDto();
                     profileDto.Id = profile.OriginalId;
                     profileDto.Username = profile.Username;
-                    profileDto.ImageSrc = String.Format("http://localhost:55988/Images/{0}", profile.ImageName);
+                    profileDto.ImageSrc = String.Format("http://localhost:55988/{0}", profile.ImageName);
                     favoritesDto.Add(profileDto);
                 }
                 dto.Favorites = favoritesDto;
@@ -147,7 +147,7 @@ namespace PostMicroservice.Mapper
                     commentDto.Publisher = new ProfileDto();
                     commentDto.Publisher.Id = comment.Publisher.OriginalId;
                     commentDto.Publisher.Username = comment.Publisher.Username;
-                    commentDto.Publisher.ImageSrc = String.Format("http://localhost:55988/Images/{0}", comment.Publisher.ImageName);
+                    commentDto.Publisher.ImageSrc = String.Format("http://localhost:55988/{0}", comment.Publisher.ImageName);
                     commentsDto.Add(commentDto);
                 }
                 dto.Comments = commentsDto;

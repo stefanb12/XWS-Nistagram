@@ -38,11 +38,14 @@ class UserProfile extends Component {
       userProfileFavoritePosts: [],
       followingSnackBarOpen: false,
       followersSnackBarOpen: false,
+      followingSnackBarMessage: "",
+      followersSnackBarMessage: "",
     };
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClickFollowingSnackBar = () => {
+  handleClickFollowingSnackBar = (message) => {
+    this.setState({ followingSnackBarMessage: message });
     this.setState({ followingSnackBarOpen: true });
   };
 
@@ -53,7 +56,8 @@ class UserProfile extends Component {
     this.setState({ followingSnackBarOpen: false });
   };
 
-  handleClickFollowersSnackBar = () => {
+  handleClickFollowersSnackBar = (message) => {
+    this.setState({ followersSnackBarMessage: message });
     this.setState({ followersSnackBarOpen: true });
   };
 
@@ -65,38 +69,50 @@ class UserProfile extends Component {
   };
 
   openFollowersModal = () => {
-    let isInFollowing = this.state.loggedUser.following.some(
-      (followingProfile) => {
-        if (followingProfile.followingId == this.state.userProfileId)
-          return true;
-      }
-    );
-    if (
-      this.state.userProfile.isPrivate === true &&
-      isInFollowing === false &&
-      this.state.loggedUser.id !== this.state.userProfileId
-    ) {
-      this.handleClickFollowersSnackBar();
+    if (!AuthService.getCurrentUser()) {
+      this.handleClickFollowersSnackBar("You have to login first!");
     } else {
-      this.setState({ isOpenFollowersModal: true });
+      let isInFollowing = this.state.loggedUser.following.some(
+        (followingProfile) => {
+          if (followingProfile.followingId == this.state.userProfileId)
+            return true;
+        }
+      );
+      if (
+        this.state.userProfile.isPrivate === true &&
+        isInFollowing === false &&
+        this.state.loggedUser.id !== this.state.userProfileId
+      ) {
+        this.handleClickFollowersSnackBar(
+          "Follow this account to see their followers"
+        );
+      } else {
+        this.setState({ isOpenFollowersModal: true });
+      }
     }
   };
   closeFollowersModal = () => this.setState({ isOpenFollowersModal: false });
   openFollowingModal = () => {
-    let isInFollowing = this.state.loggedUser.following.some(
-      (followingProfile) => {
-        if (followingProfile.followingId == this.state.userProfileId)
-          return true;
-      }
-    );
-    if (
-      this.state.userProfile.isPrivate === true &&
-      isInFollowing === false &&
-      this.state.loggedUser.id !== this.state.userProfileId
-    ) {
-      this.handleClickFollowingSnackBar();
+    if (!AuthService.getCurrentUser()) {
+      this.handleClickFollowingSnackBar("You have to login first!");
     } else {
-      this.setState({ isOpenFollowingModal: true });
+      let isInFollowing = this.state.loggedUser.following.some(
+        (followingProfile) => {
+          if (followingProfile.followingId == this.state.userProfileId)
+            return true;
+        }
+      );
+      if (
+        this.state.userProfile.isPrivate === true &&
+        isInFollowing === false &&
+        this.state.loggedUser.id !== this.state.userProfileId
+      ) {
+        this.handleClickFollowingSnackBar(
+          "Follow this account to see their following"
+        );
+      } else {
+        this.setState({ isOpenFollowingModal: true });
+      }
     }
   };
   closeFollowingModal = () => this.setState({ isOpenFollowingModal: false });
@@ -105,13 +121,34 @@ class UserProfile extends Component {
     document.addEventListener("mousedown", this.handleClickOutside);
 
     let loggedUser = await AuthService.getCurrentUser();
-    await ProfileService.getUser(loggedUser.id)
-      .then((res) => res.json())
-      .then((result) => {
-        this.setState({
-          loggedUser: result,
+    if (loggedUser) {
+      await ProfileService.getUser(loggedUser.id)
+        .then((res) => res.json())
+        .then((result) => {
+          this.setState({
+            loggedUser: result,
+          });
         });
-      });
+
+      if (this.state.userProfile.isPrivate === true) {
+        let resStatus = 0;
+        FollowRequestService.getFollowRequest(
+          this.state.userProfileId,
+          this.state.loggedUser.id
+        )
+          .then((res) => {
+            resStatus = res.status;
+            return res.json();
+          })
+          .then((result) => {
+            if (resStatus == 200) {
+              this.setState({
+                doesFollowRequestExist: true,
+              });
+            }
+          });
+      }
+    }
 
     await ProfileService.getUser(this.state.userProfileId)
       .then((res) => res.json())
@@ -121,7 +158,7 @@ class UserProfile extends Component {
         });
       });
 
-    await PostService.getPostsForProfile(this.state.loggedUser.id)
+    await PostService.getPostsForProfile(this.state.userProfileId)
       .then((res) => res.json())
       .then((result) => {
         this.setState({
@@ -130,25 +167,6 @@ class UserProfile extends Component {
       });
 
     this.getFollowersAndFollowing();
-
-    if (this.state.userProfile.isPrivate === true) {
-      let resStatus = 0;
-      FollowRequestService.getFollowRequest(
-        this.state.userProfileId,
-        this.state.loggedUser.id
-      )
-        .then((res) => {
-          resStatus = res.status;
-          return res.json();
-        })
-        .then((result) => {
-          if (resStatus == 200) {
-            this.setState({
-              doesFollowRequestExist: true,
-            });
-          }
-        });
-    }
   }
 
   componentWillUnmount() {
@@ -205,7 +223,7 @@ class UserProfile extends Component {
       document.getElementById("savedButton").className =
         "header-link-item ml-3 pl-3 border-left d-flex align-items-center";
     }
-    PostService.getPostsForProfile(this.state.loggedUser.id)
+    PostService.getPostsForProfile(this.state.userProfileId)
       .then((res) => {
         return res.json();
       })
@@ -427,7 +445,36 @@ class UserProfile extends Component {
     );
     let savedButton;
     let followButton;
-    if (loggedUser.id === userProfileId) {
+    if (!AuthService.getCurrentUser()) {
+      savedButton = <div></div>;
+      followButton = <div></div>;
+      if (userProfile.isPrivate) {
+        profileBody = (
+          <div>
+            <div class="row profile-body">
+              <div class="d-none d-md-block col-md-4 col-xl-12 ">
+                <div class="card rounded">
+                  <div class="card-body">
+                    <div
+                      class="d-flex align-items-center mb-2"
+                      style={{ marginLeft: "40%" }}
+                    >
+                      <LockOutlined />
+                      <h6 class="card-title mb-0" style={{ marginLeft: "1%" }}>
+                        This account is private!
+                      </h6>
+                    </div>
+                    <p style={{ marginLeft: "33%" }}>
+                      Follow this account to see their photos and videos.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+    } else if (loggedUser.id === userProfileId) {
       // It is my profile
       followButton = (
         <div class="d-none d-md-block">
@@ -631,7 +678,7 @@ class UserProfile extends Component {
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
           <Alert onClose={this.handleCloseFollowersSnackBar} severity="error">
-            Follow this account to see their followers
+            {this.state.followersSnackBarMessage}
           </Alert>
         </Snackbar>
         <Snackbar
@@ -641,7 +688,7 @@ class UserProfile extends Component {
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
           <Alert onClose={this.handleCloseFollowingSnackBar} severity="error">
-            Follow this account to see their following
+            {this.state.followingSnackBarMessage}
           </Alert>
         </Snackbar>
         <Modal
@@ -746,7 +793,7 @@ class UserProfile extends Component {
                       <div>
                         <img
                           class="profile-pic"
-                          src="https://bootdey.com/img/Content/avatar/avatar6.png"
+                          src={userProfile.imageSrc}
                           alt="profile"
                         />
                         <span class="profile-name">{userProfile.username}</span>
@@ -776,7 +823,6 @@ class UserProfile extends Component {
                         </svg>
                         <Link
                           class="pt-1px d-none d-md-block"
-                          to="/user/profile"
                           onClick={() => this.handlePostsButton()}
                         >
                           Posts <span class="text-muted tx-12">12</span>

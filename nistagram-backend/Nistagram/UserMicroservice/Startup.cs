@@ -114,6 +114,8 @@ namespace ProfileMicroservice
                 });
             }
 
+            app.UseStaticFiles();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

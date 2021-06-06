@@ -6,6 +6,7 @@ import Register from "../pages/Register";
 import Login from "../pages/Login";
 import HomePage from "../pages/HomePage";
 import SearchResultPage from "../pages/SearchResultPage";
+import UserProfile from "../pages/UserProfile";
 
 const MainLayoutRoot = {
   height: "100%",
@@ -51,6 +52,9 @@ export default function MainLayout({ routes }) {
               </Route>
               <Route path="/app/search">
                 <SearchResultPage />
+              </Route>
+              <Route path="/app/profile">
+                <UserProfile />
               </Route>
               <Route path="/app/*">
                 <NotFound />

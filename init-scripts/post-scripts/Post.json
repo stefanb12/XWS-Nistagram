@@ -1,0 +1,261 @@
+[{
+  "_id": {
+    "$oid": "60bc22d4323e2cca5430468b"
+  },
+  "Tags": [
+    "Nature"
+  ],
+  "Description": "Nature",
+  "PublishingDate": {
+    "$date": "2021-05-01T09:01:01Z"
+  },
+  "Location": {
+    "_id": {
+      "$oid": "60bc22d4323e2cca5430468c"
+    },
+    "Address": "",
+    "City": "Nis",
+    "Country": "Serbia"
+  },
+  "Comments": [
+    {
+      "_id": {
+        "$oid": "60bc22d4323e2cca5430468d"
+      },
+      "Text": "Excellent",
+      "Date": {
+        "$date": "2021-05-30T08:10:10Z"
+      },
+      "Publisher": {
+        "_id": {
+          "$oid": "60bc22d4323e2cca5430468e"
+        },
+        "Username": "aleksai",
+        "IsPrivate": false,
+        "OriginalId": 3,
+        "ImageName": "user3213352029.png"
+      }
+    }
+  ],
+  "Dislikes": [
+    {
+      "_id": {
+        "$oid": "60bc22d4323e2cca5430468f"
+      },
+      "Username": "majam",
+      "IsPrivate": false,
+      "OriginalId": 5,
+      "ImageName": "user5213352029.jpg"
+    }
+  ],
+  "Likes": [
+    {
+      "_id": {
+        "$oid": "60bc22d4323e2cca54304690"
+      },
+      "Username": "aleksai",
+      "IsPrivate": false,
+      "OriginalId": 3,
+      "ImageName": "user3213352029.png"
+    },
+    {
+      "_id": {
+        "$oid": "60bc22d4323e2cca54304691"
+      },
+      "Username": "stefans",
+      "IsPrivate": false,
+      "OriginalId": 4,
+      "ImageName": "user4213352029.png"
+    }
+  ],
+  "Favorites": [
+    {
+      "_id": {
+        "$oid": "60bc22d4323e2cca54304692"
+      },
+      "Username": "matijam",
+      "IsPrivate": false,
+      "OriginalId": 2,
+      "ImageName": "user2213352029.jpg"
+    }
+  ],
+  "Publisher": {
+    "_id": {
+      "$oid": "60bc22d4323e2cca54304693"
+    },
+    "Username": "stefanb",
+    "IsPrivate": false,
+    "OriginalId": 1,
+    "ImageName": "user1213352029.jpg"
+  },
+  "Contents": [
+    {
+      "_id": 0,
+      "ImageName": "2212424861.png"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "60bc22d4323e2cca54304694"
+  },
+  "Tags": [
+    "Waterfall"
+  ],
+  "Description": "Waterfall",
+  "PublishingDate": {
+    "$date": "2021-06-01T17:10:10Z"
+  },
+  "Location": {
+    "_id": {
+      "$oid": "60bc22d4323e2cca54304695"
+    },
+    "Address": "",
+    "City": "Despotovac",
+    "Country": "Serbia"
+  },
+  "Comments": [
+    {
+      "_id": {
+        "$oid": "60bc22d4323e2cca54304696"
+      },
+      "Text": "Wow :D",
+      "Date": {
+        "$date": "2021-06-02T08:10:10Z"
+      },
+      "Publisher": {
+        "_id": {
+          "$oid": "60bc22d4323e2cca54304697"
+        },
+        "Username": "stefanb",
+        "IsPrivate": false,
+        "OriginalId": 1,
+        "ImageName": "user1213352029.jpg"
+      }
+    }
+  ],
+  "Dislikes": [],
+  "Likes": [
+    {
+      "_id": {
+        "$oid": "60bc22d4323e2cca54304698"
+      },
+      "Username": "aleksai",
+      "IsPrivate": true,
+      "OriginalId": 3,
+      "ImageName": "user3213352029.png"
+    },
+    {
+      "_id": {
+        "$oid": "60bc22d4323e2cca54304699"
+      },
+      "Username": "stefanb",
+      "IsPrivate": false,
+      "OriginalId": 1,
+      "ImageName": "user1213352029.jpg"
+    }
+  ],
+  "Favorites": [
+    {
+      "_id": {
+        "$oid": "60bc22d4323e2cca5430469a"
+      },
+      "Username": "aleksai",
+      "IsPrivate": false,
+      "OriginalId": 3,
+      "ImageName": "user3213352029.png"
+    }
+  ],
+  "Publisher": {
+    "_id": {
+      "$oid": "60bc22d4323e2cca5430469b"
+    },
+    "Username": "matijam",
+    "IsPrivate": true,
+    "OriginalId": 2,
+    "ImageName": "user2213352029.jpg"
+  },
+  "Contents": [
+    {
+      "_id": 0,
+      "ImageName": "2212424862.png"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "60bc22d4323e2cca5430469c"
+  },
+  "Tags": [
+    "Mountain",
+    "Skiing",
+    "Vacation"
+  ],
+  "Description": "Vacation",
+  "PublishingDate": {
+    "$date": "2021-01-01T17:10:10Z"
+  },
+  "Location": {
+    "_id": {
+      "$oid": "60bc22d4323e2cca5430469d"
+    },
+    "Address": "",
+    "City": "Kopaonik",
+    "Country": "Serbia"
+  },
+  "Comments": [
+    {
+      "_id": {
+        "$oid": "60bc22d4323e2cca5430469e"
+      },
+      "Text": "You are lucky! :D",
+      "Date": {
+        "$date": "2021-01-02T10:11:11Z"
+      },
+      "Publisher": {
+        "_id": {
+          "$oid": "60bc22d4323e2cca5430469f"
+        },
+        "Username": "matijam",
+        "IsPrivate": true,
+        "OriginalId": 2,
+        "ImageName": "user2213352029.jpg"
+      }
+    }
+  ],
+  "Dislikes": [],
+  "Likes": [
+    {
+      "_id": {
+        "$oid": "60bc22d4323e2cca543046a0"
+      },
+      "Username": "matijam",
+      "IsPrivate": false,
+      "OriginalId": 2,
+      "ImageName": "user2213352029.jpg"
+    },
+    {
+      "_id": {
+        "$oid": "60bc22d4323e2cca543046a1"
+      },
+      "Username": "stefanb",
+      "IsPrivate": false,
+      "OriginalId": 1,
+      "ImageName": "user1213352029.jpg"
+    }
+  ],
+  "Favorites": [],
+  "Publisher": {
+    "_id": {
+      "$oid": "60bc22d4323e2cca543046a2"
+    },
+    "Username": "stefans",
+    "IsPrivate": false,
+    "OriginalId": 4,
+    "ImageName": "user4213352029.png"
+  },
+  "Contents": [
+    {
+      "_id": 0,
+      "ImageName": "2212424862.png"
+    }
+  ]
+}]
