@@ -5,28 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\1212439092.png" />
-    <Content Remove="wwwroot\2212424861.png" />
-    <Content Remove="wwwroot\2212424862.png" />
-    <Content Remove="wwwroot\2212424863.png" />
-    <Content Remove="wwwroot\sc1211007001.jpg" />
-    <Content Remove="wwwroot\sc2210938836.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.15" />
     <PackageReference Include="MongoDB.Bson" Version="2.12.3" />
     <PackageReference Include="MongoDB.Driver" Version="2.12.3" />
     <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\1212439092.png" />
-    <None Include="wwwroot\2212424861.png" />
-    <None Include="wwwroot\2212424862.png" />
-    <None Include="wwwroot\2212424863.png" />
-    <None Include="wwwroot\sc1211007001.jpg" />
-    <None Include="wwwroot\sc2210938836.jpg" />
   </ItemGroup>
 
 

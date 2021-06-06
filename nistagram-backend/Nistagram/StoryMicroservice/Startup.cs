@@ -64,11 +64,17 @@ namespace StoryMicroservice
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseStaticFiles(new StaticFileOptions
+            string staticFiles = Environment.GetEnvironmentVariable("STATIC_FILES") ?? "true";
+            if (staticFiles == "true")
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Images")),
-                RequestPath = "/Images"
-            });
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "wwwroot")),
+                    RequestPath = "/wwwroot"
+                });
+            }
+
+            app.UseStaticFiles();
 
             app.UseRouting();
 
