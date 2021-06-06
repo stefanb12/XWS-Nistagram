@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PostMicroservice.Messaging
+namespace StoryMicroservice.Messaging
 {
-    public interface IProfileMessageReciver
+    public interface IMessageReceiver
     {
         public void ReceiveMessage();
     }

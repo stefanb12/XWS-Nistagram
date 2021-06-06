@@ -35,8 +35,17 @@ namespace StoryMicroservice.Service
 
         public async Task<Profile> Update(Profile entity)
         {
-            await _profileRepository.Update(entity);
-            return entity;
+            var profiles = await GetAll();
+            Profile profile = profiles.FirstOrDefault(p => p.OriginalId == entity.OriginalId);  
+            return await _profileRepository.Update(UpdateProfileAttributes(profile, entity));
+        }
+
+        private Profile UpdateProfileAttributes(Profile profile, Profile entity)
+        {
+            profile.Username = entity.Username;
+            profile.IsPrivate = entity.IsPrivate;
+            profile.Following = entity.Following;
+            return profile;
         }
 
         public async Task Delete(string id)

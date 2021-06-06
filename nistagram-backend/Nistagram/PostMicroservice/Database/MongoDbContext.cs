@@ -107,30 +107,35 @@ namespace PostMicroservice.Database
                     OriginalId = 1 ,
                     Username = "stefanb",
                     IsPrivate = false,
+                     Following = new List<int>() {2, 3, 5},
                     ImageName = "user1213352029.jpg"
                 },
                 new Profile {
                     OriginalId = 2 ,
                     Username = "matijam",
                     IsPrivate = true,
+                    Following = new List<int>() {1, 4},
                     ImageName = "user2213352029.jpg"
                 },
                 new Profile {
                     OriginalId = 3 ,
                     Username = "aleksai",
                     IsPrivate = true,
+                    Following = new List<int>() {1, 2},
                     ImageName = "user3213352029.png"
                 },
                 new Profile {
                     OriginalId = 4 ,
                     Username = "stefans",
                     IsPrivate = false,
+                    Following = new List<int>(),
                     ImageName = "user4213352029.png"
                 },
                 new Profile {
                     OriginalId = 5 ,
                     Username = "majam",
                     IsPrivate = false,
+                    Following = new List<int>(),
                     ImageName = "user5213352029.jpg"
                 }
 
