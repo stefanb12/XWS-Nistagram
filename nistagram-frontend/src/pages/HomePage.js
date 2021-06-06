@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PostCard from "../components/home-page/PostCard";
+import AuthService from "../services/AuthService";
 import PostService from "../services/PostService";
 
 export default class HomePage extends Component {
@@ -11,7 +12,13 @@ export default class HomePage extends Component {
   }
 
   async componentWillMount() {
-    await PostService.getPublicPosts()
+    var loggedUser = AuthService.getCurrentUser();
+    var id = 0;
+    if (loggedUser !== null) {
+      id = loggedUser.id;
+    }
+
+    await PostService.getPublicPosts(id)
       .then((res) => res.json())
       .then((result) => {
         this.setState({

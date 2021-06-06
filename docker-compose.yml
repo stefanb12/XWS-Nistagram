@@ -7,7 +7,7 @@ services:
     container_name: mysql-user-microservice
     volumes:
         - mysql-db-user:/var/lib/mysql
-        - sql-user:/docker-entrypoint-initdb.d/
+        - ./init-scripts/user-scripts:/docker-entrypoint-initdb.d/
     restart: always
     environment:
       MYSQL_DATABASE: "UserMicroserviceDb"
@@ -26,7 +26,7 @@ services:
     container_name: mysql-notification-microservice
     volumes:
         - mysql-db-notification:/var/lib/mysql
-        - sql-notification:/docker-entrypoint-initdb.d/
+        - ./init-scripts/notification-scripts:/docker-entrypoint-initdb.d/
     restart: always
     environment:
       MYSQL_DATABASE: "NotificationMicroserviceDb"
@@ -46,15 +46,21 @@ services:
     volumes:
       - ./init-scripts/post-scripts:/data/db
     restart: unless-stopped
-    #environment: 
-    #   # MONGO_INITDB_ROOT_USERNAME: root
-    #   # MONGO_INITDB_ROOT_PASSWORD: root
-    # expose:
-    #   - '27017'
     ports:
       - 27017:27017   
     networks:
       - public_net 
+
+  mongodb-story-microservice:
+    image: mongo:latest
+    container_name: mongodb-story-microservice
+    volumes:
+      - ./init-scripts/story-scripts:/data/db
+    restart: unless-stopped
+    ports:
+      - 27018:27017   
+    networks:
+      - public_net
 
   user-microservice:
     build: 
@@ -78,6 +84,7 @@ services:
       - public_net
     volumes:
       - sql-user:/app/sql-user
+      # - wwwroot:/nistagram-backend/Nistagram/UserMicroservice/wwwroot
 
   notification-microservice:
     build: 
@@ -120,6 +127,30 @@ services:
       - "55993:80"
     networks:
       - public_net
+    volumes:
+      - wwwroot:/nistagram-backend/Nistagram/PostMicroservice/wwwroot
+
+  story-microservice:
+    build: 
+      context: .
+      dockerfile: nistagram-backend/Nistagram/StoryMicroservice/Dockerfile
+    image: storymicroservice:latest
+    restart: on-failure
+    environment:
+      DATABASE_HOST: "mongodb-story-microservice"
+      DATABASE_NAME: "StoryMicroserviceDb"
+      STATIC_FILES: "false"
+      HOSTED_SERVICE: "false"
+    depends_on:
+      - mongodb-story-microservice
+    expose: 
+      - "80"
+    ports:
+      - "55996:80"
+    networks:
+      - public_net
+    # volumes:
+    #   - wwwroot:/nistagram-backend/Nistagram/StoryMicroservice/wwwroot
 
   # rabbitmq:
   #   image: rabbitmq:3-management
@@ -148,6 +179,7 @@ services:
       - user-microservice
       - notification-microservice
       - post-microservice
+      - story-microservice
     expose: 
         - "80"
     ports:
@@ -173,6 +205,7 @@ networks:
     driver: bridge
 
 volumes:
+  wwwroot:
   mysql-db-user:
   mysql-db-notification:
   sql-user:

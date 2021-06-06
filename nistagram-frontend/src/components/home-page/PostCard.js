@@ -363,6 +363,24 @@ class PostCard extends Component {
       </Snackbar>
     );
 
+    const noPostsYetCard = (
+      <div class="profile-timeline">
+        <ul class="list-unstyled">
+          <li class="timeline-item">
+            <div class="card card-white grid-margin">
+              <div class="card-body">
+                <div class="timeline-item-header"></div>
+
+                <div class="timeline-item-post">
+                  <img class="img-thumbnail" src={noPostsYet} alt="" />
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    );
+
     return (
       <div>
         {snackbar}
@@ -370,564 +388,558 @@ class PostCard extends Component {
         {dislikesModalDialog}
         {(() => {
           if (Array.isArray(posts)) {
-            return (
-              <div>
-                {posts.map((post, key) => {
-                  return (
-                    <div key={key}>
-                      <div class="profile-timeline">
-                        <ul class="list-unstyled">
-                          <li class="timeline-item">
-                            <div class="card card-white grid-margin">
-                              <div class="card-body">
-                                <div class="timeline-item-header">
-                                  <img src={post.publisher.imageSrc} alt="" />
-                                  <p>
-                                    {post.publisher.username}{" "}
-                                    <small>
-                                      {moment(
-                                        moment(post.publishingDate).format(
-                                          "YYYY-MM-DD HH:mm:ss"
-                                        )
-                                      ).fromNow()}
-                                    </small>
-                                  </p>
-                                  <p>
-                                    <small>
+            if (posts.length > 0) {
+              return (
+                <div>
+                  {posts.map((post, key) => {
+                    return (
+                      <div key={key}>
+                        <div class="profile-timeline">
+                          <ul class="list-unstyled">
+                            <li class="timeline-item">
+                              <div class="card card-white grid-margin">
+                                <div class="card-body">
+                                  <div class="timeline-item-header">
+                                    <img src={post.publisher.imageSrc} alt="" />
+                                    <p>
+                                      {post.publisher.username}{" "}
+                                      <small>
+                                        {moment(
+                                          moment(post.publishingDate).format(
+                                            "YYYY-MM-DD HH:mm:ss"
+                                          )
+                                        ).fromNow()}
+                                      </small>
+                                    </p>
+                                    <p>
+                                      <small>
+                                        {(() => {
+                                          if (post.location.address === "") {
+                                            return (
+                                              <div>
+                                                {post.location.city},{" "}
+                                                {post.location.country}{" "}
+                                              </div>
+                                            );
+                                          } else {
+                                            return (
+                                              <div>
+                                                {post.location.address},{" "}
+                                                {post.location.city},{" "}
+                                                {post.location.country}{" "}
+                                              </div>
+                                            );
+                                          }
+                                        })()}
+                                      </small>
+                                    </p>
+                                  </div>
+
+                                  <div class="dropdown" ref={dropdownRef}>
+                                    <button
+                                      class="btn p-0"
+                                      type="button"
+                                      id="dropdownMenuButton"
+                                      data-toggle="dropdown"
+                                      aria-haspopup="true"
+                                      aria-expanded="false"
+                                      onClick={this.handleClick}
+                                      className="menu-trigger"
+                                    >
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="34"
+                                        height="34"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="feather feather-more-horizontal icon-lg pb-3px"
+                                      >
+                                        <circle cx="12" cy="12" r="1"></circle>
+                                        <circle cx="19" cy="12" r="1"></circle>
+                                        <circle cx="5" cy="12" r="1"></circle>
+                                      </svg>
+                                    </button>
+                                    <nav
+                                      className={`menu ${
+                                        isActive ? "active" : "inactive"
+                                      }`}
+                                    >
                                       {(() => {
-                                        if (post.location.address === "") {
+                                        if (this.state.currentUser !== null) {
                                           return (
                                             <div>
-                                              {post.location.city},{" "}
-                                              {post.location.country}{" "}
+                                              <ul>
+                                                <li>
+                                                  <Link
+                                                    to="/user/profile"
+                                                    params={{
+                                                      profileId:
+                                                        post.publisher.id,
+                                                    }}
+                                                  >
+                                                    View profile
+                                                  </Link>
+                                                </li>
+                                                <li>
+                                                  <a href="javascript:void(0)">
+                                                    Report
+                                                  </a>
+                                                </li>
+                                              </ul>
                                             </div>
                                           );
                                         } else {
                                           return (
                                             <div>
-                                              {post.location.address},{" "}
-                                              {post.location.city},{" "}
-                                              {post.location.country}{" "}
+                                              <ul>
+                                                <li>
+                                                  <Link
+                                                    to="/user/profile"
+                                                    params={{
+                                                      profileId:
+                                                        post.publisher.id,
+                                                    }}
+                                                  >
+                                                    View profile
+                                                  </Link>
+                                                </li>
+                                              </ul>
                                             </div>
                                           );
                                         }
                                       })()}
-                                    </small>
-                                  </p>
-                                </div>
-                                {(() => {
-                                  if (this.state.currentUser !== null) {
-                                    return (
-                                      <div>
-                                        <div class="dropdown" ref={dropdownRef}>
-                                          <button
-                                            class="btn p-0"
-                                            type="button"
-                                            id="dropdownMenuButton"
-                                            data-toggle="dropdown"
-                                            aria-haspopup="true"
-                                            aria-expanded="false"
-                                            onClick={this.handleClick}
-                                            className="menu-trigger"
-                                          >
-                                            <svg
-                                              xmlns="http://www.w3.org/2000/svg"
-                                              width="34"
-                                              height="34"
-                                              viewBox="0 0 24 24"
-                                              fill="none"
-                                              stroke="currentColor"
-                                              stroke-width="2"
-                                              stroke-linecap="round"
-                                              stroke-linejoin="round"
-                                              class="feather feather-more-horizontal icon-lg pb-3px"
-                                            >
-                                              <circle
-                                                cx="12"
-                                                cy="12"
-                                                r="1"
-                                              ></circle>
-                                              <circle
-                                                cx="19"
-                                                cy="12"
-                                                r="1"
-                                              ></circle>
-                                              <circle
-                                                cx="5"
-                                                cy="12"
-                                                r="1"
-                                              ></circle>
-                                            </svg>
-                                          </button>
-                                          <nav
-                                            className={`menu ${
-                                              isActive ? "active" : "inactive"
-                                            }`}
-                                          >
-                                            <ul>
-                                              <li>
-                                                <Link
-                                                  to="/user/profile"
-                                                  params={{
-                                                    profileId:
-                                                      post.publisher.id,
-                                                  }}
-                                                >
-                                                  View profile
-                                                </Link>
-                                              </li>
-                                              <li>
-                                                <a href="javascript:void(0)">
-                                                  Report
-                                                </a>
-                                              </li>
-                                            </ul>
-                                          </nav>
-                                        </div>
-                                      </div>
-                                    );
-                                  }
-                                })()}
-
-                                <div class="timeline-item-post">
-                                  <img
-                                    class="img-thumbnail"
-                                    src={post.imagesSrc[0]}
-                                    alt=""
-                                  />
-                                  {(() => {
-                                    if (
-                                      post.description !== null &&
-                                      Array.isArray(post.tags)
-                                    ) {
-                                      let tags = "";
-                                      {
-                                        post.tags.map((tag, key) => {
-                                          tags += "#" + tag;
-                                        });
-                                      }
-
-                                      return (
-                                        <div>
-                                          <p style={{ marginTop: "20px" }}>
-                                            <i>Description: </i>
-                                            {post.description}
-                                          </p>
-                                          <p style={{ marginTop: "20px" }}>
-                                            <i>Tags: </i>
-                                            {tags}
-                                          </p>
-                                        </div>
-                                      );
-                                    } else if (
-                                      post.description !== null &&
-                                      !Array.isArray(post.tags)
-                                    ) {
-                                      return (
-                                        <div>
-                                          <p style={{ marginTop: "20px" }}>
-                                            <i>Description: </i>
-                                            {post.description}
-                                          </p>
-                                        </div>
-                                      );
-                                    } else if (
-                                      post.description === null &&
-                                      Array.isArray(post.tags)
-                                    ) {
-                                      let tags = "";
-                                      {
-                                        post.tags.map((tag, key) => {
-                                          tags += "#" + tag;
-                                        });
-                                      }
-
-                                      return (
-                                        <div>
-                                          <p style={{ marginTop: "20px" }}>
-                                            <i>Tags: </i>
-                                            {tags}
-                                          </p>
-                                        </div>
-                                      );
-                                    }
-                                  })()}
-
-                                  <div class="timeline-options">
-                                    {(() => {
-                                      if (post.likes !== null) {
-                                        var classForLike = "fa fa-heart-o";
-                                        if (this.state.currentUser != null) {
-                                          var index = post.likes.findIndex(
-                                            (p) =>
-                                              p.id == this.state.currentUser.id
-                                          );
-                                          if (index !== -1) {
-                                            classForLike = "fa fa-heart";
-                                          }
-                                        }
-
-                                        return (
-                                          <div>
-                                            <a
-                                              href="javascript:void(0)"
-                                              onClick={() => {
-                                                this.likePost(post.id);
-                                              }}
-                                            >
-                                              <i
-                                                id={"like" + post.id}
-                                                class={classForLike}
-                                                style={{
-                                                  fontSize: "20px",
-                                                }}
-                                              ></i>
-                                            </a>
-                                            <a
-                                              href="javascript:void(0)"
-                                              onClick={() => {
-                                                this.showLikesForPost(
-                                                  post.likes
-                                                );
-                                              }}
-                                              style={{
-                                                marginLeft: "-10px",
-                                              }}
-                                            >
-                                              Like ({post.likes.length})
-                                            </a>
-                                          </div>
-                                        );
-                                      } else {
-                                        return (
-                                          <div>
-                                            <a
-                                              href="javascript:void(0)"
-                                              onClick={() => {
-                                                this.likePost(post.id);
-                                              }}
-                                            >
-                                              <i
-                                                id={"like" + post.id}
-                                                class={"fa fa-heart-o"}
-                                                style={{
-                                                  fontSize: "20px",
-                                                }}
-                                              ></i>
-                                            </a>
-                                            <a
-                                              href="javascript:void(0)"
-                                              onClick={() => {
-                                                this.handleClickSnackBar(
-                                                  "There are currently no likes!"
-                                                );
-                                              }}
-                                              style={{
-                                                marginLeft: "-10px",
-                                              }}
-                                            >
-                                              Like (0)
-                                            </a>
-                                          </div>
-                                        );
-                                      }
-                                    })()}
-
-                                    {(() => {
-                                      if (post.dislikes !== null) {
-                                        var classForDislike =
-                                          "fa fa-thumbs-o-down";
-
-                                        if (this.state.currentUser != null) {
-                                          var index = post.dislikes.findIndex(
-                                            (p) =>
-                                              p.id == this.state.currentUser.id
-                                          );
-                                          if (index !== -1) {
-                                            classForDislike =
-                                              "fa fa-thumbs-down";
-                                          }
-                                        }
-
-                                        return (
-                                          <div>
-                                            {" "}
-                                            <a
-                                              href="javascript:void(0)"
-                                              onClick={() => {
-                                                this.dislikePost(post.id);
-                                              }}
-                                            >
-                                              <i
-                                                id={"dislike" + post.id}
-                                                class={classForDislike}
-                                                style={{
-                                                  fontSize: "20px",
-                                                  paddingLeft: "20px",
-                                                }}
-                                              ></i>
-                                            </a>
-                                            <a
-                                              href="javascript:void(0)"
-                                              onClick={() => {
-                                                this.showDislikesForPost(
-                                                  post.dislikes
-                                                );
-                                              }}
-                                              style={{
-                                                marginLeft: "-10px",
-                                              }}
-                                            >
-                                              Dislike ({post.dislikes.length})
-                                            </a>
-                                          </div>
-                                        );
-                                      } else {
-                                        return (
-                                          <div>
-                                            <a
-                                              href="javascript:void(0)"
-                                              onClick={() => {
-                                                this.dislikePost(post.id);
-                                              }}
-                                            >
-                                              <i
-                                                id={"dislike" + post.id}
-                                                class={"fa fa-thumbs-o-down"}
-                                                style={{
-                                                  fontSize: "20px",
-                                                  paddingLeft: "20px",
-                                                }}
-                                              ></i>
-                                            </a>
-                                            <a
-                                              href="javascript:void(0)"
-                                              onClick={() => {
-                                                this.handleClickSnackBar(
-                                                  "There are currently no dislikes!"
-                                                );
-                                              }}
-                                              style={{
-                                                marginLeft: "-10px",
-                                              }}
-                                            >
-                                              Dislike (0)
-                                            </a>
-                                          </div>
-                                        );
-                                      }
-                                    })()}
-
-                                    {(() => {
-                                      if (post.comments !== null) {
-                                        return (
-                                          <div>
-                                            <a>
-                                              <i
-                                                class="fa fa-comment-o"
-                                                style={{
-                                                  fontSize: "20px",
-                                                  paddingLeft: "20px",
-                                                }}
-                                              ></i>
-                                            </a>
-                                            <a
-                                              style={{
-                                                marginLeft: "-10px",
-                                              }}
-                                            >
-                                              Comment ({post.comments.length})
-                                            </a>
-                                          </div>
-                                        );
-                                      } else {
-                                        return (
-                                          <div>
-                                            <a>
-                                              <i
-                                                class="fa fa-comment-o"
-                                                style={{
-                                                  fontSize: "20px",
-                                                  paddingLeft: "20px",
-                                                }}
-                                              ></i>
-                                            </a>
-                                            <a
-                                              style={{
-                                                marginLeft: "-10px",
-                                              }}
-                                            >
-                                              Comment (0)
-                                            </a>
-                                          </div>
-                                        );
-                                      }
-                                    })()}
-
-                                    {(() => {
-                                      if (this.state.currentUser !== null) {
-                                        var classForFavorite =
-                                          "fa fa-bookmark-o";
-
-                                        if (post.favorites != null) {
-                                          var index = post.favorites.findIndex(
-                                            (p) =>
-                                              p.id == this.state.currentUser.id
-                                          );
-                                          if (index !== -1) {
-                                            classForFavorite = "fa fa-bookmark";
-                                          }
-                                        }
-
-                                        return (
-                                          <div>
-                                            <a
-                                              href="javascript:void(0)"
-                                              onClick={() => {
-                                                this.savePost(post.id);
-                                              }}
-                                              style={{ float: "right" }}
-                                            >
-                                              <i
-                                                id={"save" + post.id}
-                                                class={classForFavorite}
-                                                style={{
-                                                  fontSize: "20px",
-                                                  paddingLeft: "20px",
-                                                }}
-                                              ></i>
-                                            </a>
-                                          </div>
-                                        );
-                                      }
-                                    })()}
+                                    </nav>
                                   </div>
-                                  <div class="comments">
+
+                                  <div class="timeline-item-post">
+                                    <img
+                                      class="img-thumbnail"
+                                      src={post.imagesSrc[0]}
+                                      alt=""
+                                    />
                                     {(() => {
                                       if (
-                                        Array.isArray(post.comments) ||
-                                        post.comments !== null
+                                        post.description !== null &&
+                                        Array.isArray(post.tags)
+                                      ) {
+                                        let tags = "";
+                                        {
+                                          post.tags.map((tag, key) => {
+                                            tags += "#" + tag;
+                                          });
+                                        }
+
+                                        return (
+                                          <div>
+                                            <p style={{ marginTop: "20px" }}>
+                                              <i>Description: </i>
+                                              {post.description}
+                                            </p>
+                                            <p style={{ marginTop: "20px" }}>
+                                              <i>Tags: </i>
+                                              {tags}
+                                            </p>
+                                          </div>
+                                        );
+                                      } else if (
+                                        post.description !== null &&
+                                        !Array.isArray(post.tags)
                                       ) {
                                         return (
                                           <div>
-                                            {post.comments.map(
-                                              (comment, key) => {
-                                                return (
-                                                  <div key={key}>
-                                                    <div class="timeline-comment">
-                                                      <div class="timeline-comment-header">
-                                                        <img
-                                                          src={
-                                                            comment.publisher
-                                                              .imageSrc
-                                                          }
-                                                          alt=""
-                                                        />
-                                                        <p>
-                                                          {
-                                                            comment.publisher
-                                                              .username
-                                                          }
-                                                          <small
-                                                            style={{
-                                                              marginLeft:
-                                                                "10px",
-                                                            }}
-                                                          >
-                                                            {moment(
-                                                              moment(
-                                                                comment.date
-                                                              ).format(
-                                                                "YYYY-MM-DD HH:mm:ss"
-                                                              )
-                                                            ).fromNow()}
-                                                          </small>
-                                                        </p>
-                                                      </div>
-                                                      <p class="timeline-comment-text">
-                                                        {comment.text}
-                                                      </p>
-                                                    </div>
-                                                  </div>
-                                                );
-                                              }
-                                            )}
+                                            <p style={{ marginTop: "20px" }}>
+                                              <i>Description: </i>
+                                              {post.description}
+                                            </p>
                                           </div>
                                         );
-                                      } else {
+                                      } else if (
+                                        post.description === null &&
+                                        Array.isArray(post.tags)
+                                      ) {
+                                        let tags = "";
+                                        {
+                                          post.tags.map((tag, key) => {
+                                            tags += "#" + tag;
+                                          });
+                                        }
+
                                         return (
                                           <div>
-                                            There are currently no comments...
+                                            <p style={{ marginTop: "20px" }}>
+                                              <i>Tags: </i>
+                                              {tags}
+                                            </p>
+                                          </div>
+                                        );
+                                      }
+                                    })()}
+
+                                    <div class="timeline-options">
+                                      {(() => {
+                                        if (post.likes !== null) {
+                                          var classForLike = "fa fa-heart-o";
+                                          if (this.state.currentUser != null) {
+                                            var index = post.likes.findIndex(
+                                              (p) =>
+                                                p.id ==
+                                                this.state.currentUser.id
+                                            );
+                                            if (index !== -1) {
+                                              classForLike = "fa fa-heart";
+                                            }
+                                          }
+
+                                          return (
+                                            <div>
+                                              <a
+                                                href="javascript:void(0)"
+                                                onClick={() => {
+                                                  this.likePost(post.id);
+                                                }}
+                                              >
+                                                <i
+                                                  id={"like" + post.id}
+                                                  class={classForLike}
+                                                  style={{
+                                                    fontSize: "20px",
+                                                  }}
+                                                ></i>
+                                              </a>
+                                              <a
+                                                href="javascript:void(0)"
+                                                onClick={() => {
+                                                  this.showLikesForPost(
+                                                    post.likes
+                                                  );
+                                                }}
+                                                style={{
+                                                  marginLeft: "-10px",
+                                                }}
+                                              >
+                                                Like ({post.likes.length})
+                                              </a>
+                                            </div>
+                                          );
+                                        } else {
+                                          return (
+                                            <div>
+                                              <a
+                                                href="javascript:void(0)"
+                                                onClick={() => {
+                                                  this.likePost(post.id);
+                                                }}
+                                              >
+                                                <i
+                                                  id={"like" + post.id}
+                                                  class={"fa fa-heart-o"}
+                                                  style={{
+                                                    fontSize: "20px",
+                                                  }}
+                                                ></i>
+                                              </a>
+                                              <a
+                                                href="javascript:void(0)"
+                                                onClick={() => {
+                                                  this.handleClickSnackBar(
+                                                    "There are currently no likes!"
+                                                  );
+                                                }}
+                                                style={{
+                                                  marginLeft: "-10px",
+                                                }}
+                                              >
+                                                Like (0)
+                                              </a>
+                                            </div>
+                                          );
+                                        }
+                                      })()}
+
+                                      {(() => {
+                                        if (post.dislikes !== null) {
+                                          var classForDislike =
+                                            "fa fa-thumbs-o-down";
+
+                                          if (this.state.currentUser != null) {
+                                            var index = post.dislikes.findIndex(
+                                              (p) =>
+                                                p.id ==
+                                                this.state.currentUser.id
+                                            );
+                                            if (index !== -1) {
+                                              classForDislike =
+                                                "fa fa-thumbs-down";
+                                            }
+                                          }
+
+                                          return (
+                                            <div>
+                                              {" "}
+                                              <a
+                                                href="javascript:void(0)"
+                                                onClick={() => {
+                                                  this.dislikePost(post.id);
+                                                }}
+                                              >
+                                                <i
+                                                  id={"dislike" + post.id}
+                                                  class={classForDislike}
+                                                  style={{
+                                                    fontSize: "20px",
+                                                    paddingLeft: "20px",
+                                                  }}
+                                                ></i>
+                                              </a>
+                                              <a
+                                                href="javascript:void(0)"
+                                                onClick={() => {
+                                                  this.showDislikesForPost(
+                                                    post.dislikes
+                                                  );
+                                                }}
+                                                style={{
+                                                  marginLeft: "-10px",
+                                                }}
+                                              >
+                                                Dislike ({post.dislikes.length})
+                                              </a>
+                                            </div>
+                                          );
+                                        } else {
+                                          return (
+                                            <div>
+                                              <a
+                                                href="javascript:void(0)"
+                                                onClick={() => {
+                                                  this.dislikePost(post.id);
+                                                }}
+                                              >
+                                                <i
+                                                  id={"dislike" + post.id}
+                                                  class={"fa fa-thumbs-o-down"}
+                                                  style={{
+                                                    fontSize: "20px",
+                                                    paddingLeft: "20px",
+                                                  }}
+                                                ></i>
+                                              </a>
+                                              <a
+                                                href="javascript:void(0)"
+                                                onClick={() => {
+                                                  this.handleClickSnackBar(
+                                                    "There are currently no dislikes!"
+                                                  );
+                                                }}
+                                                style={{
+                                                  marginLeft: "-10px",
+                                                }}
+                                              >
+                                                Dislike (0)
+                                              </a>
+                                            </div>
+                                          );
+                                        }
+                                      })()}
+
+                                      {(() => {
+                                        if (post.comments !== null) {
+                                          return (
+                                            <div>
+                                              <a>
+                                                <i
+                                                  class="fa fa-comment-o"
+                                                  style={{
+                                                    fontSize: "20px",
+                                                    paddingLeft: "20px",
+                                                  }}
+                                                ></i>
+                                              </a>
+                                              <a
+                                                style={{
+                                                  marginLeft: "-10px",
+                                                }}
+                                              >
+                                                Comment ({post.comments.length})
+                                              </a>
+                                            </div>
+                                          );
+                                        } else {
+                                          return (
+                                            <div>
+                                              <a>
+                                                <i
+                                                  class="fa fa-comment-o"
+                                                  style={{
+                                                    fontSize: "20px",
+                                                    paddingLeft: "20px",
+                                                  }}
+                                                ></i>
+                                              </a>
+                                              <a
+                                                style={{
+                                                  marginLeft: "-10px",
+                                                }}
+                                              >
+                                                Comment (0)
+                                              </a>
+                                            </div>
+                                          );
+                                        }
+                                      })()}
+
+                                      {(() => {
+                                        if (this.state.currentUser !== null) {
+                                          var classForFavorite =
+                                            "fa fa-bookmark-o";
+
+                                          if (post.favorites != null) {
+                                            var index =
+                                              post.favorites.findIndex(
+                                                (p) =>
+                                                  p.id ==
+                                                  this.state.currentUser.id
+                                              );
+                                            if (index !== -1) {
+                                              classForFavorite =
+                                                "fa fa-bookmark";
+                                            }
+                                          }
+
+                                          return (
+                                            <div>
+                                              <a
+                                                href="javascript:void(0)"
+                                                onClick={() => {
+                                                  this.savePost(post.id);
+                                                }}
+                                                style={{ float: "right" }}
+                                              >
+                                                <i
+                                                  id={"save" + post.id}
+                                                  class={classForFavorite}
+                                                  style={{
+                                                    fontSize: "20px",
+                                                    paddingLeft: "20px",
+                                                  }}
+                                                ></i>
+                                              </a>
+                                            </div>
+                                          );
+                                        }
+                                      })()}
+                                    </div>
+                                    <div class="comments">
+                                      {(() => {
+                                        if (
+                                          Array.isArray(post.comments) ||
+                                          post.comments !== null
+                                        ) {
+                                          return (
+                                            <div>
+                                              {post.comments.map(
+                                                (comment, key) => {
+                                                  return (
+                                                    <div key={key}>
+                                                      <div class="timeline-comment">
+                                                        <div class="timeline-comment-header">
+                                                          <img
+                                                            src={
+                                                              comment.publisher
+                                                                .imageSrc
+                                                            }
+                                                            alt=""
+                                                          />
+                                                          <p>
+                                                            {
+                                                              comment.publisher
+                                                                .username
+                                                            }
+                                                            <small
+                                                              style={{
+                                                                marginLeft:
+                                                                  "10px",
+                                                              }}
+                                                            >
+                                                              {moment(
+                                                                moment(
+                                                                  comment.date
+                                                                ).format(
+                                                                  "YYYY-MM-DD HH:mm:ss"
+                                                                )
+                                                              ).fromNow()}
+                                                            </small>
+                                                          </p>
+                                                        </div>
+                                                        <p class="timeline-comment-text">
+                                                          {comment.text}
+                                                        </p>
+                                                      </div>
+                                                    </div>
+                                                  );
+                                                }
+                                              )}
+                                            </div>
+                                          );
+                                        } else {
+                                          return (
+                                            <div>
+                                              There are currently no comments...
+                                            </div>
+                                          );
+                                        }
+                                      })()}
+                                    </div>
+                                    {(() => {
+                                      if (this.state.currentUser !== null) {
+                                        return (
+                                          <div>
+                                            <textarea
+                                              id={"newComment" + post.id}
+                                              name={"newComment" + post.id}
+                                              type="text"
+                                              class="form-control"
+                                              placeholder="Enter new comment"
+                                              rows="2"
+                                              style={{
+                                                marginTop: "20px",
+                                              }}
+                                            />
+                                            <button
+                                              class="btn btn-outline-success float-right"
+                                              onClick={() => {
+                                                this.postNewComment(post.id);
+                                              }}
+                                              style={{
+                                                marginTop: "20px",
+                                              }}
+                                            >
+                                              Post a comment
+                                            </button>
                                           </div>
                                         );
                                       }
                                     })()}
                                   </div>
-                                  {(() => {
-                                    if (this.state.currentUser !== null) {
-                                      return (
-                                        <div>
-                                          <textarea
-                                            id={"newComment" + post.id}
-                                            name={"newComment" + post.id}
-                                            type="text"
-                                            class="form-control"
-                                            placeholder="Enter new comment"
-                                            rows="2"
-                                            style={{
-                                              marginTop: "20px",
-                                            }}
-                                          />
-                                          <button
-                                            class="btn btn-outline-success float-right"
-                                            onClick={() => {
-                                              this.postNewComment(post.id);
-                                            }}
-                                            style={{
-                                              marginTop: "20px",
-                                            }}
-                                          >
-                                            Post a comment
-                                          </button>
-                                        </div>
-                                      );
-                                    }
-                                  })()}
                                 </div>
                               </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          } else {
-            return (
-              <div>
-                <div class="profile-timeline">
-                  <ul class="list-unstyled">
-                    <li class="timeline-item">
-                      <div class="card card-white grid-margin">
-                        <div class="card-body">
-                          <div class="timeline-item-header"></div>
-
-                          <div class="timeline-item-post">
-                            <img
-                              class="img-thumbnail"
-                              src={noPostsYet}
-                              alt=""
-                            />
-                          </div>
+                            </li>
+                          </ul>
                         </div>
                       </div>
-                    </li>
-                  </ul>
+                    );
+                  })}
                 </div>
-              </div>
-            );
+              );
+            } else {
+              return <div>{noPostsYetCard}</div>;
+            }
+          } else {
+            return <div>{noPostsYetCard}</div>;
           }
         })()}
       </div>

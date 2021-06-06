@@ -23,28 +23,6 @@ namespace PostMicroservice.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            /*List<Post> publicPosts = new List<Post>();
-
-            foreach(Post post in await _postService.GetAll()) {
-                publicPosts.Add(post);
-            }
-
-            if (publicPosts.Count == 0)
-            {
-                return NotFound();
-            }
-
-            List<PostDto> publicPostsDto = new List<PostDto>();
-            foreach (Post post in publicPosts)
-            {
-                for (int i = 0; i < post.Contents.Count; i++)
-                {
-                    post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
-                }
-                publicPostsDto.Add(PostMapper.PostToPostDto(post));
-            }
-
-            return Ok(publicPostsDto);*/
             return Ok(await _postService.GetAll());
         }
 
@@ -110,17 +88,39 @@ namespace PostMicroservice.Controllers
             return Ok(favoritePostsDto);
         }
 
-        [HttpGet("public")]
-        public async Task<IActionResult> GetPublicPosts()
+        [HttpGet("postsFromFollowedProfiles/{profileId}")]
+        public async Task<IActionResult> GetPostsFromFollowedProfiles(int profileId)
         {
-            List<Post> publicPosts = await _postService.GetAllPublicPosts();
+            List<Post> posts = await _postService.GetPostsFromFollowedProfiles(profileId);
+            if (posts.Count == 0)
+            {
+                return NotFound();
+            }
+
+            List<PostDto> postsDto = new List<PostDto>();
+            foreach (Post post in posts)
+            {
+                for (int i = 0; i < post.Contents.Count; i++)
+                {
+                    post.Contents[i].ImageSrc = String.Format("http://localhost:55993/{0}", post.Contents[i].ImageName);
+                }
+                postsDto.Add(PostMapper.PostToPostDto(post));
+            }
+
+            return Ok(postsDto);
+        }
+
+        [HttpGet("public/{profileId}")]
+        public async Task<IActionResult> GetPublicPosts(int profileId)
+        {
+            List<Post> publicPosts = await _postService.GetAllPublicPosts(profileId);
             if (publicPosts.Count == 0)
             {
                 return NotFound();
             }
 
             List<PostDto> publicPostsDto = new List<PostDto>();
-            foreach(Post post in publicPosts)
+            foreach (Post post in publicPosts)
             {
                 for (int i = 0; i < post.Contents.Count; i++)
                 {

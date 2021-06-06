@@ -77,8 +77,12 @@ class PostService {
     return fetch(API_URL + "post/favorites/" + profileId);
   }
 
-  getPublicPosts() {
-    return fetch(API_URL + "post/public");
+  getPostsFromFollowedProfiles(profileId) {
+    return fetch(API_URL + "post/postsFromFollowedProfiles/" + profileId);
+  }
+
+  getPublicPosts(profileId) {
+    return fetch(API_URL + "post/public/" + profileId);
   }
 
   getAllPosts() {

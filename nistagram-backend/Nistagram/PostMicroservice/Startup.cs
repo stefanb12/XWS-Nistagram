@@ -56,7 +56,8 @@ namespace PostMicroservice
             string hostedService = Environment.GetEnvironmentVariable("HOSTED_SERVICE") ?? "true";
             if (hostedService == "true")
             {
-                services.AddHostedService<ProfileMessageReceiver>();
+                services.AddHostedService<ProfileCreatedMessageReceiver>();
+                services.AddHostedService<ProfileUpdatedMessageReceiver>();
             }
         }
 
@@ -73,8 +74,8 @@ namespace PostMicroservice
             {
                 app.UseStaticFiles(new StaticFileOptions
                 {
-                    FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Images")),
-                    RequestPath = "/Images"
+                    FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "wwwroot")),
+                    RequestPath = "/wwwroot"
                 });
             }
 

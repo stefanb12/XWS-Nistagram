@@ -44,7 +44,7 @@ namespace ProfileMicroservice
             services.AddSingleton<IUserService, UserService>(service =>
                     new UserService(new UserRepository(new UserDbContext())));
             services.AddSingleton<IProfileService, ProfileService>(service =>
-                  new ProfileService(new ProfileRepository(new UserDbContext()), new ProfileCreatedMessageSender()));
+                  new ProfileService(new ProfileRepository(new UserDbContext()), new ProfileCreatedMessageSender(), new ProfileUpdatedMessageSender()));
             services.AddSingleton<IFollowRequestService, FollowRequestService>(service =>
                     new FollowRequestService(new FollowRequestRepository(new UserDbContext())));
 
@@ -109,8 +109,8 @@ namespace ProfileMicroservice
             {
                 app.UseStaticFiles(new StaticFileOptions
                 {
-                    FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "Images")),
-                    RequestPath = "/Images"
+                    FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "wwwroot")),
+                    RequestPath = "/wwwroot"
                 });
             }
 
