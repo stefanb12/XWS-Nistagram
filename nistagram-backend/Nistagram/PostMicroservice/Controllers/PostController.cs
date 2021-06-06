@@ -60,7 +60,7 @@ namespace PostMicroservice.Controllers
 
             for(int i = 0; i < post.Contents.Count; i++)
             {
-                post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
+                post.Contents[i].ImageSrc = String.Format("http://localhost:55993/{0}", post.Contents[i].ImageName);
             }
 
             return Ok(post);
@@ -80,7 +80,7 @@ namespace PostMicroservice.Controllers
             {
                 for (int i = 0; i < post.Contents.Count; i++)
                 {
-                    post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
+                    post.Contents[i].ImageSrc = String.Format("http://localhost:55993/{0}", post.Contents[i].ImageName);
                 }
                 postsForProfileDto.Add(PostMapper.PostToPostDto(post));
             }
@@ -102,7 +102,7 @@ namespace PostMicroservice.Controllers
             {
                 for (int i = 0; i < post.Contents.Count; i++)
                 {
-                    post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
+                    post.Contents[i].ImageSrc = String.Format("http://localhost:55993/{0}", post.Contents[i].ImageName);
                 }
                 favoritePostsDto.Add(PostMapper.PostToPostDto(post));
             }
@@ -124,7 +124,7 @@ namespace PostMicroservice.Controllers
             {
                 for (int i = 0; i < post.Contents.Count; i++)
                 {
-                    post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
+                    post.Contents[i].ImageSrc = String.Format("http://localhost:55993/{0}", post.Contents[i].ImageName);
                 }
                 publicPostsDto.Add(PostMapper.PostToPostDto(post));
             }
@@ -138,7 +138,7 @@ namespace PostMicroservice.Controllers
             Post post = await _postService.GetById(commentDto.PostId);
             for (int i = 0; i < post.Contents.Count; i++)
             {
-                post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
+                post.Contents[i].ImageSrc = String.Format("http://localhost:55993/{0}", post.Contents[i].ImageName);
             }
 
             Post updatedPost = await _postService.InsertNewComment(post, CommentMapper.CommentDtoToComment(commentDto));
@@ -151,7 +151,7 @@ namespace PostMicroservice.Controllers
             Post post = await _postService.GetById(updatePostDto.PostId);
             for (int i = 0; i < post.Contents.Count; i++)
             {
-                post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
+                post.Contents[i].ImageSrc = String.Format("http://localhost:55993/{0}", post.Contents[i].ImageName);
             }
 
             Post updatedPost = await _postService.LikePost(post, ProfileMapper.ProfileDtoToProfile(updatePostDto));
@@ -164,7 +164,7 @@ namespace PostMicroservice.Controllers
             Post post = await _postService.GetById(updatePostDto.PostId);
             for (int i = 0; i < post.Contents.Count; i++)
             {
-                post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
+                post.Contents[i].ImageSrc = String.Format("http://localhost:55993/{0}", post.Contents[i].ImageName);
             }
 
             Post updatedPost = await _postService.DisikePost(post, ProfileMapper.ProfileDtoToProfile(updatePostDto));
@@ -177,7 +177,7 @@ namespace PostMicroservice.Controllers
             Post post = await _postService.GetById(updatePostDto.PostId);
             for (int i = 0; i < post.Contents.Count; i++)
             {
-                post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
+                post.Contents[i].ImageSrc = String.Format("http://localhost:55993/{0}", post.Contents[i].ImageName);
             }
 
             Post updatedPost = await _postService.SavePostAsFavorite(post, ProfileMapper.ProfileDtoToProfile(updatePostDto));
@@ -198,7 +198,7 @@ namespace PostMicroservice.Controllers
             {
                 for (int i = 0; i < post.Contents.Count; i++)
                 {
-                    post.Contents[i].ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, post.Contents[i].ImageName);
+                    post.Contents[i].ImageSrc = String.Format("http://localhost:55993/{0}", post.Contents[i].ImageName);
                 }
                 publicPostsDto.Add(PostMapper.PostToPostDto(post));
             }

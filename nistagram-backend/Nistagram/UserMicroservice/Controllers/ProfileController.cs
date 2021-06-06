@@ -44,6 +44,7 @@ namespace UserMicroservice.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             Profile profile = await _profileService.GetById(id);
+            profile.ImageSrc = String.Format("http://localhost:55988/{0}", profile.ImageName);
 
             if (profile == null)
             {

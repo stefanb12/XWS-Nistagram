@@ -793,7 +793,7 @@ class UserProfile extends Component {
                       <div>
                         <img
                           class="profile-pic"
-                          src="https://bootdey.com/img/Content/avatar/avatar6.png"
+                          src={userProfile.imageSrc}
                           alt="profile"
                         />
                         <span class="profile-name">{userProfile.username}</span>
