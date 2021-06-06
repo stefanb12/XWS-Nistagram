@@ -1,0 +1,343 @@
+[{
+  "_id": {
+    "$oid": "60bbab614e3fc94bf71070a8"
+  },
+  "Tags": [
+    "Nature",
+    "Waterfall"
+  ],
+  "Description": "Nature",
+  "PublishingDate": {
+    "$date": "2021-02-01T00:01:01Z"
+  },
+  "Location": {
+    "_id": {
+      "$oid": "60bbab614e3fc94bf71070a9"
+    },
+    "Address": "",
+    "City": "Belgrade",
+    "Country": "Serbia"
+  },
+  "Comments": [
+    {
+      "_id": {
+        "$oid": "60bbab614e3fc94bf71070aa"
+      },
+      "Text": "Excellent",
+      "Date": {
+        "$date": "2021-05-30T08:10:10Z"
+      },
+      "Publisher": {
+        "_id": {
+          "$oid": "60bbab614e3fc94bf71070ab"
+        },
+        "Username": "user1",
+        "IsPrivate": false,
+        "OriginalId": 1,
+        "ImageName": "user121042215618378.jpg"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "60bbad114e3fc94bf7107613"
+      },
+      "Text": "adads",
+      "Date": {
+        "$date": "2021-06-05T16:57:53.843Z"
+      },
+      "Publisher": {
+        "_id": {
+          "$oid": "60bbad114e3fc94bf7107614"
+        },
+        "Username": "user1",
+        "IsPrivate": false,
+        "OriginalId": 1,
+        "ImageName": null
+      }
+    },
+    {
+      "_id": {
+        "$oid": "60bbaefd7c1334f17b370358"
+      },
+      "Text": "sdds",
+      "Date": {
+        "$date": "2021-06-05T17:06:05.293Z"
+      },
+      "Publisher": {
+        "_id": {
+          "$oid": "60bbaefd7c1334f17b370359"
+        },
+        "Username": "user1",
+        "IsPrivate": false,
+        "OriginalId": 1,
+        "ImageName": null
+      }
+    },
+    {
+      "_id": {
+        "$oid": "60bbaf647c1334f17b370393"
+      },
+      "Text": "ffd",
+      "Date": {
+        "$date": "2021-06-05T17:07:48.873Z"
+      },
+      "Publisher": {
+        "_id": {
+          "$oid": "60bbaf647c1334f17b370394"
+        },
+        "Username": "user1",
+        "IsPrivate": false,
+        "OriginalId": 1,
+        "ImageName": null
+      }
+    },
+    {
+      "_id": {
+        "$oid": "60bbaf9a7c1334f17b370425"
+      },
+      "Text": "op",
+      "Date": {
+        "$date": "2021-06-05T17:08:42.654Z"
+      },
+      "Publisher": {
+        "_id": {
+          "$oid": "60bbaf9a7c1334f17b370426"
+        },
+        "Username": "user2",
+        "IsPrivate": false,
+        "OriginalId": 2,
+        "ImageName": null
+      }
+    }
+  ],
+  "Dislikes": [
+    {
+      "_id": {
+        "$oid": "60bbab614e3fc94bf71070af"
+      },
+      "Username": "user4",
+      "IsPrivate": false,
+      "OriginalId": 4,
+      "ImageName": "user121042215618378.jpg"
+    }
+  ],
+  "Likes": [
+    {
+      "_id": {
+        "$oid": "60bbab614e3fc94bf71070ad"
+      },
+      "Username": "user2",
+      "IsPrivate": false,
+      "OriginalId": 2,
+      "ImageName": "user3214652430.png"
+    },
+    {
+      "_id": {
+        "$oid": "60bbab614e3fc94bf71070ae"
+      },
+      "Username": "user3",
+      "IsPrivate": false,
+      "OriginalId": 3,
+      "ImageName": "user2211031114.jpg"
+    },
+    {
+      "_id": {
+        "$oid": "60bbaeff7c1334f17b370367"
+      },
+      "Username": "user1",
+      "IsPrivate": false,
+      "OriginalId": 1,
+      "ImageName": null
+    }
+  ],
+  "Favorites": [],
+  "Publisher": {
+    "_id": {
+      "$oid": "60bbab614e3fc94bf71070ac"
+    },
+    "Username": "user1",
+    "IsPrivate": false,
+    "OriginalId": 1,
+    "ImageName": "user121042215618378.jpg"
+  },
+  "Contents": [
+    {
+      "_id": 0,
+      "ImageName": "2212424861.png"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "60bbab614e3fc94bf71070b0"
+  },
+  "Tags": null,
+  "Description": "Waterfall",
+  "PublishingDate": {
+    "$date": "2021-02-02T13:14:14Z"
+  },
+  "Location": {
+    "_id": {
+      "$oid": "60bbab614e3fc94bf71070b1"
+    },
+    "Address": "Bulevar Cara Lazara",
+    "City": "Novi Sad",
+    "Country": "Serbia"
+  },
+  "Comments": [
+    {
+      "_id": {
+        "$oid": "60bbab614e3fc94bf71070b2"
+      },
+      "Text": "Wow!",
+      "Date": {
+        "$date": "2021-06-01T13:16:15Z"
+      },
+      "Publisher": {
+        "_id": {
+          "$oid": "60bbab614e3fc94bf71070b3"
+        },
+        "Username": "user2",
+        "IsPrivate": false,
+        "OriginalId": 2,
+        "ImageName": "user3214652430.png"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "60bbab614e3fc94bf71070b4"
+      },
+      "Text": "Wooow!",
+      "Date": {
+        "$date": "2021-06-01T13:17:15Z"
+      },
+      "Publisher": {
+        "_id": {
+          "$oid": "60bbab614e3fc94bf71070b5"
+        },
+        "Username": "user2",
+        "IsPrivate": false,
+        "OriginalId": 2,
+        "ImageName": "user3214652430.png"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "60bbab614e3fc94bf71070b6"
+      },
+      "Text": "Wow!",
+      "Date": {
+        "$date": "2021-06-01T13:15:15Z"
+      },
+      "Publisher": {
+        "_id": {
+          "$oid": "60bbab614e3fc94bf71070b7"
+        },
+        "Username": "user2",
+        "IsPrivate": false,
+        "OriginalId": 2,
+        "ImageName": "user3214652430.png"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "60bbab614e3fc94bf71070b8"
+      },
+      "Text": "Woooow!",
+      "Date": {
+        "$date": "2021-06-01T16:15:15Z"
+      },
+      "Publisher": {
+        "_id": {
+          "$oid": "60bbab614e3fc94bf71070b9"
+        },
+        "Username": "user1",
+        "IsPrivate": false,
+        "OriginalId": 1,
+        "ImageName": "user121042215618378.jpg"
+      }
+    }
+  ],
+  "Dislikes": null,
+  "Likes": [
+    {
+      "_id": {
+        "$oid": "60bbab614e3fc94bf71070bb"
+      },
+      "Username": "user2",
+      "IsPrivate": false,
+      "OriginalId": 1,
+      "ImageName": "user3214652430.png"
+    }
+  ],
+  "Favorites": [],
+  "Publisher": {
+    "_id": {
+      "$oid": "60bbab614e3fc94bf71070ba"
+    },
+    "Username": "user1",
+    "IsPrivate": false,
+    "OriginalId": 1,
+    "ImageName": "user121042215618378.jpg"
+  },
+  "Contents": [
+    {
+      "_id": 0,
+      "ImageName": "2212424862.png"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "60bbab614e3fc94bf71070bc"
+  },
+  "Tags": null,
+  "Description": null,
+  "PublishingDate": {
+    "$date": "2021-02-02T13:14:14Z"
+  },
+  "Location": {
+    "_id": {
+      "$oid": "60bbab614e3fc94bf71070bd"
+    },
+    "Address": "",
+    "City": "Novi Sad",
+    "Country": "Serbia"
+  },
+  "Comments": [
+    {
+      "_id": {
+        "$oid": "60bbab614e3fc94bf71070be"
+      },
+      "Text": "Wooow!",
+      "Date": {
+        "$date": "2021-06-01T13:17:15Z"
+      },
+      "Publisher": {
+        "_id": {
+          "$oid": "60bbab614e3fc94bf71070bf"
+        },
+        "Username": "user2",
+        "IsPrivate": false,
+        "OriginalId": 2,
+        "ImageName": "user3214652430.png"
+      }
+    }
+  ],
+  "Dislikes": null,
+  "Likes": null,
+  "Favorites": null,
+  "Publisher": {
+    "_id": {
+      "$oid": "60bbab614e3fc94bf71070c0"
+    },
+    "Username": "user3",
+    "IsPrivate": false,
+    "OriginalId": 3,
+    "ImageName": "user2211031114.jpg"
+  },
+  "Contents": [
+    {
+      "_id": 0,
+      "ImageName": "2212424863.png"
+    }
+  ]
+}]

@@ -23,5 +23,30 @@
     <Folder Include="Images\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\asddsad.png" />
+    <None Include="wwwroot\pexels-pho213356693.jpeg" />
+    <None Include="wwwroot\pexels-pho214653009.jpeg" />
+    <None Include="wwwroot\pexels-pho215626566.jpeg" />
+    <None Include="wwwroot\user121042213214103.jpg" />
+    <None Include="wwwroot\user121042213500304.jpg" />
+    <None Include="wwwroot\user121042215618378.jpg" />
+    <None Include="wwwroot\user1210422548.jpg" />
+    <None Include="wwwroot\user1211012466.jpg" />
+    <None Include="wwwroot\user1212838870.jpg" />
+    <None Include="wwwroot\user1214901056.jpg" />
+    <None Include="wwwroot\user1215758125.jpg" />
+    <None Include="wwwroot\user2211031114.jpg" />
+    <None Include="wwwroot\user2212950940.jpg" />
+    <None Include="wwwroot\user3212914527.png" />
+    <None Include="wwwroot\user3214032644.png" />
+    <None Include="wwwroot\user3214652430.png" />
+    <None Include="wwwroot\user3215012267.png" />
+    <None Include="wwwroot\user3215045911.png" />
+    <None Include="wwwroot\user3215500797.png" />
+    <None Include="wwwroot\user5213321500.png" />
+    <None Include="wwwroot\user6213352029.png" />
+  </ItemGroup>
+
 
 </Project>

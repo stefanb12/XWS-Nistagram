@@ -252,8 +252,9 @@ export default function MainNavbar() {
       });
 
     if (row.type == "user") {
+      setSearchValue("");
       history.push({
-        pathname: "/user/profile",
+        pathname: "/app/profile",
         state: row.id,
       });
     } else if (row.type == "tag" || row.type == "location") {

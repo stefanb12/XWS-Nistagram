@@ -114,7 +114,7 @@ namespace UserMicroservice.Controllers
         public async Task<IActionResult> GetProfileForUpdating(int id)
         {
             Profile profile = await _profileService.GetById(id);
-            profile.ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, profile.ImageName);
+            profile.ImageSrc = String.Format("http://localhost:55988/{0}", profile.ImageName);
 
             if (profile == null)
             {
@@ -129,11 +129,10 @@ namespace UserMicroservice.Controllers
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAll()
         {
-            //List<Profile> profiles = await _profileService.GetAll();
             List<UpdateDto> dtos = new List<UpdateDto>();
             foreach(Profile profile in await _profileService.GetAll())
             {
-                profile.ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, profile.ImageName);
+                profile.ImageSrc = String.Format("http://localhost:55988/{0}", profile.ImageName);
                 UpdateDto dto = UpdateProfileMapper.ProfileToProfileDto(profile);
                 dtos.Add(dto);
             }

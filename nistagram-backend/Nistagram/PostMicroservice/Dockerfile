@@ -2,6 +2,8 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
 EXPOSE 80
 
+VOLUME ["nistagram-backend/Nistagram/PostMicroservice/Images"]
+
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["nistagram-backend/Nistagram/PostMicroservice/PostMicroservice.csproj", "nistagram-backend/Nistagram/PostMicroservice/"]

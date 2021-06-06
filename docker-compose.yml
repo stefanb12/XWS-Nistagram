@@ -43,8 +43,8 @@ services:
   mongodb-post-microservice:
     image: mongo:latest
     container_name: mongodb-post-microservice
-    # volumes:
-    #   - ./init-post:/data/db
+    volumes:
+      - ./init-scripts:/data/db
     restart: unless-stopped
     #environment: 
     #   # MONGO_INITDB_ROOT_USERNAME: root
@@ -147,6 +147,7 @@ services:
     depends_on:
       - user-microservice
       - notification-microservice
+      - post-microservice
     expose: 
         - "80"
     ports:
