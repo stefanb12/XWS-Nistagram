@@ -79,6 +79,8 @@ namespace PostMicroservice
                 });
             }
 
+            app.UseStaticFiles();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

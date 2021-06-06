@@ -452,8 +452,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "notification-microservice",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 56002
         }
       ],
       "UpstreamPathTemplate": "/gateway/notification/follow",

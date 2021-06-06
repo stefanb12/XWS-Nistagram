@@ -42,7 +42,7 @@ namespace StoryMicroservice.Controllers
             foreach (Story s in stories)
             {
                 StoryDto dto = StoryMapper.StoryToStoryDto(s);
-                dto.ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, s.ImageName);
+                dto.ImageSrc = String.Format("http://localhost:55996/{0}", s.ImageName);
                 returnValue.Add(dto);
             }
             return Ok(returnValue);
@@ -58,7 +58,7 @@ namespace StoryMicroservice.Controllers
                 ProfileStoriesDto dto = ProfileStoriesMapper.ProfileStoriesToProfileStoriesDto(ps);
                 foreach (StoryDto storyDto in dto.Stories)
                 {
-                    storyDto.ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, storyDto.ImageName);
+                    storyDto.ImageSrc = String.Format("http://localhost:55996/{0}", storyDto.ImageName);
                 }
                 returnValue.Add(dto);
             }
