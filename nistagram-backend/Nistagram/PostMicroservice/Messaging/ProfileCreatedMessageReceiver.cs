@@ -5,19 +5,20 @@ using PostMicroservice.Service;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace PostMicroservice.Messaging
 {
-    public class ProfileMessageReceiver : BackgroundService, IProfileMessageReciver
+    public class ProfileCreatedMessageReceiver : BackgroundService, IMessageReceiver
     {
         private IProfileService _profileService;
         private IConnection _connection;
         private IModel _channel;
 
-        public ProfileMessageReceiver(IProfileService profileService)
+        public ProfileCreatedMessageReceiver(IProfileService profileService)
         {
             _profileService = profileService;
             InitRabbitMQ();
@@ -29,14 +30,14 @@ namespace PostMicroservice.Messaging
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
-            _channel.ExchangeDeclare(exchange: "profile", type: ExchangeType.Fanout);
+            _channel.ExchangeDeclare(exchange: "profile.created", type: ExchangeType.Fanout);
             _channel.QueueDeclare(queue: "post.profile.created",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: false,
                                   arguments: null);
             _channel.QueueBind(queue: "post.profile.created",
-                              exchange: "profile",
+                              exchange: "profile.created",
                               routingKey: "");
         }
 
@@ -55,6 +56,7 @@ namespace PostMicroservice.Messaging
                 {
                     OriginalId = data["id"].Value<int>(),
                     Username = data["username"].Value<string>(),
+                    Following = new List<int>()
                 });
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);

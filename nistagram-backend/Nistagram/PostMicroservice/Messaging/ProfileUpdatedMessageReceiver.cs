@@ -2,15 +2,15 @@
 using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using StoryMicroservice.Model;
-using StoryMicroservice.Service;
+using PostMicroservice.Model;
+using PostMicroservice.Service;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StoryMicroservice.Messaging
+namespace PostMicroservice.Messaging
 {
     public class ProfileUpdatedMessageReceiver : BackgroundService, IMessageReceiver
     {
@@ -31,12 +31,12 @@ namespace StoryMicroservice.Messaging
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
             _channel.ExchangeDeclare(exchange: "profile.updated", type: ExchangeType.Fanout);
-            _channel.QueueDeclare(queue: "story.profile.updated",
+            _channel.QueueDeclare(queue: "post.profile.updated",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: false,
                                   arguments: null);
-            _channel.QueueBind(queue: "story.profile.updated",
+            _channel.QueueBind(queue: "post.profile.updated",
                               exchange: "profile.updated",
                               routingKey: "");
         }
@@ -58,14 +58,13 @@ namespace StoryMicroservice.Messaging
                     Username = data["username"].Value<string>(),
                     IsPrivate = data["isPrivate"].Value<bool>(),
                     Following = data["following"].ToObject<List<int>>(),
-                    ImageName = data["profileImage"].Value<string>(),
-                    CloseFriends = data["closeFriends"].ToObject<List<int>>()
+                    ImageName = data["profileImage"].Value<string>()
                 });
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };
 
-            _channel.BasicConsume(queue: "story.profile.updated",
+            _channel.BasicConsume(queue: "post.profile.updated",
                                   autoAck: false,
                                   consumer: consumer);
         }

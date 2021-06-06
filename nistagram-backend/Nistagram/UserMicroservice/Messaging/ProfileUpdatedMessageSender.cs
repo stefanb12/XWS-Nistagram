@@ -20,9 +20,18 @@ namespace UserMicroservice.Messaging
                 channel.ExchangeDeclare(exchange: "profile.updated", type: ExchangeType.Fanout);
 
                 List<int> followingIds = new List<int>();
-                foreach (ProfileFollowing followed in profile.Following)
+                if (profile.Following != null)
                 {
-                    followingIds.Add(followed.FollowingId);
+                    foreach (ProfileFollowing followed in profile.Following)
+                    {
+                        followingIds.Add(followed.FollowingId);
+                    }
+                }
+
+                List<int> closeFriendsIds = new List<int>();
+                foreach (ProfileCloseFriend closeFriend in profile.CloseFriends)
+                {
+                    closeFriendsIds.Add(closeFriend.CloseFriendId);
                 }
 
                 var integrationEventData = JsonConvert.SerializeObject(new
@@ -30,7 +39,9 @@ namespace UserMicroservice.Messaging
                     id = profile.Id,
                     username = profile.Username,
                     isPrivate = profile.IsPrivate,
-                    following = followingIds
+                    following = followingIds,
+                    profileImage = profile.ImageName,
+                    closeFriends = closeFriendsIds
                 });
 
                 var body = Encoding.UTF8.GetBytes(integrationEventData);

@@ -5,6 +5,7 @@ using RabbitMQ.Client.Events;
 using StoryMicroservice.Model;
 using StoryMicroservice.Service;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -55,7 +56,9 @@ namespace StoryMicroservice.Messaging
                 {
                     OriginalId = data["id"].Value<int>(),
                     Username = data["username"].Value<string>(),
-                    IsPrivate = data["isPrivate"].Value<bool>()
+                    IsPrivate = data["isPrivate"].Value<bool>(),
+                    Following = new List<int>(),
+                    CloseFriends = new List<int>()
                 });
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);

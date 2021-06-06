@@ -95,35 +95,40 @@ namespace StoryMicroservice.Database
                     Username = "stefanb",
                     IsPrivate = false,
                     ImageName = "user1213352029.jpg",
-                    Following = new List<int>() {2, 3, 5}
+                    Following = new List<int>() {2, 3, 5},
+                    CloseFriends = new List<int>() {2}
                 },
                 new Profile {
                     OriginalId = 2 ,
                     Username = "matijam",
                     IsPrivate = true,
                     ImageName = "user2213352029.jpg",
-                    Following = new List<int>() {1, 4}
+                    Following = new List<int>() {1, 4},
+                    CloseFriends = new List<int>() {3}
                 },
                 new Profile {
                     OriginalId = 3 ,
                     Username = "aleksai",
                     IsPrivate = true,
                     ImageName = "user3213352029.png",
-                    Following = new List<int>() {1, 2}
+                    Following = new List<int>() {1, 2},
+                    CloseFriends = new List<int>() {2}
                 },
                 new Profile {
                     OriginalId = 4 ,
                     Username = "stefans",
                     IsPrivate = false,
                     ImageName = "user4213352029.png",
-                    Following = new List<int>()
+                    Following = new List<int>(),
+                    CloseFriends = new List<int>()
                 },
                 new Profile {
                     OriginalId = 5 ,
                     Username = "majam",
                     IsPrivate = false,
                     ImageName = "user5213352029.jpg",
-                    Following = new List<int>()
+                    Following = new List<int>(),
+                    CloseFriends = new List<int>()
                 }
             };
 
