@@ -29,11 +29,14 @@ import Avatar from "@material-ui/core/Avatar";
 import { useHistory } from "react-router";
 import AuthService from "../services/AuthService";
 import NotificationService from "../services/NotificationService";
-import { Snackbar } from "@material-ui/core";
+import { Snackbar, Table, TableBody, TableCell, TableContainer, TableRow } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import FollowRequestService from "../services/FollowRequestService";
 import ProfileService from "../services/ProfileService";
 import moment from "moment";
+import PostService from "../services/PostService";
+import hash from "../assets/images/hash.svg";
+import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -132,6 +135,24 @@ const StyledMenuItem = withStyles((theme) => ({
   root: {},
 }))(MenuItem);
 
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+}))(TableRow);
+
 export default function UserNavbar() {
   const history = useHistory();
   const classes = useStyles();
@@ -143,6 +164,28 @@ export default function UserNavbar() {
     React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [loggedUser, setLoggedUser] = React.useState({});
+  const [searchValue, setSearchValue] = React.useState("");
+  const [allUsers, setAllUsers] = React.useState([]);
+  const [mounted, setMounted] = React.useState(false);
+  const [publicPosts, setPublicPosts] = React.useState([]);
+  const [searchData, setSearchData] = React.useState([]);
+  const [searchedPosts, setsearchedPosts] = React.useState([]);
+
+  useEffect(() => {
+    ProfileService.getAllUsers()
+      .then((res) => res.json())
+      .then((result) => {
+        setAllUsers(result);
+      });
+
+    PostService.getAllPosts()
+      .then((res) => res.json())
+      .then((result) => {
+        setPublicPosts(result);
+      });
+
+    setMounted(false);
+  }, []);
 
   const handleAlertClick = () => {
     setOpen(true);
@@ -224,6 +267,10 @@ export default function UserNavbar() {
     AuthService.logout();
     history.push("/app/login");
     handleMenuClose();
+  };
+
+  const handleExploreClick = () => {
+    history.push("/user/explore");
   };
 
   const handleConfirmFollowRequest = (followerId, followingId) => {
@@ -462,12 +509,12 @@ export default function UserNavbar() {
         </ListItemIcon>
         <ListItemText primary="Settings" />
       </StyledMenuItem>
-      <StyledMenuItem onClick={handleMenuClose}>
+      {/* <StyledMenuItem onClick={handleMenuClose}>
         <ListItemIcon>
           <BookmarkBorder fontSize="medium" />
         </ListItemIcon>
         <ListItemText primary="Saved" />
-      </StyledMenuItem>
+      </StyledMenuItem> */}
       <StyledMenuItem onClick={handleLogout}>
         <ListItemIcon>
           <ExitToApp fontSize="medium" />
@@ -518,6 +565,197 @@ export default function UserNavbar() {
     </Menu>
   );
 
+  const renderSearchResults = (
+    <TableContainer
+      style={{ width: "16%", marginLeft: "12%" }}
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "center",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "center",
+      }}
+      open={isMenuOpen}
+    >
+      <Table
+        className={classes.table}
+        aria-label="simple table"
+        style={{
+          width: "16%",
+          marginTop: "4%",
+          position: "absolute",
+          zIndex: 10,
+          backgroundColor: "white",
+          border: "1px solid grey",
+        }}
+      >
+        <div style={{ height: "212px", width: "100%", overflow: "auto" }}>
+          <TableBody style={{ width: "100%" }}>
+            {searchData
+              .filter((val) => {
+                if (searchValue == "") {
+                  return val;
+                } else if (
+                  val.searchParam
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase())
+                ) {
+                  return val;
+                }
+              })
+              .map((row) => (
+                <StyledTableRow
+                  style={{ width: "100%" }}
+                  key={row.searchParam}
+                  onClick={(event) => onChoseSearchResult(event, row)}
+                >
+                  <StyledTableCell style={{ width: "40%" }} align="center">
+                    <img
+                      src={row.imageSrc}
+                      className="rounded-circle img-responsive mt-2"
+                      width="30"
+                      height="30"
+                    />
+                    <label style={{ marginLeft: "4%" }}>
+                      {row.searchParam}
+                    </label>
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+          </TableBody>
+        </div>
+      </Table>
+    </TableContainer>
+  );
+
+  const onChoseSearchResult = async (event, row) => {
+    await PostService.getSearchedPosts(row.searchParam)
+      .then((res) => res.json())
+      .then((result) => {
+        setsearchedPosts(result);
+      });
+
+    if (row.type == "user") {
+      setSearchValue("");
+      history.push({
+        pathname: "/app/profile",
+        state: {profileId: row.id}
+      });
+    } else if (row.type == "tag" || row.type == "location") {
+      setSearchValue("");
+      await PostService.getSearchedPosts(row.searchParam)
+        .then((res) => res.json())
+        .then((result) => {
+          history.push({
+            pathname: "/user/search",
+            state: {
+              searchParam: row.searchParam,
+              imageSrc: row.imageSrc,
+              posts: result,
+            },
+          });
+        });
+    }
+  };
+
+  const onSearchChange = async (event) => {
+    setSearchValue(event.target.value);
+    if (searchValue == "" && mounted == false) {
+      await ProfileService.getAllUsers()
+        .then((res) => res.json())
+        .then((result) => {
+          setAllUsers(result);
+        });
+
+      await PostService.getAllPosts()
+        .then((res) => res.json())
+        .then((result) => {
+          setPublicPosts(result);
+        });
+    }
+
+    if (mounted == false) {
+      for (let i = 0; i < allUsers.length; i++) {
+        var user = {
+          id: allUsers[i].id,
+          searchParam: allUsers[i].username,
+          imageSrc: allUsers[i].imageSrc,
+          type: "user",
+        };
+        searchData.push(user);
+      }
+
+      for (let i = 0; i < publicPosts.length; i++) {
+        if (publicPosts[i].tags != null) {
+          for (let j = 0; j < publicPosts[i].tags.length; j++) {
+            let flag = false;
+            for (let k = 0; k < searchData.length; k++) {
+              if (searchData[k].searchParam == publicPosts[i].tags[j]) {
+                flag = true;
+              }
+            }
+            if (flag == false) {
+              var tag = {
+                id: null,
+                searchParam: publicPosts[i].tags[j],
+                imageSrc: hash,
+                type: "tag",
+              };
+              searchData.push(tag);
+            }
+          }
+        }
+        if (
+          publicPosts[i].location.address === "" ||
+          publicPosts[i].location.address === null
+        ) {
+          let flag = false;
+          for (let k = 0; k < searchData.length; k++) {
+            if (
+              searchData[k].searchParam ==
+              publicPosts[i].location.city +
+                ", " +
+                publicPosts[i].location.country
+            ) {
+              flag = true;
+            }
+          }
+          if (flag == false) {
+            var location = {
+              id: null,
+              searchParam:
+                publicPosts[i].location.city +
+                ", " +
+                publicPosts[i].location.country,
+              imageSrc:
+                "https://i.pinimg.com/564x/4e/dc/b4/4edcb460a940ff726549077935f57168.jpg",
+              type: "location",
+            };
+            searchData.push(location);
+          }
+        } else {
+          var location = {
+            id: null,
+            searchParam:
+              publicPosts[i].location.address +
+              ", " +
+              publicPosts[i].location.city +
+              ", " +
+              publicPosts[i].location.country,
+            imageSrc:
+              "https://i.pinimg.com/564x/4e/dc/b4/4edcb460a940ff726549077935f57168.jpg",
+            type: "location",
+          };
+          searchData.push(location);
+        }
+      }
+    }
+
+    await setMounted(true);
+  };
+
   return (
     <div className={classes.grow}>
       <AppBar position="static" style={{ position: "fixed" }}>
@@ -553,12 +791,15 @@ export default function UserNavbar() {
               <SearchIcon />
             </div>
             <InputBase
+              autoFocus
               placeholder="Search…"
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
+              value={searchValue}
+              onChange={(event) => onSearchChange(event)}
             />
           </div>
           <div className={classes.grow} />
@@ -572,11 +813,15 @@ export default function UserNavbar() {
                 <Home />
               </Badge>
             </IconButton>
-            <IconButton aria-label="show 12 new notifications" color="inherit">
+            <IconButton 
+              aria-label="show 12 new notifications" 
+              color="inherit"
+              onClick={handleExploreClick}
+              >
               <Badge color="secondary">
-                <Telegram />
+                <ExploreOutlinedIcon />
               </Badge>
-            </IconButton>
+            </IconButton>          
             <IconButton
               aria-label="show 12 new notifications"
               color="inherit"
@@ -587,6 +832,11 @@ export default function UserNavbar() {
                 color="secondary"
               >
                 <FavoriteBorder />
+              </Badge>
+            </IconButton>
+            <IconButton aria-label="show 12 new notifications" color="inherit">
+              <Badge color="secondary">
+                <Telegram />
               </Badge>
             </IconButton>
             <IconButton
@@ -626,6 +876,13 @@ export default function UserNavbar() {
           return <div></div>;
         } else {
           return renderNotifications;
+        }
+      })()}
+      {(() => {
+        if (searchValue == "") {
+          return <div></div>;
+        } else {
+          return renderSearchResults;
         }
       })()}
     </div>
