@@ -56,7 +56,8 @@ namespace StoryMicroservice
             string hostedService = Environment.GetEnvironmentVariable("HOSTED_SERVICE") ?? "true";
             if (hostedService == "true")
             {
-                services.AddHostedService<ProfileMessageReceiver>();
+                services.AddHostedService<ProfileCreatedMessageReceiver>();
+                services.AddHostedService<ProfileUpdatedMessageReceiver>();
             }
         }
 

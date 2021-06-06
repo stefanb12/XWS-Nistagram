@@ -11,6 +11,8 @@ namespace StoryMicroservice.Model
         public bool IsPrivate { get; set; }
         public int OriginalId { get; set; }
         public List<Story> Stories { get; set; }
+        public List<int> Following { get; set; }
+        public List<int> CloseFriends { get; set; }
         public string ImageName { get; set; }
         public IFormFile ImageFile { get; set; }
         public string ImageSrc { get; set; }

@@ -55,5 +55,10 @@ namespace PostMicroservice.Repository
             var objectId = new ObjectId(id);
             await _dbCollection.DeleteOneAsync(Builders<TDocument>.Filter.Eq("_id", objectId));
         }
+
+        public IMongoCollection<TDocument> GetCollection()
+        {
+            return _dbCollection;
+        }
     }
 }

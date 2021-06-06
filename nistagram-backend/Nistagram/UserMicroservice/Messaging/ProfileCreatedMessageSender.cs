@@ -1,11 +1,9 @@
 ﻿using Newtonsoft.Json;
 using ProfileMicroservice.Model;
 using RabbitMQ.Client;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using UserMicroservice.Model;
 
 namespace UserMicroservice.Messaging
 {
@@ -22,23 +20,18 @@ namespace UserMicroservice.Messaging
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.ExchangeDeclare(exchange: "profile", type: ExchangeType.Fanout);
-
-                /*channel.QueueDeclare(queue: "profile.created",
-                                     durable: false,
-                                     exclusive: false,
-                                     autoDelete: false,
-                                     arguments: null);*/
+                channel.ExchangeDeclare(exchange: "profile.created", type: ExchangeType.Fanout);
 
                 var integrationEventData = JsonConvert.SerializeObject(new
                 {
                     id = profile.Id,
-                    username = profile.Username
+                    username = profile.Username,
+                    isPrivate = profile.IsPrivate
                 });
 
                 var body = Encoding.UTF8.GetBytes(integrationEventData);
 
-                channel.BasicPublish(exchange: "profile",
+                channel.BasicPublish(exchange: "profile.created",
                                      routingKey: "",
                                      basicProperties: null,
                                      body: body);
