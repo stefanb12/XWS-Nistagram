@@ -251,11 +251,11 @@ export default function MainNavbar() {
         setsearchedPosts(result);
       });
 
-    if (row.type == "user") {
+    if (row.type == "user" && row.id != null) {
       setSearchValue("");
       history.push({
         pathname: "/app/profile",
-        state: row.id,
+        state: {profileId: row.id}
       });
     } else if (row.type == "tag" || row.type == "location") {
       setSearchValue("");
@@ -404,7 +404,7 @@ export default function MainNavbar() {
           border: "1px solid grey",
         }}
       >
-        <div style={{ height: "400px", width: "100%", overflow: "auto" }}>
+        <div style={{ height: "212px", width: "100%", overflow: "auto" }}>
           <TableBody style={{ width: "100%" }}>
             {searchData
               .filter((val) => {

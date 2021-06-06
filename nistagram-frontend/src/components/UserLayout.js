@@ -5,6 +5,8 @@ import UserProfile from "../pages/UserProfile";
 import UserProfileSettings from "../pages/UserProfileSettings";
 import UserHomePage from "../pages/UserHomePage";
 import NotFound from "../pages/NotFound";
+import UserSearchResultPage from "../pages/UserSearchResultPage";
+import HomePage from "../pages/HomePage";
 
 const MainLayoutRoot = {
   height: "100%",
@@ -44,6 +46,12 @@ export default function UserLayout({ routes }) {
               </Route>
               <Route path="/user/settings">
                 <UserProfileSettings />
+              </Route>
+              <Route path="/user/search">
+                <UserSearchResultPage />
+              </Route>
+              <Route path="/user/explore">
+                <HomePage />
               </Route>
               <Route path="/user/*">
                 <NotFound />

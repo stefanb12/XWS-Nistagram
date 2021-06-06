@@ -22,6 +22,12 @@ namespace PostMicroservice.Service
             return publicProfiles.Where(pf => pf.IsPrivate == false).ToList();
         }
 
+        public async Task<Profile> GetProfileByOriginalId(int originalId)
+        {
+            IEnumerable<Profile> profiles = await GetAll();
+            return profiles.Where(p => p.OriginalId == originalId).FirstOrDefault();
+        }
+
         public async Task<Profile> GetById(string id)
         {
             return await _profileRepository.GetById(id);

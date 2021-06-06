@@ -5,6 +5,7 @@ import { Button, Modal } from "react-bootstrap";
 import {
   BookmarkBorder,
   ContactlessOutlined,
+  LaptopWindows,
   LockOutlined,
 } from "@material-ui/icons";
 import "../assets/styles/posts.css";
@@ -23,9 +24,9 @@ class UserProfile extends Component {
     this.dropdownRef = React.createRef();
     this.state = {
       loggedUser: { following: [], followers: [] },
-      userProfile: {},
-      //userProfileId: this.props.location.state.profileId,
-      userProfileId: 1,
+      userProfile: { following: [], followers: [] },
+      userProfileId: this.props.location.state.profileId,
+      //userProfileId: 1,
       isOpenFollowersModal: false,
       isOpenFollowingModal: false,
       isPostsButtonActive: true,
@@ -42,6 +43,13 @@ class UserProfile extends Component {
       followersSnackBarMessage: "",
     };
     this.handleClick = this.handleClick.bind(this);
+  }
+
+  static componentWillReceiveProps(props) {
+    return { 
+      userProfileId: props.location.state.profileId
+     
+    };
   }
 
   handleClickFollowingSnackBar = (message) => {
@@ -150,6 +158,8 @@ class UserProfile extends Component {
       }
     }
 
+    this.getFollowersAndFollowing();
+
     await ProfileService.getUser(this.state.userProfileId)
       .then((res) => res.json())
       .then((result) => {
@@ -166,7 +176,6 @@ class UserProfile extends Component {
         });
       });
 
-    this.getFollowersAndFollowing();
   }
 
   componentWillUnmount() {
@@ -331,16 +340,15 @@ class UserProfile extends Component {
     let loggedUser = this.state.loggedUser;
     let userProfile = this.state.userProfile;
     let doesFollowRequestExist = this.state.doesFollowRequestExist;
-    const userProfileId = this.state.userProfileId;
     const dropdownRef = this.dropdownRef;
     const isActive = this.state.isActive;
 
     let isInFollowing = loggedUser.following.some((followingProfile) => {
-      if (followingProfile.followingId == userProfileId) return true;
+      if (followingProfile.followingId == this.state.userProfileId) return true;
     });
 
     let isInFollowers = loggedUser.followers.some((followerProfile) => {
-      if (followerProfile.followerId == userProfileId) return true;
+      if (followerProfile.followerId == this.state.userProfileId) return true;
     });
 
     let profileBody = (
@@ -443,10 +451,10 @@ class UserProfile extends Component {
         </div>
       </div>
     );
-    let savedButton;
+    let savedButton = <div id="savedButton"></div>;
     let followButton;
     if (!AuthService.getCurrentUser()) {
-      savedButton = <div></div>;
+      savedButton = <div id="savedButton"></div>; 
       followButton = <div></div>;
       if (userProfile.isPrivate) {
         profileBody = (
@@ -474,7 +482,7 @@ class UserProfile extends Component {
           </div>
         );
       }
-    } else if (loggedUser.id === userProfileId) {
+    } else if (loggedUser.id === this.state.userProfileId) {
       // It is my profile
       followButton = (
         <div class="d-none d-md-block">

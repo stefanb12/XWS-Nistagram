@@ -13,7 +13,7 @@ class SearchResultPage extends Component {
         searchParam: this.props.location.state.searchParam,
         imageSrc: this.props.location.state.imageSrc,
         publicPosts: [],
-        searchedPosts: this.props.location.state.posts,
+        searchedPosts: [],
         redirect: false
     };
   }
@@ -116,7 +116,25 @@ class SearchResultPage extends Component {
       return this.state.searchedPosts;
   }
 
+  /*updatePosts = async (updatedPosts) => {
+    console.log(updatedPosts)
+    await this.setState({
+      searchedPosts: updatedPosts,
+
+    }, () => {
+      console.log(this.state.searchedPosts);
+    });
+    
+  };*/
+
+  updatePosts = async (updatedPosts) => {
+    await this.setState({
+      searchedPosts: updatedPosts,
+    });
+  };
+
   render() {
+    //console.log("RENDER", this.state.searchedPosts)
     return (
       <div>
         <div class="container">
@@ -144,6 +162,7 @@ class SearchResultPage extends Component {
                 <div class="col-lg-9 col-xl-20" style={{marginTop: "4%"}}>
                   <PostCard
                     sendPosts={this.state.searchedPosts}
+                    updatePost={this.updatePosts.bind(this)}
                   />
                 </div>
               </div>

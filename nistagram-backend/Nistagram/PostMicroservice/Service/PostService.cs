@@ -57,20 +57,38 @@ namespace PostMicroservice.Service
             return favoritePosts;
         }
 
-        public async Task<List<Post>> GetAllPublicPosts()
+        public async Task<List<Post>> GetAllPublicPosts(int profileId)
         {
             List<Post> publicPosts = new List<Post>();
             foreach (Profile profile in await _profileService.GetAllPublicProfiles())
             {
                 foreach (Post post in await GetAll())
                 {
-                    if (profile.OriginalId == post.Publisher.OriginalId)
+                    if (profile.OriginalId == post.Publisher.OriginalId && profileId != post.Publisher.OriginalId)
                     {
                         publicPosts.Add(post);
                     }
                 }
             }
             return publicPosts;
+        }
+
+        public async Task<List<Post>> GetPostsFromFollowedProfiles(int profileId)
+        {
+            List<Post> posts = new List<Post>();
+            Profile profile = await _profileService.GetProfileByOriginalId(profileId);
+
+            foreach (int followedId in profile.Following)
+            {
+                foreach (Post post in await GetAll())
+                {
+                    if (followedId == post.Publisher.OriginalId)
+                    {
+                        posts.Add(post);
+                    }
+                }
+            }
+            return posts;
         }
 
         public async Task<Post> InsertNewComment(Post post, Comment comment)

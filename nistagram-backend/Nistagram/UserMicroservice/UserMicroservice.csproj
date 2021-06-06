@@ -6,14 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\user1213352029.jpg" />
-    <Content Remove="wwwroot\user2213352029.jpg" />
-    <Content Remove="wwwroot\user3213352029.png" />
-    <Content Remove="wwwroot\user4213352029.png" />
-    <Content Remove="wwwroot\user5213352029.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.15" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.15" />
@@ -25,14 +17,6 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.2.5" />
     <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.11.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\user1213352029.jpg" />
-    <None Include="wwwroot\user2213352029.jpg" />
-    <None Include="wwwroot\user3213352029.png" />
-    <None Include="wwwroot\user4213352029.png" />
-    <None Include="wwwroot\user5213352029.jpg" />
   </ItemGroup>
 
 </Project>

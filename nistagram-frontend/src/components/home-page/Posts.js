@@ -6,6 +6,8 @@ import AlgoliaPlaces from "algolia-places-react";
 import PostService from "../../services/PostService";
 import AuthService from "../../services/AuthService";
 import PostCard from "./PostCard";
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
 
 export default class Posts extends Component {
   constructor(props) {
@@ -27,6 +29,10 @@ export default class Posts extends Component {
       currentEnteredTags: "",
       description: "",
       posts: [],
+      openSnackError: false,
+      openSnackSuccess: false,
+      messageError: "",
+      messageSuccess: "",
     };
     this.handleInputChange = this.handleInputChange.bind(this);
   }
@@ -35,6 +41,18 @@ export default class Posts extends Component {
     const script = document.createElement("script");
     script.async = true;
     script.src = "../helpers/cyrillicToLatin.min.js";
+  }
+
+  async componentWillMount() {
+    await PostService.getPostsFromFollowedProfiles(
+      AuthService.getCurrentUser().id
+    )
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          posts: result,
+        });
+      });
   }
 
   toLatinConvert(string) {
@@ -133,17 +151,8 @@ export default class Posts extends Component {
   };
 
   addPost = () => {
-    // console.log("Images:", this.state.imageFiles);
-    // console.log("Location:", this.state.location);
-    // console.log("Address:", this.state.address);
-    // console.log("City:", this.state.city);
-    // console.log("Country:", this.state.country);
-    // console.log("Tags:", this.state.tags);
-    // console.log("Description:", this.state.description);
-
     if (this.state.imageFiles.length == 0) {
-      // Zabrani dodavanje posta
-      // Napisi obavestenje da je slika obavezna za izbacivanje posta
+      this.handleClickSnackBarError("You have to choose image first!");
     } else {
       let tagsList = [];
       for (var tag of this.state.tags.split("#")) {
@@ -151,7 +160,6 @@ export default class Posts extends Component {
           tagsList.push(tag.split(" ").join(""));
         }
       }
-      console.log(tagsList);
 
       let publisher = AuthService.getCurrentUser();
       let resStatus = 0;
@@ -171,7 +179,7 @@ export default class Posts extends Component {
         })
         .then((result) => {
           if (resStatus === 200) {
-            console.log(result);
+            this.handleClickSnackBarSuccess("Post is successfully published!");
           }
           return result;
         });
@@ -183,6 +191,46 @@ export default class Posts extends Component {
         description: "",
       });
     }
+  };
+
+  updatePosts = async (updatedPosts) => {
+    await this.setState({
+      posts: updatedPosts,
+    });
+  };
+
+  handleClickSnackBarError = (message) => {
+    this.setState({
+      openSnackError: true,
+      messageError: message,
+    });
+  };
+
+  handleClickSnackBarSuccess = (message) => {
+    this.setState({
+      openSnackSuccess: true,
+      messageSuccess: message,
+    });
+  };
+
+  handleCloseSnackBarError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    this.setState({
+      openSnackError: false,
+    });
+  };
+
+  handleCloseSnackBarSuccess = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    this.setState({
+      openSnackSuccess: false,
+    });
   };
 
   render() {
@@ -303,10 +351,38 @@ export default class Posts extends Component {
       </Modal>
     );
 
+    const snackbarError = (
+      <Snackbar
+        open={this.state.openSnackError}
+        autoHideDuration={2500}
+        onClose={this.handleCloseSnackBarError}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={this.handleCloseSnackBarError} severity="error">
+          {this.state.messageError}
+        </Alert>
+      </Snackbar>
+    );
+
+    const snackbarSuccess = (
+      <Snackbar
+        open={this.state.openSnackSuccess}
+        autoHideDuration={2500}
+        onClose={this.handleCloseSnackBarSuccess}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={this.handleCloseSnackBarSuccess} severity="success">
+          {this.state.messageSuccess}
+        </Alert>
+      </Snackbar>
+    );
+
     return (
       <div>
         {imagesModalDialog}
         {tagsAndLocationModalDialog}
+        {snackbarError}
+        {snackbarSuccess}
         <div class="container">
           <div class="no-page-title">
             <div id="main-wrapper">
@@ -359,7 +435,10 @@ export default class Posts extends Component {
                       </div>
                     </div>
                   </div>
-                  <PostCard sendPosts={this.state.posts} />
+                  <PostCard
+                    sendPosts={this.state.posts}
+                    updatePost={this.updatePosts.bind(this)}
+                  />
                 </div>
                 <div class="col-lg-12 col-xl-4">
                   <div class="card card-white grid-margin">
