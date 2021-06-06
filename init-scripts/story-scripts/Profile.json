@@ -1,0 +1,41 @@
+[{
+  "_id": {
+    "$oid": "60bc22d49d53e41f79168897"
+  },
+  "Username": "stefanb",
+  "IsPrivate": false,
+  "OriginalId": 1,
+  "ImageName": "user1213352029.jpg"
+},{
+  "_id": {
+    "$oid": "60bc22d49d53e41f79168898"
+  },
+  "Username": "matijam",
+  "IsPrivate": true,
+  "OriginalId": 2,
+  "ImageName": "user2213352029.jpg"
+},{
+  "_id": {
+    "$oid": "60bc22d49d53e41f79168899"
+  },
+  "Username": "aleksai",
+  "IsPrivate": true,
+  "OriginalId": 3,
+  "ImageName": "user3213352029.png"
+},{
+  "_id": {
+    "$oid": "60bc22d49d53e41f7916889a"
+  },
+  "Username": "stefans",
+  "IsPrivate": false,
+  "OriginalId": 4,
+  "ImageName": "user4213352029.png"
+},{
+  "_id": {
+    "$oid": "60bc22d49d53e41f7916889b"
+  },
+  "Username": "majam",
+  "IsPrivate": false,
+  "OriginalId": 5,
+  "ImageName": "user5213352029.jpg"
+}]

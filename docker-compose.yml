@@ -44,7 +44,7 @@ services:
     image: mongo:latest
     container_name: mongodb-post-microservice
     volumes:
-      - ./init-scripts:/data/db
+      - ./init-scripts/post-scripts:/data/db
     restart: unless-stopped
     #environment: 
     #   # MONGO_INITDB_ROOT_USERNAME: root

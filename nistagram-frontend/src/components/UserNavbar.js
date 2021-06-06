@@ -142,6 +142,7 @@ export default function UserNavbar() {
   const [numberOfNotSeenNotifications, setNumberOfNotSeenNotifications] =
     React.useState(0);
   const [open, setOpen] = React.useState(false);
+  const [loggedUser, setLoggedUser] = React.useState({});
 
   const handleAlertClick = () => {
     setOpen(true);
@@ -155,9 +156,9 @@ export default function UserNavbar() {
     setOpen(false);
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     let status;
-    NotificationService.getNotificationForProfile(
+    await NotificationService.getNotificationForProfile(
       AuthService.getCurrentUser().id
     )
       .then((res) => {
@@ -169,6 +170,11 @@ export default function UserNavbar() {
           setNotifications(result);
           countOfNotSeenNotifications(result);
         }
+      });
+    await ProfileService.getUser(AuthService.getCurrentUser().id)
+      .then((res) => res.json())
+      .then((result) => {
+        setLoggedUser(result);
       });
   }, []);
 
@@ -595,7 +601,7 @@ export default function UserNavbar() {
                 <Avatar
                   className={classes.small}
                   alt="profile"
-                  src="https://bootdey.com/img/Content/avatar/avatar6.png"
+                  src={loggedUser.imageSrc}
                 />
               </div>
             </IconButton>
