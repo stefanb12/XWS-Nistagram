@@ -7,5 +7,6 @@ namespace PostMicroservice.Service
     public interface IProfileService : IService<Profile>
     {
         Task<List<Profile>> GetAllPublicProfiles();
+        Task<Profile> GetProfileByOriginalId(int originalId);
     }
 }
