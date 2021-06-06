@@ -19,12 +19,13 @@ namespace UserMicroservice.Service
     {
         private IProfileRepository _profileRepository;
         private IProfileCreatedMessageSender _profileCreatedSender;
-        private readonly IWebHostEnvironment _hostEnvironment;
+        private IProfileUpdatedMessageSender _profileUpdatedSender;
 
-        public ProfileService(IProfileRepository userRepository, IProfileCreatedMessageSender profileCreatedSender)
+        public ProfileService(IProfileRepository userRepository, IProfileCreatedMessageSender profileCreatedSender, IProfileUpdatedMessageSender profileUpdatedSender)
         {
             _profileRepository = userRepository;
             _profileCreatedSender = profileCreatedSender;
+            _profileUpdatedSender = profileUpdatedSender;
         }
 
         public async Task<List<Profile>> GetFollowers(int id)
@@ -132,8 +133,7 @@ namespace UserMicroservice.Service
 
         public async Task<Profile> Update(Profile entity)
         {
-            await _profileRepository.Update(entity);
-            return entity;
+            return await _profileRepository.Update(entity);
         }
 
         public async Task<Profile> UpdateWithImage(Profile entity, IFormFile imageFile)
@@ -142,7 +142,10 @@ namespace UserMicroservice.Service
             {
                 entity.ImageName = await SaveImage(imageFile);
             }
-            await _profileRepository.Update(entity);
+
+            Profile profile = await _profileRepository.Update(entity);
+            _profileUpdatedSender.SendUpdatedProfile(profile);
+            
             return entity;
         }
 

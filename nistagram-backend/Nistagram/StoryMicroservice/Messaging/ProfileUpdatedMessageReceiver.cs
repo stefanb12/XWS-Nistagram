@@ -6,20 +6,19 @@ using StoryMicroservice.Model;
 using StoryMicroservice.Service;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace StoryMicroservice.Messaging
 {
-    public class ProfileMessageReceiver : BackgroundService, IProfileMessageReceiver
+    public class ProfileUpdatedMessageReceiver : BackgroundService, IMessageReceiver
     {
         private IProfileService _profileService;
         private IConnection _connection;
         private IModel _channel;
 
-        public ProfileMessageReceiver(IProfileService profileService)
+        public ProfileUpdatedMessageReceiver(IProfileService profileService)
         {
             _profileService = profileService;
             InitRabbitMQ();
@@ -31,14 +30,14 @@ namespace StoryMicroservice.Messaging
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
-            _channel.ExchangeDeclare(exchange: "profile", type: ExchangeType.Fanout);
-            _channel.QueueDeclare(queue: "story.profile.created",
+            _channel.ExchangeDeclare(exchange: "profile.updated", type: ExchangeType.Fanout);
+            _channel.QueueDeclare(queue: "story.profile.updated",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: false,
                                   arguments: null);
-            _channel.QueueBind(queue: "story.profile.created",
-                              exchange: "profile",
+            _channel.QueueBind(queue: "story.profile.updated",
+                              exchange: "profile.updated",
                               routingKey: "");
         }
 
@@ -53,16 +52,18 @@ namespace StoryMicroservice.Messaging
                 Console.WriteLine(" [x] Received {0}", message);
 
                 var data = JObject.Parse(message);
-                _profileService.Insert(new Profile()
+                _profileService.Update(new Profile()
                 {
                     OriginalId = data["id"].Value<int>(),
                     Username = data["username"].Value<string>(),
-                });
+                    IsPrivate = data["isPrivate"].Value<bool>(),
+                    Following = data["following"].ToObject<List<int>>()
+            });
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };
 
-            _channel.BasicConsume(queue: "story.profile.created",
+            _channel.BasicConsume(queue: "story.profile.updated",
                                   autoAck: false,
                                   consumer: consumer);
         }

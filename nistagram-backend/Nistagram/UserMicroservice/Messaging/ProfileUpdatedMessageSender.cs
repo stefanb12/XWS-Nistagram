@@ -7,31 +7,35 @@ using UserMicroservice.Model;
 
 namespace UserMicroservice.Messaging
 {
-    public class ProfileCreatedMessageSender : IProfileCreatedMessageSender
+    public class ProfileUpdatedMessageSender : IProfileUpdatedMessageSender
     {
-        public ProfileCreatedMessageSender()
-        {
+        public ProfileUpdatedMessageSender() { }
 
-        }
-
-        public void SendCreatedProfile(Profile profile)
+        public void SendUpdatedProfile(Profile profile)
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.ExchangeDeclare(exchange: "profile.created", type: ExchangeType.Fanout);
+                channel.ExchangeDeclare(exchange: "profile.updated", type: ExchangeType.Fanout);
+
+                List<int> followingIds = new List<int>();
+                foreach (ProfileFollowing followed in profile.Following)
+                {
+                    followingIds.Add(followed.FollowingId);
+                }
 
                 var integrationEventData = JsonConvert.SerializeObject(new
                 {
                     id = profile.Id,
                     username = profile.Username,
-                    isPrivate = profile.IsPrivate
+                    isPrivate = profile.IsPrivate,
+                    following = followingIds
                 });
 
                 var body = Encoding.UTF8.GetBytes(integrationEventData);
 
-                channel.BasicPublish(exchange: "profile.created",
+                channel.BasicPublish(exchange: "profile.updated",
                                      routingKey: "",
                                      basicProperties: null,
                                      body: body);

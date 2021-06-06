@@ -44,7 +44,7 @@ namespace ProfileMicroservice
             services.AddSingleton<IUserService, UserService>(service =>
                     new UserService(new UserRepository(new UserDbContext())));
             services.AddSingleton<IProfileService, ProfileService>(service =>
-                  new ProfileService(new ProfileRepository(new UserDbContext()), new ProfileCreatedMessageSender()));
+                  new ProfileService(new ProfileRepository(new UserDbContext()), new ProfileCreatedMessageSender(), new ProfileUpdatedMessageSender()));
             services.AddSingleton<IFollowRequestService, FollowRequestService>(service =>
                     new FollowRequestService(new FollowRequestRepository(new UserDbContext())));
 
