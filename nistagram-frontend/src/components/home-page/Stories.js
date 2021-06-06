@@ -9,6 +9,7 @@ import { Checkbox, FormControlLabel, Slider, Snackbar, Typography } from "@mater
 import StoryService from "../../services/StoryService";
 import AuthService from "../../services/AuthService";
 import { Alert } from "@material-ui/lab";
+import Image from 'react-bootstrap/Image'
 
 export default class Stories extends Component {
   constructor(props) {
@@ -26,7 +27,8 @@ export default class Stories extends Component {
       currentProfileStories: null,
       timeCounter: 0,
       currentStoryNumber: 0,
-      numberOfStoriesForCurrentProfile: 0
+      numberOfStoriesForCurrentProfile: 0,
+      currentProfileImage: null
     }
   }
 
@@ -201,7 +203,8 @@ componentWillMount() {
       isShowStoryDialogOpen : true,
       currentStoryNumber : storyNumber,
       numberOfStoriesForCurrentProfile : profileStories.stories.length,
-      currentProfileStories : profileStories
+      currentProfileStories : profileStories,
+      currentProfileImage : profileStories.imageSrc
     })
     this.currentStoryPublisher = profileStories.username;
     this.currentTimeout = window.setInterval(() => {
@@ -223,12 +226,13 @@ componentWillMount() {
         <div class="col-md-2" key={key}>
                 <div class="team text-center rounded p-4 py-1">
                   <img
-                    src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                    src={profileStories.imageSrc}
                     class="img-fluid avatar avatar-medium shadow rounded-pill"
                     alt=""
                     onClick = {() => {this.showStory(profileStories, 0)}}
-                    style = {{
-                      border : "2px solid red"
+                    style={{
+                      width: "90px",
+                      height: "90px"
                     }}
                   />
                   <div class="content mt-2">
@@ -248,7 +252,20 @@ componentWillMount() {
         centered>
         <Modal.Header
           closeButton>
-          <Modal.Title>
+          <img
+                    src={this.state.currentProfileImage}
+                    class="img-fluid avatar avatar-medium shadow rounded-pill"
+                    alt=""
+                    style={{
+                      width: "50px",
+                      height: "50px"
+                    }}
+                  />
+          <Modal.Title 
+            style={{
+              marginLeft: "15px",
+              marginTop: "5px"
+            }}>
             {this.currentStoryPublisher}
           </Modal.Title>
         </Modal.Header>

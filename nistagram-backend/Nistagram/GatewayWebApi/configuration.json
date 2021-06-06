@@ -545,7 +545,7 @@
             }*/
     },
     {
-      "DownstreamPathTemplate": "/api/story/getAllProfileStories",
+      "DownstreamPathTemplate": "/api/story/getAllProfileStories/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -553,7 +553,7 @@
           "Port": 55996
         }
       ],
-      "UpstreamPathTemplate": "/gateway/story/getAllProfileStories",
+      "UpstreamPathTemplate": "/gateway/story/getAllProfileStories/{id}",
       "UpstreamHttpMethod": [ "GET" ]
       /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",

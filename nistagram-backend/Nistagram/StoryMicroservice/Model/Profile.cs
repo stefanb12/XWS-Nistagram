@@ -19,5 +19,17 @@ namespace StoryMicroservice.Model
         public Profile() : base()
         {
         }
+
+        public bool IsFollowing(int profileId)
+        {
+            foreach(int id in Following)
+            {
+                if (id == profileId)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
