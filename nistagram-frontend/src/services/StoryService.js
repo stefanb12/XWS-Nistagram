@@ -1,3 +1,5 @@
+import AuthService from "./AuthService";
+
 const API_URL = "http://localhost:58809/gateway/";
 
 class StoryService {
@@ -20,12 +22,13 @@ class StoryService {
     return fetch(API_URL + "story", requestOptions);
   }
 
-  getAllStories() {
-    return fetch(API_URL + "story/getAllProfileStories");
-  }
-
   getActiveStoriesForProfile(profileId) {
     return fetch(API_URL + "story/profile/" + profileId);
+  }
+
+  getAllStories() {
+    let profile = AuthService.getCurrentUser();
+    return fetch(API_URL + "story/getAllProfileStories/" + profile.id);
   }
 }
 

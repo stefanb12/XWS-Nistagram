@@ -48,10 +48,10 @@ namespace StoryMicroservice.Controllers
             return Ok(returnValue);
         }
 
-        [HttpGet("getAllProfileStories")]
-        public async Task<IActionResult> GetProfileStories()
+        [HttpGet("getAllProfileStories/{id}")]
+        public async Task<IActionResult> GetFollowingProfilesStories(int id)
         {
-            var profilesStories = await _profileService.GetProfileStories();
+            var profilesStories = await _profileService.GetFollowingProfilesActiveStories(id);
             List<ProfileStoriesDto> returnValue = new List<ProfileStoriesDto>();
             foreach (ProfileStories ps in profilesStories)
             {

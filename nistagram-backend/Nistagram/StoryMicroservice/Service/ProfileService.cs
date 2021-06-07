@@ -35,8 +35,7 @@ namespace StoryMicroservice.Service
 
         public async Task<Profile> Update(Profile entity)
         {
-            var profiles = await GetAll();
-            Profile profile = profiles.FirstOrDefault(p => p.OriginalId == entity.OriginalId);  
+            Profile profile = await GetProfileByOriginalId(entity.OriginalId);
             return await _profileRepository.Update(UpdateProfileAttributes(profile, entity));
         }
 
@@ -53,6 +52,12 @@ namespace StoryMicroservice.Service
             await _profileRepository.Delete(id);
         }
 
+        public async Task<Profile> GetProfileByOriginalId(int id)
+        {
+            var allProfiles = await _profileRepository.GetAll();
+            return allProfiles.FirstOrDefault(predicate => predicate.OriginalId == id);
+        }
+
         public async Task<List<ProfileStories>> GetProfileStories()
         {
             var profileStories = await _profileRepository.GetProfileStoryAggregatedCollection(_storyRepository.GetCollection());
@@ -65,6 +70,39 @@ namespace StoryMicroservice.Service
                 }
             }
             return returnValue;
+        }
+
+        public async Task<List<ProfileStories>> GetFollowingProfilesActiveStories(int profileId)
+        {
+            var profileStories = await _profileRepository.GetProfileStoryAggregatedCollection(_storyRepository.GetCollection());
+            List<ProfileStories> returnValue = new List<ProfileStories>();
+            Profile profile = await GetProfileByOriginalId(profileId);
+            foreach(ProfileStories ps in profileStories)
+            {
+                if (profile.IsFollowing(ps.OriginalId))
+                {
+                    ps.Stories = FilterStoriesForCloseFriends(ps, profileId);
+                    if (ps.Stories.Count > 0)
+                    {
+                        returnValue.Add(ps);
+                    }  
+                }
+            }
+            return returnValue;
+        }
+
+        public List<Story> FilterStoriesForCloseFriends(ProfileStories profileStories, int profileId)
+        {
+            List<Story> filteredStories = new List<Story>();
+            foreach(Story s in profileStories.GetActiveStories())
+            {
+                if (s.ForCloseFriends && !profileStories.IsCloseFriend(profileId))
+                {
+                    continue;
+                }
+                filteredStories.Add(s);
+            }
+            return filteredStories;
         }
     }
 }

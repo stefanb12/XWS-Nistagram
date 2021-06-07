@@ -15,6 +15,7 @@ import {
 import StoryService from "../../services/StoryService";
 import AuthService from "../../services/AuthService";
 import { Alert } from "@material-ui/lab";
+import Image from "react-bootstrap/Image";
 
 export default class Stories extends Component {
   constructor(props) {
@@ -25,6 +26,8 @@ export default class Stories extends Component {
       storyImages: [],
       closeFriendsOnly: false,
       storyAddedSnackbarShown: false,
+      snackbarSeverity: "success",
+      snackbarMessage: "",
       allProfileStories: [],
       currentStoryImage: null,
       currentStoryPublisher: "",
@@ -33,6 +36,7 @@ export default class Stories extends Component {
       timeCounter: 0,
       currentStoryNumber: 0,
       numberOfStoriesForCurrentProfile: 0,
+      currentProfileImage: null,
     };
   }
 
@@ -79,6 +83,14 @@ export default class Stories extends Component {
   };
 
   addImages = () => {
+    if (this.state.storyImages.length == 0) {
+      this.setState({
+        storyAddedSnackbarShown: true,
+        snackbarMessage: "You must choose image first!",
+        snackbarSeverity: "error",
+      });
+      return;
+    }
     let publisher = AuthService.getCurrentUser();
     StoryService.addImagesToStory(
       this.state.storyImages,
@@ -93,6 +105,8 @@ export default class Stories extends Component {
         });
         this.setState({
           storyAddedSnackbarShown: true,
+          snackbarMessage: "Story added successfully!",
+          snackbarSeverity: "success",
         });
         StoryService.getAllStories()
           .then((res) => {
@@ -213,6 +227,7 @@ export default class Stories extends Component {
       currentStoryNumber: storyNumber,
       numberOfStoriesForCurrentProfile: profileStories.stories.length,
       currentProfileStories: profileStories,
+      currentProfileImage: profileStories.imageSrc,
     });
     this.currentStoryPublisher = profileStories.username;
     this.currentTimeout = window.setInterval(() => {
@@ -235,14 +250,15 @@ export default class Stories extends Component {
           <div class="col-md-2" key={key}>
             <div class="team text-center rounded p-4 py-1">
               <img
-                src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                src={profileStories.imageSrc}
                 class="img-fluid avatar avatar-medium shadow rounded-pill"
                 alt=""
                 onClick={() => {
                   this.showStory(profileStories, 0);
                 }}
                 style={{
-                  border: "2px solid red",
+                  width: "90px",
+                  height: "90px",
                 }}
               />
               <div class="content mt-2">
@@ -263,7 +279,23 @@ export default class Stories extends Component {
         centered
       >
         <Modal.Header closeButton>
-          <Modal.Title>{this.currentStoryPublisher}</Modal.Title>
+          <img
+            src={this.state.currentProfileImage}
+            class="img-fluid avatar avatar-medium shadow rounded-pill"
+            alt=""
+            style={{
+              width: "40px",
+              height: "40px",
+            }}
+          />
+          <Modal.Title
+            style={{
+              marginLeft: "15px",
+              marginTop: "3px",
+            }}
+          >
+            {this.currentStoryPublisher}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body
           style={{
@@ -276,8 +308,8 @@ export default class Stories extends Component {
             <img
               style={{
                 float: "left",
-                maxWidth: "300px",
-                maxHeight: "380px",
+                maxWidth: "320px",
+                maxHeight: "360px",
               }}
               src={this.state.currentStoryImage}
               class="img-thumbnail"
@@ -425,19 +457,25 @@ export default class Stories extends Component {
       </Modal>
     );
 
+    var renderSnackbar = (
+      <Snackbar
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+        open={this.state.storyAddedSnackbarShown}
+        autoHideDuration={3000}
+        onClose={this.handleCloseSnackBar}
+      >
+        <Alert severity={this.state.snackbarSeverity}>
+          {this.state.snackbarMessage}
+        </Alert>
+      </Snackbar>
+    );
+
     return (
       <div>
-        <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center",
-          }}
-          open={this.storyAddedSnackbarShown}
-          autoHideDuration={3000}
-          onClose={this.handleCloseSnackBar}
-        >
-          <Alert severity="sucess">Story added successfully!</Alert>
-        </Snackbar>
+        {renderSnackbar}
         {addStoryModalDialog}
         {showStoryModalDialog}
         <div class="container">
