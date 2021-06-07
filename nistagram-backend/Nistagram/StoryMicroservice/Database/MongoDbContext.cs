@@ -54,6 +54,7 @@ namespace StoryMicroservice.Database
             var storyData = new List<Story> {
                 new Story
                 {
+                    Id = "60bd70ad107c45e92fd80692",
                     Visible = true,
                     ForCloseFriends = false,
                     PublishingDate = new DateTime(2021, 06, 06, 23, 29, 59),
@@ -62,6 +63,7 @@ namespace StoryMicroservice.Database
                 },
                 new Story
                 {
+                    Id = "60bd70ad107c45e92fd80693",
                     Visible = true,
                     ForCloseFriends = false,
                     PublishingDate = new DateTime(2021, 06, 06, 22, 59, 59),
@@ -70,6 +72,7 @@ namespace StoryMicroservice.Database
                 },
                 new Story
                 {
+                    Id = "60bd70ad107c45e92fd80694",
                     Visible = true,
                     ForCloseFriends = false,
                     PublishingDate = new DateTime(2021, 06, 06, 21, 59, 59),
@@ -78,6 +81,7 @@ namespace StoryMicroservice.Database
                 },
                 new Story
                 {
+                    Id = "60bd70ad107c45e92fd80695",
                     Visible = true,
                     ForCloseFriends = false,
                     PublishingDate = new DateTime(2021, 06, 06, 20, 59, 59),
@@ -86,6 +90,7 @@ namespace StoryMicroservice.Database
                 },
                 new Story
                 {
+                    Id = "60bd70ad107c45e92fd80696",
                     Visible = true,
                     ForCloseFriends = true,
                     PublishingDate = new DateTime(2021, 06, 06, 21, 59, 59),

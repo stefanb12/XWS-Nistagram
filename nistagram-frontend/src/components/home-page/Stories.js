@@ -20,6 +20,8 @@ export default class Stories extends Component {
       storyImages : [],
       closeFriendsOnly : false,
       storyAddedSnackbarShown : false,
+      snackbarSeverity : 'success',
+      snackbarMessage : '',
       allProfileStories : [],
       currentStoryImage: null,
       currentStoryPublisher: '',
@@ -75,6 +77,14 @@ componentWillMount() {
   }
 
   addImages = () => {
+    if (this.state.storyImages.length == 0) {
+      this.setState({
+        storyAddedSnackbarShown : true,
+        snackbarMessage : 'You must choose image first!',
+        snackbarSeverity : 'error'
+      });
+      return;
+    }
     let publisher = AuthService.getCurrentUser();
     StoryService.addImagesToStory(this.state.storyImages, this.state.closeFriendsOnly, publisher)
     .then((res) => {
@@ -85,7 +95,9 @@ componentWillMount() {
           closeFriendsOnly : false
         });
         this.setState({
-          storyAddedSnackbarShown : true
+          storyAddedSnackbarShown : true,
+          snackbarMessage : 'Story added successfully!',
+          snackbarSeverity : 'success'
         });
         StoryService.getAllStories()
         .then((res) => {
@@ -257,14 +269,14 @@ componentWillMount() {
                     class="img-fluid avatar avatar-medium shadow rounded-pill"
                     alt=""
                     style={{
-                      width: "50px",
-                      height: "50px"
+                      width: "40px",
+                      height: "40px"
                     }}
                   />
           <Modal.Title 
             style={{
               marginLeft: "15px",
-              marginTop: "5px"
+              marginTop: "3px"
             }}>
             {this.currentStoryPublisher}
           </Modal.Title>
@@ -279,8 +291,8 @@ componentWillMount() {
             <img
               style={{
                 float: "left",
-                maxWidth: "300px",
-                maxHeight: "380px",
+                maxWidth: "320px",
+                maxHeight: "360px",
               }}
               src={this.state.currentStoryImage}
               class="img-thumbnail"
@@ -399,21 +411,25 @@ componentWillMount() {
       </Modal>
     )
 
-    return (
-      <div>
-        <Snackbar
+    var renderSnackbar = (
+      <Snackbar
           anchorOrigin={{
-            vertical: "bottom",
+            vertical: "top",
             horizontal: "center",
           }}
-          open={this.storyAddedSnackbarShown}
+          open={this.state.storyAddedSnackbarShown}
           autoHideDuration={3000}
           onClose={this.handleCloseSnackBar}
           >
-            <Alert severity="sucess">
-              Story added successfully!
+            <Alert severity={this.state.snackbarSeverity}>
+              {this.state.snackbarMessage}
             </Alert>
         </Snackbar>
+    )
+
+    return (
+      <div>
+        {renderSnackbar}
         {addStoryModalDialog}
         {showStoryModalDialog}
         <div class="container">
