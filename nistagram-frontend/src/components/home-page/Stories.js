@@ -15,8 +15,9 @@ import StoryService from "../../services/StoryService";
 import AuthService from "../../services/AuthService";
 import { Alert } from "@material-ui/lab";
 import moment from "moment";
+import { withRouter } from "react-router-dom";
 
-export default class Stories extends Component {
+class Stories extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,6 +31,7 @@ export default class Stories extends Component {
       allProfileStories: [],
       currentStoryImage: null,
       currentStoryPublisher: "",
+      currentStoryPublisherId: 1,
       currentStoryPublishingDate: null,
       currentTimeout: null,
       currentProfileStories: null,
@@ -232,6 +234,10 @@ export default class Stories extends Component {
       currentProfileImage: profileStories.imageSrc,
     });
     this.currentStoryPublisher = profileStories.username;
+    this.setState({
+      currentStoryPublisherId: profileStories.originalId,
+    });
+
     this.currentTimeout = window.setInterval(() => {
       this.setState({
         timeCounter: this.state.timeCounter + 1,
@@ -283,6 +289,14 @@ export default class Stories extends Component {
       >
         <Modal.Header closeButton>
           <img
+            onClick={() => {
+              this.props.history.push({
+                pathname: "/user/profile",
+                state: {
+                  profileId: this.state.currentStoryPublisherId,
+                },
+              });
+            }}
             src={this.state.currentProfileImage}
             class="img-fluid avatar avatar-medium shadow rounded-pill"
             alt=""
@@ -292,6 +306,14 @@ export default class Stories extends Component {
             }}
           />
           <Modal.Title
+            onClick={() => {
+              this.props.history.push({
+                pathname: "/user/profile",
+                state: {
+                  profileId: this.state.currentStoryPublisherId,
+                },
+              });
+            }}
             style={{
               marginLeft: "15px",
               marginTop: "3px",
@@ -526,3 +548,5 @@ export default class Stories extends Component {
     );
   }
 }
+
+export default withRouter(Stories);

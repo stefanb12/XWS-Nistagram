@@ -16,11 +16,13 @@ namespace StoryMicroservice.Controllers
     {
         private readonly IStoryService _storyService;
         private readonly IProfileService _profileService;
+        private readonly IStoryHighlightsService _storyHighlightsService;
 
-        public StoryController(IStoryService storyService, IProfileService profileService)
+        public StoryController(IStoryService storyService, IProfileService profileService, IStoryHighlightsService storyHighlightsService)
         {
             _storyService = storyService;
             _profileService = profileService;
+            _storyHighlightsService = storyHighlightsService;
         }
 
         [HttpPost]
@@ -98,6 +100,36 @@ namespace StoryMicroservice.Controllers
                 dto.ImageSrc = String.Format("http://localhost:55996/{0}", story.ImageName);
                 result.Add(dto);
             }
+            return Ok(result);
+        }
+
+        [HttpPost("highlight")]
+        public async Task<IActionResult> AddStoryHighlight([FromBody] StoryHighlightDto dto)
+        {
+            StoryHighlight storyHighlight = StoryHighlightMapper.StoryHighlightDtoToStoryHighlight(dto);
+            List<Story> stories = new List<Story>();
+            foreach (string storyId in dto.StoriesIds)
+            {
+                stories.Add(await _storyService.GetById(storyId));
+            }
+            storyHighlight.Stories = stories;
+            return Ok(await _storyHighlightsService.Insert(storyHighlight));
+        }
+
+        [HttpGet("highlight/profile/{profileId}")]
+        public async Task<IActionResult> GetStoryHighlightsForProfile(int profileId)
+        {
+            List<StoryHighlight> storyHighlightsForProfile = await _storyHighlightsService.GetStoryHighlightsForProfile(profileId);
+            if(!storyHighlightsForProfile.Any())
+            {
+                return NoContent();
+            }
+            List<StoryHighlightDto> result = new List<StoryHighlightDto>();
+            foreach(StoryHighlight storyHighlight in storyHighlightsForProfile) 
+            {
+                result.Add(StoryHighlightMapper.StoryHighlightToStoryHighlightDto(storyHighlight));
+            }
+
             return Ok(result);
         }
     }

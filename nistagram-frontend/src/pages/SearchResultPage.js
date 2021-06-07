@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import { Redirect, useHistory, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import PostCard from "../components/home-page/PostCard";
 import PostService from "../services/PostService";
-import hash from "../assets/images/hash.svg";
 import { Button } from "@material-ui/core";
 import { ArrowBack } from "@material-ui/icons";
 

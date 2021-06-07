@@ -22,6 +22,20 @@ class StoryService {
     return fetch(API_URL + "story", requestOptions);
   }
 
+  addStoryHighlight(name, publisherId, storiesIds) {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, publisherId, storiesIds }),
+    };
+
+    return fetch(API_URL + "story/highlight", requestOptions);
+  }
+
+  getStoryHighlightsForProfile(profileId) {
+    return fetch(API_URL + "story/highlight/profile/" + profileId);
+  }
+
   getActiveStoriesForProfile(profileId) {
     return fetch(API_URL + "story/active/profile/" + profileId);
   }

@@ -53,6 +53,9 @@ namespace StoryMicroservice
             services.AddSingleton<IProfileRepository, ProfileRepository>();
             services.AddSingleton<IProfileService, ProfileService>();
 
+            services.AddSingleton<IStoryHighlightsRepository, StoryHighlightsRepository>();
+            services.AddSingleton<IStoryHighlightsService, StoryHighlightsService>();
+
             string hostedService = Environment.GetEnvironmentVariable("HOSTED_SERVICE") ?? "true";
             if (hostedService == "true")
             {
