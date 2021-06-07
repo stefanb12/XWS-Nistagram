@@ -22,6 +22,21 @@ namespace StoryMicroservice.Service
             _hostEnvironment = hostEnvironment;
         }
 
+        public async Task<List<Story>> GetActiveStoriesForProfile(int profileId)
+        {
+            List<Story> storiesForProfile = new List<Story>();
+            foreach(Story story in await GetAll())
+            {
+                if (story.PublisherId == profileId &&
+                    story.PublishingDate < DateTime.Now &&
+                    story.PublishingDate > DateTime.Now.AddHours(-24))
+                {
+                    storiesForProfile.Add(story);
+                }
+            }
+            return storiesForProfile;
+        }
+
         public async Task<Story> GetById(string id)
         {
             return await _storyRepository.GetById(id);

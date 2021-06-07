@@ -29,14 +29,21 @@ import Avatar from "@material-ui/core/Avatar";
 import { useHistory } from "react-router";
 import AuthService from "../services/AuthService";
 import NotificationService from "../services/NotificationService";
-import { Snackbar, Table, TableBody, TableCell, TableContainer, TableRow } from "@material-ui/core";
+import {
+  Snackbar,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+} from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import FollowRequestService from "../services/FollowRequestService";
 import ProfileService from "../services/ProfileService";
 import moment from "moment";
 import PostService from "../services/PostService";
 import hash from "../assets/images/hash.svg";
-import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
+import ExploreOutlinedIcon from "@material-ui/icons/ExploreOutlined";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -214,11 +221,14 @@ export default function UserNavbar() {
           countOfNotSeenNotifications(result);
         }
       });
-    await ProfileService.getUser(AuthService.getCurrentUser().id)
-      .then((res) => res.json())
-      .then((result) => {
-        setLoggedUser(result);
-      });
+    let loggedUser = AuthService.getCurrentUser();
+    if (loggedUser) {
+      await ProfileService.getUser(AuthService.getCurrentUser().id)
+        .then((res) => res.json())
+        .then((result) => {
+          setLoggedUser(result);
+        });
+    }
   }, []);
 
   const handleClick = (event) => {
@@ -640,8 +650,8 @@ export default function UserNavbar() {
     if (row.type == "user") {
       setSearchValue("");
       history.push({
-        pathname: "/app/profile",
-        state: {profileId: row.id}
+        pathname: "/user/profile",
+        state: { profileId: row.id },
       });
     } else if (row.type == "tag" || row.type == "location") {
       setSearchValue("");
@@ -813,15 +823,15 @@ export default function UserNavbar() {
                 <Home />
               </Badge>
             </IconButton>
-            <IconButton 
-              aria-label="show 12 new notifications" 
+            <IconButton
+              aria-label="show 12 new notifications"
               color="inherit"
               onClick={handleExploreClick}
-              >
+            >
               <Badge color="secondary">
                 <ExploreOutlinedIcon />
               </Badge>
-            </IconButton>          
+            </IconButton>
             <IconButton
               aria-label="show 12 new notifications"
               color="inherit"
