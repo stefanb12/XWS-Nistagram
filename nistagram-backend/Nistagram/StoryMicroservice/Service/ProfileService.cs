@@ -77,14 +77,32 @@ namespace StoryMicroservice.Service
             var profileStories = await _profileRepository.GetProfileStoryAggregatedCollection(_storyRepository.GetCollection());
             List<ProfileStories> returnValue = new List<ProfileStories>();
             Profile profile = await GetProfileByOriginalId(profileId);
-            foreach (ProfileStories ps in profileStories)
+            foreach(ProfileStories ps in profileStories)
             {
-                if (ps.GetActiveStories().Count > 0 && profile.IsFollowing(ps.OriginalId))
+                if (profile.IsFollowing(ps.OriginalId))
                 {
-                    returnValue.Add(ps);
+                    ps.Stories = FilterStoriesForCloseFriends(ps, profileId);
+                    if (ps.Stories.Count > 0)
+                    {
+                        returnValue.Add(ps);
+                    }  
                 }
             }
             return returnValue;
+        }
+
+        public List<Story> FilterStoriesForCloseFriends(ProfileStories profileStories, int profileId)
+        {
+            List<Story> filteredStories = new List<Story>();
+            foreach(Story s in profileStories.GetActiveStories())
+            {
+                if (s.ForCloseFriends && !profileStories.IsCloseFriend(profileId))
+                {
+                    continue;
+                }
+                filteredStories.Add(s);
+            }
+            return filteredStories;
         }
     }
 }

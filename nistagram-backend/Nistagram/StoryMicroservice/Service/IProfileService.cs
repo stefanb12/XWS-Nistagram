@@ -11,5 +11,6 @@ namespace StoryMicroservice.Service
         Task<Profile> GetProfileByOriginalId(int id);
         Task<List<ProfileStories>> GetProfileStories();
         Task<List<ProfileStories>> GetFollowingProfilesActiveStories(int profileId);
+        List<Story> FilterStoriesForCloseFriends(ProfileStories profileStories, int profileId);
     }
 }

@@ -30,5 +30,29 @@ namespace StoryMicroservice.Model
         {
             return this.Stories;
         }
+
+        public bool IsFollowing(int profileId)
+        {
+            foreach (int id in Following)
+            {
+                if (id == profileId)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsCloseFriend(int profileId)
+        {
+            foreach (int id in CloseFriends)
+            {
+                if (id == profileId)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
