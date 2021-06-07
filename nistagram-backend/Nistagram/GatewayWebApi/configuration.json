@@ -563,25 +563,44 @@
                 "UserRole": "User"
             }*/
         },
-        {
-            "DownstreamPathTemplate": "/api/story/getAllProfileStories",
-            "DownstreamScheme": "http",
-            "DownstreamHostAndPorts": [
-                {
-                    "Host": "localhost",
-                    "Port": 55996
-                }
-            ],
-            "UpstreamPathTemplate": "/gateway/story/getAllProfileStories",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+      {
+        "DownstreamPathTemplate": "/api/story/getAllProfileStories",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "localhost",
+            "Port": 55996
+          }
+        ],
+        "UpstreamPathTemplate": "/gateway/story/getAllProfileStories",
+        "UpstreamHttpMethod": [ "GET" ]
+        /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User"
             }*/
-        }
+      },
+      {
+        "DownstreamPathTemplate": "/api/story/profile/{profileId}",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "localhost",
+            "Port": 55996
+          }
+        ],
+        "UpstreamPathTemplate": "/gateway/story/profile/{profileId}",
+        "UpstreamHttpMethod": [ "GET" ]
+        /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+      }
 
     ],
   "GlobalConfiguration": {

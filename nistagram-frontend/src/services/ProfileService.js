@@ -40,10 +40,9 @@ class ProfileService {
       method: "PUT",
       body: formData,
     };
-    
+
     return fetch(API_URL + "profile/update", requestOptions);
   }
-
 
   follow(followerId, followingId) {
     const requestOptions = {
@@ -78,7 +77,7 @@ class ProfileService {
   }
 
   getAllUsers() {
-    return fetch(API_URL + "profile/" + "getAll");
+    return fetch(API_URL + "profile/getAll");
   }
 }
 

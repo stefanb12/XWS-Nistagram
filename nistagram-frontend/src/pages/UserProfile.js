@@ -13,10 +13,11 @@ import AuthService from "../services/AuthService";
 import ProfileService from "../services/ProfileService";
 import FollowRequestService from "../services/FollowRequestService";
 import NotificationService from "../services/NotificationService";
-import { Snackbar } from "@material-ui/core";
+import { Slider, Snackbar, Typography } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import PostService from "../services/PostService";
 import PostCard from "../components/home-page/PostCard";
+import StoryService from "../services/StoryService";
 
 class UserProfile extends Component {
   constructor(props) {
@@ -26,7 +27,6 @@ class UserProfile extends Component {
       loggedUser: { following: [], followers: [] },
       userProfile: { following: [], followers: [] },
       userProfileId: this.props.location.state.profileId,
-      //userProfileId: 1,
       isOpenFollowersModal: false,
       isOpenFollowingModal: false,
       isPostsButtonActive: true,
@@ -41,14 +41,22 @@ class UserProfile extends Component {
       followersSnackBarOpen: false,
       followingSnackBarMessage: "",
       followersSnackBarMessage: "",
+      doesActiveStoriesExists: false,
+      activeStories: [],
+      currentStoryImage: "",
+      isShowStoryDialogOpen: false,
+      currentStoryNumber: 0,
+      timeCounter: 0,
+      currentTimeout: null,
+      numberOfStoriesForCurrentProfile: 0,
+      currentProfileStories: null,
     };
     this.handleClick = this.handleClick.bind(this);
   }
 
   static componentWillReceiveProps(props) {
-    return { 
-      userProfileId: props.location.state.profileId
-     
+    return {
+      userProfileId: props.location.state.profileId,
     };
   }
 
@@ -176,6 +184,24 @@ class UserProfile extends Component {
         });
       });
 
+    let resStatus = 0;
+    await StoryService.getActiveStoriesForProfile(this.state.userProfileId)
+      .then((res) => {
+        resStatus = res.status;
+        return res.json();
+      })
+      .then((result) => {
+        if (resStatus === 200) {
+          this.setState({
+            activeStories: result,
+            doesActiveStoriesExists: true,
+          });
+        } else if (resStatus === 204) {
+          this.setState({
+            doesActiveStoriesExists: false,
+          });
+        }
+      });
   }
 
   componentWillUnmount() {
@@ -269,7 +295,7 @@ class UserProfile extends Component {
         return res.json();
       })
       .then((result) => {
-        NotificationService.sendFollowNotification(followingId, followerId, 0);
+        NotificationService.sendFollowNotification(followingId, followerId, "");
         this.getFollowersAndFollowing();
         this.setState({
           loggedUser: result.follower,
@@ -301,7 +327,7 @@ class UserProfile extends Component {
         NotificationService.sendFollowRequestNotification(
           followerId,
           followingId,
-          0
+          ""
         );
         this.setState({
           doesFollowRequestExist: true,
@@ -336,12 +362,165 @@ class UserProfile extends Component {
     }
   };
 
+  showStory = (storyNumber) => {
+    this.setState({
+      currentStoryImage: this.state.activeStories[storyNumber].imageSrc,
+      isShowStoryDialogOpen: true,
+      currentStoryNumber: storyNumber,
+      numberOfStoriesForCurrentProfile: this.state.activeStories.length,
+      currentProfileStories: this.state.activeStories,
+    });
+    this.currentStoryPublisher = this.state.userProfile.username;
+    this.currentTimeout = window.setInterval(() => {
+      this.setState({
+        timeCounter: this.state.timeCounter + 1,
+      });
+      if (this.state.timeCounter >= 180) {
+        this.setState({
+          timeCounter: 0,
+        });
+        this.showNextStory(this.state.activeStories, storyNumber);
+      }
+    }, 30);
+  };
+
+  handleActiveStoriesClick = () => {
+    this.showStory(0);
+  };
+
+  resetClockAndCounter = () => {
+    this.setState({
+      timeCounter: 0,
+    });
+    clearInterval(this.currentTimeout);
+  };
+
+  closeShowStoryDialog = () => {
+    this.setState({
+      isShowStoryDialogOpen: false,
+    });
+    clearTimeout(this.currentTimeout);
+    this.setState({
+      timeCounter: 0,
+    });
+  };
+
+  showPreviousStory = (profileStories, storyNumber) => {
+    this.resetClockAndCounter();
+
+    if (storyNumber > -1) {
+      this.showStory(storyNumber);
+      return;
+    }
+
+    this.showStory(0);
+  };
+
+  showNextStory = (profileStories, storyNumber) => {
+    this.resetClockAndCounter();
+
+    if (storyNumber + 1 < profileStories.length) {
+      this.showStory(storyNumber + 1);
+      return;
+    }
+
+    this.closeShowStoryDialog();
+  };
+
   render() {
     let loggedUser = this.state.loggedUser;
     let userProfile = this.state.userProfile;
     let doesFollowRequestExist = this.state.doesFollowRequestExist;
     const dropdownRef = this.dropdownRef;
     const isActive = this.state.isActive;
+
+    var showStoryModalDialog = (
+      <Modal
+        show={this.state.isShowStoryDialogOpen}
+        onHide={this.closeShowStoryDialog}
+        contentClassName="story-modal"
+        id="myModal"
+        centered
+      >
+        <Modal.Header closeButton>
+          <img
+            src={this.state.userProfile.imageSrc}
+            class="img-fluid avatar avatar-medium shadow rounded-pill"
+            alt=""
+            style={{
+              width: "40px",
+              height: "40px",
+            }}
+          />
+          <Modal.Title
+            style={{
+              marginLeft: "15px",
+              marginTop: "3px",
+            }}
+          >
+            {this.state.userProfile.username}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div>
+            <img
+              style={{
+                float: "left",
+                maxWidth: "300px",
+                maxHeight: "380px",
+              }}
+              src={this.state.currentStoryImage}
+              class="img-thumbnail"
+            />
+          </div>
+        </Modal.Body>
+        <Modal.Footer
+          style={{
+            float: "left",
+            alignContent: "left",
+            alignItems: "left",
+          }}
+        >
+          <Typography
+            style={{
+              float: "left",
+            }}
+          >
+            {this.state.currentStoryNumber + 1} of{" "}
+            {this.state.numberOfStoriesForCurrentProfile}
+          </Typography>
+          <Slider value={this.state.timeCounter} step={1} max={179}></Slider>
+          <Button
+            color="primary"
+            onClick={() => {
+              this.showPreviousStory(
+                this.state.activeStories,
+                this.state.currentStoryNumber - 1
+              );
+            }}
+          >
+            Previous
+          </Button>
+          <Button
+            color="primary"
+            onClick={() => {
+              this.showNextStory(
+                this.state.activeStories,
+                this.state.currentStoryNumber
+              );
+            }}
+          >
+            Next
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
 
     let isInFollowing = loggedUser.following.some((followingProfile) => {
       if (followingProfile.followingId == this.state.userProfileId) return true;
@@ -454,7 +633,7 @@ class UserProfile extends Component {
     let savedButton = <div id="savedButton"></div>;
     let followButton;
     if (!AuthService.getCurrentUser()) {
-      savedButton = <div id="savedButton"></div>; 
+      savedButton = <div id="savedButton"></div>;
       followButton = <div></div>;
       if (userProfile.isPrivate) {
         profileBody = (
@@ -679,6 +858,7 @@ class UserProfile extends Component {
     }
     return (
       <div>
+        {showStoryModalDialog}
         <Snackbar
           open={this.state.followersSnackBarOpen}
           autoHideDuration={2000}
@@ -799,11 +979,32 @@ class UserProfile extends Component {
                     </figure>
                     <div class="cover-body d-flex justify-content-between align-items-center">
                       <div>
-                        <img
-                          class="profile-pic"
-                          src={userProfile.imageSrc}
-                          alt="profile"
-                        />
+                        {(() => {
+                          if (this.state.doesActiveStoriesExists === true) {
+                            return (
+                              <img
+                                class="profile-pic"
+                                src={userProfile.imageSrc}
+                                alt="profile"
+                                style={{
+                                  border: "2px solid red",
+                                }}
+                                onClick={() => {
+                                  this.handleActiveStoriesClick();
+                                }}
+                              />
+                            );
+                          } else {
+                            return (
+                              <img
+                                class="profile-pic"
+                                src={userProfile.imageSrc}
+                                alt="profile"
+                              />
+                            );
+                          }
+                        })()}
+
                         <span class="profile-name">{userProfile.username}</span>
                       </div>
                       {followButton}
