@@ -56,6 +56,7 @@ namespace PostMicroservice.Messaging
                 {
                     OriginalId = data["id"].Value<int>(),
                     Username = data["username"].Value<string>(),
+                    ImageName = data["profileImage"].Value<string>(),
                     Following = new List<int>()
                 });
 

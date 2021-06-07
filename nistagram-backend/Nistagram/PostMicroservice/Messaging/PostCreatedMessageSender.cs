@@ -1,35 +1,30 @@
 ﻿using Newtonsoft.Json;
-using ProfileMicroservice.Model;
+using PostMicroservice.Model;
 using RabbitMQ.Client;
-using System.Collections.Generic;
 using System.Text;
-using UserMicroservice.Model;
-
-namespace UserMicroservice.Messaging
+namespace PostMicroservice.Messaging
 {
-    public class ProfileCreatedMessageSender : IProfileCreatedMessageSender
+    public class PostCreatedMessageSender : IPostCreatedMessageSender
     {
-        public ProfileCreatedMessageSender() { }
+        public PostCreatedMessageSender() { }
 
-        public void SendCreatedProfile(Profile profile)
+        public void SendCreatedPost(Post post)
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.ExchangeDeclare(exchange: "profile.created", type: ExchangeType.Fanout);
+                channel.ExchangeDeclare(exchange: "post.created", type: ExchangeType.Fanout);
 
                 var integrationEventData = JsonConvert.SerializeObject(new
                 {
-                    id = profile.Id,
-                    username = profile.Username,
-                    isPrivate = profile.IsPrivate,
-                    profileImage = profile.ImageName
+                    originalId = post.Id,
+                    profileImage = post.Contents[0]
                 });
 
                 var body = Encoding.UTF8.GetBytes(integrationEventData);
 
-                channel.BasicPublish(exchange: "profile.created",
+                channel.BasicPublish(exchange: "post.created",
                                      routingKey: "",
                                      basicProperties: null,
                                      body: body);

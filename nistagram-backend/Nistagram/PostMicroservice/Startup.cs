@@ -47,11 +47,13 @@ namespace PostMicroservice
 
             services.AddSingleton<IMongoDbContext, MongoDbContext>();
 
-            services.AddSingleton<IPostRepository, PostRepository>();
-            services.AddSingleton<IPostService, PostService>();
+            services.AddSingleton<IPostCreatedMessageSender, PostCreatedMessageSender>();
 
             services.AddSingleton<IProfileRepository, ProfileRepository>();
             services.AddSingleton<IProfileService, ProfileService>();
+
+            services.AddSingleton<IPostRepository, PostRepository>();
+            services.AddSingleton<IPostService, PostService>();
 
             string hostedService = Environment.GetEnvironmentVariable("HOSTED_SERVICE") ?? "true";
             if (hostedService == "true")

@@ -31,6 +31,7 @@ namespace ProfileMicroservice.Model
         public Profile()
         {
             Category = UserCategory.Regular;
+            ImageName = "defaultProfile.png";
         }
     }
 }

@@ -44,6 +44,7 @@ namespace StoryMicroservice.Service
         {
             profile.Username = entity.Username;
             profile.IsPrivate = entity.IsPrivate;
+            profile.ImageName = entity.ImageName;
             profile.Following = entity.Following;
             return profile;
         }

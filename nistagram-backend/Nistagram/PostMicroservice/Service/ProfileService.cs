@@ -55,6 +55,7 @@ namespace PostMicroservice.Service
             profile.Username = entity.Username;
             profile.IsPrivate = entity.IsPrivate;
             profile.Following = entity.Following;
+            profile.ImageName = entity.ImageName;
             return profile;
         }
 

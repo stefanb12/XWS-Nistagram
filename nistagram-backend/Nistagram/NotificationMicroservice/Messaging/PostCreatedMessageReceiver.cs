@@ -1,26 +1,25 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Linq;
+using NotificationMicroservice.Model;
+using NotificationMicroservice.Service;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using StoryMicroservice.Model;
-using StoryMicroservice.Service;
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StoryMicroservice.Messaging
+namespace NotificationMicroservice.Messaging
 {
-    public class ProfileCreatedMessageReceiver : BackgroundService, IMessageReceiver
+    public class PostCreatedMessageReceiver : BackgroundService, IMessageReceiver
     {
-        private IProfileService _profileService;
+        private IPostService _postService;
         private IConnection _connection;
         private IModel _channel;
 
-        public ProfileCreatedMessageReceiver(IProfileService profileService)
+        public PostCreatedMessageReceiver(IPostService postService)
         {
-            _profileService = profileService;
+            _postService = postService;
             InitRabbitMQ();
         }
 
@@ -30,14 +29,14 @@ namespace StoryMicroservice.Messaging
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
-            _channel.ExchangeDeclare(exchange: "profile.created", type: ExchangeType.Fanout);
-            _channel.QueueDeclare(queue: "story.profile.created",
+            _channel.ExchangeDeclare(exchange: "post.created", type: ExchangeType.Fanout);
+            _channel.QueueDeclare(queue: "notification.post.created",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: false,
                                   arguments: null);
-            _channel.QueueBind(queue: "story.profile.created",
-                              exchange: "profile.created",
+            _channel.QueueBind(queue: "notification.post.created",
+                              exchange: "post.created",
                               routingKey: "");
         }
 
@@ -52,20 +51,16 @@ namespace StoryMicroservice.Messaging
                 Console.WriteLine(" [x] Received {0}", message);
 
                 var data = JObject.Parse(message);
-                _profileService.Insert(new Profile()
+                _postService.Insert(new Post()
                 {
-                    OriginalId = data["id"].Value<int>(),
-                    Username = data["username"].Value<string>(),
-                    IsPrivate = data["isPrivate"].Value<bool>(),
-                    ImageName = data["profileImage"].Value<string>(),
-                    Following = new List<int>(),
-                    CloseFriends = new List<int>()
+                    OriginalId = data["originalId"].Value<string>(),
+                    ImageName = data["profileImage"].Value<string>()
                 });
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };
 
-            _channel.BasicConsume(queue: "story.profile.created",
+            _channel.BasicConsume(queue: "notification.post.created",
                                   autoAck: false,
                                   consumer: consumer);
         }
