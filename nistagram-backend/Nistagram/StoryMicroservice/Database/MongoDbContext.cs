@@ -56,7 +56,7 @@ namespace StoryMicroservice.Database
                 {
                     Visible = true,
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 05, 23, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 06, 23, 29, 59),
                     PublisherId = 1,
                     ImageName = "sc2210938836.jpg"
                 },
@@ -64,7 +64,7 @@ namespace StoryMicroservice.Database
                 {
                     Visible = true,
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 05, 22, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 06, 22, 59, 59),
                     PublisherId = 2,
                     ImageName = "sc1211007001.jpg"
                 },
@@ -72,7 +72,7 @@ namespace StoryMicroservice.Database
                 {
                     Visible = true,
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 05, 21, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 06, 21, 59, 59),
                     PublisherId = 2,
                     ImageName = "2212424861.png"
                 },
@@ -80,7 +80,7 @@ namespace StoryMicroservice.Database
                 {
                     Visible = true,
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 05, 20, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 06, 20, 59, 59),
                     PublisherId = 3,
                     ImageName = "2212424862.png"
                 },
@@ -88,7 +88,7 @@ namespace StoryMicroservice.Database
                 {
                     Visible = true,
                     ForCloseFriends = true,
-                    PublishingDate = new DateTime(2021, 06, 05, 21, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 06, 21, 59, 59),
                     PublisherId = 4,
                     ImageName = "2212424863.png"
                 }

@@ -562,19 +562,19 @@
             "RouteClaimsRequirement": {
                 "UserRole": "User"
             }*/
-        },
+    },
+    {
+      "DownstreamPathTemplate": "/api/story/getAllProfileStories/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
         {
-            "DownstreamPathTemplate": "/api/story/getAllProfileStories",
-            "DownstreamScheme": "http",
-            "DownstreamHostAndPorts": [
-                {
-                    "Host": "localhost",
-                    "Port": 55996
-                }
-            ],
-            "UpstreamPathTemplate": "/gateway/story/getAllProfileStories",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+          "Host": "localhost",
+          "Port": 55996
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/story/getAllProfileStories/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+      /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },

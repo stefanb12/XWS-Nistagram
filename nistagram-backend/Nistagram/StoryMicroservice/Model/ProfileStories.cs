@@ -20,5 +20,15 @@ namespace StoryMicroservice.Model
         public ProfileStories() : base()
         {
         }
+
+        public List<Story> GetActiveStories()
+        {
+            return GetAllStories().Where(s => s.PublishingDate.AddHours(24) > DateTime.Now).ToList();
+        }
+
+        public IEnumerable<Story> GetAllStories()
+        {
+            return this.Stories;
+        }
     }
 }

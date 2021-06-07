@@ -15,8 +15,9 @@ namespace StoryMicroservice.Mapper
 
             dto.OriginalId = profileStories.OriginalId;
             dto.Username = profileStories.Username;
+            dto.ImageSrc = String.Format("http://localhost:55988/{0}", profileStories.ImageName);
             dto.Stories = new List<StoryDto>();
-            foreach(Story s in profileStories.Stories)
+            foreach(Story s in profileStories.GetActiveStories())
             {
                 dto.Stories.Add(StoryMapper.StoryToStoryDto(s));
             }
