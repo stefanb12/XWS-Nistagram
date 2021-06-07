@@ -1,16 +1,15 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Linq;
+using NotificationMicroservice.Model;
+using NotificationMicroservice.Service;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using StoryMicroservice.Model;
-using StoryMicroservice.Service;
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StoryMicroservice.Messaging
+namespace NotificationMicroservice.Messaging
 {
     public class ProfileCreatedMessageReceiver : BackgroundService, IMessageReceiver
     {
@@ -31,12 +30,12 @@ namespace StoryMicroservice.Messaging
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
             _channel.ExchangeDeclare(exchange: "profile.created", type: ExchangeType.Fanout);
-            _channel.QueueDeclare(queue: "story.profile.created",
+            _channel.QueueDeclare(queue: "notification.profile.created",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: false,
                                   arguments: null);
-            _channel.QueueBind(queue: "story.profile.created",
+            _channel.QueueBind(queue: "notification.profile.created",
                               exchange: "profile.created",
                               routingKey: "");
         }
@@ -56,16 +55,13 @@ namespace StoryMicroservice.Messaging
                 {
                     OriginalId = data["id"].Value<int>(),
                     Username = data["username"].Value<string>(),
-                    IsPrivate = data["isPrivate"].Value<bool>(),
-                    ImageName = data["profileImage"].Value<string>(),
-                    Following = new List<int>(),
-                    CloseFriends = new List<int>()
+                    ImageName = data["profileImage"].Value<string>()
                 });
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };
 
-            _channel.BasicConsume(queue: "story.profile.created",
+            _channel.BasicConsume(queue: "notification.profile.created",
                                   autoAck: false,
                                   consumer: consumer);
         }

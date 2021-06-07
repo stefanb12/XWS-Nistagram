@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NotificationMicroservice.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace NotificationMicroservice.Database
 {
@@ -44,13 +41,13 @@ namespace NotificationMicroservice.Database
                 new Profile { Id = 2, OriginalId = 2, Username = "matijam", ImageName = "user2213352029.jpg" },
                 new Profile { Id = 3, OriginalId = 3, Username = "aleksai", ImageName = "user3213352029.png" },
                 new Profile { Id = 4, OriginalId = 4, Username = "stefans", ImageName = "user4213352029.png" },
-                new Profile { Id = 5, OriginalId = 6, Username = "majam", ImageName = "user5213352029.jpg" }
+                new Profile { Id = 5, OriginalId = 5, Username = "majam", ImageName = "user5213352029.jpg" }
             );
 
             modelBuilder.Entity<Post>().HasData(
-                new Post { Id = 1, OriginalId = "asdasd", ImageName = "asddsad.png" },
-                new Post { Id = 2, OriginalId = "asdasd", ImageName = "asddsad.png" },
-                new Post { Id = 3, OriginalId = "asdasd", ImageName = "asddsad.png" }
+                new Post { Id = 1, OriginalId = "60bd51f992412f495bd7effb", ImageName = "2212424861.png" },
+                new Post { Id = 2, OriginalId = "60bd51f992412f495bd7effc", ImageName = "2212424862.png" },
+                new Post { Id = 3, OriginalId = "60bd51f992412f495bd7effd", ImageName = "2212424862.png" }
             );
 
             modelBuilder.Entity<Notification>().HasData(

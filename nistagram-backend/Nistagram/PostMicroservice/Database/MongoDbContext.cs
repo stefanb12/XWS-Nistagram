@@ -59,7 +59,8 @@ namespace PostMicroservice.Database
         private IEnumerable<Post> CreatePostData()
         {
             var postData = new List<Post> {
-                new Post { 
+                new Post {
+                    Id = "60bd51f992412f495bd7effb",
                     Tags = new List<string> {"Nature" } , 
                     Description = "Nature", 
                     PublishingDate = new DateTime(2021, 05, 01, 11, 01, 01), 
@@ -72,6 +73,7 @@ namespace PostMicroservice.Database
                     Contents = new List<Content> { new Content { ImageName = "2212424861.png" } }   
                 },
                 new Post {
+                    Id = "60bd51f992412f495bd7effc",
                     Tags = new List<string> { "Waterfall" } ,
                     Description = "Waterfall",
                     PublishingDate = new DateTime(2021, 06, 01, 19, 10, 10),
@@ -84,6 +86,7 @@ namespace PostMicroservice.Database
                     Contents = new List<Content> { new Content { ImageName = "2212424862.png" } }
                 },
                 new Post {
+                    Id = "60bd51f992412f495bd7effd",
                     Tags = new List<string> { "Mountain", "Skiing", "Vacation" } ,
                     Description = "Vacation",
                     PublishingDate = new DateTime(2021, 01, 01, 18, 10, 10),

@@ -29,9 +29,12 @@ namespace UserMicroservice.Messaging
                 }
 
                 List<int> closeFriendsIds = new List<int>();
-                foreach (ProfileCloseFriend closeFriend in profile.CloseFriends)
+                if (profile.CloseFriends != null)
                 {
-                    closeFriendsIds.Add(closeFriend.CloseFriendId);
+                    foreach (ProfileCloseFriend closeFriend in profile.CloseFriends)
+                    {
+                        closeFriendsIds.Add(closeFriend.CloseFriendId);
+                    }
                 }
 
                 var integrationEventData = JsonConvert.SerializeObject(new

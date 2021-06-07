@@ -80,6 +80,7 @@ namespace UserMicroservice.Service
             followerProfile.Following.Add(profileFollowing);
             await Update(followingProfile);
 
+            _profileUpdatedSender.SendUpdatedProfile(followingProfile);
             return profileFollower;
         }
 
@@ -102,6 +103,8 @@ namespace UserMicroservice.Service
                 profileFollowing.FollowingId == followingProfile.Id).SingleOrDefault();
             followerProfile.Following.Remove(profileFollowing);
             await Update(followingProfile);
+
+            _profileUpdatedSender.SendUpdatedProfile(followingProfile);
 
             ProfileFollower res = new ProfileFollower();
             res.Profile = followingProfile;
