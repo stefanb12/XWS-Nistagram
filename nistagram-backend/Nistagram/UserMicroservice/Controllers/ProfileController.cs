@@ -60,7 +60,12 @@ namespace UserMicroservice.Controllers
             List<Profile> followers = await _profileService.GetFollowers(id);
 
             List<ProfileDto> result = new List<ProfileDto>();
-            followers.ToList().ForEach(follower => result.Add(ProfileMapper.ProfileToProfileDto(follower)));
+            foreach(Profile follower in followers)
+            {
+                ProfileDto dto = ProfileMapper.ProfileToProfileDto(follower);
+                dto.ImageSrc = String.Format("http://localhost:55988/{0}", follower.ImageName);
+                result.Add(dto);
+            }
 
             return Ok(result);
         }
@@ -71,8 +76,12 @@ namespace UserMicroservice.Controllers
             List<Profile> followingProfiles = await _profileService.GetFollowingProfiles(id);
 
             List<ProfileDto> result = new List<ProfileDto>();
-            followingProfiles.ToList().ForEach(followingProfile => result.Add(ProfileMapper.ProfileToProfileDto(followingProfile)));
-
+            foreach (Profile followingProfile in followingProfiles)
+            {
+                ProfileDto dto = ProfileMapper.ProfileToProfileDto(followingProfile);
+                dto.ImageSrc = String.Format("http://localhost:55988/{0}", followingProfile.ImageName);
+                result.Add(dto);
+            }
             return Ok(result);
         }
 
