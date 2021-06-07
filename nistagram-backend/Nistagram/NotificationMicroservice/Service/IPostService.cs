@@ -8,5 +8,6 @@ namespace NotificationMicroservice.Service
 {
     public interface IPostService : IService<Post>
     {
+        Task<Post> GetByOriginalId(string originalId);
     }
 }

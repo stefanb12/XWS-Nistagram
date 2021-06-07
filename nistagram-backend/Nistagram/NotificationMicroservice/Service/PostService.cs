@@ -15,6 +15,13 @@ namespace NotificationMicroservice.Service
         {
             _postRepository = postRepository;
         }
+
+        public async Task<Post> GetByOriginalId(string originalId)
+        {
+            IEnumerable<Post> posts = await GetAll();
+            return posts.Where(p => p.OriginalId.Equals(originalId)).SingleOrDefault();
+        }
+
         public async Task<Post> GetById(int id)
         {
             return await _postRepository.GetById(id);

@@ -48,10 +48,10 @@ namespace StoryMicroservice.Controllers
             return Ok(returnValue);
         }
 
-        [HttpGet("getAllProfileStories")]
-        public async Task<IActionResult> GetProfileStories()
+        [HttpGet("getAllProfileStories/{id}")]
+        public async Task<IActionResult> GetFollowingProfilesStories(int id)
         {
-            var profilesStories = await _profileService.GetProfileStories();
+            var profilesStories = await _profileService.GetFollowingProfilesActiveStories(id);
             List<ProfileStoriesDto> returnValue = new List<ProfileStoriesDto>();
             foreach (ProfileStories ps in profilesStories)
             {
@@ -63,6 +63,24 @@ namespace StoryMicroservice.Controllers
                 returnValue.Add(dto);
             }
             return Ok(returnValue);
+        }
+
+        [HttpGet("profile/{profileId}")]
+        public async Task<IActionResult> GetActiveStoriesForProfile(int profileId)
+        {
+            List<Story> activeProfileStories = await _storyService.GetActiveStoriesForProfile(profileId);
+            if(!activeProfileStories.Any())
+            {
+                return NoContent();
+            }
+            List<StoryDto> result = new List<StoryDto>();
+            foreach (Story story in activeProfileStories)
+            {
+                StoryDto dto = StoryMapper.StoryToStoryDto(story);
+                dto.ImageSrc = String.Format("http://localhost:55996/{0}", story.ImageName);
+                result.Add(dto);
+            }
+            return Ok(result);
         }
     }
 }
