@@ -170,6 +170,8 @@ export default function UserNavbar() {
   const [numberOfNotSeenNotifications, setNumberOfNotSeenNotifications] =
     React.useState(0);
   const [open, setOpen] = React.useState(false);
+  const [alertMessage, setAlertMessage] = React.useState("");
+  const [alertType, setAlertType] = React.useState("");
   const [loggedUser, setLoggedUser] = React.useState({});
   const [searchValue, setSearchValue] = React.useState("");
   const [allUsers, setAllUsers] = React.useState([]);
@@ -194,7 +196,9 @@ export default function UserNavbar() {
     setMounted(false);
   }, []);
 
-  const handleAlertClick = () => {
+  const handleAlertClick = (message, type) => {
+    setAlertMessage(message);
+    setAlertType(type);
     setOpen(true);
   };
 
@@ -311,6 +315,10 @@ export default function UserNavbar() {
                     if (status === 200) {
                       setNotifications(result);
                       countOfNotSeenNotifications(result);
+                      handleAlertClick(
+                        "Successfully confirmed follow request",
+                        "success"
+                      );
                     } else if (status === 404) {
                       setNotifications([]);
                     }
@@ -343,6 +351,7 @@ export default function UserNavbar() {
                 if (status === 200) {
                   setNotifications(result);
                   countOfNotSeenNotifications(result);
+                  handleAlertClick("Follow request deleted", "info");
                 } else if (status === 404) {
                   setNotifications([]);
                 }
@@ -362,10 +371,10 @@ export default function UserNavbar() {
         if (status === 200) {
           setNotifications(result);
           if (notifications.length === 0) {
-            handleAlertClick();
+            handleAlertClick("You dont have any notifications", "info");
           }
         } else if (status == 404) {
-          handleAlertClick();
+          handleAlertClick("You dont have any notifications", "info");
         }
         setNumberOfNotSeenNotifications(0);
       });
@@ -775,8 +784,8 @@ export default function UserNavbar() {
           onClose={handleAlertClose}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
-          <Alert onClose={handleAlertClose} severity="error">
-            You dont have any notifications
+          <Alert onClose={handleAlertClose} severity={alertType}>
+            {alertMessage}
           </Alert>
         </Snackbar>
         <Toolbar>
@@ -846,7 +855,11 @@ export default function UserNavbar() {
             </IconButton>
             <IconButton aria-label="show 12 new notifications" color="inherit">
               <Badge color="secondary">
-                <Telegram />
+                <Telegram
+                  onClick={() =>
+                    handleAlertClick("Chat is not available yet", "info")
+                  }
+                />
               </Badge>
             </IconButton>
             <IconButton

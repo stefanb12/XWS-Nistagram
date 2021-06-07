@@ -23,6 +23,7 @@ namespace UserMicroservice.Dto
         public string Biography { get; set; }
         public bool Deactivated { get; set; }
         public UserCategory Category { get; set; }
+        public string ImageSrc { get; set; }
 
         public ProfileDto() { }
     }

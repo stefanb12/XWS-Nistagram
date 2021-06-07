@@ -2,12 +2,7 @@ import React, { Component } from "react";
 import "../assets/styles/profile.css";
 import { Link, withRouter } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
-import {
-  BookmarkBorder,
-  ContactlessOutlined,
-  LaptopWindows,
-  LockOutlined,
-} from "@material-ui/icons";
+import { BookmarkBorder, LockOutlined } from "@material-ui/icons";
 import "../assets/styles/posts.css";
 import AuthService from "../services/AuthService";
 import ProfileService from "../services/ProfileService";
@@ -18,6 +13,7 @@ import Alert from "@material-ui/lab/Alert";
 import PostService from "../services/PostService";
 import PostCard from "../components/home-page/PostCard";
 import StoryService from "../services/StoryService";
+import moment from "moment";
 
 class UserProfile extends Component {
   constructor(props) {
@@ -37,13 +33,15 @@ class UserProfile extends Component {
       following: [],
       userProfilePosts: [],
       userProfileFavoritePosts: [],
-      followingSnackBarOpen: false,
-      followersSnackBarOpen: false,
-      followingSnackBarMessage: "",
-      followersSnackBarMessage: "",
+      snackBarOpen: false,
+      snackBarMessage: "",
+      snackBarType: "",
+      doesUserProfileStoriesExists: false,
+      userProfileStories: [],
       doesActiveStoriesExists: false,
       activeStories: [],
       currentStoryImage: "",
+      currentStoryPublishingDate: null,
       isShowStoryDialogOpen: false,
       currentStoryNumber: 0,
       timeCounter: 0,
@@ -60,33 +58,24 @@ class UserProfile extends Component {
     };
   }
 
-  handleClickFollowingSnackBar = (message) => {
-    this.setState({ followingSnackBarMessage: message });
-    this.setState({ followingSnackBarOpen: true });
+  handleClickSnackBar = (message, type) => {
+    this.setState({
+      snackBarMessage: message,
+      snackBarType: type,
+      snackBarOpen: true,
+    });
   };
 
-  handleCloseFollowingSnackBar = (event, reason) => {
+  handleCloseSnackBar = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    this.setState({ followingSnackBarOpen: false });
-  };
-
-  handleClickFollowersSnackBar = (message) => {
-    this.setState({ followersSnackBarMessage: message });
-    this.setState({ followersSnackBarOpen: true });
-  };
-
-  handleCloseFollowersSnackBar = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    this.setState({ followersSnackBarOpen: false });
+    this.setState({ snackBarOpen: false });
   };
 
   openFollowersModal = () => {
     if (!AuthService.getCurrentUser()) {
-      this.handleClickFollowersSnackBar("You have to login first!");
+      this.handleClickSnackBar("You have to login first", "error");
     } else {
       let isInFollowing = this.state.loggedUser.following.some(
         (followingProfile) => {
@@ -99,8 +88,9 @@ class UserProfile extends Component {
         isInFollowing === false &&
         this.state.loggedUser.id !== this.state.userProfileId
       ) {
-        this.handleClickFollowersSnackBar(
-          "Follow this account to see their followers"
+        this.handleClickSnackBar(
+          "Follow this account to see their followers",
+          "info"
         );
       } else {
         this.setState({ isOpenFollowersModal: true });
@@ -110,7 +100,7 @@ class UserProfile extends Component {
   closeFollowersModal = () => this.setState({ isOpenFollowersModal: false });
   openFollowingModal = () => {
     if (!AuthService.getCurrentUser()) {
-      this.handleClickFollowingSnackBar("You have to login first!");
+      this.handleClickSnackBar("You have to login first", "error");
     } else {
       let isInFollowing = this.state.loggedUser.following.some(
         (followingProfile) => {
@@ -123,8 +113,9 @@ class UserProfile extends Component {
         isInFollowing === false &&
         this.state.loggedUser.id !== this.state.userProfileId
       ) {
-        this.handleClickFollowingSnackBar(
-          "Follow this account to see their following"
+        this.handleClickSnackBar(
+          "Follow this account to see their following",
+          "info"
         );
       } else {
         this.setState({ isOpenFollowingModal: true });
@@ -199,6 +190,25 @@ class UserProfile extends Component {
         } else if (resStatus === 204) {
           this.setState({
             doesActiveStoriesExists: false,
+          });
+        }
+      });
+
+    let status = 0;
+    await StoryService.getStoriesForProfile(this.state.userProfileId)
+      .then((res) => {
+        status = res.status;
+        return res.json();
+      })
+      .then((result) => {
+        if (status === 200) {
+          this.setState({
+            userProfileStories: result,
+            doesUserProfileStoriesExists: true,
+          });
+        } else if (status === 204) {
+          this.setState({
+            doesUserProfileStoriesExists: false,
           });
         }
       });
@@ -362,13 +372,14 @@ class UserProfile extends Component {
     }
   };
 
-  showStory = (storyNumber) => {
+  showStory = (stories, storyNumber) => {
     this.setState({
-      currentStoryImage: this.state.activeStories[storyNumber].imageSrc,
+      currentStoryImage: stories[storyNumber].imageSrc,
+      currentStoryPublishingDate: stories[storyNumber].publishingDate,
       isShowStoryDialogOpen: true,
       currentStoryNumber: storyNumber,
-      numberOfStoriesForCurrentProfile: this.state.activeStories.length,
-      currentProfileStories: this.state.activeStories,
+      numberOfStoriesForCurrentProfile: stories.length,
+      currentProfileStories: stories,
     });
     this.currentStoryPublisher = this.state.userProfile.username;
     this.currentTimeout = window.setInterval(() => {
@@ -379,13 +390,42 @@ class UserProfile extends Component {
         this.setState({
           timeCounter: 0,
         });
-        this.showNextStory(this.state.activeStories, storyNumber);
+        this.showNextStory(stories, storyNumber);
       }
     }, 30);
   };
 
   handleActiveStoriesClick = () => {
-    this.showStory(0);
+    if (!AuthService.getCurrentUser()) {
+      this.handleClickSnackBar("You have to login first", "error");
+    } else {
+      let isInFollowing = this.state.loggedUser.following.some(
+        (followingProfile) => {
+          if (followingProfile.followingId == this.state.userProfileId)
+            return true;
+        }
+      );
+      if (
+        this.state.userProfile.isPrivate === true &&
+        isInFollowing === false &&
+        this.state.loggedUser.id !== this.state.userProfileId
+      ) {
+        this.handleClickSnackBar(
+          "Follow this account to see their stories",
+          "info"
+        );
+      } else {
+        this.showStory(this.state.activeStories, 0);
+      }
+    }
+  };
+
+  handleStoriesClick = () => {
+    if (this.state.doesUserProfileStoriesExists === true) {
+      this.showStory(this.state.userProfileStories, 0);
+    } else {
+      this.handleClickSnackBar("You don't have any story yet", "info");
+    }
   };
 
   resetClockAndCounter = () => {
@@ -409,18 +449,18 @@ class UserProfile extends Component {
     this.resetClockAndCounter();
 
     if (storyNumber > -1) {
-      this.showStory(storyNumber);
+      this.showStory(profileStories, storyNumber);
       return;
     }
 
-    this.showStory(0);
+    this.showStory(profileStories, 0);
   };
 
   showNextStory = (profileStories, storyNumber) => {
     this.resetClockAndCounter();
 
     if (storyNumber + 1 < profileStories.length) {
-      this.showStory(storyNumber + 1);
+      this.showStory(profileStories, storyNumber + 1);
       return;
     }
 
@@ -441,6 +481,7 @@ class UserProfile extends Component {
         contentClassName="story-modal"
         id="myModal"
         centered
+        style={{ marginTop: "25px" }}
       >
         <Modal.Header closeButton>
           <img
@@ -460,6 +501,18 @@ class UserProfile extends Component {
           >
             {this.state.userProfile.username}
           </Modal.Title>
+          <small
+            style={{
+              marginLeft: "13px",
+              marginTop: "13px",
+            }}
+          >
+            {moment(
+              moment(this.state.currentStoryPublishingDate).format(
+                "YYYY-MM-DD HH:mm:ss"
+              )
+            ).fromNow()}
+          </small>
         </Modal.Header>
         <Modal.Body
           style={{
@@ -500,7 +553,7 @@ class UserProfile extends Component {
             color="primary"
             onClick={() => {
               this.showPreviousStory(
-                this.state.activeStories,
+                this.state.currentProfileStories,
                 this.state.currentStoryNumber - 1
               );
             }}
@@ -511,7 +564,7 @@ class UserProfile extends Component {
             color="primary"
             onClick={() => {
               this.showNextStory(
-                this.state.activeStories,
+                this.state.currentProfileStories,
                 this.state.currentStoryNumber
               );
             }}
@@ -532,6 +585,7 @@ class UserProfile extends Component {
 
     let profileBody = (
       <div>
+        {showStoryModalDialog}
         <div class="row profile-body">
           <div class="d-none d-md-block col-md-4 col-xl-3 left-wrapper">
             <div class="card rounded">
@@ -630,7 +684,9 @@ class UserProfile extends Component {
         </div>
       </div>
     );
+
     let savedButton = <div id="savedButton"></div>;
+    let storiesButton;
     let followButton;
     if (!AuthService.getCurrentUser()) {
       savedButton = <div id="savedButton"></div>;
@@ -701,6 +757,34 @@ class UserProfile extends Component {
               onClick={() => this.handleSavedButton()}
             >
               Saved
+            </a>
+          </li>
+        </div>
+      );
+      storiesButton = (
+        <div>
+          <li
+            class="header-link-item ml-3 pl-3 border-left d-flex align-items-center"
+            onClick={() => this.handleStoriesClick()}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="feather feather-image mr-1 icon-md"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            <a class="pt-1px d-none d-md-block" href="#">
+              Stories
             </a>
           </li>
         </div>
@@ -858,25 +942,17 @@ class UserProfile extends Component {
     }
     return (
       <div>
-        {showStoryModalDialog}
         <Snackbar
-          open={this.state.followersSnackBarOpen}
+          open={this.state.snackBarOpen}
           autoHideDuration={2000}
-          onClose={this.handleCloseFollowersSnackBar}
+          onClose={this.handleCloseSnackBar}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
-          <Alert onClose={this.handleCloseFollowersSnackBar} severity="error">
-            {this.state.followersSnackBarMessage}
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          open={this.state.followingSnackBarOpen}
-          autoHideDuration={2000}
-          onClose={this.handleCloseFollowingSnackBar}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert onClose={this.handleCloseFollowingSnackBar} severity="error">
-            {this.state.followingSnackBarMessage}
+          <Alert
+            onClose={this.handleCloseSnackBar}
+            severity={this.state.snackBarType}
+          >
+            {this.state.snackBarMessage}
           </Alert>
         </Snackbar>
         <Modal
@@ -893,7 +969,7 @@ class UserProfile extends Component {
                 return (
                   <div class="list-group-item d-flex align-items-center">
                     <img
-                      src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                      src={follower.imageSrc}
                       alt=""
                       width="50px"
                       class="rounded-sm ml-n2"
@@ -934,7 +1010,7 @@ class UserProfile extends Component {
                 return (
                   <div class="list-group-item d-flex align-items-center">
                     <img
-                      src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                      src={followingProfile.imageSrc}
                       alt=""
                       width="50px"
                       class="rounded-sm ml-n2"
@@ -1004,7 +1080,6 @@ class UserProfile extends Component {
                             );
                           }
                         })()}
-
                         <span class="profile-name">{userProfile.username}</span>
                       </div>
                       {followButton}
@@ -1037,34 +1112,7 @@ class UserProfile extends Component {
                           Posts <span class="text-muted tx-12">12</span>
                         </Link>
                       </li>
-                      <li class="header-link-item ml-3 pl-3 border-left d-flex align-items-center">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="feather feather-image mr-1 icon-md"
-                        >
-                          <rect
-                            x="3"
-                            y="3"
-                            width="18"
-                            height="18"
-                            rx="2"
-                            ry="2"
-                          ></rect>
-                          <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                          <polyline points="21 15 16 10 5 21"></polyline>
-                        </svg>
-                        <a class="pt-1px d-none d-md-block" href="#">
-                          Stories
-                        </a>
-                      </li>
+                      {storiesButton}
                       <li class="header-link-item ml-3 pl-3 border-left d-flex align-items-center">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"

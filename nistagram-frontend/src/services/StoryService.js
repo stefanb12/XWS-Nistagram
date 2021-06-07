@@ -23,6 +23,10 @@ class StoryService {
   }
 
   getActiveStoriesForProfile(profileId) {
+    return fetch(API_URL + "story/active/profile/" + profileId);
+  }
+
+  getStoriesForProfile(profileId) {
     return fetch(API_URL + "story/profile/" + profileId);
   }
 

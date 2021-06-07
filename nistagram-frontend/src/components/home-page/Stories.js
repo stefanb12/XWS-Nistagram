@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { withStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import AddCircle from "@material-ui/icons/AddCircle";
@@ -15,7 +14,7 @@ import {
 import StoryService from "../../services/StoryService";
 import AuthService from "../../services/AuthService";
 import { Alert } from "@material-ui/lab";
-import Image from "react-bootstrap/Image";
+import moment from "moment";
 
 export default class Stories extends Component {
   constructor(props) {
@@ -31,6 +30,7 @@ export default class Stories extends Component {
       allProfileStories: [],
       currentStoryImage: null,
       currentStoryPublisher: "",
+      currentStoryPublishingDate: null,
       currentTimeout: null,
       currentProfileStories: null,
       timeCounter: 0,
@@ -223,6 +223,8 @@ export default class Stories extends Component {
   showStory = (profileStories, storyNumber) => {
     this.setState({
       currentStoryImage: profileStories.stories[storyNumber].imageSrc,
+      currentStoryPublishingDate:
+        profileStories.stories[storyNumber].publishingDate,
       isShowStoryDialogOpen: true,
       currentStoryNumber: storyNumber,
       numberOfStoriesForCurrentProfile: profileStories.stories.length,
@@ -277,6 +279,7 @@ export default class Stories extends Component {
         contentClassName="story-modal"
         id="myModal"
         centered
+        style={{ marginTop: "25px" }}
       >
         <Modal.Header closeButton>
           <img
@@ -296,6 +299,18 @@ export default class Stories extends Component {
           >
             {this.currentStoryPublisher}
           </Modal.Title>
+          <small
+            style={{
+              marginLeft: "13px",
+              marginTop: "13px",
+            }}
+          >
+            {moment(
+              moment(this.state.currentStoryPublishingDate).format(
+                "YYYY-MM-DD HH:mm:ss"
+              )
+            ).fromNow()}
+          </small>
         </Modal.Header>
         <Modal.Body
           style={{
@@ -363,6 +378,7 @@ export default class Stories extends Component {
         show={this.state.isAddStoryDialogOpen}
         onHide={this.closeAddStoryModal}
         centered
+        style={{ marginTop: "25px" }}
       >
         <Modal.Header
           closeButton

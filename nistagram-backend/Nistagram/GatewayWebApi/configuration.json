@@ -564,6 +564,25 @@
             }*/
     },
     {
+      "DownstreamPathTemplate": "/api/story/active/profile/{profileId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55996
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/story/active/profile/{profileId}",
+      "UpstreamHttpMethod": [ "GET" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
+    {
       "DownstreamPathTemplate": "/api/story/profile/{profileId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
