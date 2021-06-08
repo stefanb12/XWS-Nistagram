@@ -454,8 +454,8 @@ export default class Posts extends Component {
                           />
                         </div>
                         <div class="right">
-                          <h3>John Doe</h3>
-                          <p>10 Friends</p>
+                          <h3>joca_joca</h3>
+                          <p>9 Friends</p>
                         </div>
                         <div class="right">
                           <button
@@ -470,13 +470,13 @@ export default class Posts extends Component {
                       <li>
                         <div class="left">
                           <img
-                            src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                            src="https://bootdey.com/img/Content/avatar/avatar2.png"
                             alt=""
                           />
                         </div>
                         <div class="right">
-                          <h3>John Doe</h3>
-                          <p>10 Friends</p>
+                          <h3>marko_m</h3>
+                          <p>11 Friends</p>
                         </div>
                         <div class="right">
                           <button
@@ -491,13 +491,13 @@ export default class Posts extends Component {
                       <li>
                         <div class="left">
                           <img
-                            src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                            src="https://bootdey.com/img/Content/avatar/avatar3.png"
                             alt=""
                           />
                         </div>
                         <div class="right">
-                          <h3>John Doe</h3>
-                          <p>10 Friends</p>
+                          <h3>jelenaa_n</h3>
+                          <p>15 Friends</p>
                         </div>
                         <div class="right">
                           <button
