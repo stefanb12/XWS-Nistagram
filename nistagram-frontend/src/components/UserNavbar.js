@@ -180,37 +180,21 @@ export default function UserNavbar() {
   const [searchData, setSearchData] = React.useState([]);
   const [searchedPosts, setsearchedPosts] = React.useState([]);
 
-  useEffect(() => {
-    ProfileService.getAllUsers()
+  useEffect(async () => {
+    await ProfileService.getAllUsers()
       .then((res) => res.json())
       .then((result) => {
         setAllUsers(result);
       });
 
-    PostService.getAllPosts()
+    await PostService.getAllPosts()
       .then((res) => res.json())
       .then((result) => {
         setPublicPosts(result);
       });
 
     setMounted(false);
-  }, []);
 
-  const handleAlertClick = (message, type) => {
-    setAlertMessage(message);
-    setAlertType(type);
-    setOpen(true);
-  };
-
-  const handleAlertClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  useEffect(async () => {
     let status;
     await NotificationService.getNotificationForProfile(
       AuthService.getCurrentUser().id
@@ -234,6 +218,20 @@ export default function UserNavbar() {
         });
     }
   }, []);
+
+  const handleAlertClick = (message, type) => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setOpen(true);
+  };
+
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -451,13 +449,30 @@ export default function UserNavbar() {
     } else {
       return (
         <StyledMenuItem>
-          <div class="dropdown-list-image mr-3">
-            <img
-              class="img-xs rounded-circle"
-              src={notification.sender.imageSrc}
-              alt=""
-            />
-          </div>
+          {(() => {
+            if (notification.sender != null) {
+              return (
+                <div class="dropdown-list-image mr-3">
+                  <img
+                    class="img-xs rounded-circle"
+                    src={notification.sender.imageSrc}
+                    alt=""
+                  />
+                </div>
+              );
+            } else {
+              return (
+                <div class="dropdown-list-image mr-3">
+                  <img
+                    class="img-xs rounded-circle"
+                    src="http://localhost:55988/defaultProfile.png"
+                    alt=""
+                  />
+                </div>
+              );
+            }
+          })()}
+
           <div class="font-weight mr-3">
             <div>
               {" "}

@@ -47,6 +47,14 @@ namespace PostMicroservice
 
             services.AddSingleton<IMongoDbContext, MongoDbContext>();
 
+            var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
+            if (hostName == "rabbitmq")
+            {
+                services.AddSingleton<IPostCreatedMessageSender, PostCreatedMessageSender>();
+                services.AddSingleton<IMessageReceiver, ProfileCreatedMessageReceiver>();
+                services.AddSingleton<IMessageReceiver, ProfileUpdatedMessageReceiver>();
+            }
+
             services.AddSingleton<IPostCreatedMessageSender, PostCreatedMessageSender>();
 
             services.AddSingleton<IProfileRepository, ProfileRepository>();

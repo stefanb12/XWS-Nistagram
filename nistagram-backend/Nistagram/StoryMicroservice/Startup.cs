@@ -47,6 +47,13 @@ namespace StoryMicroservice
 
             services.AddSingleton<IMongoDbContext, MongoDbContext>();
 
+            var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
+            if (hostName == "rabbitmq")
+            {
+                services.AddSingleton<IMessageReceiver, ProfileCreatedMessageReceiver>();
+                services.AddSingleton<IMessageReceiver, ProfileUpdatedMessageReceiver>();
+            }
+
             services.AddSingleton<IStoryRepository, StoryRepository>();
             services.AddSingleton<IStoryService, StoryService>();
 
