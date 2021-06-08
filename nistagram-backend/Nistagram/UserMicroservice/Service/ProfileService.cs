@@ -145,8 +145,17 @@ namespace UserMicroservice.Service
 
             Profile profile = await _profileRepository.Update(entity);
             _profileUpdatedSender.SendUpdatedProfile(profile);
-            
-            return entity;
+            return profile;
+        }
+
+        public bool DoesUsernameExist(String username, IEnumerable<Profile> profiles)
+        {
+            foreach (Profile profile in profiles)
+            {
+                if (profile.Username.Equals(username))
+                    return true;
+            }
+            return false;
         }
 
         public async Task Delete(Profile entity)

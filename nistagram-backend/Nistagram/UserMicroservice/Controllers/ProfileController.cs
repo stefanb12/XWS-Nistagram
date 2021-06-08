@@ -107,8 +107,21 @@ namespace UserMicroservice.Controllers
             {
                 return NoContent();
             }
-            Profile updatedProfile = await _profileService.UpdateWithImage(UpdateProfileMapper.ProfileDtoToProfile(profile, profileDto), profileDto.ImageFile);
-            return Ok(updatedProfile);  
+
+            if (profile.Username.Equals(profileDto.Username))
+            {
+                await _profileService.UpdateWithImage(UpdateProfileMapper.ProfileDtoToProfile(profile, profileDto), profileDto.ImageFile);
+                return Ok();
+            }
+
+            IEnumerable<Profile> profiles = await _profileService.GetAll();
+            if (!_profileService.DoesUsernameExist(profileDto.Username, profiles))
+            {
+                await _profileService.UpdateWithImage(UpdateProfileMapper.ProfileDtoToProfile(profile, profileDto), profileDto.ImageFile);
+                return Ok();
+            }
+            
+            return BadRequest();  
         }
 
         [HttpGet("{id}/profileForUpdating")]
