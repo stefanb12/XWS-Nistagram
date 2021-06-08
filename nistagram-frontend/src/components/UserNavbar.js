@@ -29,14 +29,21 @@ import Avatar from "@material-ui/core/Avatar";
 import { useHistory } from "react-router";
 import AuthService from "../services/AuthService";
 import NotificationService from "../services/NotificationService";
-import { Snackbar, Table, TableBody, TableCell, TableContainer, TableRow } from "@material-ui/core";
+import {
+  Snackbar,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+} from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import FollowRequestService from "../services/FollowRequestService";
 import ProfileService from "../services/ProfileService";
 import moment from "moment";
 import PostService from "../services/PostService";
 import hash from "../assets/images/hash.svg";
-import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
+import ExploreOutlinedIcon from "@material-ui/icons/ExploreOutlined";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -163,6 +170,8 @@ export default function UserNavbar() {
   const [numberOfNotSeenNotifications, setNumberOfNotSeenNotifications] =
     React.useState(0);
   const [open, setOpen] = React.useState(false);
+  const [alertMessage, setAlertMessage] = React.useState("");
+  const [alertType, setAlertType] = React.useState("");
   const [loggedUser, setLoggedUser] = React.useState({});
   const [searchValue, setSearchValue] = React.useState("");
   const [allUsers, setAllUsers] = React.useState([]);
@@ -187,7 +196,9 @@ export default function UserNavbar() {
     setMounted(false);
   }, []);
 
-  const handleAlertClick = () => {
+  const handleAlertClick = (message, type) => {
+    setAlertMessage(message);
+    setAlertType(type);
     setOpen(true);
   };
 
@@ -214,11 +225,14 @@ export default function UserNavbar() {
           countOfNotSeenNotifications(result);
         }
       });
-    await ProfileService.getUser(AuthService.getCurrentUser().id)
-      .then((res) => res.json())
-      .then((result) => {
-        setLoggedUser(result);
-      });
+    let loggedUser = AuthService.getCurrentUser();
+    if (loggedUser) {
+      await ProfileService.getUser(AuthService.getCurrentUser().id)
+        .then((res) => res.json())
+        .then((result) => {
+          setLoggedUser(result);
+        });
+    }
   }, []);
 
   const handleClick = (event) => {
@@ -301,6 +315,10 @@ export default function UserNavbar() {
                     if (status === 200) {
                       setNotifications(result);
                       countOfNotSeenNotifications(result);
+                      handleAlertClick(
+                        "Successfully confirmed follow request",
+                        "success"
+                      );
                     } else if (status === 404) {
                       setNotifications([]);
                     }
@@ -333,6 +351,7 @@ export default function UserNavbar() {
                 if (status === 200) {
                   setNotifications(result);
                   countOfNotSeenNotifications(result);
+                  handleAlertClick("Follow request deleted", "info");
                 } else if (status === 404) {
                   setNotifications([]);
                 }
@@ -352,10 +371,10 @@ export default function UserNavbar() {
         if (status === 200) {
           setNotifications(result);
           if (notifications.length === 0) {
-            handleAlertClick();
+            handleAlertClick("You dont have any notifications", "info");
           }
         } else if (status == 404) {
-          handleAlertClick();
+          handleAlertClick("You dont have any notifications", "info");
         }
         setNumberOfNotSeenNotifications(0);
       });
@@ -640,8 +659,8 @@ export default function UserNavbar() {
     if (row.type == "user") {
       setSearchValue("");
       history.push({
-        pathname: "/app/profile",
-        state: {profileId: row.id}
+        pathname: "/user/profile",
+        state: { profileId: row.id },
       });
     } else if (row.type == "tag" || row.type == "location") {
       setSearchValue("");
@@ -765,8 +784,8 @@ export default function UserNavbar() {
           onClose={handleAlertClose}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
-          <Alert onClose={handleAlertClose} severity="error">
-            You dont have any notifications
+          <Alert onClose={handleAlertClose} severity={alertType}>
+            {alertMessage}
           </Alert>
         </Snackbar>
         <Toolbar>
@@ -813,15 +832,15 @@ export default function UserNavbar() {
                 <Home />
               </Badge>
             </IconButton>
-            <IconButton 
-              aria-label="show 12 new notifications" 
+            <IconButton
+              aria-label="show 12 new notifications"
               color="inherit"
               onClick={handleExploreClick}
-              >
+            >
               <Badge color="secondary">
                 <ExploreOutlinedIcon />
               </Badge>
-            </IconButton>          
+            </IconButton>
             <IconButton
               aria-label="show 12 new notifications"
               color="inherit"
@@ -836,7 +855,11 @@ export default function UserNavbar() {
             </IconButton>
             <IconButton aria-label="show 12 new notifications" color="inherit">
               <Badge color="secondary">
-                <Telegram />
+                <Telegram
+                  onClick={() =>
+                    handleAlertClick("Chat is not available yet", "info")
+                  }
+                />
               </Badge>
             </IconButton>
             <IconButton

@@ -9,6 +9,7 @@ namespace StoryMicroservice.Dto
     {
         public string Username { get; set; }
         public int OriginalId { get; set; }
+        public string ImageSrc { get; set; }
         public List<StoryDto> Stories { get; set; }
 
         public ProfileStoriesDto()

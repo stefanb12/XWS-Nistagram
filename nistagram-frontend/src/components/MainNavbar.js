@@ -255,7 +255,7 @@ export default function MainNavbar() {
       setSearchValue("");
       history.push({
         pathname: "/app/profile",
-        state: {profileId: row.id}
+        state: { profileId: row.id },
       });
     } else if (row.type == "tag" || row.type == "location") {
       setSearchValue("");

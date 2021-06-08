@@ -26,7 +26,14 @@ namespace PostMicroservice.Messaging
 
         private void InitRabbitMQ()
         {
-            var factory = new ConnectionFactory { HostName = "localhost" };
+            var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
+            var factory = new ConnectionFactory()
+            {
+                HostName = hostName,
+                Port = 5672,
+                UserName = "guest",
+                Password = "guest"
+            };
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
@@ -56,6 +63,7 @@ namespace PostMicroservice.Messaging
                 {
                     OriginalId = data["id"].Value<int>(),
                     Username = data["username"].Value<string>(),
+                    ImageName = data["profileImage"].Value<string>(),
                     Following = new List<int>()
                 });
 

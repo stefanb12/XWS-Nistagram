@@ -20,5 +20,39 @@ namespace StoryMicroservice.Model
         public ProfileStories() : base()
         {
         }
+
+        public List<Story> GetActiveStories()
+        {
+            return GetAllStories().Where(s => s.PublishingDate.AddHours(24) > DateTime.Now).ToList();
+        }
+
+        public IEnumerable<Story> GetAllStories()
+        {
+            return this.Stories;
+        }
+
+        public bool IsFollowing(int profileId)
+        {
+            foreach (int id in Following)
+            {
+                if (id == profileId)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsCloseFriend(int profileId)
+        {
+            foreach (int id in CloseFriends)
+            {
+                if (id == profileId)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

@@ -16,5 +16,6 @@ namespace UserMicroservice.Service
         Task<ProfileFollower> FollowAnotherProfile(int profileId, int id);
         Task<ProfileFollower> UnfollowAnotherProfile(int profileId, int id);
         Task<Profile> UpdateWithImage(Profile profile, IFormFile imageFile);
+        public bool DoesUsernameExist(string username, IEnumerable<Profile> profiles);
     }
 }

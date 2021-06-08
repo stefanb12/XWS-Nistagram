@@ -9,7 +9,7 @@ namespace NotificationMicroservice.Mapper
 {
     public class NotificationMapper
     {
-        public static Notification NotificationDtoToNotification(NotificationDto dto)
+        public static Notification NotificationDtoToNotification(NotificationDto dto, Post post)
         {
             Notification notification = new Notification();
             notification.Time = DateTime.Now;
@@ -19,10 +19,10 @@ namespace NotificationMicroservice.Mapper
             notification.ReceiverId = dto.ReceiverId;
             notification.SenderId = dto.SenderId;
             notification.PostId = 1;
-            if(dto.PostId != 0)
+            if(post != null)
             {
-                notification.PostId = dto.PostId;
-            } 
+                notification.PostId = post.Id;
+            }
 
             return notification;
         }
