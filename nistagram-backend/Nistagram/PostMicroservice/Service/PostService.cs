@@ -188,11 +188,11 @@ namespace PostMicroservice.Service
             List<Post> searchedPosts = new List<Post>();
             foreach (Post post in await GetAll())
             {
-                if (post.Location != null) 
+                if (post.Location != null && !post.Publisher.IsPrivate) 
                     if (formatAddress(post) == searchParam)
                         searchedPosts.Add(post);
                 
-                if (post.Tags != null)
+                if (post.Tags != null && !post.Publisher.IsPrivate)
                     if (post.Tags.Contains(searchParam))
                         searchedPosts.Add(post);
             }

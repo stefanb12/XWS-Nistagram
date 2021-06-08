@@ -29,7 +29,6 @@ namespace NotificationMicroservice.Messaging
             var factory = new ConnectionFactory()
             {
                 HostName = hostName,
-                Port = 15672,
                 UserName = "guest",
                 Password = "guest"
             };

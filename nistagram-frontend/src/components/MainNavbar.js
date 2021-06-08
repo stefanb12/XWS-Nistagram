@@ -255,7 +255,7 @@ export default function MainNavbar() {
       setSearchValue("");
       history.push({
         pathname: "/app/profile",
-        state: { profileId: row.id },
+        state: {profileId: row.id}
       });
     } else if (row.type == "tag" || row.type == "location") {
       setSearchValue("");
@@ -321,7 +321,10 @@ export default function MainNavbar() {
             }
           }
         }
-        if (
+        if(publicPosts[i].location.address == null && publicPosts[i].location.city == null && publicPosts[i].location.cpuntry == null){
+          continue;
+        }
+        else if (
           publicPosts[i].location.address === "" ||
           publicPosts[i].location.address === null
         ) {
