@@ -12,13 +12,17 @@ namespace PostMicroservice.Messaging
         public void SendCreatedPost(Post post)
         {
             var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
-            var factory = new ConnectionFactory()
+            var factory = new ConnectionFactory() { HostName = "localhost" };
+            if (hostName == "rabbitmq")
             {
-                HostName = hostName,
-                Port = 5672,
-                UserName = "guest",
-                Password = "guest"
-            };
+                factory = new ConnectionFactory()
+                {
+                    HostName = hostName,
+                    Port = 5672,
+                    UserName = "guest",
+                    Password = "guest"
+                };
+            }
 
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
