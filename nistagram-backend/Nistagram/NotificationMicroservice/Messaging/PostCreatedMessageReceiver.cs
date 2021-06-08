@@ -54,7 +54,7 @@ namespace NotificationMicroservice.Messaging
                 _postService.Insert(new Post()
                 {
                     OriginalId = data["originalId"].Value<string>(),
-                    ImageName = data["profileImage"].Value<string>()
+                    ImageName = data["image"].Value<string>()
                 });
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
