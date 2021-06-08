@@ -2,22 +2,24 @@ import React, { Component } from "react";
 import "../assets/styles/profile.css";
 import { Link, withRouter } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
-import {
-  BookmarkBorder,
-  ContactlessOutlined,
-  LaptopWindows,
-  LockOutlined,
-} from "@material-ui/icons";
+import { AddCircle, BookmarkBorder, LockOutlined } from "@material-ui/icons";
 import "../assets/styles/posts.css";
 import AuthService from "../services/AuthService";
 import ProfileService from "../services/ProfileService";
 import FollowRequestService from "../services/FollowRequestService";
 import NotificationService from "../services/NotificationService";
-import { Slider, Snackbar, Typography } from "@material-ui/core";
+import {
+  Checkbox,
+  FormControlLabel,
+  Slider,
+  Snackbar,
+  Typography,
+} from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import PostService from "../services/PostService";
 import PostCard from "../components/home-page/PostCard";
 import StoryService from "../services/StoryService";
+import moment from "moment";
 
 class UserProfile extends Component {
   constructor(props) {
@@ -26,32 +28,42 @@ class UserProfile extends Component {
     this.state = {
       loggedUser: { following: [], followers: [] },
       userProfile: { following: [], followers: [] },
-      userProfileId: this.props.location.state.profileId,
+      userProfileId:
+        this.props.location.state !== undefined
+          ? this.props.location.state.profileId
+          : this.doesLoggedUserExist(),
       isOpenFollowersModal: false,
       isOpenFollowingModal: false,
       isPostsButtonActive: true,
       isSavedButtonActive: false,
+      isHighlightDialogOpen: false,
       isActive: false,
       doesFollowRequestExist: false,
       followers: [],
       following: [],
       userProfilePosts: [],
       userProfileFavoritePosts: [],
-      followingSnackBarOpen: false,
-      followersSnackBarOpen: false,
-      followingSnackBarMessage: "",
-      followersSnackBarMessage: "",
+      snackBarOpen: false,
+      snackBarMessage: "",
+      snackBarType: "",
+      doesUserProfileStoriesExists: false,
+      userProfileStories: [],
       doesActiveStoriesExists: false,
       activeStories: [],
       currentStoryImage: "",
+      currentStoryPublishingDate: null,
       isShowStoryDialogOpen: false,
       currentStoryNumber: 0,
       timeCounter: 0,
       currentTimeout: null,
       numberOfStoriesForCurrentProfile: 0,
       currentProfileStories: null,
+      checkedItems: [],
+      highlightName: "",
+      userProfileStoryHighlights: [],
     };
     this.handleClick = this.handleClick.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   static componentWillReceiveProps(props) {
@@ -60,33 +72,50 @@ class UserProfile extends Component {
     };
   }
 
-  handleClickFollowingSnackBar = (message) => {
-    this.setState({ followingSnackBarMessage: message });
-    this.setState({ followingSnackBarOpen: true });
+  handleInputChange(event) {
+    this.setState({
+      highlightName: event.target.value,
+    });
+  }
+
+  doesLoggedUserExist = () => {
+    if (AuthService.getCurrentUser()) {
+      return AuthService.getCurrentUser().id;
+    } else {
+      return 1;
+    }
   };
 
-  handleCloseFollowingSnackBar = (event, reason) => {
+  handleClickSnackBar = (message, type) => {
+    this.setState({
+      snackBarMessage: message,
+      snackBarType: type,
+      snackBarOpen: true,
+    });
+  };
+
+  handleCloseSnackBar = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    this.setState({ followingSnackBarOpen: false });
+    this.setState({ snackBarOpen: false });
   };
 
-  handleClickFollowersSnackBar = (message) => {
-    this.setState({ followersSnackBarMessage: message });
-    this.setState({ followersSnackBarOpen: true });
+  handleHighlightAdding = () => {
+    this.setState({
+      isHighlightDialogOpen: true,
+    });
   };
 
-  handleCloseFollowersSnackBar = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    this.setState({ followersSnackBarOpen: false });
+  closeAddHighlightModal = () => {
+    this.setState({
+      isHighlightDialogOpen: false,
+    });
   };
 
   openFollowersModal = () => {
     if (!AuthService.getCurrentUser()) {
-      this.handleClickFollowersSnackBar("You have to login first!");
+      this.handleClickSnackBar("You have to login first", "error");
     } else {
       let isInFollowing = this.state.loggedUser.following.some(
         (followingProfile) => {
@@ -99,8 +128,9 @@ class UserProfile extends Component {
         isInFollowing === false &&
         this.state.loggedUser.id !== this.state.userProfileId
       ) {
-        this.handleClickFollowersSnackBar(
-          "Follow this account to see their followers"
+        this.handleClickSnackBar(
+          "Follow this account to see their followers",
+          "info"
         );
       } else {
         this.setState({ isOpenFollowersModal: true });
@@ -110,7 +140,7 @@ class UserProfile extends Component {
   closeFollowersModal = () => this.setState({ isOpenFollowersModal: false });
   openFollowingModal = () => {
     if (!AuthService.getCurrentUser()) {
-      this.handleClickFollowingSnackBar("You have to login first!");
+      this.handleClickSnackBar("You have to login first", "error");
     } else {
       let isInFollowing = this.state.loggedUser.following.some(
         (followingProfile) => {
@@ -123,8 +153,9 @@ class UserProfile extends Component {
         isInFollowing === false &&
         this.state.loggedUser.id !== this.state.userProfileId
       ) {
-        this.handleClickFollowingSnackBar(
-          "Follow this account to see their following"
+        this.handleClickSnackBar(
+          "Follow this account to see their following",
+          "info"
         );
       } else {
         this.setState({ isOpenFollowingModal: true });
@@ -184,6 +215,9 @@ class UserProfile extends Component {
         });
       });
 
+    this.handleStoriesForProfile();
+    this.handleStoryHighlightsForProfile();
+
     let resStatus = 0;
     await StoryService.getActiveStoriesForProfile(this.state.userProfileId)
       .then((res) => {
@@ -203,6 +237,45 @@ class UserProfile extends Component {
         }
       });
   }
+
+  handleStoriesForProfile = () => {
+    let status = 0;
+    StoryService.getStoriesForProfile(this.state.userProfileId)
+      .then((res) => {
+        status = res.status;
+        return res.json();
+      })
+      .then((result) => {
+        if (status === 200) {
+          this.setState({
+            userProfileStories: result,
+            doesUserProfileStoriesExists: true,
+          });
+        } else if (status === 204) {
+          this.setState({
+            doesUserProfileStoriesExists: false,
+          });
+        }
+      });
+  };
+
+  handleStoryHighlightsForProfile = () => {
+    let status = 0;
+    StoryService.getStoryHighlightsForProfile(this.state.userProfileId)
+      .then((res) => {
+        status = res.status;
+        return res.json();
+      })
+      .then((result) => {
+        if (status === 200) {
+          this.setState({
+            userProfileStoryHighlights: result,
+          });
+        } else if (status === 204) {
+          console.log("nothing");
+        }
+      });
+  };
 
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleClickOutside);
@@ -362,13 +435,55 @@ class UserProfile extends Component {
     }
   };
 
-  showStory = (storyNumber) => {
+  handleActiveStoriesClick = () => {
+    if (!AuthService.getCurrentUser()) {
+      this.handleClickSnackBar("You have to login first", "error");
+    } else {
+      let isInFollowing = this.state.loggedUser.following.some(
+        (followingProfile) => {
+          if (followingProfile.followingId == this.state.userProfileId)
+            return true;
+        }
+      );
+      if (
+        this.state.userProfile.isPrivate === true &&
+        isInFollowing === false &&
+        this.state.loggedUser.id !== this.state.userProfileId
+      ) {
+        this.handleClickSnackBar(
+          "Follow this account to see their stories",
+          "info"
+        );
+      } else {
+        this.showStory(this.state.activeStories, 0);
+      }
+    }
+  };
+
+  handleStoriesClick = () => {
+    if (this.state.doesUserProfileStoriesExists === true) {
+      this.showStory(this.state.userProfileStories, 0);
+    } else {
+      this.handleClickSnackBar("You don't have any story yet", "info");
+    }
+  };
+
+  handleStoryHighlightShow = (storyHighlight) => {
+    if (AuthService.getCurrentUser()) {
+      this.showStory(storyHighlight, 0);
+    } else {
+      this.handleClickSnackBar("You have to login first", "error");
+    }
+  };
+
+  showStory = (stories, storyNumber) => {
     this.setState({
-      currentStoryImage: this.state.activeStories[storyNumber].imageSrc,
+      currentStoryImage: stories[storyNumber].imageSrc,
+      currentStoryPublishingDate: stories[storyNumber].publishingDate,
       isShowStoryDialogOpen: true,
       currentStoryNumber: storyNumber,
-      numberOfStoriesForCurrentProfile: this.state.activeStories.length,
-      currentProfileStories: this.state.activeStories,
+      numberOfStoriesForCurrentProfile: stories.length,
+      currentProfileStories: stories,
     });
     this.currentStoryPublisher = this.state.userProfile.username;
     this.currentTimeout = window.setInterval(() => {
@@ -379,13 +494,9 @@ class UserProfile extends Component {
         this.setState({
           timeCounter: 0,
         });
-        this.showNextStory(this.state.activeStories, storyNumber);
+        this.showNextStory(stories, storyNumber);
       }
     }, 30);
-  };
-
-  handleActiveStoriesClick = () => {
-    this.showStory(0);
   };
 
   resetClockAndCounter = () => {
@@ -409,22 +520,56 @@ class UserProfile extends Component {
     this.resetClockAndCounter();
 
     if (storyNumber > -1) {
-      this.showStory(storyNumber);
+      this.showStory(profileStories, storyNumber);
       return;
     }
 
-    this.showStory(0);
+    this.showStory(profileStories, 0);
   };
 
   showNextStory = (profileStories, storyNumber) => {
     this.resetClockAndCounter();
 
     if (storyNumber + 1 < profileStories.length) {
-      this.showStory(storyNumber + 1);
+      this.showStory(profileStories, storyNumber + 1);
       return;
     }
 
     this.closeShowStoryDialog();
+  };
+
+  checkIfStoryIsChecked = (storyId) => {
+    for (let id of this.state.checkedItems) {
+      if (id === storyId) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  handleAddHighlight = () => {
+    if (
+      this.state.highlightName !== "" &&
+      this.state.checkedItems.length !== 0
+    ) {
+      StoryService.addStoryHighlight(
+        this.state.highlightName,
+        this.state.loggedUser.id,
+        this.state.checkedItems
+      )
+        .then((res) => {
+          return res.json();
+        })
+        .then(() => {
+          this.handleStoryHighlightsForProfile();
+          this.closeAddHighlightModal();
+        });
+    } else {
+      this.handleClickSnackBar(
+        "You must select stories and enter highlight name",
+        "error"
+      );
+    }
   };
 
   render() {
@@ -441,6 +586,7 @@ class UserProfile extends Component {
         contentClassName="story-modal"
         id="myModal"
         centered
+        style={{ marginTop: "25px" }}
       >
         <Modal.Header closeButton>
           <img
@@ -460,6 +606,18 @@ class UserProfile extends Component {
           >
             {this.state.userProfile.username}
           </Modal.Title>
+          <small
+            style={{
+              marginLeft: "13px",
+              marginTop: "13px",
+            }}
+          >
+            {moment(
+              moment(this.state.currentStoryPublishingDate).format(
+                "YYYY-MM-DD HH:mm:ss"
+              )
+            ).fromNow()}
+          </small>
         </Modal.Header>
         <Modal.Body
           style={{
@@ -500,7 +658,7 @@ class UserProfile extends Component {
             color="primary"
             onClick={() => {
               this.showPreviousStory(
-                this.state.activeStories,
+                this.state.currentProfileStories,
                 this.state.currentStoryNumber - 1
               );
             }}
@@ -511,12 +669,116 @@ class UserProfile extends Component {
             color="primary"
             onClick={() => {
               this.showNextStory(
-                this.state.activeStories,
+                this.state.currentProfileStories,
                 this.state.currentStoryNumber
               );
             }}
           >
             Next
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+
+    let storiesForAddHighlightModalDialog = this.state.userProfileStories.map(
+      (story) => {
+        return (
+          <FormControlLabel
+            control={
+              <Checkbox
+                key={story.id}
+                checked={this.checkIfStoryIsChecked(story.id)}
+                onChange={(event) => {
+                  let list = this.state.checkedItems;
+                  if (event.target.checked) {
+                    list.push(story.id);
+                  } else {
+                    list.splice(list.indexOf(story.id), 1);
+                  }
+                  this.setState({
+                    checkedItems: list,
+                  });
+                }}
+              >
+                {" "}
+              </Checkbox>
+            }
+            label={
+              <>
+                <img
+                  src={story.imageSrc}
+                  className="profile-img"
+                  width="400px"
+                  height="auto"
+                />
+              </>
+            }
+          />
+        );
+      }
+    );
+
+    var addStoryModalDialog = (
+      <Modal
+        show={this.state.isHighlightDialogOpen}
+        onHide={this.closeAddHighlightModal}
+        centered
+        style={{ marginTop: "25px" }}
+      >
+        <Modal.Header
+          closeButton
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Modal.Title
+            style={{
+              marginLeft: "165px",
+            }}
+          >
+            Add highlight
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div>
+            <div className="form-group">
+              <label>Highlight name</label>
+              <input
+                name="highlightName"
+                type="text"
+                value={this.state.highlightName}
+                onChange={this.handleInputChange}
+                className="form-control"
+                id="inputName"
+                placeholder="Name"
+              />
+            </div>
+            <div
+              style={{
+                overflow: "auto",
+                height: "350px",
+              }}
+            >
+              {storiesForAddHighlightModalDialog}
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="success"
+            onClick={() => {
+              this.handleAddHighlight();
+            }}
+          >
+            Add
           </Button>
         </Modal.Footer>
       </Modal>
@@ -530,8 +792,28 @@ class UserProfile extends Component {
       if (followerProfile.followerId == this.state.userProfileId) return true;
     });
 
+    let storyHighlightsListItems = this.state.userProfileStoryHighlights.map(
+      (storyHighlight) => {
+        return (
+          <li
+            onClick={() =>
+              this.handleStoryHighlightShow(storyHighlight.stories)
+            }
+          >
+            <div class="left">
+              <img src={storyHighlight.stories[0].imageSrc} alt="" />
+            </div>
+            <div class="right">
+              <h3>{storyHighlight.name}</h3>
+            </div>
+          </li>
+        );
+      }
+    );
+
     let profileBody = (
       <div>
+        {showStoryModalDialog}
         <div class="row profile-body">
           <div class="d-none d-md-block col-md-4 col-xl-3 left-wrapper">
             <div class="card rounded">
@@ -585,42 +867,38 @@ class UserProfile extends Component {
                   <div class="card-body">
                     <h5 class="card-title">Highlights</h5>
                     <ul class="friend-list">
-                      <li>
-                        <div class="left">
-                          <img
-                            src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                            alt=""
-                          />
-                        </div>
-                        <div class="right">
-                          <h3>John Doe</h3>
-                          <p>10 Friends</p>
-                        </div>
-                      </li>
-                      <li>
-                        <div class="left">
-                          <img
-                            src="https://bootdey.com/img/Content/avatar/avatar2.png"
-                            alt=""
-                          />
-                        </div>
-                        <div class="right">
-                          <h3>John Doe</h3>
-                          <p>10 Friends</p>
-                        </div>
-                      </li>
-                      <li>
-                        <div class="left">
-                          <img
-                            src="https://bootdey.com/img/Content/avatar/avatar3.png"
-                            alt=""
-                          />
-                        </div>
-                        <div class="right">
-                          <h3>John Doe</h3>
-                          <p>10 Friends</p>
-                        </div>
-                      </li>
+                      {(() => {
+                        if (AuthService.getCurrentUser()) {
+                          if (
+                            AuthService.getCurrentUser().id ===
+                            this.state.userProfileId
+                          ) {
+                            return (
+                              <li
+                                onClick={() => {
+                                  this.handleHighlightAdding();
+                                }}
+                              >
+                                <div
+                                  class="left"
+                                  style={{ marginLeft: "-3px" }}
+                                >
+                                  <AddCircle
+                                    color="primary"
+                                    style={{ fontSize: 50 }}
+                                  />
+                                </div>
+                                <div class="right">
+                                  <h3 style={{ marginLeft: "12px" }}>
+                                    Add highlight
+                                  </h3>
+                                </div>
+                              </li>
+                            );
+                          }
+                        }
+                      })()}
+                      {storyHighlightsListItems}
                     </ul>
                   </div>
                 </div>
@@ -630,7 +908,9 @@ class UserProfile extends Component {
         </div>
       </div>
     );
+
     let savedButton = <div id="savedButton"></div>;
+    let storiesButton;
     let followButton;
     if (!AuthService.getCurrentUser()) {
       savedButton = <div id="savedButton"></div>;
@@ -701,6 +981,34 @@ class UserProfile extends Component {
               onClick={() => this.handleSavedButton()}
             >
               Saved
+            </a>
+          </li>
+        </div>
+      );
+      storiesButton = (
+        <div>
+          <li
+            class="header-link-item ml-3 pl-3 border-left d-flex align-items-center"
+            onClick={() => this.handleStoriesClick()}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="feather feather-image mr-1 icon-md"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            <a class="pt-1px d-none d-md-block" href="#">
+              Stories
             </a>
           </li>
         </div>
@@ -858,25 +1166,18 @@ class UserProfile extends Component {
     }
     return (
       <div>
-        {showStoryModalDialog}
+        {addStoryModalDialog}
         <Snackbar
-          open={this.state.followersSnackBarOpen}
+          open={this.state.snackBarOpen}
           autoHideDuration={2000}
-          onClose={this.handleCloseFollowersSnackBar}
+          onClose={this.handleCloseSnackBar}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
-          <Alert onClose={this.handleCloseFollowersSnackBar} severity="error">
-            {this.state.followersSnackBarMessage}
-          </Alert>
-        </Snackbar>
-        <Snackbar
-          open={this.state.followingSnackBarOpen}
-          autoHideDuration={2000}
-          onClose={this.handleCloseFollowingSnackBar}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert onClose={this.handleCloseFollowingSnackBar} severity="error">
-            {this.state.followingSnackBarMessage}
+          <Alert
+            onClose={this.handleCloseSnackBar}
+            severity={this.state.snackBarType}
+          >
+            {this.state.snackBarMessage}
           </Alert>
         </Snackbar>
         <Modal
@@ -893,7 +1194,7 @@ class UserProfile extends Component {
                 return (
                   <div class="list-group-item d-flex align-items-center">
                     <img
-                      src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                      src={follower.imageSrc}
                       alt=""
                       width="50px"
                       class="rounded-sm ml-n2"
@@ -934,7 +1235,7 @@ class UserProfile extends Component {
                 return (
                   <div class="list-group-item d-flex align-items-center">
                     <img
-                      src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                      src={followingProfile.imageSrc}
                       alt=""
                       width="50px"
                       class="rounded-sm ml-n2"
@@ -1004,7 +1305,6 @@ class UserProfile extends Component {
                             );
                           }
                         })()}
-
                         <span class="profile-name">{userProfile.username}</span>
                       </div>
                       {followButton}
@@ -1037,34 +1337,7 @@ class UserProfile extends Component {
                           Posts <span class="text-muted tx-12">12</span>
                         </Link>
                       </li>
-                      <li class="header-link-item ml-3 pl-3 border-left d-flex align-items-center">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="feather feather-image mr-1 icon-md"
-                        >
-                          <rect
-                            x="3"
-                            y="3"
-                            width="18"
-                            height="18"
-                            rx="2"
-                            ry="2"
-                          ></rect>
-                          <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                          <polyline points="21 15 16 10 5 21"></polyline>
-                        </svg>
-                        <a class="pt-1px d-none d-md-block" href="#">
-                          Stories
-                        </a>
-                      </li>
+                      {storiesButton}
                       <li class="header-link-item ml-3 pl-3 border-left d-flex align-items-center">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"

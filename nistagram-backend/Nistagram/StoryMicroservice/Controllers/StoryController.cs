@@ -16,11 +16,13 @@ namespace StoryMicroservice.Controllers
     {
         private readonly IStoryService _storyService;
         private readonly IProfileService _profileService;
+        private readonly IStoryHighlightsService _storyHighlightsService;
 
-        public StoryController(IStoryService storyService, IProfileService profileService)
+        public StoryController(IStoryService storyService, IProfileService profileService, IStoryHighlightsService storyHighlightsService)
         {
             _storyService = storyService;
             _profileService = profileService;
+            _storyHighlightsService = storyHighlightsService;
         }
 
         [HttpPost]
@@ -65,7 +67,7 @@ namespace StoryMicroservice.Controllers
             return Ok(returnValue);
         }
 
-        [HttpGet("profile/{profileId}")]
+        [HttpGet("active/profile/{profileId}")]
         public async Task<IActionResult> GetActiveStoriesForProfile(int profileId)
         {
             List<Story> activeProfileStories = await _storyService.GetActiveStoriesForProfile(profileId);
@@ -80,6 +82,54 @@ namespace StoryMicroservice.Controllers
                 dto.ImageSrc = String.Format("http://localhost:55996/{0}", story.ImageName);
                 result.Add(dto);
             }
+            return Ok(result);
+        }
+
+        [HttpGet("profile/{profileId}")]
+        public async Task<IActionResult> GetStoriesForProfile(int profileId)
+        {
+            List<Story> storiesForProfile = await _storyService.GetStoriesForProfile(profileId);
+            if (!storiesForProfile.Any())
+            {
+                return NoContent();
+            }
+            List<StoryDto> result = new List<StoryDto>();
+            foreach (Story story in storiesForProfile)
+            {
+                StoryDto dto = StoryMapper.StoryToStoryDto(story);
+                dto.ImageSrc = String.Format("http://localhost:55996/{0}", story.ImageName);
+                result.Add(dto);
+            }
+            return Ok(result);
+        }
+
+        [HttpPost("highlight")]
+        public async Task<IActionResult> AddStoryHighlight([FromBody] StoryHighlightDto dto)
+        {
+            StoryHighlight storyHighlight = StoryHighlightMapper.StoryHighlightDtoToStoryHighlight(dto);
+            List<Story> stories = new List<Story>();
+            foreach (string storyId in dto.StoriesIds)
+            {
+                stories.Add(await _storyService.GetById(storyId));
+            }
+            storyHighlight.Stories = stories;
+            return Ok(await _storyHighlightsService.Insert(storyHighlight));
+        }
+
+        [HttpGet("highlight/profile/{profileId}")]
+        public async Task<IActionResult> GetStoryHighlightsForProfile(int profileId)
+        {
+            List<StoryHighlight> storyHighlightsForProfile = await _storyHighlightsService.GetStoryHighlightsForProfile(profileId);
+            if(!storyHighlightsForProfile.Any())
+            {
+                return NoContent();
+            }
+            List<StoryHighlightDto> result = new List<StoryHighlightDto>();
+            foreach(StoryHighlight storyHighlight in storyHighlightsForProfile) 
+            {
+                result.Add(StoryHighlightMapper.StoryHighlightToStoryHighlightDto(storyHighlight));
+            }
+
             return Ok(result);
         }
     }

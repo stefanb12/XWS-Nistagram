@@ -37,6 +37,19 @@ namespace StoryMicroservice.Service
             return storiesForProfile;
         }
 
+        public async Task<List<Story>> GetStoriesForProfile(int profileId)
+        {
+            List<Story> storiesForProfile = new List<Story>();
+            foreach (Story story in await GetAll())
+            {
+                if (story.PublisherId == profileId)
+                {
+                    storiesForProfile.Add(story);
+                }
+            }
+            return storiesForProfile;
+        }
+
         public async Task<Story> GetById(string id)
         {
             return await _storyRepository.GetById(id);

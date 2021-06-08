@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Redirect, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import PostCard from "../components/home-page/PostCard";
 import PostService from "../services/PostService";
 import { Button } from "@material-ui/core";
