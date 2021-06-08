@@ -7,7 +7,7 @@ services:
     container_name: mysql-user-microservice
     volumes:
         - mysql-db-user:/var/lib/mysql
-        - ./init-scripts/user-scripts:/docker-entrypoint-initdb.d/
+        - sql-user:/docker-entrypoint-initdb.d/
     restart: always
     environment:
       MYSQL_DATABASE: "UserMicroserviceDb"
@@ -26,7 +26,7 @@ services:
     container_name: mysql-notification-microservice
     volumes:
         - mysql-db-notification:/var/lib/mysql
-        - ./init-scripts/notification-scripts:/docker-entrypoint-initdb.d/
+        - sql-notification:/docker-entrypoint-initdb.d/
     restart: always
     environment:
       MYSQL_DATABASE: "NotificationMicroserviceDb"
@@ -74,6 +74,7 @@ services:
       DATABASE_HOST: "mysql-user-microservice"
       DATABASE_SCHEMA: "UserMicroserviceDb"
       STATIC_FILES: "false"
+      RABBITMQ_HOST_NAME: "rabbitmq"
     depends_on:
       - mysql-user-microservice
     expose: 
@@ -97,6 +98,8 @@ services:
       DATABASE_PASSWORD: "user"
       DATABASE_HOST: "mysql-notification-microservice"
       DATABASE_SCHEMA: "NotificationMicroserviceDb"
+      HOSTED_SERVICE: "false"
+      RABBITMQ_HOST_NAME: "rabbitmq"
     depends_on:
       - mysql-notification-microservice
     expose: 
@@ -119,6 +122,7 @@ services:
       DATABASE_NAME: "PostMicroserviceDb"
       STATIC_FILES: "false"
       HOSTED_SERVICE: "false"
+      RABBITMQ_HOST_NAME: "rabbitmq"
     depends_on:
       - mongodb-post-microservice
     expose: 
@@ -127,8 +131,8 @@ services:
       - "55993:80"
     networks:
       - public_net
-    volumes:
-      - wwwroot:/nistagram-backend/Nistagram/PostMicroservice/wwwroot
+    # volumes:
+    #   - wwwroot:/nistagram-backend/Nistagram/PostMicroservice/wwwroot
 
   story-microservice:
     build: 
@@ -141,6 +145,7 @@ services:
       DATABASE_NAME: "StoryMicroserviceDb"
       STATIC_FILES: "false"
       HOSTED_SERVICE: "false"
+      RABBITMQ_HOST_NAME: "rabbitmq"
     depends_on:
       - mongodb-story-microservice
     expose: 
@@ -152,20 +157,23 @@ services:
     # volumes:
     #   - wwwroot:/nistagram-backend/Nistagram/StoryMicroservice/wwwroot
 
-  # rabbitmq:
-  #   image: rabbitmq:3-management
-  #   container_name: rabbitmq
-  #   restart: on-failure
-  #   # environment: 
-  #   #   RABBITMQ_DEFAULT_USER : "guest"
-  #   #   RABBITMQ_DEFAULT_PASS : "guest"
-  #   ports:
-  #     - "15672:15672"
-  #     - "5672:5672"
-  #     # - "4369:4369"
-  #     # - "5671:5671"
-  #     # - "25672:25672"
-  #     # - "15671:15671"
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: on-failure
+    hostname: "rabbitmq"
+    labels:
+      NAME: "rabbitmq"
+    environment: 
+      RABBITMQ_DEFAULT_USER : "guest"
+      RABBITMQ_DEFAULT_PASS : "guest"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+      # - "4369:4369"
+      # - "5671:5671"
+      # - "25672:25672"
+      # - "15671:15671"
 
   gateway-web-api:
     build: 
@@ -205,7 +213,7 @@ networks:
     driver: bridge
 
 volumes:
-  wwwroot:
+  #wwwroot:
   mysql-db-user:
   mysql-db-notification:
   sql-user:

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using PostMicroservice.Model;
 using RabbitMQ.Client;
+using System;
 using System.Text;
 namespace PostMicroservice.Messaging
 {
@@ -10,7 +11,15 @@ namespace PostMicroservice.Messaging
 
         public void SendCreatedPost(Post post)
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
+            var factory = new ConnectionFactory()
+            {
+                HostName = hostName,
+                Port = 5672,
+                UserName = "guest",
+                Password = "guest"
+            };
+
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
