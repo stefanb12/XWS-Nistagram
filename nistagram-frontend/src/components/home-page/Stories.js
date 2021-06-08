@@ -16,6 +16,7 @@ import AuthService from "../../services/AuthService";
 import { Alert } from "@material-ui/lab";
 import moment from "moment";
 import { withRouter } from "react-router-dom";
+import ReactPlayer from "react-player";
 
 class Stories extends Component {
   constructor(props) {
@@ -29,13 +30,14 @@ class Stories extends Component {
       snackbarSeverity: "success",
       snackbarMessage: "",
       allProfileStories: [],
-      currentStoryImage: null,
+      currentStoryContent: "",
       currentStoryPublisher: "",
       currentStoryPublisherId: 1,
       currentStoryPublishingDate: null,
       currentTimeout: null,
       currentProfileStories: null,
       timeCounter: 0,
+      timeCounterMultiplier: 1,
       currentStoryNumber: 0,
       numberOfStoriesForCurrentProfile: 0,
       currentProfileImage: null,
@@ -224,7 +226,7 @@ class Stories extends Component {
 
   showStory = (profileStories, storyNumber) => {
     this.setState({
-      currentStoryImage: profileStories.stories[storyNumber].imageSrc,
+      currentStoryContent: profileStories.stories[storyNumber].imageSrc,
       currentStoryPublishingDate:
         profileStories.stories[storyNumber].publishingDate,
       isShowStoryDialogOpen: true,
@@ -233,6 +235,15 @@ class Stories extends Component {
       currentProfileStories: profileStories,
       currentProfileImage: profileStories.imageSrc,
     });
+    if (profileStories.stories[storyNumber].imageSrc.endsWith(".mp4")) {
+      this.setState({
+        timeCounterMultiplier : 3
+      })
+    } else {
+      this.setState({
+        timeCounterMultiplier : 1
+      })
+    }
     this.currentStoryPublisher = profileStories.username;
     this.setState({
       currentStoryPublisherId: profileStories.originalId,
@@ -242,7 +253,7 @@ class Stories extends Component {
       this.setState({
         timeCounter: this.state.timeCounter + 1,
       });
-      if (this.state.timeCounter >= 180) {
+      if (this.state.timeCounter >= 180 * this.state.timeCounterMultiplier) {
         this.setState({
           timeCounter: 0,
         });
@@ -342,15 +353,34 @@ class Stories extends Component {
           }}
         >
           <div>
-            <img
+          {(() => {
+            if (this.state.currentStoryContent.endsWith(".mp4")) {
+              return (
+                  <ReactPlayer
+                    className="d-block w-100"
+                    playing={true}
+                    url={
+                      this.state.currentStoryContent
+                    }
+                    controls={false}
+                  />
+              );
+            } else {
+              return(
+                <img
               style={{
                 float: "left",
                 maxWidth: "320px",
                 maxHeight: "360px",
               }}
-              src={this.state.currentStoryImage}
+              src={this.state.currentStoryContent}
               class="img-thumbnail"
             />
+              );
+            }
+          })()}
+          
+            
           </div>
         </Modal.Body>
         <Modal.Footer
@@ -368,7 +398,7 @@ class Stories extends Component {
             {this.state.currentStoryNumber + 1} of{" "}
             {this.state.numberOfStoriesForCurrentProfile}
           </Typography>
-          <Slider value={this.state.timeCounter} step={1} max={179}></Slider>
+          <Slider value={this.state.timeCounter} step={1} max={180 * this.state.timeCounterMultiplier - 1}></Slider>
           <Button
             color="primary"
             onClick={() => {
