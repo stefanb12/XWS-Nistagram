@@ -784,13 +784,23 @@ class UserProfile extends Component {
       </Modal>
     );
 
-    let isInFollowing = loggedUser.following.some((followingProfile) => {
-      if (followingProfile.followingId == this.state.userProfileId) return true;
-    });
+    let isInFollowing = () => {
+      if (loggedUser.following != null) {
+        loggedUser.following.some((followingProfile) => {
+          if (followingProfile.followingId == this.state.userProfileId)
+            return true;
+        });
+      }
+    };
 
-    let isInFollowers = loggedUser.followers.some((followerProfile) => {
-      if (followerProfile.followerId == this.state.userProfileId) return true;
-    });
+    let isInFollowers = () => {
+      if (loggedUser.followers != null) {
+        loggedUser.followers.some((followerProfile) => {
+          if (followerProfile.followerId == this.state.userProfileId)
+            return true;
+        });
+      }
+    };
 
     let storyHighlightsListItems = this.state.userProfileStoryHighlights.map(
       (storyHighlight) => {
@@ -1008,7 +1018,7 @@ class UserProfile extends Component {
               <polyline points="21 15 16 10 5 21"></polyline>
             </svg>
             <a class="pt-1px d-none d-md-block" href="#">
-              Stories
+              Stories {this.state.userProfileStories.length}
             </a>
           </li>
         </div>
@@ -1334,7 +1344,10 @@ class UserProfile extends Component {
                           class="pt-1px d-none d-md-block"
                           onClick={() => this.handlePostsButton()}
                         >
-                          Posts <span class="text-muted tx-12">12</span>
+                          Posts{" "}
+                          <span class="text-muted tx-12">
+                            {this.state.userProfilePosts.length}
+                          </span>
                         </Link>
                       </li>
                       {storiesButton}
