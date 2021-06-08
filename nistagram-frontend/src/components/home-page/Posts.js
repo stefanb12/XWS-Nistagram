@@ -241,8 +241,8 @@ export default class Posts extends Component {
         style={{ marginTop: "120px", minHeight: "560px", overflow: "hidden" }}
       >
         <Modal.Header closeButton>
-          <Modal.Title style={{ marginLeft: "30px" }}>
-            Single or multiple image selection
+          <Modal.Title style={{ marginLeft: "38px" }}>
+            Single or multiple file selection
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -410,7 +410,7 @@ export default class Posts extends Component {
                           >
                             <i class="fa fa-camera"></i>
                             <span style={{ marginLeft: "10px" }}>
-                              Add images
+                              Add files
                             </span>
                           </button>
                           <button

@@ -50,7 +50,7 @@ class UploadImages extends Component {
           onChange={this.handlerFile.bind(this)}
         />
         <label htmlFor="icon-button-file" style={{ marginLeft: "150px" }}>
-          Choose images:
+          Choose files:
           <IconButton
             color="primary"
             aria-label="upload picture"
