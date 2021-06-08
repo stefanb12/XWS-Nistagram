@@ -32,10 +32,14 @@ namespace UserMicroservice.Service
         {
             Profile profile = await _profileRepository.GetById(id);
             List<Profile> followers = new List<Profile>();
-            foreach(ProfileFollower profileFollower in profile.Followers)
+            if(profile.Followers != null)
             {
-                followers.Add(profileFollower.Follower);
+                foreach (ProfileFollower profileFollower in profile.Followers)
+                {
+                    followers.Add(profileFollower.Follower);
+                }
             }
+
             return followers;
         }
 
@@ -43,10 +47,14 @@ namespace UserMicroservice.Service
         {
             Profile profile = await _profileRepository.GetById(id);
             List<Profile> followingProfiles = new List<Profile>();
-            foreach (ProfileFollowing profileFollowing in profile.Following)
+            if (profile.Following != null)
             {
-                followingProfiles.Add(profileFollowing.Following);
+                foreach (ProfileFollowing profileFollowing in profile.Following)
+                {
+                    followingProfiles.Add(profileFollowing.Following);
+                }
             }
+                
             return followingProfiles;
         }
 
