@@ -741,7 +741,10 @@ export default function UserNavbar() {
             }
           }
         }
-        if (
+        if(publicPosts[i].location.address == null && publicPosts[i].location.city == null && publicPosts[i].location.cpuntry == null){
+          continue;
+        }
+        else if (
           publicPosts[i].location.address === "" ||
           publicPosts[i].location.address === null
         ) {
