@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using PostMicroservice.Dto;
+using PostMicroservice.Messaging;
 using PostMicroservice.Model;
 using PostMicroservice.Repository;
 using System;
@@ -15,12 +16,14 @@ namespace PostMicroservice.Service
     {
         private IPostRepository _postRepository;
         private IProfileService _profileService;
+        private IPostCreatedMessageSender _postCreatedMessageSender;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public PostService(IPostRepository postRepository, IProfileService profileService, IWebHostEnvironment hostEnvironment)
+        public PostService(IPostRepository postRepository, IProfileService profileService, IPostCreatedMessageSender postCreatedMessageSender, IWebHostEnvironment hostEnvironment)
         {
             _postRepository = postRepository;
             _profileService = profileService;
+            _postCreatedMessageSender = postCreatedMessageSender;
             _hostEnvironment = hostEnvironment;
         }
 
@@ -264,7 +267,11 @@ namespace PostMicroservice.Service
                 content.ImageName = await SaveImage(content.ImageFile);
             }
             entity.PublishingDate = DateTime.Now;
-            return await _postRepository.Insert(entity);
+            
+            Post post = await _postRepository.Insert(entity);
+            _postCreatedMessageSender.SendCreatedPost(post);
+            
+            return post;
         }
 
         public async Task<Post> Update(Post entity)

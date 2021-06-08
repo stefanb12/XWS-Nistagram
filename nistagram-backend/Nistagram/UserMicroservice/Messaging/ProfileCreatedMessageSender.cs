@@ -9,10 +9,7 @@ namespace UserMicroservice.Messaging
 {
     public class ProfileCreatedMessageSender : IProfileCreatedMessageSender
     {
-        public ProfileCreatedMessageSender()
-        {
-
-        }
+        public ProfileCreatedMessageSender() { }
 
         public void SendCreatedProfile(Profile profile)
         {
@@ -26,7 +23,8 @@ namespace UserMicroservice.Messaging
                 {
                     id = profile.Id,
                     username = profile.Username,
-                    isPrivate = profile.IsPrivate
+                    isPrivate = profile.IsPrivate,
+                    profileImage = profile.ImageName
                 });
 
                 var body = Encoding.UTF8.GetBytes(integrationEventData);

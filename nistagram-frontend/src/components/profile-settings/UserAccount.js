@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ProfileService from "../../services/ProfileService"
+import ProfileService from "../../services/ProfileService";
 import Alert from "@material-ui/lab/Alert";
 import { Button, Snackbar, withStyles } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
@@ -24,30 +24,29 @@ class UserAccount extends Component {
     super(props);
 
     this.state = {
-        profileForUpdating:{},
-        username: "",
-        biography: "",
-        website: "",
-        fullname: "",
-        email: "",
-        phoneNumber: "", 
-        dateOfBirth: "",
-        gender: 15,
-        open: false,
-        snackBarMessage: "",
-        snackBarSeverity: "",
-        profileImage: "https://bootdey.com/img/Content/avatar/avatar7.png",
-        imageForSending: null
+      profileForUpdating: {},
+      username: "",
+      biography: "",
+      website: "",
+      fullname: "",
+      email: "",
+      phoneNumber: "",
+      dateOfBirth: "",
+      gender: 15,
+      open: false,
+      snackBarMessage: "",
+      snackBarSeverity: "",
+      profileImage: "https://bootdey.com/img/Content/avatar/avatar7.png",
+      imageForSending: null,
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleOptionChange = this.handleOptionChange.bind(this);
     //this.handlerFile = this.handlerFile.bind(this);
-
   }
 
-  componentDidMount(){
+  componentDidMount() {
     let publisher = AuthService.getCurrentUser();
     ProfileService.getUserForUpdating(publisher.id)
       .then((res) => res.json())
@@ -56,39 +55,39 @@ class UserAccount extends Component {
           this.setProfile(result);
           this.setState({
             profileForUpdating: result,
-            dateOfBirth : this.formattedDate(result.dateOfBirth)
+            dateOfBirth: this.formattedDate(result.dateOfBirth),
           });
         },
         (error) => {
           console.log(error);
         }
       );
-      //this.state.dateOfBirth = this.formattedDate(this.state.profileForUpdating.dateOfBirth);
+    //this.state.dateOfBirth = this.formattedDate(this.state.profileForUpdating.dateOfBirth);
   }
 
   handleInputChange(event) {
     const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
 
     this.setState({
-      [name]: value    
+      [name]: value,
     });
   }
-  
+
   handleOptionChange(changeEvent) {
     this.setState({
-      gender: changeEvent.target.value
+      gender: changeEvent.target.value,
     });
   }
 
   handleSubmit(event) {
-    console.log('username: ' + this.state.username);
-    console.log('biography: ' + this.state.biography);
+    console.log("username: " + this.state.username);
+    console.log("biography: " + this.state.biography);
     event.preventDefault();
   }
 
-  setProfile(profile){
+  setProfile(profile) {
     this.state.username = profile.username;
     this.state.biography = profile.biography;
     this.state.website = profile.website;
@@ -97,44 +96,62 @@ class UserAccount extends Component {
     this.state.phoneNumber = profile.mobilePhone;
     this.state.dateOfBirth = profile.dateOfBirth;
     this.state.gender = profile.gender;
-    if(profile.imageSrc != ""){
+    if (profile.imageSrc != "") {
       this.state.profileImage = profile.imageSrc;
-    }else {
-      this.state.profileImage = "https://bootdey.com/img/Content/avatar/avatar7.png";
+    } else {
+      this.state.profileImage =
+        "https://bootdey.com/img/Content/avatar/avatar7.png";
     }
   }
 
   formattedDate(date) {
-    var d = new Date(date)
+    var d = new Date(date);
     let month = String(d.getMonth() + 1);
     let day = String(d.getDate());
     const year = String(d.getFullYear());
-  
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-  
+
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
     return year + "-" + month + "-" + day;
     //console.log(formattedDate)
     //return `${year}-${month}-${day}`;
   }
 
-  updateProfile(){
+  updateProfile() {
     let publisher = AuthService.getCurrentUser();
-    if(this.state.username == "" || this.state.biography == "" || this.state.biography == "" || this.state.fullname == "" ||
-      this.state.email == "" || this.state.phoneNumber == "" || this.state.dateOfBirth == ""){
-        this.setState({
-          open: true,
-          snackBarMessage: "Enter values in all inputs!",
-          snackBarSeverity: "error"
-        });
-    }else{
+    if (
+      this.state.username == "" ||
+      this.state.biography == "" ||
+      this.state.biography == "" ||
+      this.state.fullname == "" ||
+      this.state.email == "" ||
+      this.state.phoneNumber == "" ||
+      this.state.dateOfBirth == ""
+    ) {
+      this.setState({
+        open: true,
+        snackBarMessage: "Enter values in all inputs!",
+        snackBarSeverity: "error",
+      });
+    } else {
       this.setState({
         open: true,
         snackBarMessage: "Profile updated!",
-        snackBarSeverity: "success"
+        snackBarSeverity: "success",
       });
-      ProfileService.updateProfile(publisher.id, this.state.username, this.state.biography, this.state.website, this.state.fullname, 
-                                  this.state.email, this.state.phoneNumber, this.state.dateOfBirth, this.state.gender, this.state.imageForSending)
+      ProfileService.updateProfile(
+        publisher.id,
+        this.state.username,
+        this.state.biography,
+        this.state.website,
+        this.state.fullname,
+        this.state.email,
+        this.state.phoneNumber,
+        this.state.dateOfBirth,
+        this.state.gender,
+        this.state.imageForSending
+      )
         .then((res) => res.json())
         .then(
           (result) => {
@@ -153,9 +170,16 @@ class UserAccount extends Component {
     }
   }
 
-  inputValidated(){
-    if(this.state.username == "" || this.state.biography == "" || this.state.biography == "" || this.state.fullname == "" ||
-      this.state.email == "" || this.state.phoneNumber == "" || this.state.dateOfBirth == ""){
+  inputValidated() {
+    if (
+      this.state.username == "" ||
+      this.state.biography == "" ||
+      this.state.biography == "" ||
+      this.state.fullname == "" ||
+      this.state.email == "" ||
+      this.state.phoneNumber == "" ||
+      this.state.dateOfBirth == ""
+    ) {
       this.state.showAlert = false;
     }
     this.state.showAlert = true;
@@ -167,7 +191,7 @@ class UserAccount extends Component {
       let img = e.target.files[0];
       this.setState({
         profileImage: URL.createObjectURL(img),
-        imageForSending: img
+        imageForSending: img,
       });
     }
     e.preventDefault();
@@ -179,7 +203,7 @@ class UserAccount extends Component {
     }
 
     this.setState({
-      open: false
+      open: false,
     });
   };
 
@@ -187,43 +211,56 @@ class UserAccount extends Component {
     const { classes } = this.props;
 
     let usernameValidation;
-    if(this.state.username == ""){
-      usernameValidation = <label style={{color:"red"}}>Enter your username</label>
+    if (this.state.username == "") {
+      usernameValidation = (
+        <label style={{ color: "red" }}>Enter your username</label>
+      );
     }
     let biographyValidation;
-    if(this.state.biography == ""){
-      biographyValidation = <label style={{color:"red"}}>Enter your biography</label>
+    if (this.state.biography == "") {
+      biographyValidation = (
+        <label style={{ color: "red" }}>Enter your biography</label>
+      );
     }
     let websiteValidation;
-    if(this.state.website == ""){
-      websiteValidation = <label style={{color:"red"}}>Enter your website</label>
+    if (this.state.website == "") {
+      websiteValidation = (
+        <label style={{ color: "red" }}>Enter your website</label>
+      );
     }
     let fullnameValidation;
-    if(this.state.fullname == ""){
-      fullnameValidation = <label style={{color:"red"}}>Enter your full name</label>
+    if (this.state.fullname == "") {
+      fullnameValidation = (
+        <label style={{ color: "red" }}>Enter your full name</label>
+      );
     }
     let emailValidation;
-    if(this.state.email == ""){
-      emailValidation = <label style={{color:"red"}}>Enter your email</label>
+    if (this.state.email == "") {
+      emailValidation = (
+        <label style={{ color: "red" }}>Enter your email</label>
+      );
     }
     let phoneNumberValidation;
-    if(this.state.phoneNumber == ""){
-      phoneNumberValidation = <label style={{color:"red"}}>Enter your phone number</label>
+    if (this.state.phoneNumber == "") {
+      phoneNumberValidation = (
+        <label style={{ color: "red" }}>Enter your phone number</label>
+      );
     }
     let dateOfBirthValidation;
-    if(this.state.dateOfBirth == ""){
-      dateOfBirthValidation = <label style={{color:"red"}}>Enter your date of birth</label>
+    if (this.state.dateOfBirth == "") {
+      dateOfBirthValidation = (
+        <label style={{ color: "red" }}>Enter your date of birth</label>
+      );
     }
 
     let alert;
-    if(this.state.showAlert == true){
-      alert = <Alert variant="primary">This is a alertlike.</Alert>
+    if (this.state.showAlert == true) {
+      alert = <Alert variant="primary">This is a alertlike.</Alert>;
     }
 
     let image = this.state.profileImage;
 
     return (
-      
       <div
         className="tab-pane fade show active"
         id="account"
@@ -243,7 +280,7 @@ class UserAccount extends Component {
                     <input
                       name="username"
                       type="text"
-                      value={this.state.username} 
+                      value={this.state.username}
                       onChange={this.handleInputChange}
                       className="form-control"
                       id="inputUsername"
@@ -255,7 +292,7 @@ class UserAccount extends Component {
                     <label>Biography</label>
                     <textarea
                       name="biography"
-                      value={this.state.biography} 
+                      value={this.state.biography}
                       onChange={this.handleInputChange}
                       rows="2"
                       className="form-control"
@@ -269,7 +306,7 @@ class UserAccount extends Component {
                     <input
                       name="website"
                       type="text"
-                      value={this.state.website} 
+                      value={this.state.website}
                       onChange={this.handleInputChange}
                       className="form-control"
                       id="inputUsername"
@@ -295,7 +332,10 @@ class UserAccount extends Component {
                       type="file"
                       onChange={this.handlerFile.bind(this)}
                     />
-                    <label htmlFor="icon-button-file" style={{ marginLeft: "10%" }}>
+                    <label
+                      htmlFor="icon-button-file"
+                      style={{ marginLeft: "10%" }}
+                    >
                       Choose images:
                       <IconButton
                         color="primary"
@@ -317,100 +357,105 @@ class UserAccount extends Component {
             <h5 className="card-title mb-0">Private info</h5>
           </div>
           <div className="card-body">
-                          
-              <div className="form-group">
-                <label>Full name</label>
-                <input
-                  name="fullname"
-                  type="text"
-                  value={this.state.fullname}
-                  onChange={this.handleInputChange}
-                  className="form-control"
-                  id="inputFirstName"
-                  placeholder="Full name"
-                />
-                {fullnameValidation}
-              </div>               
-              <div className="form-group">
-                <label>Email</label>
-                <input
-                  name="email"
-                  type="email"
-                  value={this.state.email}
-                  onChange={this.handleInputChange}
-                  className="form-control"
-                  id="inputEmail4"
-                  placeholder="Email"
-                />
-                {emailValidation}
-              </div>
-              <div className="form-group">
-                <label>Phone number</label>
-                <input
-                  name="phoneNumber"
-                  type="text"
-                  value={this.state.phoneNumber}
-                  onChange={this.handleInputChange}
-                  className="form-control"
-                  id="inputAddress"
-                  placeholder="Phone number"
-                />
-                {phoneNumberValidation}
-              </div>
-              <div className="form-group">
-                <label>Date of birth</label>
-                <input
-                  name="dateOfBirth"
-                  type="date"
-                  value={this.state.dateOfBirth}
-                  onChange={this.handleInputChange}
-                  className="form-control"
-                  id="inputAddress"
-                  placeholder="Date of birth"
-                />
-                {dateOfBirthValidation}
-              </div>
-              <div style={{ marginBottom: "1%" }}>
-                <h6>Gender</h6>
-                <label>Male</label>
-                <input
-                  name="gender"
-                  checked = {this.state.gender == 0}
-                  type="radio"
-                  value={0}
-                  onChange={this.handleOptionChange}
-                  id="inputAddress"
-                  placeholder="Date of birth"
-                  style={{ marginLeft: "1%" }}
-                />
-                <label style={{ marginLeft: "3%" }}>Female</label>
-                <input
-                  name="gender"
-                  checked = {this.state.gender == 1}
-                  type="radio"
-                  value={1}
-                  onChange={this.handleOptionChange}
-                  id="inputAddress"
-                  placeholder="Date of birth"
-                  style={{ marginLeft: "1%" }}
-                />
-              </div>
-              <button className="btn btn-primary" onClick={() => this.updateProfile()}>
-                Save changes
-              </button>
-                <Snackbar
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'center',
-                  }}
-                  open={this.state.open}
-                  autoHideDuration={2000}
-                  onClose={this.handleClose}
-                >
-                  <Alert onClose={this.handleClose} severity={this.state.snackBarSeverity}>
-                    {this.state.snackBarMessage}
-                  </Alert>
-                </Snackbar>
+            <div className="form-group">
+              <label>Full name</label>
+              <input
+                name="fullname"
+                type="text"
+                value={this.state.fullname}
+                onChange={this.handleInputChange}
+                className="form-control"
+                id="inputFirstName"
+                placeholder="Full name"
+              />
+              {fullnameValidation}
+            </div>
+            <div className="form-group">
+              <label>Email</label>
+              <input
+                name="email"
+                type="email"
+                value={this.state.email}
+                onChange={this.handleInputChange}
+                className="form-control"
+                id="inputEmail4"
+                placeholder="Email"
+              />
+              {emailValidation}
+            </div>
+            <div className="form-group">
+              <label>Phone number</label>
+              <input
+                name="phoneNumber"
+                type="text"
+                value={this.state.phoneNumber}
+                onChange={this.handleInputChange}
+                className="form-control"
+                id="inputAddress"
+                placeholder="Phone number"
+              />
+              {phoneNumberValidation}
+            </div>
+            <div className="form-group">
+              <label>Date of birth</label>
+              <input
+                name="dateOfBirth"
+                type="date"
+                value={this.state.dateOfBirth}
+                onChange={this.handleInputChange}
+                className="form-control"
+                id="inputAddress"
+                placeholder="Date of birth"
+              />
+              {dateOfBirthValidation}
+            </div>
+            <div style={{ marginBottom: "1%" }}>
+              <h6>Gender</h6>
+              <label>Male</label>
+              <input
+                name="gender"
+                checked={this.state.gender == 0}
+                type="radio"
+                value={0}
+                onChange={this.handleOptionChange}
+                id="inputAddress"
+                placeholder="Date of birth"
+                style={{ marginLeft: "1%" }}
+              />
+              <label style={{ marginLeft: "3%" }}>Female</label>
+              <input
+                name="gender"
+                checked={this.state.gender == 1}
+                type="radio"
+                value={1}
+                onChange={this.handleOptionChange}
+                id="inputAddress"
+                placeholder="Date of birth"
+                style={{ marginLeft: "1%" }}
+              />
+            </div>
+            <button
+              className="btn btn-primary"
+              onClick={() => this.updateProfile()}
+            >
+              Save changes
+            </button>
+            <Snackbar
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+              open={this.state.open}
+              autoHideDuration={2000}
+              onClose={this.handleClose}
+            >
+              <Alert
+                onClose={this.handleClose}
+                severity={this.state.snackBarSeverity}
+              >
+                {this.state.snackBarMessage}
+              </Alert>
+            </Snackbar>
           </div>
         </div>
       </div>

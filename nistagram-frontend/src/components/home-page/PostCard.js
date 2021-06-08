@@ -6,7 +6,10 @@ import { Link, withRouter } from "react-router-dom";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import PostService from "../../services/PostService";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Carousel, Modal } from "react-bootstrap";
+import NotificationService from "../../services/NotificationService";
+import ReactPlayer from "react-player";
+import "../../assets/styles/postCard.css";
 
 class PostCard extends Component {
   constructor(props) {
@@ -70,25 +73,30 @@ class PostCard extends Component {
     });
   }
 
-  postNewComment = (postId) => {
-    let text = document.getElementById("newComment" + postId).value;
+  postNewComment = (post) => {
+    let text = document.getElementById("newComment" + post.id).value;
     let resStatus = 0;
     if (text !== "") {
-      PostService.insertNewComment(postId, text, this.state.currentUser)
+      PostService.insertNewComment(post.id, text, this.state.currentUser)
         .then((res) => {
           resStatus = res.status;
           return res.json();
         })
         .then((result) => {
           if (resStatus === 200) {
-            const index = this.state.posts.findIndex((p) => p.id === postId);
+            const index = this.state.posts.findIndex((p) => p.id === post.id);
             const updatedPosts = [...this.state.posts];
             updatedPosts[index] = result;
             this.updatePost(updatedPosts);
+            NotificationService.sendCommentNotification(
+              post.publisher.id,
+              this.state.currentUser.id,
+              post.id
+            );
           }
           return result;
         });
-      document.getElementById("newComment" + postId).value = "";
+      document.getElementById("newComment" + post.id).value = "";
     } else {
       this.handleClickSnackBar("You have to enter a comment!");
     }
@@ -98,31 +106,36 @@ class PostCard extends Component {
     this.props.updatePost(updatedPosts);
   };
 
-  likePost = (postId) => {
+  likePost = (post) => {
     if (this.state.currentUser != null) {
       if (
-        document.getElementById("like" + postId).className === "fa fa-heart"
+        document.getElementById("like" + post.id).className === "fa fa-heart"
       ) {
-        document.getElementById("like" + postId).className = "fa fa-heart-o";
+        document.getElementById("like" + post.id).className = "fa fa-heart-o";
       } else {
-        document.getElementById("like" + postId).className = "fa fa-heart";
-        document.getElementById("dislike" + postId).className =
+        document.getElementById("like" + post.id).className = "fa fa-heart";
+        document.getElementById("dislike" + post.id).className =
           "fa fa-thumbs-o-down";
       }
 
       let resStatus = 0;
 
-      PostService.likePost(postId, this.state.currentUser)
+      PostService.likePost(post.id, this.state.currentUser)
         .then((res) => {
           resStatus = res.status;
           return res.json();
         })
         .then((result) => {
           if (resStatus === 200) {
-            const index = this.state.posts.findIndex((p) => p.id === postId);
+            const index = this.state.posts.findIndex((p) => p.id === post.id);
             const updatedPosts = [...this.state.posts];
             updatedPosts[index] = result;
             this.updatePost(updatedPosts);
+            NotificationService.sendLikeNotification(
+              post.publisher.id,
+              this.state.currentUser.id,
+              post.id
+            );
           }
         });
     } else {
@@ -130,33 +143,38 @@ class PostCard extends Component {
     }
   };
 
-  dislikePost = (postId) => {
+  dislikePost = (post) => {
     if (this.state.currentUser != null) {
       if (
-        document.getElementById("dislike" + postId).className ===
+        document.getElementById("dislike" + post.id).className ===
         "fa fa-thumbs-down"
       ) {
-        document.getElementById("dislike" + postId).className =
+        document.getElementById("dislike" + post.id).className =
           "fa fa-thumbs-o-down";
       } else {
-        document.getElementById("dislike" + postId).className =
+        document.getElementById("dislike" + post.id).className =
           "fa fa-thumbs-down";
-        document.getElementById("like" + postId).className = "fa fa-heart-o";
+        document.getElementById("like" + post.id).className = "fa fa-heart-o";
       }
 
       let resStatus = 0;
 
-      PostService.dislikePost(postId, this.state.currentUser)
+      PostService.dislikePost(post.id, this.state.currentUser)
         .then((res) => {
           resStatus = res.status;
           return res.json();
         })
         .then((result) => {
           if (resStatus === 200) {
-            const index = this.state.posts.findIndex((p) => p.id === postId);
+            const index = this.state.posts.findIndex((p) => p.id === post.id);
             const updatedPosts = [...this.state.posts];
             updatedPosts[index] = result;
             this.updatePost(updatedPosts);
+            NotificationService.sendDislikeNotification(
+              post.publisher.id,
+              this.state.currentUser.id,
+              post.id
+            );
           }
         });
     } else {
@@ -414,14 +432,24 @@ class PostCard extends Component {
                                     <p>
                                       <small>
                                         {(() => {
-                                          if (post.location.address === "") {
+                                          if (
+                                            (post.location.address === "" ||
+                                              post.location.address == null) &&
+                                            post.location.city != null &&
+                                            post.location.country != null
+                                          ) {
                                             return (
                                               <div>
                                                 {post.location.city},{" "}
                                                 {post.location.country}{" "}
                                               </div>
                                             );
-                                          } else {
+                                          } else if (
+                                            (post.location.address !== "" ||
+                                              post.location.address != null) &&
+                                            post.location.city != null &&
+                                            post.location.country != null
+                                          ) {
                                             return (
                                               <div>
                                                 {post.location.address},{" "}
@@ -429,6 +457,8 @@ class PostCard extends Component {
                                                 {post.location.country}{" "}
                                               </div>
                                             );
+                                          } else {
+                                            return <div></div>;
                                           }
                                         })()}
                                       </small>
@@ -475,10 +505,12 @@ class PostCard extends Component {
                                               <ul>
                                                 <li>
                                                   <Link
-                                                    to="/user/profile"
-                                                    params={{
-                                                      profileId:
-                                                        post.publisher.id,
+                                                    to={{
+                                                      pathname: "/user/profile",
+                                                      state: {
+                                                        profileId:
+                                                          post.publisher.id,
+                                                      },
                                                     }}
                                                   >
                                                     View profile
@@ -498,10 +530,12 @@ class PostCard extends Component {
                                               <ul>
                                                 <li>
                                                   <Link
-                                                    to="/user/profile"
-                                                    params={{
-                                                      profileId:
-                                                        post.publisher.id,
+                                                    to={{
+                                                      pathname: "/app/profile",
+                                                      state: {
+                                                        profileId:
+                                                          post.publisher.id,
+                                                      },
                                                     }}
                                                   >
                                                     View profile
@@ -516,11 +550,72 @@ class PostCard extends Component {
                                   </div>
 
                                   <div class="timeline-item-post">
-                                    <img
-                                      class="img-thumbnail"
-                                      src={post.imagesSrc[0]}
-                                      alt=""
-                                    />
+                                    {(() => {
+                                      if (post.imagesSrc.length > 1) {
+                                        return (
+                                          <Carousel
+                                            interval={null}
+                                            nextIcon={
+                                              <span
+                                                aria-hidden="true"
+                                                class="carousel-control-next-icon"
+                                              />
+                                            }
+                                          >
+                                            {(() => {
+                                              return post.imagesSrc.map(
+                                                (fileUrl, key) => {
+                                                  if (
+                                                    fileUrl.endsWith(".mp4")
+                                                  ) {
+                                                    return (
+                                                      <Carousel.Item>
+                                                        <ReactPlayer
+                                                          className="d-block w-100"
+                                                          url={fileUrl}
+                                                          controls={true}
+                                                        />
+                                                      </Carousel.Item>
+                                                    );
+                                                  } else {
+                                                    return (
+                                                      <Carousel.Item>
+                                                        <img
+                                                          className="d-block w-100"
+                                                          src={fileUrl}
+                                                          alt="First slide"
+                                                        />
+                                                      </Carousel.Item>
+                                                    );
+                                                  }
+                                                }
+                                              );
+                                            })()}
+                                          </Carousel>
+                                        );
+                                      } else {
+                                        if (
+                                          post.imagesSrc[0].endsWith(".mp4")
+                                        ) {
+                                          return (
+                                            <ReactPlayer
+                                              className="d-block w-100"
+                                              url={post.imagesSrc[0]}
+                                              controls={true}
+                                            />
+                                          );
+                                        } else {
+                                          return (
+                                            <img
+                                              className="d-block w-100"
+                                              src={post.imagesSrc[0]}
+                                              alt="First slide"
+                                            />
+                                          );
+                                        }
+                                      }
+                                    })()}
+
                                     {(() => {
                                       if (
                                         post.description !== null &&
@@ -599,7 +694,7 @@ class PostCard extends Component {
                                               <a
                                                 href="javascript:void(0)"
                                                 onClick={() => {
-                                                  this.likePost(post.id);
+                                                  this.likePost(post);
                                                 }}
                                               >
                                                 <i
@@ -631,7 +726,7 @@ class PostCard extends Component {
                                               <a
                                                 href="javascript:void(0)"
                                                 onClick={() => {
-                                                  this.likePost(post.id);
+                                                  this.likePost(post);
                                                 }}
                                               >
                                                 <i
@@ -683,7 +778,7 @@ class PostCard extends Component {
                                               <a
                                                 href="javascript:void(0)"
                                                 onClick={() => {
-                                                  this.dislikePost(post.id);
+                                                  this.dislikePost(post);
                                                 }}
                                               >
                                                 <i
@@ -716,7 +811,7 @@ class PostCard extends Component {
                                               <a
                                                 href="javascript:void(0)"
                                                 onClick={() => {
-                                                  this.dislikePost(post.id);
+                                                  this.dislikePost(post);
                                                 }}
                                               >
                                                 <i
@@ -912,7 +1007,7 @@ class PostCard extends Component {
                                             <button
                                               class="btn btn-outline-success float-right"
                                               onClick={() => {
-                                                this.postNewComment(post.id);
+                                                this.postNewComment(post);
                                               }}
                                               style={{
                                                 marginTop: "20px",

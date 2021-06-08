@@ -22,6 +22,34 @@ namespace StoryMicroservice.Service
             _hostEnvironment = hostEnvironment;
         }
 
+        public async Task<List<Story>> GetActiveStoriesForProfile(int profileId)
+        {
+            List<Story> storiesForProfile = new List<Story>();
+            foreach(Story story in await GetAll())
+            {
+                if (story.PublisherId == profileId &&
+                    story.PublishingDate < DateTime.Now &&
+                    story.PublishingDate > DateTime.Now.AddHours(-24))
+                {
+                    storiesForProfile.Add(story);
+                }
+            }
+            return storiesForProfile;
+        }
+
+        public async Task<List<Story>> GetStoriesForProfile(int profileId)
+        {
+            List<Story> storiesForProfile = new List<Story>();
+            foreach (Story story in await GetAll())
+            {
+                if (story.PublisherId == profileId)
+                {
+                    storiesForProfile.Add(story);
+                }
+            }
+            return storiesForProfile;
+        }
+
         public async Task<Story> GetById(string id)
         {
             return await _storyRepository.GetById(id);
@@ -50,6 +78,12 @@ namespace StoryMicroservice.Service
             await _storyRepository.Delete(id);
         }
 
+        public async Task<List<StoryProfile>> GetAllStoryProfiles()
+        {
+            var result = await _storyRepository.GetAggregatedCollection();
+            return result;
+        }
+
         public async Task<string> SaveImage(IFormFile imageFile)
         {
             string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray()).Replace(' ', '-');
@@ -60,12 +94,6 @@ namespace StoryMicroservice.Service
                 await imageFile.CopyToAsync(fileStream);
             }
             return imageName;
-        }
-
-        public async Task<List<StoryProfile>> GetAllStoryProfiles()
-        {
-            var result = await _storyRepository.GetAggregatedCollection();
-            return result;
         }
     }
 }
