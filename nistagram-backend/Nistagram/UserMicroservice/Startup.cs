@@ -41,6 +41,14 @@ namespace ProfileMicroservice
             services.AddDbContext<UserDbContext>(options =>
                   options.UseMySql(CreateConnectionStringFromEnvironment()).UseLazyLoadingProxies(), ServiceLifetime.Transient);
 
+
+            var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
+            if (hostName == "rabbitmq")
+            {
+                services.AddSingleton<IProfileCreatedMessageSender, ProfileCreatedMessageSender>();
+                services.AddSingleton<IProfileUpdatedMessageSender, ProfileUpdatedMessageSender>();
+            }
+
             services.AddSingleton<IUserService, UserService>(service =>
                     new UserService(new UserRepository(new UserDbContext())));
             services.AddSingleton<IProfileService, ProfileService>(service =>

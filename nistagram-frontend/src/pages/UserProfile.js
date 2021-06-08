@@ -277,6 +277,24 @@ class UserProfile extends Component {
       });
   };
 
+  getFollowersAndFollowing = () => {
+    ProfileService.getFollowers(this.state.userProfileId)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          followers: result,
+        });
+      });
+
+    ProfileService.getFollowing(this.state.userProfileId)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          following: result,
+        });
+      });
+  };
+
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleClickOutside);
   }
@@ -343,24 +361,6 @@ class UserProfile extends Component {
         });
       });
   }
-
-  getFollowersAndFollowing = () => {
-    ProfileService.getFollowers(this.state.userProfileId)
-      .then((res) => res.json())
-      .then((result) => {
-        this.setState({
-          followers: result,
-        });
-      });
-
-    ProfileService.getFollowing(this.state.userProfileId)
-      .then((res) => res.json())
-      .then((result) => {
-        this.setState({
-          following: result,
-        });
-      });
-  };
 
   handleFollow = (followerId, followingId) => {
     ProfileService.follow(followerId, followingId)
@@ -784,23 +784,13 @@ class UserProfile extends Component {
       </Modal>
     );
 
-    let isInFollowing = () => {
-      if (loggedUser.following != null) {
-        loggedUser.following.some((followingProfile) => {
-          if (followingProfile.followingId == this.state.userProfileId)
-            return true;
-        });
-      }
-    };
+    let isInFollowing = loggedUser.following.some((followingProfile) => {
+      if (followingProfile.followingId == this.state.userProfileId) return true;
+    });
 
-    let isInFollowers = () => {
-      if (loggedUser.followers != null) {
-        loggedUser.followers.some((followerProfile) => {
-          if (followerProfile.followerId == this.state.userProfileId)
-            return true;
-        });
-      }
-    };
+    let isInFollowers = loggedUser.followers.some((followerProfile) => {
+      if (followerProfile.followerId == this.state.userProfileId) return true;
+    });
 
     let storyHighlightsListItems = this.state.userProfileStoryHighlights.map(
       (storyHighlight) => {

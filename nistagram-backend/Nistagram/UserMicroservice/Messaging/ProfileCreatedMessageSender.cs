@@ -15,12 +15,17 @@ namespace UserMicroservice.Messaging
         public void SendCreatedProfile(Profile profile)
         {
             var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
-            var factory = new ConnectionFactory() {
-                HostName = hostName,
-                Port = 5672,
-                UserName = "guest",
-                Password = "guest"
-            };
+            var factory = new ConnectionFactory() { HostName = "localhost" };
+            if (hostName == "rabbitmq")
+            {
+                factory = new ConnectionFactory()
+                {
+                    HostName = hostName,
+                    Port = 5672,
+                    UserName = "guest",
+                    Password = "guest"
+                };
+            }
 
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())

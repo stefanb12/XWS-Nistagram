@@ -32,6 +32,8 @@ namespace ProfileMicroservice.Model
         {
             Category = UserCategory.Regular;
             ImageName = "defaultProfile.png";
+            Followers = new List<ProfileFollower>();
+            Following = new List<ProfileFollowing>();
         }
     }
 }

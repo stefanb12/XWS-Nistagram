@@ -32,6 +32,14 @@ namespace NotificationMicroservice
             services.AddDbContext<NotificationDbContext>(options =>
                 options.UseMySql(CreateConnectionStringFromEnvironment()).UseLazyLoadingProxies(), ServiceLifetime.Transient);
 
+            var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
+            if (hostName == "rabbitmq")
+            {
+                services.AddSingleton<IMessageReceiver, PostCreatedMessageReceiver>();
+                services.AddSingleton<IMessageReceiver, ProfileCreatedMessageReceiver>();
+                services.AddSingleton<IMessageReceiver, ProfileUpdatedMessageReceiver>();
+            }
+
             services.AddSingleton<INotificationService, NotificationService>(service =>
                     new NotificationService(new NotificationRepository(new NotificationDbContext())));
             services.AddSingleton<IProfileService, ProfileService>(service =>

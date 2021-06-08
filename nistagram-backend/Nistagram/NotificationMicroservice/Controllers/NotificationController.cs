@@ -32,8 +32,14 @@ namespace NotificationMicroservice.Controllers
 
             foreach (Notification notification in notifications)
             {
-                notification.Sender.ImageSrc = String.Format("http://localhost:55988/{0}", notification.Sender.ImageName);
-                notification.Post.ImageSrc = String.Format("http://localhost:55993/{0}", notification.Post.ImageName);
+                if(notification.Sender != null)
+                {
+                    notification.Sender.ImageSrc = String.Format("http://localhost:55988/{0}", notification.Sender.ImageName);
+                }
+                if (notification.Post != null)
+                {
+                    notification.Post.ImageSrc = String.Format("http://localhost:55993/{0}", notification.Post.ImageName);
+                }
             }
 
             List<Notification> result = notifications.OrderByDescending(notification => notification.Time).ToList();

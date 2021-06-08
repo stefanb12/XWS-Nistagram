@@ -26,13 +26,17 @@ namespace NotificationMicroservice.Messaging
         private void InitRabbitMQ()
         {
             var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
-            var factory = new ConnectionFactory()
+            var factory = new ConnectionFactory() { HostName = "localhost" };
+            if (hostName == "rabbitmq")
             {
-                HostName = hostName,
-                Port = 15672,
-                UserName = "guest",
-                Password = "guest"
-            };
+                factory = new ConnectionFactory()
+                {
+                    HostName = hostName,
+                    Port = 5672,
+                    UserName = "guest",
+                    Password = "guest"
+                };
+            }
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
