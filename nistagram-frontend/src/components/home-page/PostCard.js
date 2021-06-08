@@ -6,8 +6,10 @@ import { Link, withRouter } from "react-router-dom";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import PostService from "../../services/PostService";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Carousel, Modal } from "react-bootstrap";
 import NotificationService from "../../services/NotificationService";
+import ReactPlayer from "react-player";
+import "../../assets/styles/postCard.css";
 
 class PostCard extends Component {
   constructor(props) {
@@ -430,14 +432,24 @@ class PostCard extends Component {
                                     <p>
                                       <small>
                                         {(() => {
-                                          if (post.location.address === "") {
+                                          if (
+                                            (post.location.address === "" ||
+                                              post.location.address == null) &&
+                                            post.location.city != null &&
+                                            post.location.country != null
+                                          ) {
                                             return (
                                               <div>
                                                 {post.location.city},{" "}
                                                 {post.location.country}{" "}
                                               </div>
                                             );
-                                          } else {
+                                          } else if (
+                                            (post.location.address !== "" ||
+                                              post.location.address != null) &&
+                                            post.location.city != null &&
+                                            post.location.country != null
+                                          ) {
                                             return (
                                               <div>
                                                 {post.location.address},{" "}
@@ -445,6 +457,8 @@ class PostCard extends Component {
                                                 {post.location.country}{" "}
                                               </div>
                                             );
+                                          } else {
+                                            return <div></div>;
                                           }
                                         })()}
                                       </small>
@@ -536,11 +550,72 @@ class PostCard extends Component {
                                   </div>
 
                                   <div class="timeline-item-post">
-                                    <img
-                                      class="img-thumbnail"
-                                      src={post.imagesSrc[0]}
-                                      alt=""
-                                    />
+                                    {(() => {
+                                      if (post.imagesSrc.length > 1) {
+                                        return (
+                                          <Carousel
+                                            interval={null}
+                                            nextIcon={
+                                              <span
+                                                aria-hidden="true"
+                                                class="carousel-control-next-icon"
+                                              />
+                                            }
+                                          >
+                                            {(() => {
+                                              return post.imagesSrc.map(
+                                                (fileUrl, key) => {
+                                                  if (
+                                                    fileUrl.endsWith(".mp4")
+                                                  ) {
+                                                    return (
+                                                      <Carousel.Item>
+                                                        <ReactPlayer
+                                                          className="d-block w-100"
+                                                          url={fileUrl}
+                                                          controls={true}
+                                                        />
+                                                      </Carousel.Item>
+                                                    );
+                                                  } else {
+                                                    return (
+                                                      <Carousel.Item>
+                                                        <img
+                                                          className="d-block w-100"
+                                                          src={fileUrl}
+                                                          alt="First slide"
+                                                        />
+                                                      </Carousel.Item>
+                                                    );
+                                                  }
+                                                }
+                                              );
+                                            })()}
+                                          </Carousel>
+                                        );
+                                      } else {
+                                        if (
+                                          post.imagesSrc[0].endsWith(".mp4")
+                                        ) {
+                                          return (
+                                            <ReactPlayer
+                                              className="d-block w-100"
+                                              url={post.imagesSrc[0]}
+                                              controls={true}
+                                            />
+                                          );
+                                        } else {
+                                          return (
+                                            <img
+                                              className="d-block w-100"
+                                              src={post.imagesSrc[0]}
+                                              alt="First slide"
+                                            />
+                                          );
+                                        }
+                                      }
+                                    })()}
+
                                     {(() => {
                                       if (
                                         post.description !== null &&

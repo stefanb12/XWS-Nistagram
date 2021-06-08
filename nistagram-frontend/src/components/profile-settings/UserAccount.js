@@ -154,7 +154,15 @@ class UserAccount extends Component {
       )
         .then((res) => res.json())
         .then(
-          (result) => {},
+          (result) => {
+            if(!result.ok){
+              this.setState({
+                open: true,
+                snackBarMessage: "Username already exists!",
+                snackBarSeverity: "error"
+              });
+            }
+          },
           (error) => {
             console.log(error);
           }

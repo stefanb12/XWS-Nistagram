@@ -32,10 +32,14 @@ namespace UserMicroservice.Service
         {
             Profile profile = await _profileRepository.GetById(id);
             List<Profile> followers = new List<Profile>();
-            foreach(ProfileFollower profileFollower in profile.Followers)
+            if(profile.Followers != null)
             {
-                followers.Add(profileFollower.Follower);
+                foreach (ProfileFollower profileFollower in profile.Followers)
+                {
+                    followers.Add(profileFollower.Follower);
+                }
             }
+
             return followers;
         }
 
@@ -43,10 +47,14 @@ namespace UserMicroservice.Service
         {
             Profile profile = await _profileRepository.GetById(id);
             List<Profile> followingProfiles = new List<Profile>();
-            foreach (ProfileFollowing profileFollowing in profile.Following)
+            if (profile.Following != null)
             {
-                followingProfiles.Add(profileFollowing.Following);
+                foreach (ProfileFollowing profileFollowing in profile.Following)
+                {
+                    followingProfiles.Add(profileFollowing.Following);
+                }
             }
+                
             return followingProfiles;
         }
 
@@ -148,8 +156,17 @@ namespace UserMicroservice.Service
 
             Profile profile = await _profileRepository.Update(entity);
             _profileUpdatedSender.SendUpdatedProfile(profile);
-            
-            return entity;
+            return profile;
+        }
+
+        public bool DoesUsernameExist(String username, IEnumerable<Profile> profiles)
+        {
+            foreach (Profile profile in profiles)
+            {
+                if (profile.Username.Equals(username))
+                    return true;
+            }
+            return false;
         }
 
         public async Task Delete(Profile entity)

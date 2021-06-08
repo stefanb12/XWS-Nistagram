@@ -28,7 +28,7 @@ namespace PostMicroservice.Messaging
                 var integrationEventData = JsonConvert.SerializeObject(new
                 {
                     originalId = post.Id,
-                    profileImage = post.Contents[0]
+                    image = post.Contents[0].ImageName
                 });
 
                 var body = Encoding.UTF8.GetBytes(integrationEventData);
