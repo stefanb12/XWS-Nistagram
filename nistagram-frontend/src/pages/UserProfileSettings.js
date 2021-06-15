@@ -5,6 +5,8 @@ import Button from "react-bootstrap/Button";
 import "../assets/styles/profileSettings.css";
 import UserAccount from "../components/profile-settings/UserAccount";
 import UserPassword from "../components/profile-settings/UserPassword";
+import UserPrivacy from "../components/profile-settings/UserPrivacy";
+import VerifyProfile from "../components/profile-settings/VerifyProfile";
 
 export default class UserProfileSettings extends Component {
   state = {
@@ -28,6 +30,10 @@ export default class UserProfileSettings extends Component {
       contentForShowing = <UserAccount />;
     } else if (this.state.contentActive === 1) {
       contentForShowing = <UserPassword />;
+    } else if (this.state.contentActive === 2) {
+      contentForShowing = <UserPrivacy />;
+    } else if (this.state.contentActive === 3) {
+      contentForShowing = <VerifyProfile />;
     }
 
     return (
@@ -45,6 +51,24 @@ export default class UserProfileSettings extends Component {
                   onClick={() => this.activateLasers(0)}
                 >
                   Edit Profile
+                </Button>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Button
+                  variant={this.state.contentActive === 2 ? "primary" : "light"}
+                  style={{ width: "100%" }}
+                  onClick={() => this.activateLasers(2)}
+                >
+                  Privacy and Security
+                </Button>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Button
+                  variant={this.state.contentActive === 3 ? "primary" : "light"}
+                  style={{ width: "100%" }}
+                  onClick={() => this.activateLasers(3)}
+                >
+                  Verify Profile
                 </Button>
               </ListGroup.Item>
               <ListGroup.Item>
