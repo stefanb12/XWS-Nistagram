@@ -3,9 +3,9 @@ using PostMicroservice.Model;
 
 namespace PostMicroservice.Repository
 {
-    public class ProfileRepository : MongoDbRepository<Profile>, IProfileRepository
+    public class ProfileRepository : MySqlRepository<Profile>, IProfileRepository
     {
-        public ProfileRepository(IMongoDbContext context)
+        public ProfileRepository(PostDbContext context)
                : base(context)
         {
         }

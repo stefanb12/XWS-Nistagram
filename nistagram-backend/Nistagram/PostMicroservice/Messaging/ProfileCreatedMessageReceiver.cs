@@ -67,8 +67,8 @@ namespace PostMicroservice.Messaging
                 {
                     OriginalId = data["id"].Value<int>(),
                     Username = data["username"].Value<string>(),
-                    ImageName = data["profileImage"].Value<string>(),
-                    Following = new List<int>()
+                    ImageName = data["profileImage"].Value<string>()
+                    //Following = new List<int>()
                 });
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);

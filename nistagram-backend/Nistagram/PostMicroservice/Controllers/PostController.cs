@@ -14,10 +14,12 @@ namespace PostMicroservice.Controllers
     public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
-        
-        public PostController(IPostService postService)
+        private readonly IProfileService _profileService;
+
+        public PostController(IPostService postService, IProfileService profileService)
         {
             _postService = postService;
+            _profileService = profileService;
         }
 
         [HttpGet]
@@ -27,7 +29,7 @@ namespace PostMicroservice.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(string id)
+        public async Task<IActionResult> GetById(int id)
         {
             Post post = await _postService.GetById(id);
 
@@ -141,7 +143,8 @@ namespace PostMicroservice.Controllers
                 post.Contents[i].ImageSrc = String.Format("http://localhost:55993/{0}", post.Contents[i].ImageName);
             }
 
-            Post updatedPost = await _postService.InsertNewComment(post, CommentMapper.CommentDtoToComment(commentDto));
+            Profile publisher = await _profileService.GetById(commentDto.Publisher.Id);
+            Post updatedPost = await _postService.InsertNewComment(post, CommentMapper.CommentDtoToComment(commentDto, publisher));
             return Ok(PostMapper.PostToPostDto(updatedPost));
         }
 
@@ -209,7 +212,8 @@ namespace PostMicroservice.Controllers
         [HttpPost]
         public async Task<IActionResult> Insert([FromForm] PostDto postDto)
         {
-            return Ok(await _postService.Insert(PostMapper.PostDtoToPost(postDto)));
+            Profile publisher = await _profileService.GetById(postDto.Publisher.Id);
+            return Ok(await _postService.Insert(PostMapper.PostDtoToPost(postDto, publisher)));
         }
 
         [HttpPut]
@@ -221,7 +225,7 @@ namespace PostMicroservice.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(Post post)
         {
-            await _postService.Delete(post.Id.ToString());
+            await _postService.Delete(post.Id);
             return Ok();
         }
     }
