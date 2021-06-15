@@ -8,43 +8,53 @@ namespace PostMicroservice.Mapper
 {
     public class PostMapper
     {
-        public static Post PostDtoToPost(PostDto dto)
+        public static Post PostDtoToPost(PostDto dto, Profile publisher)
         {
             Post post = new Post();
 
-            post.Tags = dto.Tags;
+            List<Tag> tags = new List<Tag>();
+            foreach(string t in dto.Tags)
+            {
+                Tag tag = new Tag();
+                tag.Content = t;
+                tags.Add(tag);
+            }
+            post.Tags = tags;
             post.Description = dto.Description;
             post.Location = new Location();
             post.Location.Address = dto.Location.Address;
             post.Location.City = dto.Location.City;
             post.Location.Country = dto.Location.Country;
-            post.Publisher = new Profile();
+            post.PublisherId = publisher.Id;
+            /*post.Publisher = new Profile();
             post.Publisher.OriginalId = dto.Publisher.Id;
             post.Publisher.Username = dto.Publisher.Username;
-            post.Publisher.ImageName = dto.Publisher.ImageName;
+            post.Publisher.ImageName = dto.Publisher.ImageName;*/
 
-            if (dto.Dislikes != null)
+            /*if (dto.Dislikes != null)
             {
-                List<Profile> dislikes = new List<Profile>();
+                List<PostDislike> dislikes = new List<PostDislike>();
                 foreach(ProfileDto profileDto in dto.Dislikes)
                 {
-                    Profile profile = new Profile();
-                    profile.OriginalId = profileDto.Id;
-                    profile.Username = profileDto.Username;
-                    dislikes.Add(profile);
+                    PostDislike postDislike = new PostDislike();
+                    postDislike.Dislike.Id = profileDto.Id;
+                    postDislike.Dislike.Username = profileDto.Username;
+                    postDislike.Post = post;
+                    dislikes.Add(postDislike);
                 }
                 post.Dislikes = dislikes;
             }
 
             if (dto.Likes != null)
             {
-                List<Profile> likes = new List<Profile>();
+                List<PostLike> likes = new List<PostLike>();
                 foreach (ProfileDto profileDto in dto.Likes)
                 {
-                    Profile profile = new Profile();
-                    profile.OriginalId = profileDto.Id;
-                    profile.Username = profileDto.Username;
-                    likes.Add(profile);
+                    PostLike postLike = new PostLike();
+                    postLike.Like.Id = profileDto.Id;
+                    postLike.Like.Username = profileDto.Username;
+                    postLike.Post = post;
+                    likes.Add(postLike);
                 }
                 post.Likes = likes;
             }
@@ -63,7 +73,7 @@ namespace PostMicroservice.Mapper
                     comments.Add(comment);
                 }
                 post.Comments = comments;
-            }
+            }*/
            
             List<Content> contents = new List<Content>();
             foreach(IFormFile file in dto.ImageFiles)
@@ -82,7 +92,12 @@ namespace PostMicroservice.Mapper
             PostDto dto = new PostDto();
 
             dto.Id = post.Id;
-            dto.Tags = post.Tags;
+            List<string> tags = new List<string>();
+            foreach(Tag tag in post.Tags)
+            {
+                tags.Add(tag.Content);
+            }
+            dto.Tags = tags;
             dto.Description = post.Description;
             dto.Location = new LocationDto();
             dto.Location.Address = post.Location.Address;
@@ -97,12 +112,12 @@ namespace PostMicroservice.Mapper
             if (post.Dislikes != null)
             {
                 List<ProfileDto> dislikesDto = new List<ProfileDto>();
-                foreach (Profile profile in post.Dislikes)
+                foreach (PostDislike postDislike in post.Dislikes)
                 {
                     ProfileDto profileDto = new ProfileDto();
-                    profileDto.Id = profile.OriginalId;
-                    profileDto.Username = profile.Username;
-                    profileDto.ImageSrc = String.Format("http://localhost:55988/{0}", profile.ImageName);
+                    profileDto.Id = postDislike.Dislike.OriginalId;
+                    profileDto.Username = postDislike.Dislike.Username;
+                    profileDto.ImageSrc = String.Format("http://localhost:55988/{0}", postDislike.Dislike.ImageName);
                     dislikesDto.Add(profileDto);
                 }
                 dto.Dislikes = dislikesDto;
@@ -111,12 +126,12 @@ namespace PostMicroservice.Mapper
             if (post.Likes != null)
             {
                 List<ProfileDto> likesDto = new List<ProfileDto>();
-                foreach (Profile profile in post.Likes)
+                foreach (PostLike postLike in post.Likes)
                 {
                     ProfileDto profileDto = new ProfileDto();
-                    profileDto.Id = profile.OriginalId;
-                    profileDto.Username = profile.Username;
-                    profileDto.ImageSrc = String.Format("http://localhost:55988/{0}", profile.ImageName);
+                    profileDto.Id = postLike.Like.OriginalId;
+                    profileDto.Username = postLike.Like.Username;
+                    profileDto.ImageSrc = String.Format("http://localhost:55988/{0}", postLike.Like.ImageName);
                     likesDto.Add(profileDto);
                 }
                 dto.Likes = likesDto;
@@ -125,12 +140,12 @@ namespace PostMicroservice.Mapper
             if (post.Favorites != null)
             {
                 List<ProfileDto> favoritesDto = new List<ProfileDto>();
-                foreach (Profile profile in post.Favorites)
+                foreach (PostFavorite postFavorite in post.Favorites)
                 {
                     ProfileDto profileDto = new ProfileDto();
-                    profileDto.Id = profile.OriginalId;
-                    profileDto.Username = profile.Username;
-                    profileDto.ImageSrc = String.Format("http://localhost:55988/{0}", profile.ImageName);
+                    profileDto.Id = postFavorite.Favorite.OriginalId;
+                    profileDto.Username = postFavorite.Favorite.Username;
+                    profileDto.ImageSrc = String.Format("http://localhost:55988/{0}", postFavorite.Favorite.ImageName);
                     favoritesDto.Add(profileDto);
                 }
                 dto.Favorites = favoritesDto;

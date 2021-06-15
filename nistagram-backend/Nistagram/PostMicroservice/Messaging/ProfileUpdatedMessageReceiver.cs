@@ -68,7 +68,7 @@ namespace PostMicroservice.Messaging
                     OriginalId = data["id"].Value<int>(),
                     Username = data["username"].Value<string>(),
                     IsPrivate = data["isPrivate"].Value<bool>(),
-                    Following = data["following"].ToObject<List<int>>(),
+                    //Following = data["following"].ToObject<List<int>>(),
                     ImageName = data["profileImage"].Value<string>()
                 });
 

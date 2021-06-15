@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PostMicroservice.Model
 {
@@ -7,10 +7,12 @@ namespace PostMicroservice.Model
     {
         public int Id { get; set; }
         public string ImageName { get; set; }
-        [BsonIgnore]
+        [NotMapped]
         public IFormFile ImageFile { get; set; }
-        [BsonIgnore]
+        [NotMapped]
         public string ImageSrc { get; set; }
+        public int PostId { get; set; }
+        public virtual Post Post { get; set; }
 
         public Content() {}
     }

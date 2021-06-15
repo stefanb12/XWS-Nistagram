@@ -1,27 +1,27 @@
-﻿using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PostMicroservice.Model
 {
-    public class Post : Document
+    public class Post
     {
-        public List<string> Tags { get; set; }
+        public int Id { get; set; }
+        public virtual List<Tag> Tags { get; set; }
         public string Description { get; set; }
         public DateTime PublishingDate { get; set; }
-        public Location Location { get; set; }
-        public List<Comment> Comments { get; set; }
-        public List<Profile> Dislikes { get; set; }
-        public List<Profile> Likes { get; set; }
-        public List<Profile> Favorites { get; set; }
-        public Profile Publisher { get; set; }
-        public List<Content> Contents { get; set; }
+        public int LocationId { get; set; }
+        public virtual Location Location { get; set; }
+        public int PublisherId { get; set; }
+        public virtual Profile Publisher { get; set; }
+        public virtual List<Comment> Comments { get; set; }
+        public virtual List<PostDislike> Dislikes { get; set; }
+        public virtual List<PostLike> Likes { get; set; }
+        public virtual List<PostFavorite> Favorites { get; set; }
+        public virtual List<Content> Contents { get; set; }
 
         public Post()
         {
-            Id = ObjectId.GenerateNewId().ToString();
         }
     }
 }

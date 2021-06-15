@@ -17,14 +17,12 @@ namespace PostMicroservice.Service
         private IPostRepository _postRepository;
         private IProfileService _profileService;
         private IPostCreatedMessageSender _postCreatedMessageSender;
-        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public PostService(IPostRepository postRepository, IProfileService profileService, IPostCreatedMessageSender postCreatedMessageSender, IWebHostEnvironment hostEnvironment)
+        public PostService(IPostRepository postRepository, IProfileService profileService, IPostCreatedMessageSender postCreatedMessageSender)
         {
             _postRepository = postRepository;
             _profileService = profileService;
             _postCreatedMessageSender = postCreatedMessageSender;
-            _hostEnvironment = hostEnvironment;
         }
 
         public async Task<List<Post>> GetPostsForProfile(int profileId)
@@ -47,9 +45,9 @@ namespace PostMicroservice.Service
             {
                 if(post.Favorites != null)
                 {
-                    foreach (Profile profile in post.Favorites)
+                    foreach (PostFavorite postFavorite in post.Favorites)
                     {
-                        if (profile.OriginalId == profileId)
+                        if (postFavorite.Favorite.OriginalId == profileId)
                         {
                             favoritePosts.Add(post);
                             break;
@@ -81,11 +79,11 @@ namespace PostMicroservice.Service
             List<Post> posts = new List<Post>();
             Profile profile = await _profileService.GetProfileByOriginalId(profileId);
 
-            foreach (int followedId in profile.Following)
+            foreach (ProfileFollowing profileFollowing in profile.Following)
             {
                 foreach (Post post in await GetAll())
                 {
-                    if (followedId == post.Publisher.OriginalId)
+                    if (profileFollowing.FollowingId == post.Publisher.OriginalId)
                     {
                         posts.Add(post);
                     }
@@ -104,68 +102,102 @@ namespace PostMicroservice.Service
             return await Update(post);
         }
 
-        public async Task<Post> LikePost(Post post, Profile profile)
+        public async Task<Post> LikePost(Post post, Profile p)
         {
-            if(post.Likes == null)
+            Profile profile = await _profileService.GetById(p.OriginalId);
+            if (post.Likes == null)
             {
-                post.Likes = new List<Profile>();
+                post.Likes = new List<PostLike>();
             }
 
             if(CheckIfUserHasAlreadyLikedPost(post, profile.OriginalId))
             {
-                int index = post.Likes.FindIndex(p => p.OriginalId == profile.OriginalId);
-                post.Likes.RemoveAt(index);
+                foreach(PostLike postLike in post.Likes)
+                {
+                    if(postLike.LikeId == profile.OriginalId)
+                    {
+                        post.Likes.Remove(postLike);
+                        break;
+                    }
+                }
             } else
             {
-                post = DeleteUserFromDislikesIfExistThere(post, profile);
-                post.Likes.Add(profile);
+                post = await DeleteUserFromDislikesIfExistThere(post, profile);
+                PostLike postLike = new PostLike();
+                postLike.PostId = post.Id;
+                postLike.LikeId = profile.Id;
+                post.Likes.Add(postLike);
             }
 
             return await Update(post);
         }
 
-        public async Task<Post> DisikePost(Post post, Profile profile)
+        public async Task<Post> DisikePost(Post post, Profile p)
         {
+            Profile profile = await _profileService.GetById(p.OriginalId);
             if (post.Dislikes == null)
             {
-                post.Dislikes = new List<Profile>();
+                post.Dislikes = new List<PostDislike>();
             }
 
             if (CheckIfUserHasAlreadyDislikedPost(post, profile.OriginalId))
             {
-                int index = post.Dislikes.FindIndex(p => p.OriginalId == profile.OriginalId);
-                post.Dislikes.RemoveAt(index);
+                foreach (PostDislike postDislike in post.Dislikes)
+                {
+                    if (postDislike.DislikeId == profile.OriginalId)
+                    {
+                        post.Dislikes.Remove(postDislike);
+                        break;
+                    }
+                }
             }
             else
             {
-                post = DeleteUserFromLikesIfExistThere(post, profile);
-                post.Dislikes.Add(profile);
+                post = await DeleteUserFromLikesIfExistThere(post, profile);
+                PostDislike postDislike = new PostDislike();
+                postDislike.PostId = post.Id;
+                postDislike.DislikeId = profile.Id;
+                post.Dislikes.Add(postDislike);
             }
 
             return await Update(post);
         }
 
-        private Post DeleteUserFromDislikesIfExistThere(Post post, Profile profile)
+        private async Task<Post> DeleteUserFromDislikesIfExistThere(Post post, Profile profile)
         {
             if (post.Dislikes != null)
             {
                 if (CheckIfUserHasAlreadyDislikedPost(post, profile.OriginalId))
                 {
-                    int index = post.Dislikes.FindIndex(p => p.OriginalId == profile.OriginalId);
-                    post.Dislikes.RemoveAt(index);
+                    foreach (PostDislike postDislike in post.Dislikes)
+                    {
+                        if (postDislike.DislikeId == profile.OriginalId)
+                        {
+                            post.Dislikes.Remove(postDislike);
+                            post = await Update(post);
+                            break;
+                        }
+                    }
                 }
             }
             return post;
         }
 
-        private Post DeleteUserFromLikesIfExistThere(Post post, Profile profile)
+        private async Task<Post> DeleteUserFromLikesIfExistThere(Post post, Profile profile)
         {
             if (post.Dislikes != null)
             {
                 if (CheckIfUserHasAlreadyLikedPost(post, profile.OriginalId))
                 {
-                    int index = post.Likes.FindIndex(p => p.OriginalId == profile.OriginalId);
-                    post.Likes.RemoveAt(index);
+                    foreach (PostLike postLike in post.Likes)
+                    {
+                        if (postLike.LikeId == profile.OriginalId)
+                        {
+                            post.Likes.Remove(postLike);
+                            post = await Update(post);
+                            break;
+                        }
+                    }
                 }
             }
             return post;
@@ -173,9 +205,9 @@ namespace PostMicroservice.Service
 
         private bool CheckIfUserHasAlreadyLikedPost(Post post, int originalId)
         {
-            foreach(Profile profile in post.Likes)
+            foreach(PostLike postLike in post.Likes)
             {
-                if (profile.OriginalId == originalId)
+                if (postLike.Like.OriginalId == originalId)
                 {
                     return true; 
                 }
@@ -193,10 +225,20 @@ namespace PostMicroservice.Service
                         searchedPosts.Add(post);
                 
                 if (post.Tags != null && !post.Publisher.IsPrivate)
-                    if (post.Tags.Contains(searchParam))
+                    if (getTags(post.Tags).Contains(searchParam))
                         searchedPosts.Add(post);
             }
             return searchedPosts;
+        }
+
+        public List<string> getTags(List<Tag> tags)
+        {
+            List<string> result = new List<string>();
+            foreach (Tag tag in tags)
+            {
+                result.Add(tag.Content);
+            }
+            return result;
         }
 
         public string formatAddress(Post post) {
@@ -208,9 +250,9 @@ namespace PostMicroservice.Service
 
         private bool CheckIfUserHasAlreadyDislikedPost(Post post, int originalId)
         {
-            foreach (Profile profile in post.Dislikes)
+            foreach (PostDislike postDislike in post.Dislikes)
             {
-                if (profile.OriginalId == originalId)
+                if (postDislike.Dislike.OriginalId == originalId)
                 {
                     return true;
                 }
@@ -218,21 +260,31 @@ namespace PostMicroservice.Service
             return false;
         }
 
-        public async Task<Post> SavePostAsFavorite(Post post, Profile profile)
+        public async Task<Post> SavePostAsFavorite(Post post, Profile p)
         {
+            Profile profile = await _profileService.GetById(p.OriginalId);
             if (post.Favorites == null)
             {
-                post.Favorites = new List<Profile>();
+                post.Favorites = new List<PostFavorite>();
             }
 
             if (CheckIfUserHasAlreadySavePost(post, profile.OriginalId))
             {
-                int index = post.Favorites.FindIndex(p => p.OriginalId == profile.OriginalId);
-                post.Favorites.RemoveAt(index);
+                foreach (PostFavorite postFavorite in post.Favorites)
+                {
+                    if (postFavorite.FavoriteId == profile.OriginalId)
+                    {
+                        post.Favorites.Remove(postFavorite);
+                        break;
+                    }
+                }
             }
             else
             {
-                post.Favorites.Add(profile);
+                PostFavorite postFavorite = new PostFavorite();
+                postFavorite.PostId = post.Id;
+                postFavorite.FavoriteId = profile.Id;
+                post.Favorites.Add(postFavorite);
             }
 
             return await Update(post);
@@ -240,9 +292,9 @@ namespace PostMicroservice.Service
 
         private bool CheckIfUserHasAlreadySavePost(Post post, int originalId)
         {
-            foreach (Profile profile in post.Favorites)
+            foreach (PostFavorite postFavorite in post.Favorites)
             {
-                if (profile.OriginalId == originalId)
+                if (postFavorite.Favorite.OriginalId == originalId)
                 {
                     return true;
                 }
@@ -250,7 +302,7 @@ namespace PostMicroservice.Service
             return false;
         }
 
-        public async Task<Post> GetById(string id)
+        public async Task<Post> GetById(int id)
         {
             return await _postRepository.GetById(id);
         }
@@ -280,16 +332,17 @@ namespace PostMicroservice.Service
             return entity;
         }
 
-        public async Task Delete(string id)
+        public async Task Delete(int id)
         {
-            await _postRepository.Delete(id);
+            Post post = await _postRepository.GetById(id);
+            await _postRepository.Delete(post);
         }
 
         public async Task<string> SaveImage(IFormFile imageFile)
         {
             string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray()).Replace(' ', '-');
             imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(imageFile.FileName);
-            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, "wwwroot", imageName);
+            var imagePath = Path.Combine("wwwroot", imageName);
             using (var fileStream = new FileStream(imagePath, FileMode.Create))
             {
                 await imageFile.CopyToAsync(fileStream);
