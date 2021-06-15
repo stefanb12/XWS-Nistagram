@@ -255,7 +255,7 @@ export default function MainNavbar() {
       setSearchValue("");
       history.push({
         pathname: "/app/profile",
-        state: {profileId: row.id}
+        state: { profileId: row.id },
       });
     } else if (row.type == "tag" || row.type == "location") {
       setSearchValue("");
@@ -306,14 +306,14 @@ export default function MainNavbar() {
           for (let j = 0; j < publicPosts[i].tags.length; j++) {
             let flag = false;
             for (let k = 0; k < searchData.length; k++) {
-              if (searchData[k].searchParam == publicPosts[i].tags[j]) {
+              if (searchData[k].searchParam == publicPosts[i].tags[j].content) {
                 flag = true;
               }
             }
             if (flag == false) {
               var tag = {
                 id: null,
-                searchParam: publicPosts[i].tags[j],
+                searchParam: publicPosts[i].tags[j].content,
                 imageSrc: hash,
                 type: "tag",
               };
@@ -321,10 +321,13 @@ export default function MainNavbar() {
             }
           }
         }
-        if(publicPosts[i].location.address == null && publicPosts[i].location.city == null && publicPosts[i].location.cpuntry == null){
+        if (
+          publicPosts[i].location.address == null &&
+          publicPosts[i].location.city == null &&
+          publicPosts[i].location.cpuntry == null
+        ) {
           continue;
-        }
-        else if (
+        } else if (
           publicPosts[i].location.address === "" ||
           publicPosts[i].location.address === null
         ) {

@@ -7,10 +7,10 @@ namespace PostMicroservice.Service
 {
     public interface IService<E> where E : class
     {
-        Task<E> GetById(string id);
+        Task<E> GetById(int id);
         Task<IEnumerable<E>> GetAll();
         Task<E> Insert(E entity);
         Task<E> Update(E entity);
-        Task Delete(string id);
+        Task Delete(int id);
     }
 }

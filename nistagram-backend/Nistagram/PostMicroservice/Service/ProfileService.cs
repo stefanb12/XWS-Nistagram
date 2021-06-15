@@ -28,7 +28,7 @@ namespace PostMicroservice.Service
             return profiles.Where(p => p.OriginalId == originalId).FirstOrDefault();
         }
 
-        public async Task<Profile> GetById(string id)
+        public async Task<Profile> GetById(int id)
         {
             return await _profileRepository.GetById(id);
         }
@@ -59,9 +59,10 @@ namespace PostMicroservice.Service
             return profile;
         }
 
-        public async Task Delete(String id)
+        public async Task Delete(int id)
         {
-            await _profileRepository.Delete(id);
+            Profile profile = await _profileRepository.GetById(id);
+            await _profileRepository.Delete(profile);
         }
     }
 }

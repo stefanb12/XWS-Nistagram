@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -39,13 +40,8 @@ namespace PostMicroservice
                 .AddNewtonsoftJson(options =>
                      options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-            services.Configure<MongoDbSettings>(
-                Configuration.GetSection(nameof(MongoDbSettings)));
-
-            services.AddSingleton<IMongoDbSettings>(sp =>
-                sp.GetRequiredService<IOptions<MongoDbSettings>>().Value);
-
-            services.AddSingleton<IMongoDbContext, MongoDbContext>();
+            services.AddDbContext<PostDbContext>(options =>
+                options.UseMySql(CreateConnectionStringFromEnvironment()).UseLazyLoadingProxies(), ServiceLifetime.Transient);
 
             var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
             if (hostName == "rabbitmq")
@@ -57,11 +53,10 @@ namespace PostMicroservice
 
             services.AddSingleton<IPostCreatedMessageSender, PostCreatedMessageSender>();
 
-            services.AddSingleton<IProfileRepository, ProfileRepository>();
-            services.AddSingleton<IProfileService, ProfileService>();
-
-            services.AddSingleton<IPostRepository, PostRepository>();
-            services.AddSingleton<IPostService, PostService>();
+            services.AddSingleton<IProfileService, ProfileService>(service =>
+                    new ProfileService(new ProfileRepository(new PostDbContext())));
+            services.AddSingleton<IPostService, PostService>(service =>
+                    new PostService(new PostRepository(new PostDbContext()), new ProfileService(new ProfileRepository(new PostDbContext())), new PostCreatedMessageSender()));
 
             string hostedService = Environment.GetEnvironmentVariable("HOSTED_SERVICE") ?? "true";
             if (hostedService == "true")
@@ -69,6 +64,17 @@ namespace PostMicroservice
                 services.AddHostedService<ProfileCreatedMessageReceiver>();
                 services.AddHostedService<ProfileUpdatedMessageReceiver>();
             }
+        }
+
+        private string CreateConnectionStringFromEnvironment()
+        {
+            string server = Environment.GetEnvironmentVariable("DATABASE_HOST") ?? "localhost";
+            string port = Environment.GetEnvironmentVariable("DATABASE_PORT") ?? "3306";
+            string database = Environment.GetEnvironmentVariable("DATABASE_SCHEMA") ?? "PostMicroserviceDb";
+            string user = Environment.GetEnvironmentVariable("DATABASE_USERNAME") ?? "root";
+            string password = Environment.GetEnvironmentVariable("DATABASE_PASSWORD") ?? "root";
+            string sslMode = Environment.GetEnvironmentVariable("DATABASE_SSL_MODE") ?? "None";
+            return $"server={server};port={port};database={database};user={user};password={password};";
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
