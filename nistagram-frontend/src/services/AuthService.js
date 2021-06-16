@@ -15,10 +15,10 @@ class AuthService {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fullName, username, email, password, gender })
+      body: JSON.stringify({ fullName, username, email, password, gender }),
     };
 
-    return fetch(API_URL + "profile/registration", requestOptions)
+    return fetch(API_URL + "profile/registration", requestOptions);
   }
 
   logout() {
