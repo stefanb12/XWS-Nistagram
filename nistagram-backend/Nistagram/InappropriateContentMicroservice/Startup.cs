@@ -37,14 +37,14 @@ namespace InappropriateContentMicroservice
                options.UseMySql(CreateConnectionStringFromEnvironment()).UseLazyLoadingProxies(), ServiceLifetime.Transient);
 
             services.AddSingleton<IInappropriateContentService, InappropriateContentService>(service =>
-                    new InappropriateContentService(new InappropriateContentRepository(new InappropriateContentDbContext())));
+                    new InappropriateContentService(new InappropriateContentRepository(new InappropriateContentDbContext()),
+                    new StoryService(new StoryRepository(new InappropriateContentDbContext()))));
             services.AddSingleton<IProfileService, ProfileService>(service =>
                     new ProfileService(new ProfileRepository(new InappropriateContentDbContext())));
             services.AddSingleton<IPostService, PostService>(service =>
                     new PostService(new PostRepository(new InappropriateContentDbContext())));
             services.AddSingleton<IStoryService, StoryService>(service =>
                     new StoryService(new StoryRepository(new InappropriateContentDbContext())));
-
         }
 
         private string CreateConnectionStringFromEnvironment()

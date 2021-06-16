@@ -93,7 +93,7 @@ class PostCard extends Component {
       true,
       AuthService.getCurrentUser().id,
       this.state.reportPostId,
-      1
+      ""
     )
       .then((res) => {
         resStatus = res.status;
