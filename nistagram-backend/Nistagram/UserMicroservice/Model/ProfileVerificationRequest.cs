@@ -14,15 +14,15 @@ namespace ProfileMicroservice.Model
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public UserCategory Category { get; set; }
+        public bool Accepted { get; set; }
+        public bool Processed { get; set; }
+        public int ProfileId { get; set; }
+        public virtual Profile Profile { get; set; }
         public string ImageName { get; set; }
         [NotMapped]
         public IFormFile ImageFile { get; set; }
         [NotMapped]
         public string ImageSrc { get; set; }
-        public bool Accepted { get; set; }
-        public bool Processed { get; set; }
-        public int ProfileId { get; set; }
-        public virtual Profile Profile { get; set; }
 
         public ProfileVerificationRequest()
         {

@@ -9,7 +9,7 @@ namespace InappropriateContentMicroservice.Mapper
 {
     public class InappropriateContentMapper
     {
-        public static InappropriateContent InappropriateContentDtoToInappropriateContent(InappropriateContentDto dto)
+        public static InappropriateContent InappropriateContentDtoToInappropriateContent(InappropriateContentDto dto, Story story)
         {
             InappropriateContent inappropriateContent = new InappropriateContent();
 
@@ -18,7 +18,11 @@ namespace InappropriateContentMicroservice.Mapper
             inappropriateContent.IsPost = dto.IsPost;
             inappropriateContent.SenderId = dto.SenderId;
             inappropriateContent.PostId = dto.PostId;
-            inappropriateContent.StoryId = dto.StoryId;
+            inappropriateContent.StoryId = 1;
+            if (story != null)
+            {
+                inappropriateContent.StoryId = story.Id;
+            }
 
             return inappropriateContent;
         }

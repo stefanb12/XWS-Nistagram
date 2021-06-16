@@ -16,6 +16,18 @@ namespace InappropriateContentMicroservice.Service
             _storyRepository = storyRepository;
         }
 
+        public async Task<Story> GetByOriginalId(string originalId)
+        {
+            foreach(Story story in await GetAll())
+            {
+                if (story.OriginalId.Equals(originalId))
+                {
+                    return story;
+                }
+            }
+            return null;
+        }
+
         public async Task<Story> GetById(int id)
         {
             return await _storyRepository.GetById(id);

@@ -8,13 +8,15 @@ namespace InappropriateContentMicroservice.Service
     public class InappropriateContentService : IInappropriateContentService
     {
         private IInappropriateContentRepository _inappropriateContentRepository;
+        private IStoryService _storyService;
 
-        public InappropriateContentService(IInappropriateContentRepository inappropriateContentRepository)
+        public InappropriateContentService(IInappropriateContentRepository inappropriateContentRepository, IStoryService storyService)
         {
             _inappropriateContentRepository = inappropriateContentRepository;
+            _storyService = storyService;
         }
 
-        public async Task<bool> DoesInappropriateContentExist(InappropriateContent inappropriateContent)
+        public async Task<bool> DoesInappropriateContentExist(InappropriateContent inappropriateContent, string storyId)
         {   
             if(inappropriateContent.IsPost)
             {
@@ -29,7 +31,8 @@ namespace InappropriateContentMicroservice.Service
             {
                 foreach (InappropriateContent ic in await GetAll())
                 {
-                    if (ic.SenderId == inappropriateContent.SenderId && ic.StoryId == inappropriateContent.StoryId && ic.Processed == false)
+                    Story story = await _storyService.GetById(ic.StoryId);
+                    if (ic.SenderId == inappropriateContent.SenderId && story.OriginalId.Equals(storyId) && ic.Processed == false)
                     {
                         return true;
                     }
