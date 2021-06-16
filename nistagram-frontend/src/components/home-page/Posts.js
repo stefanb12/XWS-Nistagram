@@ -180,6 +180,15 @@ export default class Posts extends Component {
         .then((result) => {
           if (resStatus === 200) {
             this.handleClickSnackBarSuccess("Post is successfully published!");
+            PostService.getPostsFromFollowedProfiles(
+              AuthService.getCurrentUser().id
+            )
+              .then((res) => res.json())
+              .then((result) => {
+                this.setState({
+                  posts: result,
+                });
+              });
           }
           return result;
         });

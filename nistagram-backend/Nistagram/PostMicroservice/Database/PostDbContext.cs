@@ -10,7 +10,15 @@ namespace PostMicroservice.Database
     public class PostDbContext : DbContext
     {
         public DbSet<Profile> Profiles { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<Tag> Tags { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<Content> Contents { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<PostLike> PostLikes { get; set; }
+        public DbSet<PostDislike> PostDislikes { get; set; }
+        public DbSet<PostFavorite> PostFavorites { get; set; }
+        public DbSet<ProfileFollowing> ProfileFollowings { get; set; }
 
         public PostDbContext() : base() { }
 
@@ -40,11 +48,11 @@ namespace PostMicroservice.Database
         {
 
             modelBuilder.Entity<Profile>().HasData(
-                new Profile { Id = 1, OriginalId = 1, Username = "stefanb", ImageName = "user1213352029.jpg" },
-                new Profile { Id = 2, OriginalId = 2, Username = "matijam", ImageName = "user2213352029.jpg" },
-                new Profile { Id = 3, OriginalId = 3, Username = "aleksai", ImageName = "user3213352029.png" },
-                new Profile { Id = 4, OriginalId = 4, Username = "stefans", ImageName = "user4213352029.png" },
-                new Profile { Id = 5, OriginalId = 5, Username = "majam", ImageName = "user5213352029.jpg" }
+                new Profile { Id = 1, OriginalId = 1, IsPrivate = false, Username = "stefanb", ImageName = "user1213352029.jpg" },
+                new Profile { Id = 2, OriginalId = 2, IsPrivate = true, Username = "matijam", ImageName = "user2213352029.jpg" },
+                new Profile { Id = 3, OriginalId = 3, IsPrivate = true, Username = "aleksai", ImageName = "user3213352029.png" },
+                new Profile { Id = 4, OriginalId = 4, IsPrivate = false, Username = "stefans", ImageName = "user4213352029.png" },
+                new Profile { Id = 5, OriginalId = 5, IsPrivate = false, Username = "majam", ImageName = "user5213352029.jpg" }
             );
 
             modelBuilder.Entity<Location>().HasData(
