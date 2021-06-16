@@ -90,6 +90,28 @@ namespace PostMicroservice.Controllers
             return Ok(favoritePostsDto);
         }
 
+        [HttpGet("likedAndDislikedPosts/{profileId}")]
+        public async Task<IActionResult> GetLikedAndDislikedPosts(int profileId)
+        {
+            List<Post> likedAndDislikedPosts = await _postService.GetLikedAndDislikedPosts(profileId);
+            if (likedAndDislikedPosts.Count == 0)
+            {
+                return NotFound();
+            }
+
+            List<PostDto> likedAndDislikedPostsDto = new List<PostDto>();
+            foreach (Post post in likedAndDislikedPosts)
+            {
+                for (int i = 0; i < post.Contents.Count; i++)
+                {
+                    post.Contents[i].ImageSrc = String.Format("http://localhost:55993/{0}", post.Contents[i].ImageName);
+                }
+                likedAndDislikedPostsDto.Add(PostMapper.PostToPostDto(post));
+            }
+
+            return Ok(likedAndDislikedPostsDto);
+        }
+
         [HttpGet("postsFromFollowedProfiles/{profileId}")]
         public async Task<IActionResult> GetPostsFromFollowedProfiles(int profileId)
         {

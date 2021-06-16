@@ -20,6 +20,7 @@ import PostService from "../services/PostService";
 import PostCard from "../components/home-page/PostCard";
 import StoryService from "../services/StoryService";
 import moment from "moment";
+import ThumbsUpDownOutlinedIcon from "@material-ui/icons/ThumbsUpDownOutlined";
 
 class UserProfile extends Component {
   constructor(props) {
@@ -36,6 +37,7 @@ class UserProfile extends Component {
       isOpenFollowingModal: false,
       isPostsButtonActive: true,
       isSavedButtonActive: false,
+      isLikedAndDislikedPostsButtonActive: false,
       isHighlightDialogOpen: false,
       isActive: false,
       doesFollowRequestExist: false,
@@ -43,6 +45,7 @@ class UserProfile extends Component {
       following: [],
       userProfilePosts: [],
       userProfileFavoritePosts: [],
+      userProfileLikedAndDislikedPosts: [],
       snackBarOpen: false,
       snackBarMessage: "",
       snackBarType: "",
@@ -325,6 +328,8 @@ class UserProfile extends Component {
         "header-link-item ml-3 pl-3 border-left d-flex align-items-center active";
       document.getElementById("postsButton").className =
         "header-link-item d-flex align-items-center";
+      document.getElementById("likedAndDislikedPostsButton").className =
+        "header-link-item ml-3 pl-3 border-left d-flex align-items-center";
     }
     PostService.getFavoritePosts(this.state.loggedUser.id)
       .then((res) => {
@@ -333,8 +338,35 @@ class UserProfile extends Component {
       .then((result) => {
         this.setState({
           isSavedButtonActive: true,
+          isLikedAndDislikedPostsButtonActive: false,
           isPostsButtonActive: false,
           userProfileFavoritePosts: result,
+        });
+      });
+  }
+
+  handleLikedAndDislikedPostsButton() {
+    if (
+      document.getElementById("likedAndDislikedPostsButton").className ===
+      "header-link-item ml-3 pl-3 border-left d-flex align-items-center"
+    ) {
+      document.getElementById("likedAndDislikedPostsButton").className =
+        "header-link-item ml-3 pl-3 border-left d-flex align-items-center active";
+      document.getElementById("postsButton").className =
+        "header-link-item d-flex align-items-center";
+      document.getElementById("savedButton").className =
+        "header-link-item ml-3 pl-3 border-left d-flex align-items-center";
+    }
+    PostService.getLikedAndDislikedPosts(this.state.loggedUser.id)
+      .then((res) => {
+        return res.json();
+      })
+      .then((result) => {
+        this.setState({
+          isLikedAndDislikedPostsButtonActive: true,
+          isSavedButtonActive: false,
+          isPostsButtonActive: false,
+          userProfileLikedAndDislikedPosts: result,
         });
       });
   }
@@ -348,6 +380,8 @@ class UserProfile extends Component {
         "header-link-item d-flex align-items-center active";
       document.getElementById("savedButton").className =
         "header-link-item ml-3 pl-3 border-left d-flex align-items-center";
+      document.getElementById("likedAndDislikedPostsButton").className =
+        "header-link-item ml-3 pl-3 border-left d-flex align-items-center";
     }
     PostService.getPostsForProfile(this.state.userProfileId)
       .then((res) => {
@@ -357,6 +391,7 @@ class UserProfile extends Component {
         this.setState({
           isPostsButtonActive: true,
           isSavedButtonActive: false,
+          isLikedAndDislikedPostsButtonActive: false,
           userProfilePosts: result,
         });
       });
@@ -426,12 +461,20 @@ class UserProfile extends Component {
     await this.setState({
       userProfilePosts: updatedPosts,
       userProfileFavoritePosts: updatedPosts,
+      userProfileLikedAndDislikedPosts: updatedPosts,
     });
     if (
       document.getElementById("savedButton").className ===
       "header-link-item ml-3 pl-3 border-left d-flex align-items-center active"
     ) {
       this.handleSavedButton();
+    }
+
+    if (
+      document.getElementById("likedAndDislikedPostsButton").className ===
+      "header-link-item ml-3 pl-3 border-left d-flex align-items-center active"
+    ) {
+      this.handleLikedAndDislikedPostsButton();
     }
   };
 
@@ -848,10 +891,17 @@ class UserProfile extends Component {
                         updatePost={this.updatePosts.bind(this)}
                       />
                     );
-                  } else {
+                  } else if (this.state.isSavedButtonActive === true) {
                     return (
                       <PostCard
                         sendPosts={this.state.userProfileFavoritePosts}
+                        updatePost={this.updatePosts.bind(this)}
+                      />
+                    );
+                  } else {
+                    return (
+                      <PostCard
+                        sendPosts={this.state.userProfileLikedAndDislikedPosts}
                         updatePost={this.updatePosts.bind(this)}
                       />
                     );
@@ -910,10 +960,16 @@ class UserProfile extends Component {
     );
 
     let savedButton = <div id="savedButton"></div>;
+    let likedAndDislikedPostsButton = (
+      <div id="likedAndDislikedPostsButton"></div>
+    );
     let storiesButton;
     let followButton;
     if (!AuthService.getCurrentUser()) {
       savedButton = <div id="savedButton"></div>;
+      likedAndDislikedPostsButton = (
+        <div id="likedAndDislikedPostsButton"></div>
+      );
       followButton = <div></div>;
       if (userProfile.isPrivate) {
         profileBody = (
@@ -981,6 +1037,23 @@ class UserProfile extends Component {
               onClick={() => this.handleSavedButton()}
             >
               Saved
+            </a>
+          </li>
+        </div>
+      );
+      likedAndDislikedPostsButton = (
+        <div>
+          <li
+            id="likedAndDislikedPostsButton"
+            class="header-link-item ml-3 pl-3 border-left d-flex align-items-center"
+          >
+            <ThumbsUpDownOutlinedIcon />
+            <a
+              class="pt-1px d-none d-md-block"
+              href="javascript:void(0)"
+              onClick={() => this.handleLikedAndDislikedPostsButton()}
+            >
+              &nbsp; Liked/disliked posts
             </a>
           </li>
         </div>
@@ -1396,6 +1469,7 @@ class UserProfile extends Component {
                         </Link>
                       </li>
                       {savedButton}
+                      {likedAndDislikedPostsButton}
                     </ul>
                   </div>
                 </div>
