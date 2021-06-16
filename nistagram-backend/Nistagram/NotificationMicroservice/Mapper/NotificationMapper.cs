@@ -27,10 +27,5 @@ namespace NotificationMicroservice.Mapper
             return notification;
         }
 
-        public static NotificationDto NotificationToNotificationDto(Notification notification)
-        {
-            NotificationDto dto = new NotificationDto();
-            return dto;
-        }
     }
 }

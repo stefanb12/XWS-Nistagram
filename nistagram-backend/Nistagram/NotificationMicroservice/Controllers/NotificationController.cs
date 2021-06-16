@@ -62,7 +62,7 @@ namespace NotificationMicroservice.Controllers
             Post post = null;
             if (!dto.PostId.Equals(""))
             {
-                post = await _postService.GetByOriginalId(dto.PostId);
+                post = await _postService.GetById(dto.PostId);
             }
             Notification notification = NotificationMapper.NotificationDtoToNotification(dto, post);
             Profile sender = await _profileService.GetById(dto.SenderId);
@@ -80,7 +80,7 @@ namespace NotificationMicroservice.Controllers
             Post post = null;
             if (!dto.PostId.Equals(""))
             {
-                post = await _postService.GetByOriginalId(dto.PostId);
+                post = await _postService.GetById(dto.PostId);
             }
             Notification notification = NotificationMapper.NotificationDtoToNotification(dto, post);
             Profile sender = await _profileService.GetById(dto.SenderId);
@@ -98,7 +98,7 @@ namespace NotificationMicroservice.Controllers
             Post post = null;
             if (!dto.PostId.Equals(""))
             {
-                post = await _postService.GetByOriginalId(dto.PostId);
+                post = await _postService.GetById(dto.PostId);
             }  
             Notification notification = NotificationMapper.NotificationDtoToNotification(dto, post);
             Profile sender = await _profileService.GetById(dto.SenderId);

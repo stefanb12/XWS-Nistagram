@@ -8,7 +8,6 @@ namespace StoryMicroservice.Model
 {
     public class Story : Document
     {
-        public bool Visible { get; set; }
         public bool ForCloseFriends { get; set; }
         public DateTime PublishingDate { get; set; }
         public int PublisherId { get; set; }
