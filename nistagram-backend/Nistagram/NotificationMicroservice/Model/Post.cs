@@ -8,7 +8,7 @@ namespace NotificationMicroservice.Model
     public class Post
     {
         public int Id { get; set; }
-        public string OriginalId { get; set; }
+        public int OriginalId { get; set; }
         public string ImageName { get; set; }
         [NotMapped]
         public IFormFile ImageFile { get; set; }
