@@ -55,45 +55,40 @@ namespace StoryMicroservice.Database
                 new Story
                 {
                     Id = "60bd70ad107c45e92fd80692",
-                    Visible = true,
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 08, 15, 29, 59),
+                    PublishingDate = new DateTime(2021, 06, 17, 15, 29, 59),
                     PublisherId = 1,
                     ImageName = "sc2210938836.jpg"
                 },
                 new Story
                 {
                     Id = "60bd70ad107c45e92fd80693",
-                    Visible = true,
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 08, 14, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 17, 14, 59, 59),
                     PublisherId = 2,
                     ImageName = "sc1211007001.jpg"
                 },
                 new Story
                 {
                     Id = "60bd70ad107c45e92fd80694",
-                    Visible = true,
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 08, 12, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 17, 12, 59, 59),
                     PublisherId = 2,
                     ImageName = "2212424861.png"
                 },
                 new Story
                 {
                     Id = "60bd70ad107c45e92fd80695",
-                    Visible = true,
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 08, 16, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 17, 16, 59, 59),
                     PublisherId = 3,
                     ImageName = "2212424862.png"
                 },
                 new Story
                 {
                     Id = "60bd70ad107c45e92fd80696",
-                    Visible = true,
                     ForCloseFriends = true,
-                    PublishingDate = new DateTime(2021, 06, 08, 14, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 17, 14, 59, 59),
                     PublisherId = 4,
                     ImageName = "2212424863.png"
                 }

@@ -45,9 +45,9 @@ namespace NotificationMicroservice.Database
             );
 
             modelBuilder.Entity<Post>().HasData(
-                new Post { Id = 1, OriginalId = "60bd51f992412f495bd7effb", ImageName = "2212424861.png" },
-                new Post { Id = 2, OriginalId = "60bd51f992412f495bd7effc", ImageName = "2212424862.png" },
-                new Post { Id = 3, OriginalId = "60bd51f992412f495bd7effd", ImageName = "2212424862.png" }
+                new Post { Id = 1, OriginalId = 1, ImageName = "2212424861.png" },
+                new Post { Id = 2, OriginalId = 2, ImageName = "2212424862.png" },
+                new Post { Id = 3, OriginalId = 3, ImageName = "2212424862.png" }
             );
 
             modelBuilder.Entity<Notification>().HasData(

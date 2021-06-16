@@ -64,7 +64,7 @@ namespace NotificationMicroservice.Messaging
                 var data = JObject.Parse(message);
                 _postService.Insert(new Post()
                 {
-                    OriginalId = data["originalId"].Value<string>(),
+                    OriginalId = data["originalId"].Value<int>(),
                     ImageName = data["image"].Value<string>()
                 });
 
