@@ -12,6 +12,7 @@ namespace NotificationMicroservice.Mapper
         public static Notification NotificationDtoToNotification(NotificationDto dto, Post post)
         {
             Notification notification = new Notification();
+
             notification.Time = DateTime.Now;
             notification.Content = "";
             notification.Seen = false;

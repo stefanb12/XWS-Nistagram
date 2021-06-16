@@ -13,7 +13,31 @@ namespace InappropriateContentMicroservice.Service
         {
             _inappropriateContentRepository = inappropriateContentRepository;
         }
-       
+
+        public async Task<bool> DoesInappropriateContentExist(InappropriateContent inappropriateContent)
+        {   
+            if(inappropriateContent.IsPost)
+            {
+                foreach (InappropriateContent ic in await GetAll())
+                {
+                    if (ic.SenderId == inappropriateContent.SenderId && ic.PostId == inappropriateContent.PostId && ic.Processed == false)
+                    {
+                        return true;
+                    }
+                }
+            } else
+            {
+                foreach (InappropriateContent ic in await GetAll())
+                {
+                    if (ic.SenderId == inappropriateContent.SenderId && ic.StoryId == inappropriateContent.StoryId && ic.Processed == false)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public async Task<InappropriateContent> GetById(int id)
         {
             return await _inappropriateContentRepository.GetById(id);

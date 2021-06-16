@@ -6,6 +6,11 @@ namespace InappropriateContentMicroservice.Database
 {
     public class InappropriateContentDbContext : DbContext
     {
+        public DbSet<InappropriateContent> InappropriateContents { get; set; }
+        public DbSet<Profile> Profiles { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Story> Stories { get; set; }
+
         public InappropriateContentDbContext() : base() { }
 
         public InappropriateContentDbContext(DbContextOptions<InappropriateContentDbContext> options) : base(options) { }
@@ -41,7 +46,9 @@ namespace InappropriateContentMicroservice.Database
             );
 
             modelBuilder.Entity<Post>().HasData(
-                new Post { Id = 1, OriginalId = 1, ImageName = "2212424861.png" }
+                new Post { Id = 1, OriginalId = 1, ImageName = "2212424861.png" },
+                new Post { Id = 2, OriginalId = 2, ImageName = "2212424862.png" },
+                new Post { Id = 3, OriginalId = 3, ImageName = "2212424862.png" }
             );
 
             modelBuilder.Entity<Story>().HasData(
@@ -49,8 +56,7 @@ namespace InappropriateContentMicroservice.Database
             );
 
             modelBuilder.Entity<InappropriateContent>().HasData(
-                new InappropriateContent { Id = 1, ReportComment = "Racism", Processed = false, IsPost = true, PostId = 1, StoryId = 1, SenderId = 2 },
-                new InappropriateContent { Id = 2, ReportComment = "Racism", Processed = false, IsPost = false, PostId = 1, StoryId = 1, SenderId = 2 }
+                new InappropriateContent { Id = 1, ReportComment = "Racism", Processed = false, IsPost = true, PostId = 1, StoryId = 1, SenderId = 5 }
             );
 
         }

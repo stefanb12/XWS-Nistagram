@@ -562,7 +562,7 @@
             }*/
         },
 
-        //StoryMicroservice
+        // StoryMicroservice
         {
             "DownstreamPathTemplate": "/api/story",
             "DownstreamScheme": "http",
@@ -658,25 +658,46 @@
                 "UserRole": "User"
             }*/
         },
-        {
-            "DownstreamPathTemplate": "/api/story/highlight/profile/{profileId}",
-            "DownstreamScheme": "http",
-            "DownstreamHostAndPorts": [
-                {
-                    "Host": "localhost",
-                    "Port": 55996
-                }
-            ],
-            "UpstreamPathTemplate": "/gateway/story/highlight/profile/{profileId}",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+      {
+        "DownstreamPathTemplate": "/api/story/highlight/profile/{profileId}",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "localhost",
+            "Port": 55996
+          }
+        ],
+        "UpstreamPathTemplate": "/gateway/story/highlight/profile/{profileId}",
+        "UpstreamHttpMethod": [ "GET" ]
+        /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User"
             }*/
-        }
+      },
+
+      // InappropriateContentMicroservice
+      {
+        "DownstreamPathTemplate": "/api/inappropriateContent",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "localhost",
+            "Port": 55997
+          }
+        ],
+        "UpstreamPathTemplate": "/gateway/inappropriateContent",
+        "UpstreamHttpMethod": [ "POST" ]
+        /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+      }
 
     ],
   "GlobalConfiguration": {
