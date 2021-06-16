@@ -196,6 +196,25 @@
                 "UserRole": "User"
             }*/
     },
+    {
+        "DownstreamPathTemplate": "/api/profileVerificationRequest",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+            {
+                "Host": "localhost",
+                "Port": 55988
+            }
+        ],
+        "UpstreamPathTemplate": "/gateway/profileVerificationRequest",
+        "UpstreamHttpMethod": [ "POST" ]
+        /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
 
     // PostMicroservice
     {
@@ -640,17 +659,17 @@
             }*/
     },
     {
-      "DownstreamPathTemplate": "/api/story/highlight/profile/{profileId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 55996
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/story/highlight/profile/{profileId}",
-      "UpstreamHttpMethod": [ "GET" ]
-      /*"AuthenticationOptions": {
+        "DownstreamPathTemplate": "/api/story/highlight/profile/{profileId}",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+            {
+                "Host": "localhost",
+                "Port": 55996
+            }
+        ],
+        "UpstreamPathTemplate": "/gateway/story/highlight/profile/{profileId}",
+        "UpstreamHttpMethod": [ "GET" ]
+        /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
