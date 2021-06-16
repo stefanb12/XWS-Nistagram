@@ -13,11 +13,14 @@ namespace PostMicroservice.Mapper
             Post post = new Post();
 
             List<Tag> tags = new List<Tag>();
-            foreach(string t in dto.Tags)
+            if (dto.Tags != null)
             {
-                Tag tag = new Tag();
-                tag.Content = t;
-                tags.Add(tag);
+                foreach (string t in dto.Tags)
+                {
+                    Tag tag = new Tag();
+                    tag.Content = t;
+                    tags.Add(tag);
+                }
             }
             post.Tags = tags;
             post.Description = dto.Description;

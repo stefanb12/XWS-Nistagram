@@ -35,7 +35,7 @@ namespace PostMicroservice.Service
                     profilePosts.Add(post);
                 }
             }
-            return profilePosts;
+            return profilePosts.OrderByDescending(post => post.PublishingDate).ToList();
         }
 
         public async Task<List<Post>> GetFavoritePostsForProfile(int profileId)
@@ -55,15 +55,46 @@ namespace PostMicroservice.Service
                     }
                 }       
             }
-            return favoritePosts;
+            return favoritePosts.OrderByDescending(post => post.PublishingDate).ToList();
+        }
+
+        public async Task<List<Post>> GetLikedAndDislikedPosts(int profileId)
+        {
+            List<Post> likedAndDislikedPosts = new List<Post>();
+            foreach (Post post in await GetAll())
+            {
+                if (post.Likes != null)
+                {
+                    foreach (PostLike postLike in post.Likes)
+                    {
+                        if (postLike.Like.OriginalId == profileId)
+                        {
+                            likedAndDislikedPosts.Add(post);
+                            break;
+                        }
+                    }
+                }
+                if (post.Dislikes != null)
+                {
+                    foreach (PostDislike postDislike in post.Dislikes)
+                    {
+                        if (postDislike.Dislike.OriginalId == profileId)
+                        {
+                            likedAndDislikedPosts.Add(post);
+                            break;
+                        }
+                    }
+                }
+            }
+            return likedAndDislikedPosts.OrderByDescending(post => post.PublishingDate).ToList();
         }
 
         public async Task<List<Post>> GetAllPublicPosts(int profileId)
         {
             List<Post> publicPosts = new List<Post>();
-            foreach (Profile profile in await _profileService.GetAllPublicProfiles())
+            foreach (Post post in await GetAll())    
             {
-                foreach (Post post in await GetAll())
+                foreach (Profile profile in await _profileService.GetAllPublicProfiles())
                 {
                     if (profile.OriginalId == post.Publisher.OriginalId && profileId != post.Publisher.OriginalId)
                     {
@@ -71,7 +102,7 @@ namespace PostMicroservice.Service
                     }
                 }
             }
-            return publicPosts;
+            return publicPosts.OrderByDescending(post => post.PublishingDate).ToList();
         }
 
         public async Task<List<Post>> GetPostsFromFollowedProfiles(int profileId)
@@ -79,17 +110,22 @@ namespace PostMicroservice.Service
             List<Post> posts = new List<Post>();
             Profile profile = await _profileService.GetProfileByOriginalId(profileId);
 
-            foreach (ProfileFollowing profileFollowing in profile.Following)
+            foreach (Post post in await GetAll())
             {
-                foreach (Post post in await GetAll())
+                if (profileId == post.Publisher.OriginalId)
                 {
-                    if (profileFollowing.FollowingId == post.Publisher.OriginalId)
+                    posts.Add(post);
+                    continue;
+                }
+                foreach (ProfileFollowing profileFollowing in profile.Following)
+                {
+                    if (profileFollowing.FollowingId == post.Publisher.OriginalId || profileId == post.Publisher.OriginalId)
                     {
                         posts.Add(post);
                     }
                 }
             }
-            return posts;
+            return posts.OrderByDescending(post => post.PublishingDate).ToList();
         }
 
         public async Task<Post> InsertNewComment(Post post, Comment comment)
