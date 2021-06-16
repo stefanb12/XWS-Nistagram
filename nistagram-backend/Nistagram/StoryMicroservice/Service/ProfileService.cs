@@ -80,9 +80,17 @@ namespace StoryMicroservice.Service
             Profile profile = await GetProfileByOriginalId(profileId);
             foreach(ProfileStories ps in profileStories)
             {
-                if (profile.IsFollowing(ps.OriginalId))
+                if (profile.IsFollowing(ps.OriginalId) || ps.OriginalId == profileId)
                 {
-                    ps.Stories = FilterStoriesForCloseFriends(ps, profileId);
+                    if (ps.OriginalId != profileId)
+                    {
+                        ps.Stories = FilterStoriesForCloseFriends(ps, profileId);
+                    }
+                    else
+                    {
+                        ps.Stories = ps.GetActiveStories();
+                    }
+                   
                     if (ps.Stories.Count > 0)
                     {
                         returnValue.Add(ps);
