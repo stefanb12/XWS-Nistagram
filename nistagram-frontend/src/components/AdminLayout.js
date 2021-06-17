@@ -4,6 +4,7 @@ import NotFound from "../pages/NotFound";
 import AdminNavbar from "./AdminNavbar";
 import UserProfileSettings from "../pages/UserProfileSettings";
 import UserHomePage from "../pages/UserHomePage";
+import ProfileVerificationRequest from "../pages/ProfileVerificationRequest";
 
 const MainLayoutRoot = {
   height: "100%",
@@ -38,8 +39,8 @@ export default function AdminLayout({ routes }) {
         <div style={MainLayoutContainer}>
           <div style={MainLayoutContent}>
             <Switch>
-              <Route path="/admin/requestsForProfileVerification">
-                {/* <UserProfileSettings /> */}
+              <Route path="/admin/profileVerificationRequests">
+                <ProfileVerificationRequest />
               </Route>
               <Route path="/admin/requestsForInappropriateContent">
                 {/* <UserSearchResultPage /> */}

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using ProfileMicroservice.Model;
+using ProfileMicroservice.Model.Enum;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -112,6 +113,13 @@ namespace UserMicroservice.Service
             res.Profile = followingProfile;
             res.Follower = followerProfile;
             return res;
+        }
+
+        public async Task<Profile> SetProfileCategory(int profileId, UserCategory userCategory)
+        {
+            Profile profile = await GetById(profileId);
+            profile.Category = userCategory;
+            return await _profileRepository.Update(profile);
         }
 
         public async Task<Profile> GetById(int id)
