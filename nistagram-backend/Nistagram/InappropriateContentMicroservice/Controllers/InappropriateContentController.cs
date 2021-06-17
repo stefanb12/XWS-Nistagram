@@ -12,31 +12,31 @@ namespace InappropriateContentMicroservice.Controllers
     public class InappropriateContentController : Controller
     {
         private readonly IInappropriateContentService _inappropriateContentService;
+        private readonly IProfileService _profileService;
+        private readonly IPostService _postService;
+        private readonly IStoryService _storyService;
 
-        public InappropriateContentController(IInappropriateContentService inappropriateContentService)
+        public InappropriateContentController(IInappropriateContentService inappropriateContentService, IProfileService profileService, IPostService postService, IStoryService storyService)
         {
             _inappropriateContentService = inappropriateContentService;
+            _profileService = profileService;
+            _postService = postService;
+            _storyService = storyService;
         }
 
 
         [HttpPost()]
         public async Task<IActionResult> SaveInappropriateContent([FromBody] InappropriateContentDto dto)
         {
-            InappropriateContent inappropriateContent = InappropriateContentMapper.InappropriateContentDtoToInappropriateContent(dto);
+            Story story = await _storyService.GetByOriginalId(dto.StoryId);
+            InappropriateContent inappropriateContent = InappropriateContentMapper.InappropriateContentDtoToInappropriateContent(dto, story);
             
-            if(await _inappropriateContentService.DoesInappropriateContentExist(inappropriateContent))
+            if(await _inappropriateContentService.DoesInappropriateContentExist(inappropriateContent, dto.StoryId))
             {
                 return BadRequest();
             }
 
-            inappropriateContent = await _inappropriateContentService.Insert(inappropriateContent);
-
-            if (inappropriateContent == null)
-            {
-                return BadRequest();
-            }
-
-            return Ok(inappropriateContent);
+            return Ok(await _inappropriateContentService.Insert(inappropriateContent));
         }
     }
 }

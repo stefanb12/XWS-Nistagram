@@ -5,6 +5,6 @@ namespace InappropriateContentMicroservice.Service
 {
     public interface IInappropriateContentService : IService<InappropriateContent>
     {
-        Task<bool> DoesInappropriateContentExist(InappropriateContent inappropriateContent);
+        Task<bool> DoesInappropriateContentExist(InappropriateContent inappropriateContent, string storyId);
     }
 }

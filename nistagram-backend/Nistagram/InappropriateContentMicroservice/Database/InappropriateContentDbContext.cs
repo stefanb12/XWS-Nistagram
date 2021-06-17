@@ -52,7 +52,11 @@ namespace InappropriateContentMicroservice.Database
             );
 
             modelBuilder.Entity<Story>().HasData(
-                new Story { Id = 1, OriginalId = "60bd70ad107c45e92fd80692", ImageName = "sc2210938836.jpg" }
+                new Story { Id = 1, OriginalId = "60bd70ad107c45e92fd80692", ImageName = "sc2210938836.jpg" },
+                new Story { Id = 2, OriginalId = "60bd70ad107c45e92fd80693", ImageName = "sc1211007001.jpg" },
+                new Story { Id = 3, OriginalId = "60bd70ad107c45e92fd80694", ImageName = "2212424861.jpg" },
+                new Story { Id = 4, OriginalId = "60bd70ad107c45e92fd80695", ImageName = "2212424862.jpg" },
+                new Story { Id = 5, OriginalId = "60bd70ad107c45e92fd80696", ImageName = "2212424863.jpg" }
             );
 
             modelBuilder.Entity<InappropriateContent>().HasData(

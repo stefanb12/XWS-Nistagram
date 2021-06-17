@@ -13,7 +13,7 @@ namespace InappropriateContentMicroservice.Dto
         public bool IsPost { get; set; }
         public int SenderId { get; set; }
         public int PostId { get; set; }
-        public int StoryId { get; set; }
+        public string StoryId { get; set; }
 
         public InappropriateContentDto()
         {
