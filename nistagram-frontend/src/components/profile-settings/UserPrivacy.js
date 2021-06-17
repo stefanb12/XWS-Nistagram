@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import { Checkbox } from "@material-ui/core";
 import NotificationsOffIcon from "@material-ui/icons/NotificationsOff";
 import BlockIcon from "@material-ui/icons/Block";
+import AddCircleOutline from "@material-ui/icons/AddCircleOutline";
 import { Modal } from "react-bootstrap";
 import ProfileService from "../../services/ProfileService";
 import AuthService from "../../services/AuthService";
@@ -12,11 +13,42 @@ class UserPrivacy extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      accountPrivacy: null,
+      messagesSettings: null,
+      tagsSettings: null,
       isOpenMuteProfilesModalOpen: false,
       isOpenBlockProfilesModalOpen: false,
+      isOpenCloseFriendsModalOpen: false,
       following: [],
+      mutedProfiles: [],
+      blockedProfiles: [],
+      closeFriends: [],
     };
   }
+
+  componentDidMount() {
+    ProfileService.getProfilePrivacy(AuthService.getCurrentUser().id)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          accountPrivacy: result.isPrivate,
+          messagesSettings: result.receiveAllMessages,
+          tagsSettings: result.tagAllowed,
+        });
+      });
+  }
+
+  privacyOnChange = (event) => {
+    this.setState({ accountPrivacy: event.target.checked });
+  };
+
+  messageSettingsOnChange = (event) => {
+    this.setState({ messagesSettings: event.target.checked });
+  };
+
+  tagsSettingsOnChange = (event) => {
+    this.setState({ tagsSettings: event.target.checked });
+  };
 
   openMuteProfilesModal = () => {
     ProfileService.getFollowing(AuthService.getCurrentUser().id)
@@ -26,6 +58,15 @@ class UserPrivacy extends Component {
           following: result,
         });
       });
+
+    ProfileService.getMuted(AuthService.getCurrentUser().id)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          mutedProfiles: result,
+        });
+      });
+
     this.setState({
       isOpenMuteProfilesModalOpen: true,
     });
@@ -37,6 +78,41 @@ class UserPrivacy extends Component {
     });
   };
 
+  isProfileMuted = (username) => {
+    for (let i = 0; i < this.state.mutedProfiles.length; i++) {
+      if (this.state.mutedProfiles[i].username == username) return true;
+    }
+    return false;
+  };
+
+  muteProfile = async (muteId) => {
+    await ProfileService.mute(AuthService.getCurrentUser().id, muteId).then(
+      (res) => res.json()
+    );
+
+    await ProfileService.getMuted(AuthService.getCurrentUser().id)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          mutedProfiles: result,
+        });
+      });
+  };
+
+  unmuteProfile = async (unmuteId) => {
+    await ProfileService.unmute(AuthService.getCurrentUser().id, unmuteId).then(
+      (res) => res.json()
+    );
+
+    await ProfileService.getMuted(AuthService.getCurrentUser().id)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          mutedProfiles: result,
+        });
+      });
+  };
+
   openBlockProfilesModal = () => {
     ProfileService.getFollowing(AuthService.getCurrentUser().id)
       .then((res) => res.json())
@@ -45,6 +121,15 @@ class UserPrivacy extends Component {
           following: result,
         });
       });
+
+    ProfileService.getBlocked(AuthService.getCurrentUser().id)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          blockedProfiles: result,
+        });
+      });
+
     this.setState({
       isOpenBlockProfilesModalOpen: true,
     });
@@ -54,6 +139,128 @@ class UserPrivacy extends Component {
     this.setState({
       isOpenBlockProfilesModalOpen: false,
     });
+  };
+
+  isProfileBlocked = (username) => {
+    for (let i = 0; i < this.state.blockedProfiles.length; i++) {
+      if (this.state.blockedProfiles[i].username == username) return true;
+    }
+    return false;
+  };
+
+  blockProfile = async (blockId) => {
+    await ProfileService.block(AuthService.getCurrentUser().id, blockId).then(
+      (res) => res.json()
+    );
+
+    await ProfileService.getBlocked(AuthService.getCurrentUser().id)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          blockedProfiles: result,
+        });
+      });
+  };
+
+  unblockProfile = async (unblockId) => {
+    await ProfileService.unblock(
+      AuthService.getCurrentUser().id,
+      unblockId
+    ).then((res) => res.json());
+
+    await ProfileService.getBlocked(AuthService.getCurrentUser().id)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          blockedProfiles: result,
+        });
+      });
+  };
+
+  openCloseFriendsModal = () => {
+    ProfileService.getFollowing(AuthService.getCurrentUser().id)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          following: result,
+        });
+      });
+
+    ProfileService.getCloseFriends(AuthService.getCurrentUser().id)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          closeFriends: result,
+        });
+      });
+
+    this.setState({
+      isOpenCloseFriendsModalOpen: true,
+    });
+  };
+
+  closeCloseFriendsModal = () => {
+    this.setState({
+      isOpenCloseFriendsModalOpen: false,
+    });
+  };
+
+  isFriendClose = (username) => {
+    for (let i = 0; i < this.state.closeFriends.length; i++) {
+      if (this.state.closeFriends[i].username == username) return true;
+    }
+    return false;
+  };
+
+  addCloseFriend = async (closeFriendId) => {
+    await ProfileService.addCloseFriend(
+      AuthService.getCurrentUser().id,
+      closeFriendId
+    ).then((res) => res.json());
+
+    await ProfileService.getCloseFriends(AuthService.getCurrentUser().id)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          closeFriends: result,
+        });
+      });
+  };
+
+  removeCloseFriend = async (closeFriendId) => {
+    await ProfileService.removeCloseFriends(
+      AuthService.getCurrentUser().id,
+      closeFriendId
+    ).then((res) => res.json());
+
+    await ProfileService.getCloseFriends(AuthService.getCurrentUser().id)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          closeFriends: result,
+        });
+      });
+  };
+
+  saveProfilePrivacy = async () => {
+    await ProfileService.updateProfilePrivacy(
+      AuthService.getCurrentUser().id,
+      this.state.accountPrivacy,
+      this.state.messagesSettings,
+      this.state.tagsSettings
+    )
+      .then((res) => res.json())
+      .then((result) => {});
+
+    await ProfileService.getProfilePrivacy(AuthService.getCurrentUser().id)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          accountPrivacy: result.isPrivate,
+          messagesSettings: result.receiveAllMessages,
+          tagsSettings: result.tagAllowed,
+        });
+      });
   };
 
   render() {
@@ -85,16 +292,27 @@ class UserPrivacy extends Component {
                     </div>
                     {/* <div class="text-muted fs-13px">{follower.fullName}</div> */}
                   </div>
-                  {
+                  {this.isProfileMuted(profile.username) ? (
+                    <a
+                      href="javascript:void(0)"
+                      class="btn btn-dark"
+                      style={{ width: "26%" }}
+                      onClick={() => this.unmuteProfile(profile.id)}
+                    >
+                      <NotificationsOffIcon style={{ marginRight: "2%" }} />
+                      Unmute
+                    </a>
+                  ) : (
                     <a
                       href="javascript:void(0)"
                       class="btn btn-outline-dark"
-                      style={{ width: "24%" }}
+                      style={{ width: "26%" }}
+                      onClick={() => this.muteProfile(profile.id)}
                     >
                       <NotificationsOffIcon style={{ marginRight: "2%" }} />
                       Mute
                     </a>
-                  }
+                  )}
                 </div>
               );
             })}
@@ -136,16 +354,27 @@ class UserPrivacy extends Component {
                     </div>
                     {/* <div class="text-muted fs-13px">{follower.fullName}</div> */}
                   </div>
-                  {
+                  {this.isProfileBlocked(profile.username) ? (
+                    <a
+                      href="javascript:void(0)"
+                      class="btn btn-danger"
+                      style={{ width: "26%" }}
+                      onClick={() => this.unblockProfile(profile.id)}
+                    >
+                      <BlockIcon style={{ marginRight: "3%" }} />
+                      Unblock
+                    </a>
+                  ) : (
                     <a
                       href="javascript:void(0)"
                       class="btn btn-outline-danger"
-                      style={{ width: "24%" }}
+                      style={{ width: "26%" }}
+                      onClick={() => this.blockProfile(profile.id)}
                     >
                       <BlockIcon style={{ marginRight: "3%" }} />
                       Block
                     </a>
-                  }
+                  )}
                 </div>
               );
             })}
@@ -159,10 +388,73 @@ class UserPrivacy extends Component {
       </Modal>
     );
 
+    var closeFriendsModal = (
+      <Modal
+        show={this.state.isOpenCloseFriendsModalOpen}
+        onHide={this.closeCloseFriendsModal}
+        style={{ marginTop: "120px", maxHeight: "500px", overflow: "hidden" }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Close profiles</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div style={{ overflow: "auto", maxHeight: "300px" }}>
+            {this.state.following.map((profile) => {
+              return (
+                <div class="list-group-item d-flex align-items-center">
+                  <img
+                    src={profile.imageSrc}
+                    alt=""
+                    width="50px"
+                    class="rounded-sm ml-n2"
+                  />
+                  <div class="flex-fill pl-3 pr-3">
+                    <div>
+                      <a href="#" class="text-dark font-weight-600">
+                        {profile.username}
+                      </a>
+                    </div>
+                    {/* <div class="text-muted fs-13px">{follower.fullName}</div> */}
+                  </div>
+                  {this.isFriendClose(profile.username) ? (
+                    <a
+                      href="javascript:void(0)"
+                      class="btn btn-success"
+                      style={{ width: "26%" }}
+                      onClick={() => this.removeCloseFriend(profile.id)}
+                    >
+                      <AddCircleOutline style={{ marginRight: "3%" }} />
+                      Remove
+                    </a>
+                  ) : (
+                    <a
+                      href="javascript:void(0)"
+                      class="btn btn-outline-success"
+                      style={{ width: "26%" }}
+                      onClick={() => this.addCloseFriend(profile.id)}
+                    >
+                      <AddCircleOutline style={{ marginRight: "3%" }} />
+                      Add
+                    </a>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={this.closeCloseFriendsModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+
     return (
       <div>
         {muteProfilesModal}
         {blockProfilesModal}
+        {closeFriendsModal}
         <div
           className="card"
           style={{ float: "right", marginRight: "20%", width: "50%" }}
@@ -171,98 +463,120 @@ class UserPrivacy extends Component {
             <h5 className="card-title">Privacy and Security</h5>
           </div>
           <div className="card-body">
-            <form>
-              <ListGroup variant="flush">
-                <ListGroup.Item>
-                  <h5>Account privacy</h5>
-                  <Checkbox
-                    style={{ marginLeft: "-2%" }}
-                    color="primary"
-                    inputProps={{ "aria-label": "secondary checkbox" }}
-                  />
-                  <label>Private account</label>
-                  <br />
-                  <p style={{ fontSize: "14px" }}>
-                    When your account is private, only people you approve can
-                    see your photos and videos on Instagram. Your existing
-                    followers won't be affected.
-                  </p>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <h5>Messages Settings</h5>
-                  <Checkbox
-                    style={{ marginLeft: "-2%" }}
-                    color="primary"
-                    inputProps={{ "aria-label": "secondary checkbox" }}
-                  />
-                  <label>Receive All Messages</label>
-                  <br />
-                  <p style={{ fontSize: "14px" }}>
-                    Do you want to receive messages from profiles you don't
-                    follow?
-                  </p>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <h5>Tags Settings</h5>
-                  <Checkbox
-                    style={{ marginLeft: "-2%" }}
-                    color="primary"
-                    inputProps={{ "aria-label": "secondary checkbox" }}
-                  />
-                  <label>Allow tagging</label>
-                  <br />
-                  <p style={{ fontSize: "14px" }}>
-                    Do other profiles can tag you on their posts, stories and
-                    comments?
-                  </p>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <h5>Muted profiles</h5>
-                  <Button
-                    variant="dark"
-                    style={{
-                      width: "25%",
-                      marginTop: "2%",
-                      marginBottom: "2%",
-                    }}
-                    onClick={this.openMuteProfilesModal}
-                  >
-                    <NotificationsOffIcon style={{ marginRight: "2%" }} />
-                    Mute profiles
-                  </Button>
-                  <p style={{ fontSize: "14px" }}>
-                    You will be able to access muted profiles, but content
-                    posted by these profiles won't be shown to you.
-                  </p>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <h5>Blocked profiles</h5>
-                  <Button
-                    variant="danger"
-                    style={{
-                      width: "25%",
-                      marginTop: "2%",
-                      marginBottom: "2%",
-                    }}
-                    onClick={this.openBlockProfilesModal}
-                  >
-                    <BlockIcon style={{ marginRight: "2%" }} />
-                    Block profiles
-                  </Button>
-                  <p style={{ fontSize: "14px", marginBottom: "4%" }}>
-                    When you block profile you won't be able to have any type
-                    interaction with it.
-                  </p>
-                </ListGroup.Item>
-              </ListGroup>
-              <button
-                type="submit"
-                className="btn btn-primary"
-                style={{ marginLeft: "3%" }}
-              >
-                Save changes
-              </button>
-            </form>
+            <ListGroup variant="flush">
+              <ListGroup.Item>
+                <h5>Account privacy</h5>
+                <Checkbox
+                  checked={this.state.accountPrivacy}
+                  style={{ marginLeft: "-2%" }}
+                  color="primary"
+                  inputProps={{ "aria-label": "secondary checkbox" }}
+                  onChange={this.privacyOnChange}
+                />
+                <label>Private account</label>
+                <br />
+                <p style={{ fontSize: "14px" }}>
+                  When your account is private, only people you approve can see
+                  your photos and videos on Instagram. Your existing followers
+                  won't be affected.
+                </p>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <h5>Messages Settings</h5>
+                <Checkbox
+                  checked={this.state.messagesSettings}
+                  style={{ marginLeft: "-2%" }}
+                  color="primary"
+                  inputProps={{ "aria-label": "secondary checkbox" }}
+                  onChange={this.messageSettingsOnChange}
+                />
+                <label>Receive All Messages</label>
+                <br />
+                <p style={{ fontSize: "14px" }}>
+                  Do you want to receive messages from profiles you don't
+                  follow?
+                </p>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <h5>Tags Settings</h5>
+                <Checkbox
+                  checked={this.state.tagsSettings}
+                  style={{ marginLeft: "-2%" }}
+                  color="primary"
+                  inputProps={{ "aria-label": "secondary checkbox" }}
+                  onChange={this.tagsSettingsOnChange}
+                />
+                <label>Allow tagging</label>
+                <br />
+                <p style={{ fontSize: "14px" }}>
+                  Do other profiles can tag you on their posts, stories and
+                  comments?
+                </p>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <h5>Muted profiles</h5>
+                <Button
+                  variant="dark"
+                  style={{
+                    width: "30%",
+                    marginTop: "2%",
+                    marginBottom: "2%",
+                  }}
+                  onClick={this.openMuteProfilesModal}
+                >
+                  <NotificationsOffIcon style={{ marginRight: "2%" }} />
+                  Mute profiles
+                </Button>
+                <p style={{ fontSize: "14px" }}>
+                  You will be able to access muted profiles, but content posted
+                  by these profiles won't be shown to you.
+                </p>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <h5>Blocked profiles</h5>
+                <Button
+                  variant="danger"
+                  style={{
+                    width: "30%",
+                    marginTop: "2%",
+                    marginBottom: "2%",
+                  }}
+                  onClick={this.openBlockProfilesModal}
+                >
+                  <BlockIcon style={{ marginRight: "2%" }} />
+                  Block profiles
+                </Button>
+                <p style={{ fontSize: "14px", marginBottom: "4%" }}>
+                  When you block profile you won't be able to have any type
+                  interaction with it.
+                </p>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <h5>Close friends</h5>
+                <Button
+                  variant="success"
+                  style={{
+                    width: "30%",
+                    marginTop: "2%",
+                    marginBottom: "2%",
+                  }}
+                  onClick={this.openCloseFriendsModal}
+                >
+                  <AddCircleOutline style={{ marginRight: "2%" }} />
+                  Add close friends
+                </Button>
+                <p style={{ fontSize: "14px", marginBottom: "4%" }}>
+                  You can set story to be visible only for close friends.
+                </p>
+              </ListGroup.Item>
+            </ListGroup>
+            <button
+              className="btn btn-primary"
+              style={{ marginLeft: "42%" }}
+              onClick={this.saveProfilePrivacy}
+            >
+              Save changes
+            </button>
           </div>
         </div>
       </div>

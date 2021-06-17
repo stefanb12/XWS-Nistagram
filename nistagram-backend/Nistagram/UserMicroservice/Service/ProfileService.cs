@@ -18,12 +18,14 @@ namespace UserMicroservice.Service
     public class ProfileService : IProfileService
     {
         private IProfileRepository _profileRepository;
+        private IProfileSettingsRepository _profileSettingsRepository;
         private IProfileCreatedMessageSender _profileCreatedSender;
         private IProfileUpdatedMessageSender _profileUpdatedSender;
 
-        public ProfileService(IProfileRepository userRepository, IProfileCreatedMessageSender profileCreatedSender, IProfileUpdatedMessageSender profileUpdatedSender)
+        public ProfileService(IProfileRepository userRepository, IProfileSettingsRepository profileSettingsRepository, IProfileCreatedMessageSender profileCreatedSender, IProfileUpdatedMessageSender profileUpdatedSender)
         {
             _profileRepository = userRepository;
+            _profileSettingsRepository = profileSettingsRepository;
             _profileCreatedSender = profileCreatedSender;
             _profileUpdatedSender = profileUpdatedSender;
         }
@@ -194,6 +196,173 @@ namespace UserMicroservice.Service
             user.Token = tokenHandler.WriteToken(token);
 
             return user;
+        }
+
+        public async Task<List<Profile>> GetMutedProfiles(int id)
+        {
+            ProfileSettings profileSettings = await _profileSettingsRepository.GetById(id);
+            List<Profile> mutedProfiles = new List<Profile>();
+            foreach (ProfileMutedProfile profileMutedProfile in profileSettings.MutedProfiles)
+            {
+                mutedProfiles.Add(profileMutedProfile.MutedProfile);
+            }
+
+            return mutedProfiles;
+        }
+
+        public async Task<ProfileMutedProfile> MuteProfile(int profileId, int id)
+        {
+            ProfileSettings profile = await _profileSettingsRepository.GetById(profileId);
+            ProfileSettings muteProfile = await _profileSettingsRepository.GetById(id);
+            if (profile == null || muteProfile == null)
+            {
+                return null;
+            }
+            ProfileMutedProfile profileMutedProfile = new ProfileMutedProfile();
+            profileMutedProfile.MutedProfileId = muteProfile.Id;
+            profileMutedProfile.ProfileSettingsId = profile.Id;
+            profile.MutedProfiles.Add(profileMutedProfile);
+            await _profileSettingsRepository.Update(profile);
+
+            /*
+            ProfileMutedProfile profileMutingProfile = new ProfileMutedProfile();
+            profileMutingProfile.MutedProfileId = profile.Id;
+            profileMutingProfile.ProfileSettingsId = muteProfile.Id;
+            profile.MutedProfiles.Add(profileMutingProfile);
+            await _profileSettingsRepository.Update(muteProfile);
+            */
+
+            return profileMutedProfile;
+        }
+
+        public async Task<ProfileMutedProfile> UnmuteProfile(int profileId, int id)
+        {
+            ProfileSettings profile = await _profileSettingsRepository.GetById(profileId);
+            ProfileSettings muteProfile = await _profileSettingsRepository.GetById(id);
+            if (profile == null || muteProfile == null)
+            {
+                return null;
+            }
+            ProfileMutedProfile profileMutedProfile = profile.MutedProfiles.Where(ps =>
+                ps.MutedProfileId == muteProfile.Id).SingleOrDefault();
+            profile.MutedProfiles.Remove(profileMutedProfile);
+            await _profileSettingsRepository.Update(profile);
+
+            /*
+            ProfileFollowing profileFollowing = followerProfile.Following.Where(profileFollowing =>
+                profileFollowing.ProfileId == followerProfile.Id &&
+                profileFollowing.FollowingId == followingProfile.Id).SingleOrDefault();
+            followerProfile.Following.Remove(profileFollowing);
+            await Update(followingProfile);
+
+            _profileUpdatedSender.SendUpdatedProfile(followingProfile);
+
+            ProfileFollower res = new ProfileFollower();
+            res.Profile = followingProfile;
+            res.Follower = followerProfile;
+            */
+
+            return profileMutedProfile;
+        }
+
+        public async Task<List<Profile>> GetBlockedProfiles(int id)
+        {
+            ProfileSettings profileSettings = await _profileSettingsRepository.GetById(id);
+            List<Profile> blockedProfiles = new List<Profile>();
+            foreach (ProfileBlockedProfile profileBlockedProfile in profileSettings.BlockedProfiles)
+            {
+                blockedProfiles.Add(profileBlockedProfile.BlockedProfile);
+            }
+
+            return blockedProfiles;
+        }
+
+        public async Task<ProfileBlockedProfile> BlockProfile(int profileId, int id)
+        {
+            ProfileSettings profile = await _profileSettingsRepository.GetById(profileId);
+            ProfileSettings blockProfile = await _profileSettingsRepository.GetById(id);
+            if (profile == null || blockProfile == null)
+            {
+                return null;
+            }
+            ProfileBlockedProfile profileBlockedProfile = new ProfileBlockedProfile();
+            profileBlockedProfile.BlockedProfileId = blockProfile.Id;
+            profileBlockedProfile.ProfileSettingsId = profile.Id;
+            profile.BlockedProfiles.Add(profileBlockedProfile);
+            await _profileSettingsRepository.Update(profile);
+
+            return profileBlockedProfile;
+        }
+
+        public async Task<ProfileBlockedProfile> UnBlockProfile(int profileId, int id)
+        {
+            ProfileSettings profile = await _profileSettingsRepository.GetById(profileId);
+            ProfileSettings muteProfile = await _profileSettingsRepository.GetById(id);
+            if (profile == null || muteProfile == null)
+            {
+                return null;
+            }
+            ProfileBlockedProfile profileBlockedProfile = profile.BlockedProfiles.Where(ps =>
+                ps.BlockedProfileId == muteProfile.Id).SingleOrDefault();
+            profile.BlockedProfiles.Remove(profileBlockedProfile);
+            await _profileSettingsRepository.Update(profile);
+
+            return profileBlockedProfile;
+        }
+
+        public async Task<List<Profile>> GetCloseFriends(int id)
+        {
+            Profile profile = await GetById(id);
+            List<Profile> closeFriends = new List<Profile>();
+            foreach (ProfileCloseFriend profileCloseFriend in profile.CloseFriends)
+            {
+                closeFriends.Add(profileCloseFriend.CloseFriend);
+            }
+
+            return closeFriends;
+        }
+
+        public async Task<ProfileCloseFriend> AddCloseFriend(int profileId, int id)
+        {
+            Profile profile = await GetById(profileId);
+            Profile closeFriend = await GetById(id);
+            if (profile == null || closeFriend == null)
+            {
+                return null;
+            }
+            ProfileCloseFriend profileCloseFriend = new ProfileCloseFriend();
+            profileCloseFriend.CloseFriendId = closeFriend.Id;
+            profileCloseFriend.ProfileId = profile.Id;
+            profile.CloseFriends.Add(profileCloseFriend);
+            await Update(profile);
+
+            return profileCloseFriend;
+        }
+
+        public async Task<ProfileCloseFriend> RemoveCloseFriend(int profileId, int id)
+        {
+            Profile profile = await GetById(profileId);
+            Profile closeFriend = await GetById(id);
+            if (profile == null || closeFriend == null)
+            {
+                return null;
+            }
+            ProfileCloseFriend profileCloseFriend = profile.CloseFriends.Where(p =>
+                p.CloseFriendId == closeFriend.Id).SingleOrDefault();
+            profile.CloseFriends.Remove(profileCloseFriend);
+            await Update(profile);
+
+            return profileCloseFriend;
+        }
+
+        public async Task<ProfileSettings> GetProfileSettingsById(int id)
+        {
+            return await _profileSettingsRepository.GetById(id);
+        }
+
+        public async Task<ProfileSettings> UpdateProfileSettings(ProfileSettings entity)
+        {
+            return await _profileSettingsRepository.Update(entity);
         }
 
         public async Task<string> SaveImage(IFormFile imageFile)
