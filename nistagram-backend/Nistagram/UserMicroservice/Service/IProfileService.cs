@@ -17,5 +17,16 @@ namespace UserMicroservice.Service
         Task<ProfileFollower> UnfollowAnotherProfile(int profileId, int id);
         Task<Profile> UpdateWithImage(Profile profile, IFormFile imageFile);
         public bool DoesUsernameExist(string username, IEnumerable<Profile> profiles);
+        Task<List<Profile>> GetMutedProfiles(int id);
+        Task<List<Profile>> GetBlockedProfiles(int id);
+        Task<ProfileMutedProfile> MuteProfile(int profileId, int id);
+        Task<ProfileMutedProfile> UnmuteProfile(int profileId, int id);
+        Task<ProfileBlockedProfile> BlockProfile(int profileId, int id);
+        Task<ProfileBlockedProfile> UnBlockProfile(int profileId, int id);
+        Task<List<Profile>> GetCloseFriends(int id);
+        Task<ProfileCloseFriend> AddCloseFriend(int profileId, int id);
+        Task<ProfileCloseFriend> RemoveCloseFriend(int profileId, int id);
+        Task<ProfileSettings> GetProfileSettingsById(int id);
+        Task<ProfileSettings> UpdateProfileSettings(ProfileSettings entity);
     }
 }
