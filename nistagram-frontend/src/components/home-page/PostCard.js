@@ -10,6 +10,7 @@ import { Button, Carousel, Modal } from "react-bootstrap";
 import NotificationService from "../../services/NotificationService";
 import ReactPlayer from "react-player";
 import "../../assets/styles/postCard.css";
+import InappropriateContentService from "../../services/InappropriateContentService";
 
 class PostCard extends Component {
   constructor(props) {
@@ -18,17 +19,22 @@ class PostCard extends Component {
     this.state = {
       isSaved: false,
       isActive: false,
+      reportComment: "",
+      reportPostId: 0,
       newComment: "",
       currentUser: null,
       open: false,
       posts: [],
       message: "",
+      type: "error",
       isOpenLikesModal: false,
       likes: [],
       isOpenDislikesModal: false,
       dislikes: [],
+      isOpenReportModal: false,
     };
     this.handleClick = this.handleClick.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   static getDerivedStateFromProps(props) {
@@ -61,6 +67,47 @@ class PostCard extends Component {
         isActive: false,
       });
     }
+  };
+
+  openReportModal = (postId) => {
+    this.setState({
+      isOpenReportModal: true,
+      reportPostId: postId,
+    });
+  };
+
+  closeReportModal = () =>
+    this.setState({
+      isOpenReportModal: false,
+      reportComment: "",
+      reportPostId: 0,
+    });
+
+  reportPost = () => {
+    this.setState({
+      isActive: false,
+    });
+    let resStatus;
+    InappropriateContentService.insertInappropriateContent(
+      this.state.reportComment,
+      true,
+      AuthService.getCurrentUser().id,
+      this.state.reportPostId,
+      ""
+    )
+      .then((res) => {
+        resStatus = res.status;
+        return res.json();
+      })
+      .then((result) => {
+        if (resStatus == 200) {
+          this.closeReportModal();
+          this.handleClickSnackBar("You sent report for post", "success");
+        } else if (resStatus == 400) {
+          this.closeReportModal();
+          this.handleClickSnackBar("You have already sent report", "error");
+        }
+      });
   };
 
   handleInputChange(event) {
@@ -98,7 +145,7 @@ class PostCard extends Component {
         });
       document.getElementById("newComment" + post.id).value = "";
     } else {
-      this.handleClickSnackBar("You have to enter a comment!");
+      this.handleClickSnackBar("You have to enter a comment!", "error");
     }
   };
 
@@ -139,7 +186,7 @@ class PostCard extends Component {
           }
         });
     } else {
-      this.handleClickSnackBar("You have to login first!");
+      this.handleClickSnackBar("You have to login first", "error");
     }
   };
 
@@ -178,7 +225,7 @@ class PostCard extends Component {
           }
         });
     } else {
-      this.handleClickSnackBar("You have to login first!");
+      this.handleClickSnackBar("You have to login first", "error");
     }
   };
 
@@ -208,14 +255,15 @@ class PostCard extends Component {
           }
         });
     } else {
-      this.handleClickSnackBar("You have to login first!");
+      this.handleClickSnackBar("You have to login first", "error");
     }
   };
 
-  handleClickSnackBar = (message) => {
+  handleClickSnackBar = (message, type) => {
     this.setState({
       open: true,
       message: message,
+      type: type,
     });
   };
 
@@ -245,10 +293,10 @@ class PostCard extends Component {
           likes: postLikes,
         });
       } else {
-        this.handleClickSnackBar("There are currently no likes!");
+        this.handleClickSnackBar("There are currently no likes!", "error");
       }
     } else {
-      this.handleClickSnackBar("You have to login first!");
+      this.handleClickSnackBar("You have to login first", "error");
     }
   };
 
@@ -268,10 +316,10 @@ class PostCard extends Component {
           dislikes: postDislikes,
         });
       } else {
-        this.handleClickSnackBar("There are currently no dislikes!");
+        this.handleClickSnackBar("There are currently no dislikes!", "error");
       }
     } else {
-      this.handleClickSnackBar("You have to login first!");
+      this.handleClickSnackBar("You have to login first", "error");
     }
   };
 
@@ -279,6 +327,15 @@ class PostCard extends Component {
     const dropdownRef = this.dropdownRef;
     const isActive = this.state.isActive;
     const posts = this.state.posts;
+
+    let reportCommentValidation;
+    if (this.state.reportComment == "") {
+      reportCommentValidation = (
+        <label style={{ color: "red", marginTop: "1px" }}>
+          Enter report comment
+        </label>
+      );
+    }
 
     const likesModalDialog = (
       <Modal
@@ -368,6 +425,59 @@ class PostCard extends Component {
       </Modal>
     );
 
+    const reportModalDialog = (
+      <Modal
+        show={this.state.isOpenReportModal}
+        onHide={this.closeReportModal}
+        style={{ marginTop: "155px", minHeight: "200px", overflow: "hidden" }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title style={{ marginLeft: "95px" }}>
+            Inappropriate content
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div
+            style={{
+              overflow: "hidden",
+              height: "150px",
+            }}
+          >
+            <form>
+              <div className="form-group">
+                <label style={{ marginLeft: "5px" }}>
+                  <b>Report comment</b>
+                </label>
+                <textarea
+                  name="reportComment"
+                  type="text"
+                  checked={this.state.reportComment}
+                  onChange={this.handleInputChange}
+                  rows="3"
+                  className="form-control"
+                  placeholder="Enter report comment"
+                  value={this.state.reportComment}
+                ></textarea>
+                {reportCommentValidation}
+              </div>
+            </form>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={this.closeReportModal}>
+            Cancel
+          </Button>
+          <Button
+            variant="success"
+            onClick={this.reportPost}
+            disabled={this.state.reportComment === ""}
+          >
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+
     const snackbar = (
       <Snackbar
         open={this.state.open}
@@ -375,7 +485,7 @@ class PostCard extends Component {
         onClose={this.handleCloseSnackBar}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert onClose={this.handleCloseSnackBar} severity="error">
+        <Alert onClose={this.handleCloseSnackBar} severity={this.state.type}>
           {this.state.message}
         </Alert>
       </Snackbar>
@@ -404,6 +514,7 @@ class PostCard extends Component {
         {snackbar}
         {likesModalDialog}
         {dislikesModalDialog}
+        {reportModalDialog}
         {(() => {
           if (Array.isArray(posts)) {
             if (posts.length > 0) {
@@ -517,7 +628,14 @@ class PostCard extends Component {
                                                   </Link>
                                                 </li>
                                                 <li>
-                                                  <a href="javascript:void(0)">
+                                                  <a
+                                                    href="javascript:void(0)"
+                                                    onClick={() =>
+                                                      this.openReportModal(
+                                                        post.id
+                                                      )
+                                                    }
+                                                  >
                                                     Report
                                                   </a>
                                                 </li>
@@ -741,7 +859,8 @@ class PostCard extends Component {
                                                 href="javascript:void(0)"
                                                 onClick={() => {
                                                   this.handleClickSnackBar(
-                                                    "There are currently no likes!"
+                                                    "There are currently no likes!",
+                                                    "error"
                                                   );
                                                 }}
                                                 style={{
@@ -827,7 +946,8 @@ class PostCard extends Component {
                                                 href="javascript:void(0)"
                                                 onClick={() => {
                                                   this.handleClickSnackBar(
-                                                    "There are currently no dislikes!"
+                                                    "There are currently no dislikes!",
+                                                    "error"
                                                   );
                                                 }}
                                                 style={{

@@ -9,6 +9,7 @@ namespace PostMicroservice.Service
     {
         Task<List<Post>> GetPostsForProfile(int profileId);
         Task<List<Post>> GetFavoritePostsForProfile(int profileId);
+        Task<List<Post>> GetLikedAndDislikedPosts(int profileId);
         Task<List<Post>> GetAllPublicPosts(int profileId);
         Task<List<Post>> GetPostsFromFollowedProfiles(int profileId);
         Task<string> SaveImage(IFormFile imageFile);

@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InappropriateContentMicroservice.Model
 {
     public class Post
     {
-        public List<string> Tags { get; set; }
-        public string Description { get; set; }
-        public DateTime PublishingDate { get; set; }
+        public int Id { get; set; }
+        public int OriginalId { get; set; }
+        public string ImageName { get; set; }
+        [NotMapped]
+        public IFormFile ImageFile { get; set; }
+        [NotMapped]
+        public string ImageSrc { get; set; }
 
         public Post()
         {

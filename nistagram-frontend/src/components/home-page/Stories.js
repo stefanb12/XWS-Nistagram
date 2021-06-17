@@ -17,11 +17,17 @@ import { Alert } from "@material-ui/lab";
 import moment from "moment";
 import { withRouter } from "react-router-dom";
 import ReactPlayer from "react-player";
+import InappropriateContentService from "../../services/InappropriateContentService";
 
 class Stories extends Component {
   constructor(props) {
     super(props);
+    this.dropdownRef = React.createRef();
     this.state = {
+      isActive: false,
+      reportComment: "",
+      reportStoryId: "",
+      newComment: "",
       isAddStoryDialogOpen: false,
       isShowStoryDialogOpen: false,
       storyImages: [],
@@ -41,7 +47,10 @@ class Stories extends Component {
       currentStoryNumber: 0,
       numberOfStoriesForCurrentProfile: 0,
       currentProfileImage: null,
+      forCloseFriends: false,
     };
+    this.handleClick = this.handleClick.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   componentWillMount() {
@@ -56,6 +65,23 @@ class Stories extends Component {
         });
       });
   }
+
+  handleClick() {
+    this.setState((state) => ({
+      isActive: !this.state.isActive,
+    }));
+  }
+
+  handleClickOutside = (event) => {
+    if (
+      this.dropdownRef.current &&
+      !this.dropdownRef.current.contains(event.target)
+    ) {
+      this.setState({
+        isActive: false,
+      });
+    }
+  };
 
   handleStoryAdding = () => {
     this.setState({
@@ -79,6 +105,7 @@ class Stories extends Component {
   closeShowStoryDialog = () => {
     this.setState({
       isShowStoryDialogOpen: false,
+      isActive: false,
     });
     clearTimeout(this.currentTimeout);
     this.setState({
@@ -234,15 +261,16 @@ class Stories extends Component {
       numberOfStoriesForCurrentProfile: profileStories.stories.length,
       currentProfileStories: profileStories,
       currentProfileImage: profileStories.imageSrc,
+      forCloseFriends: profileStories.stories[storyNumber].forCloseFriends,
     });
     if (profileStories.stories[storyNumber].imageSrc.endsWith(".mp4")) {
       this.setState({
-        timeCounterMultiplier : 3
-      })
+        timeCounterMultiplier: 3,
+      });
     } else {
       this.setState({
-        timeCounterMultiplier : 1
-      })
+        timeCounterMultiplier: 1,
+      });
     }
     this.currentStoryPublisher = profileStories.username;
     this.setState({
@@ -262,7 +290,76 @@ class Stories extends Component {
     }, 30);
   };
 
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value,
+    });
+  }
+
+  openReportModal = (storyId) => {
+    this.closeShowStoryDialog();
+    this.setState({
+      isOpenReportModal: true,
+      reportStoryId: storyId,
+    });
+  };
+
+  closeReportModal = () =>
+    this.setState({
+      isOpenReportModal: false,
+      reportComment: "",
+      reportStoryId: "",
+    });
+
+  reportStory = () => {
+    let resStatus;
+    InappropriateContentService.insertInappropriateContent(
+      this.state.reportComment,
+      false,
+      AuthService.getCurrentUser().id,
+      1,
+      this.state.reportStoryId
+    )
+      .then((res) => {
+        resStatus = res.status;
+        return res.json();
+      })
+      .then((result) => {
+        if (resStatus == 200) {
+          this.closeReportModal();
+          this.setState({
+            storyAddedSnackbarShown: true,
+            snackbarMessage: "You sent report for story",
+            snackbarSeverity: "success",
+          });
+        } else if (resStatus == 400) {
+          this.closeReportModal();
+          this.setState({
+            storyAddedSnackbarShown: true,
+            snackbarMessage: "You have already sent report",
+            snackbarSeverity: "error",
+          });
+        }
+      });
+  };
+
   render() {
+    const dropdownRef = this.dropdownRef;
+    const isActive = this.state.isActive;
+
+    let reportCommentValidation;
+    if (this.state.reportComment == "") {
+      reportCommentValidation = (
+        <label style={{ color: "red", marginTop: "1px" }}>
+          Enter report comment
+        </label>
+      );
+    }
+
     var renderStories = this.state.allProfileStories.map(
       (profileStories, key) => {
         return (
@@ -299,23 +396,55 @@ class Stories extends Component {
         style={{ marginTop: "25px" }}
       >
         <Modal.Header closeButton>
-          <img
-            onClick={() => {
-              this.props.history.push({
-                pathname: "/user/profile",
-                state: {
-                  profileId: this.state.currentStoryPublisherId,
-                },
-              });
-            }}
-            src={this.state.currentProfileImage}
-            class="img-fluid avatar avatar-medium shadow rounded-pill"
-            alt=""
-            style={{
-              width: "40px",
-              height: "40px",
-            }}
-          />
+          {(() => {
+            if (this.state.forCloseFriends) {
+              return (
+                <div>
+                  <img
+                    onClick={() => {
+                      this.props.history.push({
+                        pathname: "/user/profile",
+                        state: {
+                          profileId: this.state.currentStoryPublisherId,
+                        },
+                      });
+                    }}
+                    src={this.state.currentProfileImage}
+                    class="img-fluid avatar avatar-medium shadow rounded-pill"
+                    alt=""
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      border: "2px solid green",
+                    }}
+                  />
+                </div>
+              );
+            } else {
+              return (
+                <div>
+                  <img
+                    onClick={() => {
+                      this.props.history.push({
+                        pathname: "/user/profile",
+                        state: {
+                          profileId: this.state.currentStoryPublisherId,
+                        },
+                      });
+                    }}
+                    src={this.state.currentProfileImage}
+                    class="img-fluid avatar avatar-medium shadow rounded-pill"
+                    alt=""
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                    }}
+                  />
+                </div>
+              );
+            }
+          })()}
+
           <Modal.Title
             onClick={() => {
               this.props.history.push({
@@ -344,6 +473,59 @@ class Stories extends Component {
               )
             ).fromNow()}
           </small>
+          <div
+            class="dropdown"
+            ref={dropdownRef}
+            style={{ marginLeft: "120px", marginTop: "5px" }}
+          >
+            <button
+              class="btn p-0"
+              type="button"
+              id="dropdownMenuButton"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              onClick={this.handleClick}
+              className="menu-trigger"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="feather feather-more-horizontal icon-lg pb-3px"
+              >
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="19" cy="12" r="1"></circle>
+                <circle cx="5" cy="12" r="1"></circle>
+              </svg>
+            </button>
+            <nav className={`menu ${isActive ? "active" : "inactive"}`}>
+              <div>
+                <ul>
+                  <li>
+                    <a
+                      href="javascript:void(0)"
+                      onClick={() =>
+                        this.openReportModal(
+                          this.state.currentProfileStories.stories[
+                            this.state.currentStoryNumber
+                          ].id
+                        )
+                      }
+                    >
+                      Report
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+          </div>
         </Modal.Header>
         <Modal.Body
           style={{
@@ -353,34 +535,30 @@ class Stories extends Component {
           }}
         >
           <div>
-          {(() => {
-            if (this.state.currentStoryContent.endsWith(".mp4")) {
-              return (
+            {(() => {
+              if (this.state.currentStoryContent.endsWith(".mp4")) {
+                return (
                   <ReactPlayer
                     className="d-block w-100"
                     playing={true}
-                    url={
-                      this.state.currentStoryContent
-                    }
+                    url={this.state.currentStoryContent}
                     controls={false}
                   />
-              );
-            } else {
-              return(
-                <img
-              style={{
-                float: "left",
-                maxWidth: "320px",
-                maxHeight: "360px",
-              }}
-              src={this.state.currentStoryContent}
-              class="img-thumbnail"
-            />
-              );
-            }
-          })()}
-          
-            
+                );
+              } else {
+                return (
+                  <img
+                    style={{
+                      float: "left",
+                      maxWidth: "320px",
+                      maxHeight: "360px",
+                    }}
+                    src={this.state.currentStoryContent}
+                    class="img-thumbnail"
+                  />
+                );
+              }
+            })()}
           </div>
         </Modal.Body>
         <Modal.Footer
@@ -398,7 +576,11 @@ class Stories extends Component {
             {this.state.currentStoryNumber + 1} of{" "}
             {this.state.numberOfStoriesForCurrentProfile}
           </Typography>
-          <Slider value={this.state.timeCounter} step={1} max={180 * this.state.timeCounterMultiplier - 1}></Slider>
+          <Slider
+            value={this.state.timeCounter}
+            step={1}
+            max={180 * this.state.timeCounterMultiplier - 1}
+          ></Slider>
           <Button
             color="primary"
             onClick={() => {
@@ -525,6 +707,59 @@ class Stories extends Component {
       </Modal>
     );
 
+    const reportModalDialog = (
+      <Modal
+        show={this.state.isOpenReportModal}
+        onHide={this.closeReportModal}
+        style={{ marginTop: "155px", minHeight: "200px", overflow: "hidden" }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title style={{ marginLeft: "95px" }}>
+            Inappropriate content
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div
+            style={{
+              overflow: "hidden",
+              height: "150px",
+            }}
+          >
+            <form>
+              <div className="form-group">
+                <label style={{ marginLeft: "5px" }}>
+                  <b>Report comment</b>
+                </label>
+                <textarea
+                  name="reportComment"
+                  type="text"
+                  checked={this.state.reportComment}
+                  onChange={this.handleInputChange}
+                  rows="3"
+                  className="form-control"
+                  placeholder="Enter report comment"
+                  value={this.state.reportComment}
+                ></textarea>
+                {reportCommentValidation}
+              </div>
+            </form>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={this.closeReportModal}>
+            Cancel
+          </Button>
+          <Button
+            variant="success"
+            onClick={this.reportStory}
+            disabled={this.state.reportComment === ""}
+          >
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+
     var renderSnackbar = (
       <Snackbar
         anchorOrigin={{
@@ -546,6 +781,7 @@ class Stories extends Component {
         {renderSnackbar}
         {addStoryModalDialog}
         {showStoryModalDialog}
+        {reportModalDialog}
         <div class="container">
           <div
             class="page-inner"

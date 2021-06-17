@@ -5,6 +5,7 @@ import { Checkbox } from "@material-ui/core";
 import NotificationsOffIcon from "@material-ui/icons/NotificationsOff";
 import BlockIcon from "@material-ui/icons/Block";
 import AddCircleOutline from "@material-ui/icons/AddCircleOutline";
+import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import { Modal } from "react-bootstrap";
 import ProfileService from "../../services/ProfileService";
 import AuthService from "../../services/AuthService";
@@ -423,7 +424,7 @@ class UserPrivacy extends Component {
                       style={{ width: "26%" }}
                       onClick={() => this.removeCloseFriend(profile.id)}
                     >
-                      <AddCircleOutline style={{ marginRight: "3%" }} />
+                      <RemoveCircleOutlineIcon style={{ marginRight: "3%" }} />
                       Remove
                     </a>
                   ) : (

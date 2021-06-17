@@ -23,7 +23,7 @@ namespace StoryMicroservice.Model
 
         public List<Story> GetActiveStories()
         {
-            return GetAllStories().Where(s => s.PublishingDate.AddHours(24) > DateTime.Now).ToList();
+            return GetAllStories().Where(s => s.PublishingDate.AddHours(24) > DateTime.Now && s.PublishingDate < DateTime.Now).ToList();
         }
 
         public IEnumerable<Story> GetAllStories()

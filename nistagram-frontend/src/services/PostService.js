@@ -77,6 +77,10 @@ class PostService {
     return fetch(API_URL + "post/favorites/" + profileId);
   }
 
+  getLikedAndDislikedPosts(profileId) {
+    return fetch(API_URL + "post/likedAndDislikedPosts/" + profileId);
+  }
+
   getPostsFromFollowedProfiles(profileId) {
     return fetch(API_URL + "post/postsFromFollowedProfiles/" + profileId);
   }

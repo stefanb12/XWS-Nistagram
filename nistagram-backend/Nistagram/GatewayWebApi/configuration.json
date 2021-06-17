@@ -197,6 +197,25 @@
             }*/
     },
     {
+      "DownstreamPathTemplate": "/api/profileVerificationRequest",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55988
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/profileVerificationRequest",
+      "UpstreamHttpMethod": [ "POST" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
+    {
       "DownstreamPathTemplate": "/api/profile/{id}/muted",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -455,6 +474,25 @@
         }
       ],
       "UpstreamPathTemplate": "/gateway/post/favorites/{profileId}",
+      "UpstreamHttpMethod": [ "GET" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
+    {
+      "DownstreamPathTemplate": "/api/post/likedAndDislikedPosts/{profileId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55993
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/post/likedAndDislikedPosts/{profileId}",
       "UpstreamHttpMethod": [ "GET" ]
       /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
@@ -859,6 +897,27 @@
       ],
       "UpstreamPathTemplate": "/gateway/story/highlight/profile/{profileId}",
       "UpstreamHttpMethod": [ "GET" ]
+      /*"AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User"
+            }*/
+    },
+
+    // InappropriateContentMicroservice
+    {
+      "DownstreamPathTemplate": "/api/inappropriateContent",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55997
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/inappropriateContent",
+      "UpstreamHttpMethod": [ "POST" ]
       /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
