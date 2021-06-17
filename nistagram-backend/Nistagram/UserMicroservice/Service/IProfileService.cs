@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using ProfileMicroservice.Model;
+using ProfileMicroservice.Model.Enum;
 using ProfileMicroservice.Service;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace UserMicroservice.Service
         Task<ProfileFollower> UnfollowAnotherProfile(int profileId, int id);
         Task<Profile> UpdateWithImage(Profile profile, IFormFile imageFile);
         public bool DoesUsernameExist(string username, IEnumerable<Profile> profiles);
+        Task<Profile> SetProfileCategory(int profileId, UserCategory userCategory);
         Task<List<Profile>> GetMutedProfiles(int id);
         Task<List<Profile>> GetBlockedProfiles(int id);
         Task<ProfileMutedProfile> MuteProfile(int profileId, int id);

@@ -41,7 +41,15 @@ const Login = () => {
       .then((result) => {
         if (resStatus === 200) {
           localStorage.setItem("currentUser", JSON.stringify(result));
-          history.push("/user");
+          if (result.userRole === 0) {
+            history.push("/user");
+          } else if (result.userRole === 1) {
+            history.push("/user"); // agent
+          } else if (result.userRole === 2) {
+            history.push("/admin");
+          }
+          // history.push("/user");
+          console.log(result);
         } else if (resStatus === 401) {
           handleClick();
         }
