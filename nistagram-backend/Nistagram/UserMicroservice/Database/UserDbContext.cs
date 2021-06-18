@@ -50,7 +50,8 @@ namespace ProfileMicroservice.Database
                 new ProfileSettings { Id = 2, ReceiveAllMessages = true, TagAllowed = true },
                 new ProfileSettings { Id = 3, ReceiveAllMessages = true, TagAllowed = true },
                 new ProfileSettings { Id = 4, ReceiveAllMessages = true, TagAllowed = true },
-                new ProfileSettings { Id = 5, ReceiveAllMessages = true, TagAllowed = true }
+                new ProfileSettings { Id = 5, ReceiveAllMessages = true, TagAllowed = true },
+                new ProfileSettings { Id = 6, ReceiveAllMessages = true, TagAllowed = true }
             );
 
             modelBuilder.Entity<Profile>().HasData(
@@ -62,7 +63,7 @@ namespace ProfileMicroservice.Database
                 new Profile { Id = 5, Username = "majam", Password = "pass", FullName = "Maja Majkic", Email = "majam@gmail.com", MobilePhone = "+381 60 55 58 444", Gender = Gender.Female, DateOfBirth = new DateTime(1998, 07, 21), UserRole = UserMicroservice.Model.Enum.UserRole.Agent, IsPrivate = false, Website = "WebSite4", Biography = "bio", Deactivated = false, Category = UserCategory.Regular, ProfileSettingsId = 5, ImageName = "user5213352029.jpg" },
                 
                 // Admins
-                new Profile { Id = 6, Username = "admin", Password = "pass", FullName = "Aca Acic", Email = "acaa@gmail.com", MobilePhone = "+381 60 55 58 444", Gender = Gender.Male, DateOfBirth = new DateTime(1998, 07, 21), UserRole = UserMicroservice.Model.Enum.UserRole.Admin, ProfileSettingsId = 5}
+                new Profile { Id = 6, Username = "admin", Password = "pass", FullName = "Aca Acic", Email = "acaa@gmail.com", MobilePhone = "+381 60 55 58 444", Gender = Gender.Male, DateOfBirth = new DateTime(1998, 07, 21), UserRole = UserMicroservice.Model.Enum.UserRole.Admin, ProfileSettingsId = 6}
             );
 
             // Followers

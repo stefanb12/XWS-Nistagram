@@ -737,7 +737,8 @@ class PostCard extends Component {
                                     {(() => {
                                       if (
                                         post.description !== null &&
-                                        Array.isArray(post.tags)
+                                        Array.isArray(post.tags) &&
+                                        post.tags.length > 0
                                       ) {
                                         let tags = "";
                                         {
@@ -760,7 +761,8 @@ class PostCard extends Component {
                                         );
                                       } else if (
                                         post.description !== null &&
-                                        !Array.isArray(post.tags)
+                                        Array.isArray(post.tags) &&
+                                        post.tags.length === 0
                                       ) {
                                         return (
                                           <div>
@@ -772,7 +774,8 @@ class PostCard extends Component {
                                         );
                                       } else if (
                                         post.description === null &&
-                                        Array.isArray(post.tags)
+                                        Array.isArray(post.tags) &&
+                                        post.tags.length > 0
                                       ) {
                                         let tags = "";
                                         {
@@ -794,7 +797,7 @@ class PostCard extends Component {
 
                                     <div class="timeline-options">
                                       {(() => {
-                                        if (post.likes !== null) {
+                                        if (post.likes.length > 0) {
                                           var classForLike = "fa fa-heart-o";
                                           if (this.state.currentUser != null) {
                                             var index = post.likes.findIndex(
@@ -875,7 +878,7 @@ class PostCard extends Component {
                                       })()}
 
                                       {(() => {
-                                        if (post.dislikes !== null) {
+                                        if (post.dislikes.length > 0) {
                                           var classForDislike =
                                             "fa fa-thumbs-o-down";
 
@@ -962,7 +965,7 @@ class PostCard extends Component {
                                       })()}
 
                                       {(() => {
-                                        if (post.comments !== null) {
+                                        if (post.comments.length > 0) {
                                           return (
                                             <div>
                                               <a>
@@ -1051,8 +1054,8 @@ class PostCard extends Component {
                                     <div class="comments">
                                       {(() => {
                                         if (
-                                          Array.isArray(post.comments) ||
-                                          post.comments !== null
+                                          Array.isArray(post.comments) &&
+                                          post.comments.length > 0
                                         ) {
                                           return (
                                             <div>
