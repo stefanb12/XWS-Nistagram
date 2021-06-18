@@ -19,6 +19,7 @@ import {
   ExitToApp,
   FavoriteBorder,
   Home,
+  HomeOutlined,
   Instagram,
   SettingsOutlined,
 } from "@material-ui/icons";
@@ -44,6 +45,9 @@ import moment from "moment";
 import PostService from "../services/PostService";
 import hash from "../assets/images/hash.svg";
 import ExploreOutlinedIcon from "@material-ui/icons/ExploreOutlined";
+import ExploreIcon from "@material-ui/icons/Explore";
+import ChatOutlinedIcon from "@material-ui/icons/ChatOutlined";
+import ChatIcon from "@material-ui/icons/Chat";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -179,6 +183,9 @@ export default function UserNavbar() {
   const [publicPosts, setPublicPosts] = React.useState([]);
   const [searchData, setSearchData] = React.useState([]);
   const [searchedPosts, setsearchedPosts] = React.useState([]);
+  const [exploreIcon, setExploreIcon] = React.useState(<ExploreOutlinedIcon />);
+  const [homeIcon, setHomeIcon] = React.useState(<Home />);
+  const [chatIcon, setChatIcon] = React.useState(<ChatOutlinedIcon />);
 
   useEffect(async () => {
     await ProfileService.getAllUsers()
@@ -259,10 +266,16 @@ export default function UserNavbar() {
   };
 
   const navigateToHome = () => {
+    setExploreIcon(<ExploreOutlinedIcon />);
+    setHomeIcon(<Home />);
+    setChatIcon(<ChatOutlinedIcon />);
     history.push("/user");
   };
 
   const navigateToProfile = () => {
+    setExploreIcon(<ExploreOutlinedIcon />);
+    setHomeIcon(<HomeOutlined />);
+    setChatIcon(<ChatOutlinedIcon />);
     history.push({
       pathname: "/user/profile",
       state: { profileId: AuthService.getCurrentUser().id },
@@ -271,6 +284,9 @@ export default function UserNavbar() {
   };
 
   const navigateToSettings = () => {
+    setExploreIcon(<ExploreOutlinedIcon />);
+    setHomeIcon(<HomeOutlined />);
+    setChatIcon(<ChatOutlinedIcon />);
     history.push("/user/settings");
     handleMenuClose();
   };
@@ -282,6 +298,9 @@ export default function UserNavbar() {
   };
 
   const handleExploreClick = () => {
+    setExploreIcon(<ExploreIcon />);
+    setHomeIcon(<HomeOutlined />);
+    setChatIcon(<ChatOutlinedIcon />);
     history.push("/user/explore");
   };
 
@@ -848,18 +867,14 @@ export default function UserNavbar() {
               color="inherit"
               onClick={navigateToHome}
             >
-              <Badge color="secondary">
-                <Home />
-              </Badge>
+              <Badge color="secondary">{homeIcon}</Badge>
             </IconButton>
             <IconButton
               aria-label="show 12 new notifications"
               color="inherit"
               onClick={handleExploreClick}
             >
-              <Badge color="secondary">
-                <ExploreOutlinedIcon />
-              </Badge>
+              <Badge color="secondary">{exploreIcon}</Badge>
             </IconButton>
             <IconButton
               aria-label="show 12 new notifications"
@@ -874,12 +889,13 @@ export default function UserNavbar() {
               </Badge>
             </IconButton>
             <IconButton aria-label="show 12 new notifications" color="inherit">
-              <Badge color="secondary">
-                <Telegram
-                  onClick={() =>
-                    handleAlertClick("Chat is not available yet", "info")
-                  }
-                />
+              <Badge
+                color="secondary"
+                onClick={() =>
+                  handleAlertClick("Chat is not available yet", "info")
+                }
+              >
+                {chatIcon}
               </Badge>
             </IconButton>
             <IconButton
