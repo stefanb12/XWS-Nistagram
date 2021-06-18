@@ -15,6 +15,7 @@ class ProfileVerificationRequestService {
     const requestOptions = {
       method: "POST",
       body: formData,
+      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
     };
 
     return fetch(API_URL + "profileVerificationRequest", requestOptions);
@@ -23,6 +24,7 @@ class ProfileVerificationRequestService {
   acceptRequest(requestId) {
     const requestOptions = {
       method: "PUT",
+      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
     };
 
     return fetch(
@@ -34,6 +36,7 @@ class ProfileVerificationRequestService {
   rejectRequest(requestId) {
     const requestOptions = {
       method: "PUT",
+      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
     };
 
     return fetch(
@@ -43,7 +46,12 @@ class ProfileVerificationRequestService {
   }
 
   getAllProfileVerificationRequests() {
-    return fetch(API_URL + "profileVerificationRequest/getAll");
+    const requestOptions = {
+      method: "GET",
+      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+    };
+
+    return fetch(API_URL + "profileVerificationRequest/getAll", requestOptions);
   }
 }
 export default new ProfileVerificationRequestService();

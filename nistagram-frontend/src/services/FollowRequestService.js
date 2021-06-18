@@ -1,10 +1,13 @@
+import AuthService from "./AuthService";
+
 const API_URL = "http://localhost:58809/gateway/";
 
 class FollowRequestService {
   sendFollowRequest(receiverId, senderId) {
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json",
+                 "Authorization" : "Bearer " + AuthService.getUserToken() },
       body: JSON.stringify({ receiverId, senderId }),
     };
 
@@ -14,7 +17,8 @@ class FollowRequestService {
   deleteFollowRequest(receiverId, senderId) {
     const requestOptions = {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json",
+                 "Authorization" : "Bearer " + AuthService.getUserToken() },
       body: JSON.stringify({ receiverId, senderId }),
     };
 
@@ -22,7 +26,12 @@ class FollowRequestService {
   }
 
   getFollowRequest(receiverId, senderId) {
-    return fetch(API_URL + "followRequest/" + receiverId + "/" + senderId);
+    const requestOptions = {
+      method: "GET",
+      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+    };
+
+    return fetch(API_URL + "followRequest/" + receiverId + "/" + senderId, requestOptions);
   }
 }
 

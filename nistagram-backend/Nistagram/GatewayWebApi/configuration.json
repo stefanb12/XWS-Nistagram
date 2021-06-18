@@ -26,6 +26,18 @@
             "UpstreamHttpMethod": [ "POST" ]
         },
         {
+            "DownstreamPathTemplate": "/api/profile/getAll",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/getAll",
+            "UpstreamHttpMethod": [ "GET" ]
+        },
+        {
             "DownstreamPathTemplate": "/api/profile/{id}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
@@ -35,14 +47,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/{id}",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
-              "AuthenticationProviderKey": "Key",
-              "AllowedScopes": []
-          },
-          "RouteClaimsRequirement": {
-              "UserRole": "User"
-          }*/
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profile/{id}/followers",
@@ -54,14 +66,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/{id}/followers",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profile/{id}/following",
@@ -73,14 +85,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/{id}/following",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profile/{profileId}/follow/{id}",
@@ -92,14 +104,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/{profileId}/follow/{id}",
-            "UpstreamHttpMethod": [ "PUT" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profile/{profileId}/unfollow/{id}",
@@ -111,14 +123,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/{profileId}/unfollow/{id}",
-            "UpstreamHttpMethod": [ "PUT" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/followRequest",
@@ -130,14 +142,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/followRequest",
-            "UpstreamHttpMethod": [ "POST", "DELETE" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "POST", "DELETE" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/followRequest/{receiverId}/{senderId}",
@@ -149,14 +161,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/followRequest/{receiverId}/{senderId}",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profile/update",
@@ -168,14 +180,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/update",
-            "UpstreamHttpMethod": [ "PUT" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profile/{id}/profileForUpdating",
@@ -187,14 +199,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/{id}/profileForUpdating",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profileVerificationRequest",
@@ -206,14 +218,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profileVerificationRequest",
-            "UpstreamHttpMethod": [ "POST" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profileVerificationRequest/getAll",
@@ -225,14 +237,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profileVerificationRequest/getAll",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "Admin"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profileVerificationRequest/accept/{requestId}",
@@ -244,14 +256,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profileVerificationRequest/accept/{requestId}",
-            "UpstreamHttpMethod": [ "PUT" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "Admin"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profileVerificationRequest/reject/{requestId}",
@@ -263,14 +275,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profileVerificationRequest/reject/{requestId}",
-            "UpstreamHttpMethod": [ "PUT" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "Admin"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profile/{id}/muted",
@@ -282,14 +294,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/{id}/muted",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profile/{profileId}/mute/{id}",
@@ -301,14 +313,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/{profileId}/mute/{id}",
-            "UpstreamHttpMethod": [ "PUT" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profile/{profileId}/unmute/{id}",
@@ -320,14 +332,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/{profileId}/unmute/{id}",
-            "UpstreamHttpMethod": [ "PUT" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profile/{id}/blocked",
@@ -339,14 +351,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/{id}/blocked",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profile/{profileId}/block/{id}",
@@ -358,14 +370,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/{profileId}/block/{id}",
-            "UpstreamHttpMethod": [ "PUT" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profile/{profileId}/unblock/{id}",
@@ -377,14 +389,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/{profileId}/unblock/{id}",
-            "UpstreamHttpMethod": [ "PUT" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profile/{id}/closeFriends",
@@ -396,14 +408,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/{id}/closeFriends",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profile/{profileId}/addCloseFriends/{id}",
@@ -415,14 +427,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/{profileId}/addCloseFriends/{id}",
-            "UpstreamHttpMethod": [ "PUT" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profile/{profileId}/removeCloseFriends/{id}",
@@ -434,14 +446,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/{profileId}/removeCloseFriends/{id}",
-            "UpstreamHttpMethod": [ "PUT" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profile/{id}/getProfilePrivacy",
@@ -453,14 +465,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/{id}/getProfilePrivacy",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/profile/updateProfilePrivacy",
@@ -472,14 +484,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/updateProfilePrivacy",
-            "UpstreamHttpMethod": [ "PUT" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
 
         // PostMicroservice
@@ -493,14 +505,26 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/post",
-            "UpstreamHttpMethod": [ "POST", "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/post",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post",
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/post/profile/{profileId}",
@@ -512,14 +536,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/post/profile/{profileId}",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/post/favorites/{profileId}",
@@ -531,14 +555,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/post/favorites/{profileId}",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/post/likedAndDislikedPosts/{profileId}",
@@ -550,14 +574,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/post/likedAndDislikedPosts/{profileId}",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/post/public/{profileId}",
@@ -570,13 +594,6 @@
             ],
             "UpstreamPathTemplate": "/gateway/post/public/{profileId}",
             "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
-                "AuthenticationProviderKey": "Key",
-                "AllowedScopes": []
-            },
-            "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
         },
         {
             "DownstreamPathTemplate": "/api/post/postsFromFollowedProfiles/{profileId}",
@@ -588,14 +605,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/post/postsFromFollowedProfiles/{profileId}",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/post/{id}",
@@ -607,14 +624,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/post/{id}",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/post/newComment",
@@ -626,14 +643,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/post/newComment",
-            "UpstreamHttpMethod": [ "PUT" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/post/like",
@@ -645,14 +662,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/post/like",
-            "UpstreamHttpMethod": [ "PUT" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/post/dislike",
@@ -664,14 +681,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/post/dislike",
-            "UpstreamHttpMethod": [ "PUT" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/post/favorite",
@@ -683,14 +700,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/post/favorite",
-            "UpstreamHttpMethod": [ "PUT" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/post/search/{searchParam}",
@@ -702,14 +719,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/post/search/{searchParam}",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
 
         // NotificationMicroservice
@@ -723,14 +740,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/notification/like",
-            "UpstreamHttpMethod": [ "POST" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/notification/dislike",
@@ -742,14 +759,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/notification/dislike",
-            "UpstreamHttpMethod": [ "POST" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/notification/comment",
@@ -761,14 +778,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/notification/comment",
-            "UpstreamHttpMethod": [ "POST" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/notification/follow",
@@ -780,14 +797,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/notification/follow",
-            "UpstreamHttpMethod": [ "POST" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/notification/followRequest",
@@ -799,14 +816,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/notification/followRequest",
-            "UpstreamHttpMethod": [ "POST", "DELETE" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "POST", "DELETE" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/notification/profile/{id}",
@@ -818,14 +835,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/notification/profile/{id}",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/notification/seen/{profileId}",
@@ -837,14 +854,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/notification/seen/{profileId}",
-            "UpstreamHttpMethod": [ "PUT" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
 
         //StoryMicroservice
@@ -858,14 +875,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/story",
-            "UpstreamHttpMethod": [ "POST" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/story/active/profile/{profileId}",
@@ -877,14 +894,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/story/active/profile/{profileId}",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/story/profile/{profileId}",
@@ -896,14 +913,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/story/profile/{profileId}",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/story/getAllProfileStories/{id}",
@@ -915,14 +932,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/story/getAllProfileStories/{id}",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/story/highlight",
@@ -934,14 +951,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/story/highlight",
-            "UpstreamHttpMethod": [ "POST" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
         {
             "DownstreamPathTemplate": "/api/story/highlight/profile/{profileId}",
@@ -953,14 +970,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/story/highlight/profile/{profileId}",
-            "UpstreamHttpMethod": [ "GET" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         },
 
         // InappropriateContentMicroservice
@@ -974,14 +991,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/inappropriateContent",
-            "UpstreamHttpMethod": [ "POST" ]
-            /*"AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User"
-            }*/
+                "UserRole": "User , Agent"
+            }
         }
 
     ],
