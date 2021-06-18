@@ -14,6 +14,7 @@ import React from "react";
 import AuthService from "../services/AuthService";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
+import jwt_decode from "jwt-decode";
 
 const Login = () => {
   const history = useHistory();
@@ -40,7 +41,12 @@ const Login = () => {
       })
       .then((result) => {
         if (resStatus === 200) {
+          var decodedToken = jwt_decode(result.token);
+          var userRole = decodedToken.UserRole;
+
           localStorage.setItem("currentUser", JSON.stringify(result));
+          localStorage.setItem("userRole", userRole);
+
           if (result.userRole === 0) {
             history.push("/user");
           } else if (result.userRole === 1) {
@@ -48,8 +54,6 @@ const Login = () => {
           } else if (result.userRole === 2) {
             history.push("/admin/profileVerificationRequests");
           }
-          // history.push("/user");
-          console.log(result);
         } else if (resStatus === 401) {
           handleClick();
         }
