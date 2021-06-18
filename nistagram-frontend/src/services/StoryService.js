@@ -16,6 +16,7 @@ class StoryService {
 
     const requestOptions = {
       method: "POST",
+      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() },
       body: formData,
     };
 
@@ -25,7 +26,8 @@ class StoryService {
   addStoryHighlight(name, publisherId, storiesIds) {
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json",
+                 "Authorization" : "Bearer " + AuthService.getUserToken() },
       body: JSON.stringify({ name, publisherId, storiesIds }),
     };
 
@@ -33,20 +35,40 @@ class StoryService {
   }
 
   getStoryHighlightsForProfile(profileId) {
-    return fetch(API_URL + "story/highlight/profile/" + profileId);
+    const requestOptions = {
+      method: "GET",
+      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+    };
+    
+    return fetch(API_URL + "story/highlight/profile/" + profileId, requestOptions);
   }
 
   getActiveStoriesForProfile(profileId) {
-    return fetch(API_URL + "story/active/profile/" + profileId);
+    const requestOptions = {
+      method: "GET",
+      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+    };
+
+    return fetch(API_URL + "story/active/profile/" + profileId, requestOptions);
   }
 
   getStoriesForProfile(profileId) {
-    return fetch(API_URL + "story/profile/" + profileId);
+    const requestOptions = {
+      method: "GET",
+      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+    };
+
+    return fetch(API_URL + "story/profile/" + profileId, requestOptions);
   }
 
   getAllStories() {
     let profile = AuthService.getCurrentUser();
-    return fetch(API_URL + "story/getAllProfileStories/" + profile.id);
+    const requestOptions = {
+      method: "GET",
+      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+    };
+
+    return fetch(API_URL + "story/getAllProfileStories/" + profile.id, requestOptions);
   }
 }
 
