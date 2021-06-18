@@ -2,9 +2,9 @@ import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import NotFound from "../pages/NotFound";
 import AdminNavbar from "./AdminNavbar";
-import UserProfileSettings from "../pages/UserProfileSettings";
-import UserHomePage from "../pages/UserHomePage";
 import ProfileVerificationRequest from "../pages/ProfileVerificationRequest";
+import InappropriateContentRequests from "../pages/InappropriateContentRequests";
+import AgentRequests from "../pages/AgentRequests";
 
 const MainLayoutRoot = {
   height: "100%",
@@ -42,16 +42,18 @@ export default function AdminLayout({ routes }) {
               <Route path="/admin/profileVerificationRequests">
                 <ProfileVerificationRequest />
               </Route>
-              <Route path="/admin/requestsForInappropriateContent">
-                {/* <UserSearchResultPage /> */}
+              <Route path="/admin/inappropriateContentRequests">
+                <InappropriateContentRequests />
               </Route>
-              <Route path="/admin/requestsForAgent">
-                <NotFound />
+              <Route path="/admin/agentRequests">
+                <AgentRequests />
               </Route>
               <Route path="/admin/*">
                 <NotFound />
               </Route>
-              <Route path="/admin">{/* <UserProfileSettings /> */}</Route>
+              <Route path="/admin">
+                <Redirect to="/admin/profileVerificationRequests" />
+              </Route>
               <Route path="/admin/404">
                 <NotFound />
               </Route>

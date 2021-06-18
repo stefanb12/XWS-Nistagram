@@ -46,7 +46,7 @@ const Login = () => {
           } else if (result.userRole === 1) {
             history.push("/user"); // agent
           } else if (result.userRole === 2) {
-            history.push("/admin");
+            history.push("/admin/profileVerificationRequests");
           }
           // history.push("/user");
           console.log(result);

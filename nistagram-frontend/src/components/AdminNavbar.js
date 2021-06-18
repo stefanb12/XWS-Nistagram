@@ -15,10 +15,14 @@ import { Instagram } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import BusinessCenterOutlinedIcon from "@material-ui/icons/BusinessCenterOutlined";
+import BusinessCenterIcon from "@material-ui/icons/BusinessCenter";
 import ReportOutlinedIcon from "@material-ui/icons/ReportOutlined";
+import ReportIcon from "@material-ui/icons/Report";
 import { Tooltip } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import AuthService from "../services/AuthService";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -80,6 +84,13 @@ export default function AdminNavbar() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const [profileVerificationRequestIcon, setProfileVerificationRequest] =
+    React.useState(<CheckCircleIcon />);
+  const [inappropriateContentRequestsIcon, setInappropriateContentRequests] =
+    React.useState(<ReportOutlinedIcon />);
+  const [agentRequestsIcon, setAgentRequests] = React.useState(
+    <BusinessCenterOutlinedIcon />
+  );
 
   useEffect(() => {}, []);
 
@@ -100,20 +111,31 @@ export default function AdminNavbar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const navigateToLogin = () => {
+  const navigateToProfileVerificationRequests = () => {
+    setAgentRequests(<BusinessCenterOutlinedIcon />);
+    setProfileVerificationRequest(<CheckCircleIcon />);
+    setInappropriateContentRequests(<ReportOutlinedIcon />);
+    history.push("/admin/profileVerificationRequests");
+  };
+
+  const navigateToRequestsForInappropriateContent = () => {
+    setAgentRequests(<BusinessCenterOutlinedIcon />);
+    setProfileVerificationRequest(<CheckCircleOutlineIcon />);
+    setInappropriateContentRequests(<ReportIcon />);
+    history.push("/admin/inappropriateContentRequests");
+  };
+
+  const navigateToRequestsForAgent = () => {
+    setAgentRequests(<BusinessCenterIcon />);
+    setProfileVerificationRequest(<CheckCircleOutlineIcon />);
+    setInappropriateContentRequests(<ReportOutlinedIcon />);
+    history.push("/admin/agentRequests");
+  };
+
+  const handleLogout = () => {
+    AuthService.logout();
     history.push("/app/login");
-  };
-
-  const navigateToRegister = () => {
-    history.push("/app/register");
-  };
-
-  const navigateToHome = () => {
-    history.push("/app");
-  };
-
-  const handleExploreClick = () => {
-    history.push("/user/explore");
+    handleMenuClose();
   };
 
   const menuId = "primary-search-account-menu";
@@ -183,10 +205,10 @@ export default function AdminNavbar() {
             color="inherit"
             aria-label="open drawer"
           >
-            <Instagram onClick={navigateToHome} />
+            <Instagram onClick={navigateToProfileVerificationRequests} />
           </IconButton>
           <Typography
-            onClick={navigateToHome}
+            onClick={navigateToProfileVerificationRequests}
             className={classes.title}
             variant="h6"
             noWrap
@@ -196,14 +218,25 @@ export default function AdminNavbar() {
 
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
+            <MyTooltip title="Verification requests">
+              <IconButton
+                aria-label="Verification requests"
+                color="inherit"
+                onClick={navigateToProfileVerificationRequests}
+              >
+                <Badge color="secondary">
+                  {profileVerificationRequestIcon}
+                </Badge>
+              </IconButton>
+            </MyTooltip>
             <MyTooltip title="Inappropriate content requests">
               <IconButton
                 aria-label="Inappropriate content requests"
                 color="inherit"
-                onClick={handleExploreClick}
+                onClick={navigateToRequestsForInappropriateContent}
               >
                 <Badge color="secondary">
-                  <ReportOutlinedIcon />
+                  {inappropriateContentRequestsIcon}
                 </Badge>
               </IconButton>
             </MyTooltip>
@@ -211,68 +244,22 @@ export default function AdminNavbar() {
               <IconButton
                 aria-label="Agent requests"
                 color="inherit"
-                onClick={handleExploreClick}
+                onClick={navigateToRequestsForAgent}
               >
-                <Badge color="secondary">
-                  <BusinessCenterOutlinedIcon />
-                </Badge>
-              </IconButton>
-            </MyTooltip>
-            <MyTooltip title="Verification requests">
-              <IconButton
-                aria-label="Verification requests"
-                color="inherit"
-                onClick={handleExploreClick}
-              >
-                <Badge color="secondary">
-                  <CheckCircleOutlineIcon />
-                </Badge>
+                <Badge color="secondary">{agentRequestsIcon}</Badge>
               </IconButton>
             </MyTooltip>
             <MyTooltip title="Log out">
               <IconButton
                 aria-label="log out"
                 color="inherit"
-                onClick={handleExploreClick}
+                onClick={handleLogout}
               >
                 <Badge color="secondary">
                   <ExitToAppIcon />
                 </Badge>
               </IconButton>
             </MyTooltip>
-
-            {/* <Button
-              variant="contained"
-              color="primary"
-              onClick={navigateToLogin}
-              className={classes.buttonMargin}
-            >
-              Inappropriate content requests
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={navigateToLogin}
-              className={classes.buttonMargin}
-            >
-              Verification requests
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={navigateToLogin}
-              className={classes.buttonMargin}
-            >
-              Agent requests
-            </Button> */}
-            {/* <Button
-              variant="contained"
-              color="primary"
-              onClick={navigateToRegister}
-              className={classes.buttonMargin}
-            >
-              Log out
-            </Button> */}
           </div>
           <div className={classes.sectionMobile}>
             <IconButton
