@@ -9,18 +9,19 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace PostMicroservice.Messaging
 {
-    public class ProfileUpdatedMessageReceiver : BackgroundService, IMessageReceiver
+    public class ProfileUpdatedMessageReceiver : IHostedService, IMessageReceiver
     {
-        private IProfileService _profileService;
         private IConnection _connection;
         private IModel _channel;
+        public IServiceProvider Services;
 
-        public ProfileUpdatedMessageReceiver(IProfileService profileService)
+        public ProfileUpdatedMessageReceiver(IServiceProvider services)
         {
-            _profileService = profileService;
+            Services = services;
             InitRabbitMQ();
         }
 
@@ -54,7 +55,6 @@ namespace PostMicroservice.Messaging
 
         public void ReceiveMessage()
         {
-
             var consumer = new EventingBasicConsumer(_channel);
             consumer.Received += (model, ea) =>
             {
@@ -63,14 +63,22 @@ namespace PostMicroservice.Messaging
                 Console.WriteLine(" [x] Received {0}", message);
 
                 var data = JObject.Parse(message);
-                _profileService.Update(new Profile()
+
+                using (var scope = Services.CreateScope())
                 {
-                    OriginalId = data["id"].Value<int>(),
-                    Username = data["username"].Value<string>(),
-                    IsPrivate = data["isPrivate"].Value<bool>(),
-                    //Following = data["following"].ToObject<List<int>>(),
-                    ImageName = data["profileImage"].Value<string>()
-                });
+                    var scopedProcessingService =
+                        scope.ServiceProvider
+                            .GetRequiredService<IProfileService>();
+
+                    scopedProcessingService.Update(new Profile()
+                    {
+                        OriginalId = data["id"].Value<int>(),
+                        Username = data["username"].Value<string>(),
+                        IsPrivate = data["isPrivate"].Value<bool>(),
+                        //Following = data["following"].ToObject<List<int>>(),
+                        ImageName = data["profileImage"].Value<string>()
+                    });
+                }
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };
@@ -80,11 +88,16 @@ namespace PostMicroservice.Messaging
                                   consumer: consumer);
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
-            stoppingToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
             ReceiveMessage();
             return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

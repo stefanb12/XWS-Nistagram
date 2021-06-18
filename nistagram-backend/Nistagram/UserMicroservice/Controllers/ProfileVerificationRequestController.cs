@@ -48,9 +48,9 @@ namespace UserMicroservice.Controllers
 
             profileVerificationRequest.Processed = true;
             profileVerificationRequest.Accepted = true;
-            await _profileService.SetProfileCategory(profileVerificationRequest.ProfileId, profileVerificationRequest.Category);
 
             ProfileVerificationRequestDto dto = ProfileVerificationRequestMapper.ProfileVerificationRequestToProfileVerificationRequestDto(await _profileVerificationRequestService.Update(profileVerificationRequest));
+            await _profileService.SetProfileCategory(profileVerificationRequest.ProfileId, profileVerificationRequest.Category);
             return Ok(dto);
         }
 
