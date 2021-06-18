@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Linq;
 using NotificationMicroservice.Model;
 using NotificationMicroservice.Service;
@@ -11,15 +12,15 @@ using System.Threading.Tasks;
 
 namespace NotificationMicroservice.Messaging
 {
-    public class PostCreatedMessageReceiver : BackgroundService, IMessageReceiver
+    public class PostCreatedMessageReceiver : IHostedService, IMessageReceiver
     {
-        private IPostService _postService;
         private IConnection _connection;
         private IModel _channel;
+        public IServiceProvider Services;
 
-        public PostCreatedMessageReceiver(IPostService postService)
+        public PostCreatedMessageReceiver(IServiceProvider services)
         {
-            _postService = postService;
+            Services = services;
             InitRabbitMQ();
         }
 
@@ -62,11 +63,18 @@ namespace NotificationMicroservice.Messaging
                 Console.WriteLine(" [x] Received {0}", message);
 
                 var data = JObject.Parse(message);
-                _postService.Insert(new Post()
+                using (var scope = Services.CreateScope())
                 {
-                    OriginalId = data["originalId"].Value<int>(),
-                    ImageName = data["image"].Value<string>()
-                });
+                    var scopedProcessingService =
+                        scope.ServiceProvider
+                            .GetRequiredService<IPostService>();
+
+                    scopedProcessingService.Insert(new Post()
+                    {
+                        OriginalId = data["originalId"].Value<int>(),
+                        ImageName = data["image"].Value<string>()
+                    });
+                }
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };
@@ -76,11 +84,16 @@ namespace NotificationMicroservice.Messaging
                                   consumer: consumer);
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
-            stoppingToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
             ReceiveMessage();
             return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

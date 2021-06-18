@@ -36,15 +36,15 @@ namespace InappropriateContentMicroservice
             services.AddDbContext<InappropriateContentDbContext>(options =>
                options.UseMySql(CreateConnectionStringFromEnvironment()).UseLazyLoadingProxies(), ServiceLifetime.Transient);
 
-            services.AddSingleton<IInappropriateContentService, InappropriateContentService>(service =>
-                    new InappropriateContentService(new InappropriateContentRepository(new InappropriateContentDbContext()),
-                    new StoryService(new StoryRepository(new InappropriateContentDbContext()))));
-            services.AddSingleton<IProfileService, ProfileService>(service =>
-                    new ProfileService(new ProfileRepository(new InappropriateContentDbContext())));
-            services.AddSingleton<IPostService, PostService>(service =>
-                    new PostService(new PostRepository(new InappropriateContentDbContext())));
-            services.AddSingleton<IStoryService, StoryService>(service =>
-                    new StoryService(new StoryRepository(new InappropriateContentDbContext())));
+            services.AddScoped<IInappropriateContentRepository, InappropriateContentRepository>();
+            services.AddScoped<IProfileRepository, ProfileRepository>();
+            services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<IStoryRepository, StoryRepository>();
+
+            services.AddScoped<IInappropriateContentService, InappropriateContentService>();
+            services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IPostService, PostService>();
+            services.AddScoped<IStoryService, StoryService>();
         }
 
         private string CreateConnectionStringFromEnvironment()

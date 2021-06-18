@@ -35,17 +35,18 @@ namespace NotificationMicroservice
             var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
             if (hostName == "rabbitmq")
             {
-                services.AddSingleton<IMessageReceiver, PostCreatedMessageReceiver>();
-                services.AddSingleton<IMessageReceiver, ProfileCreatedMessageReceiver>();
-                services.AddSingleton<IMessageReceiver, ProfileUpdatedMessageReceiver>();
+                services.AddScoped<IMessageReceiver, PostCreatedMessageReceiver>();
+                services.AddScoped<IMessageReceiver, ProfileCreatedMessageReceiver>();
+                services.AddScoped<IMessageReceiver, ProfileUpdatedMessageReceiver>();
             }
 
-            services.AddSingleton<INotificationService, NotificationService>(service =>
-                    new NotificationService(new NotificationRepository(new NotificationDbContext())));
-            services.AddSingleton<IProfileService, ProfileService>(service =>
-                    new ProfileService(new ProfileRepository(new NotificationDbContext())));
-            services.AddSingleton<IPostService, PostService>(service =>
-                    new PostService(new PostRepository(new NotificationDbContext())));
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IProfileRepository, ProfileRepository>();
+            services.AddScoped<IPostRepository, PostRepository>();
+
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IPostService, PostService>();
 
             string hostedService = Environment.GetEnvironmentVariable("HOSTED_SERVICE") ?? "true";
             if (hostedService == "true")

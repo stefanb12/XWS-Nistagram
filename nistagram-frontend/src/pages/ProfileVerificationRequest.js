@@ -137,7 +137,7 @@ export default class ProfileVerificationRequest extends Component {
                         title=""
                         data-original-title="Edit"
                       >
-                        <i class="fas fa-check"></i>
+                        <i class="fa fa-check"></i>
                       </a>
                       <a
                         href="javascript:void(0)"
@@ -150,7 +150,7 @@ export default class ProfileVerificationRequest extends Component {
                         title=""
                         data-original-title="Close"
                       >
-                        <i class="fas fa-times"></i>
+                        <i class="fa fa-times"></i>
                       </a>
                     </div>
                   </div>

@@ -41,20 +41,17 @@ namespace ProfileMicroservice
             services.AddDbContext<UserDbContext>(options =>
                   options.UseMySql(CreateConnectionStringFromEnvironment()).UseLazyLoadingProxies(), ServiceLifetime.Transient);
 
+            services.AddScoped<IProfileCreatedMessageSender, ProfileCreatedMessageSender>();
+            services.AddScoped<IProfileUpdatedMessageSender, ProfileUpdatedMessageSender>();
 
-            var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
-            if (hostName == "rabbitmq")
-            {
-                services.AddSingleton<IProfileCreatedMessageSender, ProfileCreatedMessageSender>();
-                services.AddSingleton<IProfileUpdatedMessageSender, ProfileUpdatedMessageSender>();
-            }
+            services.AddScoped<IProfileRepository, ProfileRepository>();
+            services.AddScoped<IProfileSettingsRepository, ProfileSettingsRepository>();
+            services.AddScoped<IFollowRequestRepository, FollowRequestRepository>();
+            services.AddScoped<IProfileVerificationRequestRepository, ProfileVerificationRequestRepository>();
 
-            services.AddSingleton<IProfileService, ProfileService>(service =>
-                  new ProfileService(new ProfileRepository(new UserDbContext()), new ProfileSettingsRepository(new UserDbContext()), new ProfileCreatedMessageSender(), new ProfileUpdatedMessageSender()));
-            services.AddSingleton<IFollowRequestService, FollowRequestService>(service =>
-                    new FollowRequestService(new FollowRequestRepository(new UserDbContext())));
-            services.AddSingleton<IProfileVerificationRequestService, ProfileVerificationRequestService>(service =>
-                    new ProfileVerificationRequestService(new ProfileVerificationRequestRepository(new UserDbContext())));
+            services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IFollowRequestService, FollowRequestService>();
+            services.AddScoped<IProfileVerificationRequestService, ProfileVerificationRequestService>();
 
             // JWT Token
             var appSettingsSection = Configuration.GetSection("AppSettings");

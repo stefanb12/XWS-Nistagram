@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Linq;
 using PostMicroservice.Model;
 using PostMicroservice.Service;
@@ -12,15 +13,15 @@ using System.Threading.Tasks;
 
 namespace PostMicroservice.Messaging
 {
-    public class ProfileCreatedMessageReceiver : BackgroundService, IMessageReceiver
+    public class ProfileCreatedMessageReceiver : IHostedService, IMessageReceiver
     {
-        private IProfileService _profileService;
         private IConnection _connection;
         private IModel _channel;
+        public IServiceProvider Services;
 
-        public ProfileCreatedMessageReceiver(IProfileService profileService)
+        public ProfileCreatedMessageReceiver(IServiceProvider services)
         {
-            _profileService = profileService;
+            Services = services;
             InitRabbitMQ();
         }
 
@@ -63,13 +64,21 @@ namespace PostMicroservice.Messaging
                 Console.WriteLine(" [x] Received {0}", message);
 
                 var data = JObject.Parse(message);
-                _profileService.Insert(new Profile()
+
+                using (var scope = Services.CreateScope())
                 {
-                    OriginalId = data["id"].Value<int>(),
-                    Username = data["username"].Value<string>(),
-                    ImageName = data["profileImage"].Value<string>()
-                    //Following = new List<int>()
-                });
+                    var scopedProcessingService =
+                        scope.ServiceProvider
+                            .GetRequiredService<IProfileService>();
+
+                    scopedProcessingService.Insert(new Profile()
+                    {
+                        OriginalId = data["id"].Value<int>(),
+                        Username = data["username"].Value<string>(),
+                        ImageName = data["profileImage"].Value<string>()
+                        //Following = new List<int>()
+                    });
+                }
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };
@@ -78,12 +87,17 @@ namespace PostMicroservice.Messaging
                                   autoAck: false,
                                   consumer: consumer);
         }
-
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        
+        public Task StartAsync(CancellationToken cancellationToken)
         {
-            stoppingToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
             ReceiveMessage();
             return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

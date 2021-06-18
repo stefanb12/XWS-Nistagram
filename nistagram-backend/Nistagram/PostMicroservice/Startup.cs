@@ -45,18 +45,18 @@ namespace PostMicroservice
 
             var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
             if (hostName == "rabbitmq")
-            {
-                services.AddSingleton<IPostCreatedMessageSender, PostCreatedMessageSender>();
-                services.AddSingleton<IMessageReceiver, ProfileCreatedMessageReceiver>();
-                services.AddSingleton<IMessageReceiver, ProfileUpdatedMessageReceiver>();
+            {     
+                services.AddScoped<IMessageReceiver, ProfileCreatedMessageReceiver>();
+                services.AddScoped<IMessageReceiver, ProfileUpdatedMessageReceiver>();
             }
 
-            services.AddSingleton<IPostCreatedMessageSender, PostCreatedMessageSender>();
+            services.AddScoped<IPostCreatedMessageSender, PostCreatedMessageSender>();
 
-            services.AddSingleton<IProfileService, ProfileService>(service =>
-                    new ProfileService(new ProfileRepository(new PostDbContext())));
-            services.AddSingleton<IPostService, PostService>(service =>
-                    new PostService(new PostRepository(new PostDbContext()), new ProfileService(new ProfileRepository(new PostDbContext())), new PostCreatedMessageSender()));
+            services.AddScoped<IProfileRepository, ProfileRepository>();
+            services.AddScoped<IPostRepository, PostRepository>();
+
+            services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IPostService, PostService>();
 
             string hostedService = Environment.GetEnvironmentVariable("HOSTED_SERVICE") ?? "true";
             if (hostedService == "true")
