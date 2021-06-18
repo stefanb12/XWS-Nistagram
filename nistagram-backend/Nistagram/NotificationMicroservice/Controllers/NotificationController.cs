@@ -59,14 +59,12 @@ namespace NotificationMicroservice.Controllers
             {
                 return Ok();
             }
-            Post post = null;
-            if (!dto.PostId.Equals(""))
-            {
-                post = await _postService.GetById(dto.PostId);
-            }
+
+            Post post = await _postService.GetById(dto.PostId);
             Notification notification = NotificationMapper.NotificationDtoToNotification(dto, post);
             Profile sender = await _profileService.GetById(dto.SenderId);
             notification.Content = sender.Username + " like your post.";
+
             return Ok(await _notificationService.Insert(notification));
         }
 
@@ -77,14 +75,12 @@ namespace NotificationMicroservice.Controllers
             {
                 return Ok();
             }
-            Post post = null;
-            if (!dto.PostId.Equals(""))
-            {
-                post = await _postService.GetById(dto.PostId);
-            }
+
+            Post post = await _postService.GetById(dto.PostId);
             Notification notification = NotificationMapper.NotificationDtoToNotification(dto, post);
             Profile sender = await _profileService.GetById(dto.SenderId);
             notification.Content = sender.Username + " dislike your post.";
+
             return Ok(await _notificationService.Insert(notification));
         }
 
@@ -95,14 +91,12 @@ namespace NotificationMicroservice.Controllers
             {
                 return Ok();
             }
-            Post post = null;
-            if (!dto.PostId.Equals(""))
-            {
-                post = await _postService.GetById(dto.PostId);
-            }  
+
+            Post post = await _postService.GetById(dto.PostId);
             Notification notification = NotificationMapper.NotificationDtoToNotification(dto, post);
             Profile sender = await _profileService.GetById(dto.SenderId);
             notification.Content = sender.Username + " comment your post.";
+
             return Ok(await _notificationService.Insert(notification));
         }
 
