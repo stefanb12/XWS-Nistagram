@@ -79,6 +79,104 @@ class ProfileService {
   getAllUsers() {
     return fetch(API_URL + "profile/getAll");
   }
+
+  getMuted(profileId) {
+    return fetch(API_URL + "profile/" + profileId + "/muted");
+  }
+
+  mute(profileId, muteId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+    };
+
+    return fetch(
+      API_URL + "profile/" + profileId + "/mute/" + muteId,
+      requestOptions
+    );
+  }
+
+  unmute(profileId, muteId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+    };
+
+    return fetch(
+      API_URL + "profile/" + profileId + "/unmute/" + muteId,
+      requestOptions
+    );
+  }
+
+  getBlocked(profileId) {
+    return fetch(API_URL + "profile/" + profileId + "/blocked");
+  }
+
+  block(profileId, blockId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+    };
+
+    return fetch(
+      API_URL + "profile/" + profileId + "/block/" + blockId,
+      requestOptions
+    );
+  }
+
+  unblock(profileId, blockId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+    };
+
+    return fetch(
+      API_URL + "profile/" + profileId + "/unblock/" + blockId,
+      requestOptions
+    );
+  }
+
+  getCloseFriends(profileId) {
+    return fetch(API_URL + "profile/" + profileId + "/closeFriends");
+  }
+
+  addCloseFriend(profileId, closeFriendId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+    };
+
+    return fetch(
+      API_URL + "profile/" + profileId + "/addCloseFriends/" + closeFriendId,
+      requestOptions
+    );
+  }
+
+  removeCloseFriends(profileId, closeFriendId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+    };
+
+    return fetch(
+      API_URL + "profile/" + profileId + "/removeCloseFriends/" + closeFriendId,
+      requestOptions
+    );
+  }
+
+  getProfilePrivacy(id) {
+    return fetch(API_URL + "profile/" + id + "/getProfilePrivacy");
+  }
+
+  updateProfilePrivacy(id, isPrivate, receiveAllMessages, tagAllowed) {
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, isPrivate, receiveAllMessages, tagAllowed }),
+    };
+
+    return fetch(API_URL + "profile/updateProfilePrivacy", requestOptions);
+  }
 }
 
 export default new ProfileService();

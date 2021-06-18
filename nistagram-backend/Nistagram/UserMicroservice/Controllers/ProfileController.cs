@@ -79,6 +79,7 @@ namespace UserMicroservice.Controllers
             foreach (Profile followingProfile in followingProfiles)
             {
                 ProfileDto dto = ProfileMapper.ProfileToProfileDto(followingProfile);
+                dto.Id = followingProfile.Id;
                 dto.ImageSrc = String.Format("http://localhost:55988/{0}", followingProfile.ImageName);
                 result.Add(dto);
             }
@@ -161,6 +162,158 @@ namespace UserMicroservice.Controllers
             }
 
             return Ok(dtos);
+        }
+
+        [HttpGet("{id}/muted")]
+        public async Task<IActionResult> GetMutedProfiles(int id)
+        {
+            List<Profile> mutedProfiles = await _profileService.GetMutedProfiles(id);
+
+            List<ProfileDto> result = new List<ProfileDto>();
+            foreach (Profile mutedProfile in mutedProfiles)
+            {
+                ProfileDto dto = ProfileMapper.ProfileToProfileDto(mutedProfile);
+                dto.ImageSrc = String.Format("http://localhost:55988/{0}", mutedProfile.ImageName);
+                result.Add(dto);
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("{profileId}/mute/{id}")]
+        public async Task<IActionResult> muteProfile(int profileId, int id)
+        {
+            ProfileMutedProfile result = await _profileService.MuteProfile(profileId, id);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("{profileId}/unmute/{id}")]
+        public async Task<IActionResult> unmuteProfile(int profileId, int id)
+        {
+            ProfileMutedProfile result = await _profileService.UnmuteProfile(profileId, id);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
+
+        [HttpGet("{id}/blocked")]
+        public async Task<IActionResult> GetBlockedProfiles(int id)
+        {
+            List<Profile> blockedProfiles = await _profileService.GetBlockedProfiles(id);
+
+            List<ProfileDto> result = new List<ProfileDto>();
+            foreach (Profile blockedProfile in blockedProfiles)
+            {
+                ProfileDto dto = ProfileMapper.ProfileToProfileDto(blockedProfile);
+                dto.ImageSrc = String.Format("http://localhost:55988/{0}", blockedProfile.ImageName);
+                result.Add(dto);
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("{profileId}/block/{id}")]
+        public async Task<IActionResult> blockProfile(int profileId, int id)
+        {
+            ProfileBlockedProfile result = await _profileService.BlockProfile(profileId, id);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("{profileId}/unblock/{id}")]
+        public async Task<IActionResult> unblockProfile(int profileId, int id)
+        {
+            ProfileBlockedProfile result = await _profileService.UnBlockProfile(profileId, id);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
+
+        [HttpGet("{id}/closeFriends")]
+        public async Task<IActionResult> GetCloseFriends(int id)
+        {
+            List<Profile> closeFriends = await _profileService.GetCloseFriends(id);
+
+            List<ProfileDto> result = new List<ProfileDto>();
+            foreach (Profile closeFriend in closeFriends)
+            {
+                ProfileDto dto = ProfileMapper.ProfileToProfileDto(closeFriend);
+                dto.ImageSrc = String.Format("http://localhost:55988/{0}", closeFriend.ImageName);
+                result.Add(dto);
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("{profileId}/addCloseFriends/{id}")]
+        public async Task<IActionResult> AddCloseFriends(int profileId, int id)
+        {
+            ProfileCloseFriend result = await _profileService.AddCloseFriend(profileId, id);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("{profileId}/removeCloseFriends/{id}")]
+        public async Task<IActionResult> RemoveCloseFriends(int profileId, int id)
+        {
+            ProfileCloseFriend result = await _profileService.RemoveCloseFriend(profileId, id);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
+
+        [HttpGet("{id}/getProfilePrivacy")]
+        public async Task<IActionResult> GetProfilePrivacy(int id)
+        {
+            Profile profile = await _profileService.GetById(id);
+            ProfileSettings profileSettings = await _profileService.GetProfileSettingsById(id);
+
+            if (profile == null || profileSettings == null)
+            {
+                return NoContent();
+            }
+
+            ProfilePrivacyDto dto = new ProfilePrivacyDto();
+            dto.Id = profile.Id;
+            dto.IsPrivate = profile.IsPrivate;
+            dto.ReceiveAllMessages = profileSettings.ReceiveAllMessages;
+            dto.TagAllowed = profileSettings.TagAllowed;
+
+            return Ok(dto);
+        }
+
+        [HttpPut("updateProfilePrivacy")]
+        public async Task<IActionResult> UpdateProfilePrivacy(ProfilePrivacyDto profilePrivacyDto)
+        {
+            Profile profile = await _profileService.GetById(profilePrivacyDto.Id);
+            ProfileSettings profileSettings = await _profileService.GetProfileSettingsById(profilePrivacyDto.Id);
+
+            if (profile == null || profileSettings == null)
+            {
+                return NoContent();
+            }
+
+            profile.IsPrivate = profilePrivacyDto.IsPrivate;
+            await _profileService.Update(profile);
+
+            profileSettings.ReceiveAllMessages = profilePrivacyDto.ReceiveAllMessages;
+            profileSettings.TagAllowed = profilePrivacyDto.TagAllowed;
+            await _profileService.UpdateProfileSettings(profileSettings);
+
+            return Ok(profileSettings);
         }
     }
 }
