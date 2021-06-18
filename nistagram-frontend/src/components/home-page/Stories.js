@@ -652,7 +652,7 @@ class Stories extends Component {
               label="Visible for close friends only"
             />
             <input
-              accept="image/*"
+              accept="image/*,video/mp4"
               id="icon-button-file"
               type="file"
               multiple

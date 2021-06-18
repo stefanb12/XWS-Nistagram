@@ -21,6 +21,7 @@ import PostCard from "../components/home-page/PostCard";
 import StoryService from "../services/StoryService";
 import moment from "moment";
 import ThumbsUpDownOutlinedIcon from "@material-ui/icons/ThumbsUpDownOutlined";
+import ReactPlayer from "react-player";
 
 class UserProfile extends Component {
   constructor(props) {
@@ -53,11 +54,12 @@ class UserProfile extends Component {
       userProfileStories: [],
       doesActiveStoriesExists: false,
       activeStories: [],
-      currentStoryImage: "",
+      currentStoryContent: "",
       currentStoryPublishingDate: null,
       isShowStoryDialogOpen: false,
       currentStoryNumber: 0,
       timeCounter: 0,
+      timeCounterMultiplier: 1,
       currentTimeout: null,
       numberOfStoriesForCurrentProfile: 0,
       currentProfileStories: null,
@@ -520,20 +522,34 @@ class UserProfile extends Component {
   };
 
   showStory = (stories, storyNumber) => {
-    this.setState({
-      currentStoryImage: stories[storyNumber].imageSrc,
-      currentStoryPublishingDate: stories[storyNumber].publishingDate,
-      isShowStoryDialogOpen: true,
-      currentStoryNumber: storyNumber,
-      numberOfStoriesForCurrentProfile: stories.length,
-      currentProfileStories: stories,
-    });
+    this.setState(
+      {
+        currentStoryContent: stories[storyNumber].imageSrc,
+        currentStoryPublishingDate: stories[storyNumber].publishingDate,
+        isShowStoryDialogOpen: true,
+        currentStoryNumber: storyNumber,
+        numberOfStoriesForCurrentProfile: stories.length,
+        currentProfileStories: stories,
+      },
+      () => {
+        if (this.state.currentStoryContent.endsWith(".mp4")) {
+          this.setState({
+            timeCounterMultiplier: 3,
+          });
+        } else {
+          this.setState({
+            timeCounterMultiplier: 1,
+          });
+        }
+      }
+    );
     this.currentStoryPublisher = this.state.userProfile.username;
+
     this.currentTimeout = window.setInterval(() => {
       this.setState({
         timeCounter: this.state.timeCounter + 1,
       });
-      if (this.state.timeCounter >= 180) {
+      if (this.state.timeCounter >= 180 * this.state.timeCounterMultiplier) {
         this.setState({
           timeCounter: 0,
         });
@@ -670,15 +686,30 @@ class UserProfile extends Component {
           }}
         >
           <div>
-            <img
-              style={{
-                float: "left",
-                maxWidth: "300px",
-                maxHeight: "380px",
-              }}
-              src={this.state.currentStoryImage}
-              class="img-thumbnail"
-            />
+            {(() => {
+              if (this.state.currentStoryContent.endsWith(".mp4")) {
+                return (
+                  <ReactPlayer
+                    className="d-block w-100"
+                    playing={true}
+                    url={this.state.currentStoryContent}
+                    controls={false}
+                  />
+                );
+              } else {
+                return (
+                  <img
+                    style={{
+                      float: "left",
+                      maxWidth: "320px",
+                      maxHeight: "360px",
+                    }}
+                    src={this.state.currentStoryContent}
+                    class="img-thumbnail"
+                  />
+                );
+              }
+            })()}
           </div>
         </Modal.Body>
         <Modal.Footer
@@ -696,7 +727,11 @@ class UserProfile extends Component {
             {this.state.currentStoryNumber + 1} of{" "}
             {this.state.numberOfStoriesForCurrentProfile}
           </Typography>
-          <Slider value={this.state.timeCounter} step={1} max={179}></Slider>
+          <Slider
+            value={this.state.timeCounter}
+            step={1}
+            max={180 * this.state.timeCounterMultiplier - 1}
+          ></Slider>
           <Button
             color="primary"
             onClick={() => {
