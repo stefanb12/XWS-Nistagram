@@ -481,9 +481,8 @@ export default function UserNavbar() {
                 if (notification.post !== null) {
                   if (notification.post.id !== 1) {
                     return (
-                      <div>
+                      <div style={{ float: "right", marginLeft: "10px" }}>
                         <img
-                          style={{ marginLeft: "12px" }}
                           class="img-xs"
                           src={notification.post.imageSrc}
                           alt=""
