@@ -242,6 +242,56 @@ class ProfileService {
     );
   }
 
+  getNotificationProfiles(profileId) {
+    const requestOptions = {
+      method: "GET",
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
+    };
+
+    return fetch(
+      API_URL + "profile/" + profileId + "/notificationProfiles",
+      requestOptions
+    );
+  }
+
+  addNotificationProfile(profileId, notificationProfileId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
+    };
+
+    return fetch(
+      API_URL +
+        "profile/" +
+        profileId +
+        "/addNotificationProfile/" +
+        notificationProfileId,
+      requestOptions
+    );
+  }
+
+  removeNotificationProfile(profileId, notificationProfileId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
+    };
+
+    return fetch(
+      API_URL +
+        "profile/" +
+        profileId +
+        "/removeNotificationProfile/" +
+        notificationProfileId,
+      requestOptions
+    );
+  }
+
   getProfilePrivacy(id) {
     const requestOptions = {
       method: "GET",
