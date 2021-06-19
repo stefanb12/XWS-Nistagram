@@ -6,7 +6,7 @@ class ProfileService {
   getUser(id) {
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
 
     return fetch(API_URL + "profile/" + id, requestOptions);
@@ -15,10 +15,13 @@ class ProfileService {
   getUserForUpdating(id) {
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
 
-    return fetch(API_URL + "profile/" + id + "/profileForUpdating", requestOptions);
+    return fetch(
+      API_URL + "profile/" + id + "/profileForUpdating",
+      requestOptions
+    );
   }
 
   updateProfile(
@@ -50,7 +53,7 @@ class ProfileService {
 
     const requestOptions = {
       method: "PUT",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
       body: formData,
     };
 
@@ -60,8 +63,10 @@ class ProfileService {
   follow(followerId, followingId) {
     const requestOptions = {
       method: "PUT",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
     };
 
     return fetch(
@@ -73,8 +78,10 @@ class ProfileService {
   unfollow(followerId, followingId) {
     const requestOptions = {
       method: "PUT",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
     };
 
     return fetch(
@@ -86,24 +93,30 @@ class ProfileService {
   getFollowers(profileId) {
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
 
-    return fetch(API_URL + "profile/" + profileId + "/followers", requestOptions);
+    return fetch(
+      API_URL + "profile/" + profileId + "/followers",
+      requestOptions
+    );
   }
 
   getFollowing(profileId) {
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
 
-    return fetch(API_URL + "profile/" + profileId + "/following", requestOptions);
+    return fetch(
+      API_URL + "profile/" + profileId + "/following",
+      requestOptions
+    );
   }
 
   getAllUsers() {
     const requestOptions = {
-      method: "GET"
+      method: "GET",
     };
 
     return fetch(API_URL + "profile/getAll", requestOptions);
@@ -112,7 +125,7 @@ class ProfileService {
   getMuted(profileId) {
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
 
     return fetch(API_URL + "profile/" + profileId + "/muted", requestOptions);
@@ -121,8 +134,10 @@ class ProfileService {
   mute(profileId, muteId) {
     const requestOptions = {
       method: "PUT",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
     };
 
     return fetch(
@@ -134,8 +149,10 @@ class ProfileService {
   unmute(profileId, muteId) {
     const requestOptions = {
       method: "PUT",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
     };
 
     return fetch(
@@ -147,7 +164,7 @@ class ProfileService {
   getBlocked(profileId) {
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
 
     return fetch(API_URL + "profile/" + profileId + "/blocked", requestOptions);
@@ -156,8 +173,10 @@ class ProfileService {
   block(profileId, blockId) {
     const requestOptions = {
       method: "PUT",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
     };
 
     return fetch(
@@ -169,8 +188,10 @@ class ProfileService {
   unblock(profileId, blockId) {
     const requestOptions = {
       method: "PUT",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
     };
 
     return fetch(
@@ -182,17 +203,22 @@ class ProfileService {
   getCloseFriends(profileId) {
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
 
-    return fetch(API_URL + "profile/" + profileId + "/closeFriends", requestOptions);
+    return fetch(
+      API_URL + "profile/" + profileId + "/closeFriends",
+      requestOptions
+    );
   }
 
   addCloseFriend(profileId, closeFriendId) {
     const requestOptions = {
       method: "PUT",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
     };
 
     return fetch(
@@ -204,8 +230,10 @@ class ProfileService {
   removeCloseFriends(profileId, closeFriendId) {
     const requestOptions = {
       method: "PUT",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken()  },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
     };
 
     return fetch(
@@ -217,17 +245,22 @@ class ProfileService {
   getProfilePrivacy(id) {
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
 
-    return fetch(API_URL + "profile/" + id + "/getProfilePrivacy", requestOptions);
+    return fetch(
+      API_URL + "profile/" + id + "/getProfilePrivacy",
+      requestOptions
+    );
   }
 
   updateProfilePrivacy(id, isPrivate, receiveAllMessages, tagAllowed) {
     const requestOptions = {
       method: "PUT",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
       body: JSON.stringify({ id, isPrivate, receiveAllMessages, tagAllowed }),
     };
 

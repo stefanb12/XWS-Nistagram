@@ -45,6 +45,7 @@ const Login = () => {
           var userRole = decodedToken.UserRole;
 
           localStorage.setItem("currentUser", JSON.stringify(result));
+          localStorage.setItem("userToken", result.token);
           localStorage.setItem("userRole", userRole);
 
           if (result.userRole === 0) {
