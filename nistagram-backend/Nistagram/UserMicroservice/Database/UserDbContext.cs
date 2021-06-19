@@ -18,6 +18,7 @@ namespace ProfileMicroservice.Database
         public DbSet<ProfileCloseFriend> ProfileCloseFriends { get; set; }
         public DbSet<ProfileMutedProfile> ProfileMutedProfiles { get; set; }
         public DbSet<ProfileBlockedProfile> ProfileBlockedProfiles { get; set; }
+        public DbSet<ProfileNotificationProfile> ProfileNotificationProfiles { get; set; }
 
         public UserDbContext() : base() { }
 
@@ -138,6 +139,16 @@ namespace ProfileMicroservice.Database
             modelBuilder.Entity<FollowRequest>().HasData(
                 new FollowRequest { Id = 1, Accepted = false, Processed = false, ReceiverId = 2, SenderId = 5 },
                 new FollowRequest { Id = 2, Accepted = false, Processed = false, ReceiverId = 3, SenderId = 5 }
+            );
+
+            modelBuilder.Entity<ProfileNotificationProfile>().HasKey(t => new { t.ProfileSettingsId, t.NotificationProfileId });
+            modelBuilder.Entity<ProfileNotificationProfile>()
+                .HasOne(pt => pt.ProfileSettings)
+                .WithMany(p => p.NotificationProfiles)
+                .HasForeignKey(pt => pt.ProfileSettingsId);
+
+            modelBuilder.Entity<ProfileNotificationProfile>().HasData(
+                new ProfileNotificationProfile { ProfileSettingsId = 1, NotificationProfileId = 4 }
             );
         }
     }

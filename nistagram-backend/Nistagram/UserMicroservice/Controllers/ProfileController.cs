@@ -287,6 +287,43 @@ namespace UserMicroservice.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id}/notificationProfiles")]
+        public async Task<IActionResult> GetNotificationProfiles(int id)
+        {
+            List<Profile> notificationProfiles = await _profileService.GetNotificationProfiles(id);
+
+            List<ProfileDto> result = new List<ProfileDto>();
+            foreach (Profile notificationProfile in notificationProfiles)
+            {
+                ProfileDto dto = ProfileMapper.ProfileToProfileDto(notificationProfile);
+                dto.ImageSrc = String.Format("http://localhost:55988/{0}", notificationProfile.ImageName);
+                result.Add(dto);
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("{profileId}/addNotificationProfile/{id}")]
+        public async Task<IActionResult> AddNotificationProfile(int profileId, int id)
+        {
+            ProfileNotificationProfile result = await _profileService.AddNotificationProfile(profileId, id);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("{profileId}/removeNotificationProfile/{id}")]
+        public async Task<IActionResult> RemoveNotificationProfile(int profileId, int id)
+        {
+            ProfileNotificationProfile result = await _profileService.RemoveNotificationProfile(profileId, id);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
+
         [HttpGet("{id}/getProfilePrivacy")]
         public async Task<IActionResult> GetProfilePrivacy(int id)
         {

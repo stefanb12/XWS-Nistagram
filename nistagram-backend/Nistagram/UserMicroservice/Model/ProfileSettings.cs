@@ -13,6 +13,7 @@ namespace ProfileMicroservice.Model
         public bool TagAllowed { get; set; }
         public virtual List<ProfileMutedProfile> MutedProfiles { get; set; }   
         public virtual List<ProfileBlockedProfile> BlockedProfiles { get; set; }
+        public virtual List<ProfileNotificationProfile> NotificationProfiles { get; set; }
 
         public ProfileSettings()
         {
