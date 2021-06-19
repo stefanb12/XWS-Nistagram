@@ -9,8 +9,11 @@ import {
 import MainLayout from "./components/MainLayout";
 import UserLayout from "./components/UserLayout";
 import NotFound from "./pages/NotFound";
-import { PrivateRoute } from "./helpers/PrivateRoute";
 import AdminLayout from "./components/AdminLayout";
+import AgentLayout from "./components/AgentLayout";
+import { UserRoute } from "./helpers/UserRoute";
+import { AgentRoute } from "./helpers/AgentRoute";
+import { AdminRoute } from "./helpers/AdminRoute";
 
 function App() {
   return (
@@ -18,8 +21,9 @@ function App() {
       <Switch>
         <Redirect exact from="/" to="/app" />
         <Route path="/app" component={MainLayout} />
-        <PrivateRoute path="/user" component={UserLayout} />
-        <PrivateRoute path="/admin" component={AdminLayout} />
+        <UserRoute path="/user" component={UserLayout} />
+        <AgentRoute path="/agent" component={AgentLayout} />
+        <AdminRoute path="/admin" component={AdminLayout} />
         <Route path="/*" component={NotFound} />
       </Switch>
     </Router>

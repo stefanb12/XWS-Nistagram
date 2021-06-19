@@ -34,7 +34,7 @@ const MainLayoutContent = {
   overflow: "auto",
 };
 
-export default function UserLayout({ routes }) {
+export default function AgentLayout({ routes }) {
   return (
     <div style={MainLayoutRoot}>
       <UserNavbar />
@@ -42,25 +42,16 @@ export default function UserLayout({ routes }) {
         <div style={MainLayoutContainer}>
           <div style={MainLayoutContent}>
             <Switch>
-              <Route path="/user/profile">
-                <UserProfile />
-              </Route>
-              <Route path="/user/settings">
-                <UserProfileSettings />
-              </Route>
-              <Route path="/user/search">
-                <UserSearchResultPage />
-              </Route>
-              <Route path="/user/explore">
+              <Route path="/agent/explore">
                 <HomePage />
               </Route>
-              <Route path="/user/*">
+              <Route path="/agent/*">
                 <NotFound />
               </Route>
-              <Route path="/user">
+              <Route path="/agent">
                 <UserHomePage />
               </Route>
-              <Route path="/user/404">
+              <Route path="/agent/404">
                 <NotFound />
               </Route>
               <Redirect to="/user/404" />

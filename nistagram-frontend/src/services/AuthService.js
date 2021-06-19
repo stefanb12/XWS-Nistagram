@@ -23,6 +23,7 @@ class AuthService {
 
   logout() {
     localStorage.removeItem("currentUser");
+    localStorage.removeItem("userRole");
   }
 
   getCurrentUser() {
