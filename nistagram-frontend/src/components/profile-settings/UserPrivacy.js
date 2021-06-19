@@ -20,10 +20,12 @@ class UserPrivacy extends Component {
       isOpenMuteProfilesModalOpen: false,
       isOpenBlockProfilesModalOpen: false,
       isOpenCloseFriendsModalOpen: false,
+      isOpenNotificationProfilesModalOpen: false,
       following: [],
       mutedProfiles: [],
       blockedProfiles: [],
       closeFriends: [],
+      notificationProfiles: [],
     };
   }
 
@@ -178,8 +180,8 @@ class UserPrivacy extends Component {
       });
   };
 
-  openCloseFriendsModal = () => {
-    ProfileService.getFollowing(AuthService.getCurrentUser().id)
+  openCloseFriendsModal = async () => {
+    await ProfileService.getFollowing(AuthService.getCurrentUser().id)
       .then((res) => res.json())
       .then((result) => {
         this.setState({
@@ -187,7 +189,7 @@ class UserPrivacy extends Component {
         });
       });
 
-    ProfileService.getCloseFriends(AuthService.getCurrentUser().id)
+    await ProfileService.getCloseFriends(AuthService.getCurrentUser().id)
       .then((res) => res.json())
       .then((result) => {
         this.setState({
@@ -239,6 +241,77 @@ class UserPrivacy extends Component {
       .then((result) => {
         this.setState({
           closeFriends: result,
+        });
+      });
+  };
+
+  openNotificationProfilesModal = async () => {
+    await ProfileService.getFollowing(AuthService.getCurrentUser().id)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          following: result,
+        });
+      });
+
+    await ProfileService.getNotificationProfiles(
+      AuthService.getCurrentUser().id
+    )
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          notificationProfiles: result,
+        });
+      });
+
+    this.setState({
+      isOpenNotificationProfilesModalOpen: true,
+    });
+  };
+
+  closeNotificationProfilesModal = () => {
+    this.setState({
+      isOpenNotificationProfilesModalOpen: false,
+    });
+  };
+
+  isNotificationProfiles = (username) => {
+    for (let i = 0; i < this.state.notificationProfiles.length; i++) {
+      if (this.state.notificationProfiles[i].username == username) return true;
+    }
+    return false;
+  };
+
+  addNotificationProfile = async (notificationProfileId) => {
+    await ProfileService.addNotificationProfile(
+      AuthService.getCurrentUser().id,
+      notificationProfileId
+    ).then((res) => res.json());
+
+    await ProfileService.getNotificationProfiles(
+      AuthService.getCurrentUser().id
+    )
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          notificationProfiles: result,
+        });
+      });
+  };
+
+  removeNotificationProfile = async (notificationProfileId) => {
+    await ProfileService.removeNotificationProfile(
+      AuthService.getCurrentUser().id,
+      notificationProfileId
+    ).then((res) => res.json());
+
+    await ProfileService.getNotificationProfiles(
+      AuthService.getCurrentUser().id
+    )
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          notificationProfiles: result,
         });
       });
   };
@@ -451,11 +524,77 @@ class UserPrivacy extends Component {
       </Modal>
     );
 
+    var notificationProfilesModal = (
+      <Modal
+        show={this.state.isOpenNotificationProfilesModalOpen}
+        onHide={this.closeNotificationProfilesModal}
+        style={{ marginTop: "120px", maxHeight: "500px", overflow: "hidden" }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Notification profiles</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div style={{ overflow: "auto", maxHeight: "300px" }}>
+            {this.state.following.map((profile) => {
+              return (
+                <div class="list-group-item d-flex align-items-center">
+                  <img
+                    src={profile.imageSrc}
+                    alt=""
+                    width="50px"
+                    class="rounded-sm ml-n2"
+                  />
+                  <div class="flex-fill pl-3 pr-3">
+                    <div>
+                      <a href="#" class="text-dark font-weight-600">
+                        {profile.username}
+                      </a>
+                    </div>
+                    {/* <div class="text-muted fs-13px">{follower.fullName}</div> */}
+                  </div>
+                  {this.isNotificationProfiles(profile.username) ? (
+                    <a
+                      href="javascript:void(0)"
+                      class="btn btn-info"
+                      style={{ width: "26%" }}
+                      onClick={() => this.removeNotificationProfile(profile.id)}
+                    >
+                      <RemoveCircleOutlineIcon style={{ marginRight: "3%" }} />
+                      Remove
+                    </a>
+                  ) : (
+                    <a
+                      href="javascript:void(0)"
+                      class="btn btn-outline-info"
+                      style={{ width: "26%" }}
+                      onClick={() => this.addNotificationProfile(profile.id)}
+                    >
+                      <AddCircleOutline style={{ marginRight: "3%" }} />
+                      Add
+                    </a>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={this.closeNotificationProfilesModal}
+          >
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+
     return (
       <div>
         {muteProfilesModal}
         {blockProfilesModal}
         {closeFriendsModal}
+        {notificationProfilesModal}
         <div
           className="card"
           style={{ float: "right", marginRight: "20%", width: "50%" }}
@@ -519,7 +658,7 @@ class UserPrivacy extends Component {
                 <Button
                   variant="dark"
                   style={{
-                    width: "30%",
+                    width: "34%",
                     marginTop: "2%",
                     marginBottom: "2%",
                   }}
@@ -538,7 +677,7 @@ class UserPrivacy extends Component {
                 <Button
                   variant="danger"
                   style={{
-                    width: "30%",
+                    width: "34%",
                     marginTop: "2%",
                     marginBottom: "2%",
                   }}
@@ -557,7 +696,7 @@ class UserPrivacy extends Component {
                 <Button
                   variant="success"
                   style={{
-                    width: "30%",
+                    width: "34%",
                     marginTop: "2%",
                     marginBottom: "2%",
                   }}
@@ -568,6 +707,24 @@ class UserPrivacy extends Component {
                 </Button>
                 <p style={{ fontSize: "14px", marginBottom: "4%" }}>
                   You can set story to be visible only for close friends.
+                </p>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <h5>Notification profiles</h5>
+                <Button
+                  variant="info"
+                  style={{
+                    width: "34%",
+                    marginTop: "2%",
+                    marginBottom: "2%",
+                  }}
+                  onClick={this.openNotificationProfilesModal}
+                >
+                  <AddCircleOutline style={{ marginRight: "2%" }} />
+                  Notification profiles
+                </Button>
+                <p style={{ fontSize: "14px", marginBottom: "4%" }}>
+                  You will receive notification when someone from this list adds post, story, comment or send you a message.
                 </p>
               </ListGroup.Item>
             </ListGroup>
