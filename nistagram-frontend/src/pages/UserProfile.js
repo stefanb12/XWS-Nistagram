@@ -22,6 +22,7 @@ import StoryService from "../services/StoryService";
 import moment from "moment";
 import ThumbsUpDownOutlinedIcon from "@material-ui/icons/ThumbsUpDownOutlined";
 import ReactPlayer from "react-player";
+import VerifiedUserOutlinedIcon from "@material-ui/icons/VerifiedUserOutlined";
 
 class UserProfile extends Component {
   constructor(props) {
@@ -1272,6 +1273,37 @@ class UserProfile extends Component {
         );
       }
     }
+
+    let userCategory;
+    if (this.state.userProfile.category !== 0) {
+      let category;
+      if (this.state.userProfile.category === 1) {
+        category = "Influencer";
+      } else if (this.state.userProfile.category === 2) {
+        category = "Sports";
+      } else if (this.state.userProfile.category === 3) {
+        category = "Media";
+      } else if (this.state.userProfile.category === 4) {
+        category = "Buissines";
+      } else if (this.state.userProfile.category === 5) {
+        category = "Brand";
+      } else if (this.state.userProfile.category === 6) {
+        category = "Organization";
+      }
+
+      userCategory = (
+        <span>
+          {" "}
+          <span class="profile-name" style={{ color: "blue" }}>
+            <VerifiedUserOutlinedIcon />
+          </span>
+          <span class="text-muted" style={{ marginLeft: "6px" }}>
+            {category}
+          </span>
+        </span>
+      );
+    }
+
     return (
       <div>
         {addStoryModalDialog}
@@ -1414,6 +1446,7 @@ class UserProfile extends Component {
                           }
                         })()}
                         <span class="profile-name">{userProfile.username}</span>
+                        {userCategory}
                       </div>
                       {followButton}
                     </div>

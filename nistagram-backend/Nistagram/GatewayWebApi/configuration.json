@@ -47,14 +47,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/profile/{id}",
-            "UpstreamHttpMethod": [ "GET" ],
-            "AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User , Agent"
-            }
+            }*/
         },
         {
             "DownstreamPathTemplate": "/api/profile/{id}/followers",
@@ -536,14 +536,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/post/profile/{profileId}",
-            "UpstreamHttpMethod": [ "GET" ],
-            "AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User , Agent"
-            }
+            }*/
         },
         {
             "DownstreamPathTemplate": "/api/post/favorites/{profileId}",
@@ -894,14 +894,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/story/active/profile/{profileId}",
-            "UpstreamHttpMethod": [ "GET" ],
-            "AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User , Agent"
-            }
+            }*/
         },
         {
             "DownstreamPathTemplate": "/api/story/profile/{profileId}",
@@ -913,14 +913,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/story/profile/{profileId}",
-            "UpstreamHttpMethod": [ "GET" ],
-            "AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User , Agent"
-            }
+            }*/
         },
         {
             "DownstreamPathTemplate": "/api/story/getAllProfileStories/{id}",
@@ -970,14 +970,14 @@
                 }
             ],
             "UpstreamPathTemplate": "/gateway/story/highlight/profile/{profileId}",
-            "UpstreamHttpMethod": [ "GET" ],
-            "AuthenticationOptions": {
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User , Agent"
-            }
+            }*/
         },
 
         // InappropriateContentMicroservice

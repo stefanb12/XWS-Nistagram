@@ -23,6 +23,7 @@ class AuthService {
 
   logout() {
     localStorage.removeItem("currentUser");
+    localStorage.removeItem("userToken");
     localStorage.removeItem("userRole");
   }
 
@@ -31,8 +32,9 @@ class AuthService {
   }
 
   getUserToken() {
-    var user = JSON.parse(localStorage.getItem("currentUser"));
-    return user.token;
+    // var user = JSON.parse(localStorage.getItem("currentUser"));
+    // return user.token;
+    return localStorage.getItem("userToken");
   }
 }
 
