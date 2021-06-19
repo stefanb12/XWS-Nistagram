@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NotificationMicroservice.Model
 {
@@ -15,6 +16,7 @@ namespace NotificationMicroservice.Model
         public virtual Profile Sender { get; set; }
         public int PostId { get; set; }
         public virtual Post Post { get; set; }
+        public virtual List<NotificationProfile> NotificationProfiles { get; set; }
 
         public Notification()
         {

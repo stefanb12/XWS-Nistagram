@@ -862,7 +862,7 @@
             "RouteClaimsRequirement": {
                 "UserRole": "User , Agent"
             }
-        },
+        }, 
 
         //StoryMicroservice
         {

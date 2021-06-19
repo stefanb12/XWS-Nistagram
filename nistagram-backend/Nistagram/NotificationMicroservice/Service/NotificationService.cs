@@ -31,7 +31,25 @@ namespace NotificationMicroservice.Service
         public async Task<List<Notification>> FindNotificationsForProfile(int profileId)
         {
             IEnumerable<Notification> notifications = await GetAll();
-            return notifications.ToList().Where(notification => notification.ReceiverId == profileId).ToList();
+
+            List<Notification> result = notifications.ToList().Where(notification => notification.ReceiverId == profileId).ToList();
+
+            foreach(Notification notification in notifications)
+            {
+                if(notification.ReceiverId == profileId)
+                {
+                    result.Add(notification);
+                } 
+                foreach(NotificationProfile notificationProfile in notification.NotificationProfiles)
+                {
+                    if(notificationProfile.NotificationProfileId == notification.SenderId && (notification.Content.Contains("added") || notification.Content.EndsWith("comment post.")))
+                    {
+                        result.Add(notification);
+                    }
+                }
+            }
+
+            return result;
         }
 
         public async Task<Notification> FindFollowRequestNotification(int receiverId, int senderId)

@@ -7,7 +7,6 @@ import UserHomePage from "../pages/UserHomePage";
 import NotFound from "../pages/NotFound";
 import UserSearchResultPage from "../pages/UserSearchResultPage";
 import HomePage from "../pages/HomePage";
-import { AgentRoute } from "../helpers/AgentRoute";
 
 const MainLayoutRoot = {
   height: "100%",
