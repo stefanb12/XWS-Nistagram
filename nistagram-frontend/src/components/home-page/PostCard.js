@@ -154,7 +154,10 @@ class PostCard extends Component {
   };
 
   likePost = (post) => {
-    if (this.state.currentUser != null) {
+    if (
+      this.state.currentUser != null &&
+      localStorage.getItem("userRole") !== "Admin"
+    ) {
       if (
         document.getElementById("like" + post.id).className === "fa fa-heart"
       ) {
@@ -186,12 +189,17 @@ class PostCard extends Component {
           }
         });
     } else {
-      this.handleClickSnackBar("You have to login first", "error");
+      if (localStorage.getItem("userRole") !== "Admin") {
+        this.handleClickSnackBar("You have to login first", "error");
+      }
     }
   };
 
   dislikePost = (post) => {
-    if (this.state.currentUser != null) {
+    if (
+      this.state.currentUser != null &&
+      localStorage.getItem("userRole") !== "Admin"
+    ) {
       if (
         document.getElementById("dislike" + post.id).className ===
         "fa fa-thumbs-down"
@@ -225,12 +233,17 @@ class PostCard extends Component {
           }
         });
     } else {
-      this.handleClickSnackBar("You have to login first", "error");
+      if (localStorage.getItem("userRole") !== "Admin") {
+        this.handleClickSnackBar("You have to login first", "error");
+      }
     }
   };
 
   savePost = (postId) => {
-    if (this.state.currentUser != null) {
+    if (
+      this.state.currentUser != null &&
+      localStorage.getItem("userRole") !== "Admin"
+    ) {
       if (
         document.getElementById("save" + postId).className === "fa fa-bookmark"
       ) {
@@ -610,7 +623,11 @@ class PostCard extends Component {
                                       }`}
                                     >
                                       {(() => {
-                                        if (this.state.currentUser !== null) {
+                                        if (
+                                          this.state.currentUser !== null &&
+                                          localStorage.getItem("userRole") !==
+                                            "Admin"
+                                        ) {
                                           return (
                                             <div>
                                               <ul>
@@ -1011,7 +1028,11 @@ class PostCard extends Component {
                                       })()}
 
                                       {(() => {
-                                        if (this.state.currentUser !== null) {
+                                        if (
+                                          this.state.currentUser !== null &&
+                                          localStorage.getItem("userRole") !==
+                                            "Admin"
+                                        ) {
                                           var classForFavorite =
                                             "fa fa-bookmark-o";
 
@@ -1113,7 +1134,11 @@ class PostCard extends Component {
                                       })()}
                                     </div>
                                     {(() => {
-                                      if (this.state.currentUser !== null) {
+                                      if (
+                                        this.state.currentUser !== null &&
+                                        localStorage.getItem("userRole") !==
+                                          "Admin"
+                                      ) {
                                         return (
                                           <div>
                                             <textarea

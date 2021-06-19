@@ -14,6 +14,7 @@ namespace InappropriateContentMicroservice.Dto
         public int SenderId { get; set; }
         public int PostId { get; set; }
         public string StoryId { get; set; }
+        public string Username { get; set; }
 
         public InappropriateContentDto()
         {

@@ -630,7 +630,7 @@
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
-                "UserRole": "User , Agent"
+                "UserRole": "User , Agent , Admin"
             }
         },
         {
@@ -998,6 +998,25 @@
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User , Agent"
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/inappropriateContent/getAll",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55997
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/inappropriateContent/getAll",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
             }
         }
 

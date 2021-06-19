@@ -1,12 +1,15 @@
 import React, { Component } from "react";
-import ProfileVerificationRequestService from "../services/ProfileVerificationRequestService";
 import { Button, Modal } from "react-bootstrap";
+import InappropriateContentService from "../services/InappropriateContentService";
+import PostService from "../services/PostService";
+import PostCard from "../components/home-page/PostCard";
+import moment from "moment";
 
 export default class InappropriateContentRequests extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      requests: [],
+      inappripriateContents: [],
       isOpenInappropriateContentDeletingModal: false,
       isOpenDeactivateUserModal: false,
       isOpenInappropriateContentModal: false,
@@ -14,6 +17,7 @@ export default class InappropriateContentRequests extends Component {
       open: false,
       message: "",
       snackbarType: "success",
+      posts: [],
       inappropriateContent: null,
     };
   }
@@ -23,33 +27,55 @@ export default class InappropriateContentRequests extends Component {
   }
 
   getAllProfileVerificationRequests = () => {
-    ProfileVerificationRequestService.getAllProfileVerificationRequests()
+    InappropriateContentService.getAll()
       .then((res) => {
         return res.json();
       })
       .then((data) => {
-        this.setState({ requests: data });
+        this.setState({ inappripriateContents: data });
       });
   };
 
   openInappropriateContentDeletingModal = (inappropriateContent) => {
     this.setState({
       isOpenInappropriateContentDeletingModal: true,
-      inappropriateContent: inappropriateContent,
     });
   };
 
   closeInappropriateContentDeletingModal = () =>
     this.setState({
       isOpenInappropriateContentDeletingModal: false,
-      inappropriateContent: null,
     });
 
-  openInappropriateContentModal = (inappropriateContent) => {
-    this.setState({
-      isOpenInappropriateContentModal: true,
-      inappropriateContent: inappropriateContent,
-    });
+  openInappropriateContentModal = async (inappropriateContent) => {
+    if (inappropriateContent.isPost) {
+      await PostService.getById(inappropriateContent.postId)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          this.setState({
+            posts: data,
+            inappropriateContent: inappropriateContent,
+          });
+        });
+    } else {
+      this.setState({
+        inappropriateContent: inappropriateContent,
+      });
+    }
+
+    this.setState(
+      {
+        isOpenInappropriateContentModal: true,
+      },
+      () => {
+        console.log(
+          "inappripriateContent after set:",
+          this.state.inappropriateContent
+        );
+      }
+    );
   };
 
   closeInappropriateContentModal = () =>
@@ -187,11 +213,67 @@ export default class InappropriateContentRequests extends Component {
             height: "510px",
           }}
         >
-          <div
-            style={{
-              marginLeft: "75px",
-            }}
-          ></div>
+          <div>
+            {(() => {
+              if (this.state.inappropriateContent !== null) {
+                console.log(this.state.inappropriateContent.isPost);
+                if (this.state.inappropriateContent.isPost) {
+                  return (
+                    <div>
+                      {" "}
+                      <PostCard sendPosts={this.state.posts} />
+                    </div>
+                  );
+                } else {
+                  console.log("story");
+                  return (
+                    <div>
+                      <img
+                        src={"http://localhost:55993/2212424861.png"}
+                        class="img-fluid avatar avatar-medium shadow rounded-pill"
+                        alt=""
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          marginLeft: "75px",
+                        }}
+                      />
+                      <b
+                        style={{
+                          marginLeft: "15px",
+                          fontSize: "18px",
+                        }}
+                      >
+                        stefanb
+                      </b>
+                      <small
+                        style={{
+                          marginLeft: "13px",
+                        }}
+                      >
+                        {moment(
+                          moment(this.state.currentStoryPublishingDate).format(
+                            "YYYY-MM-DD HH:mm:ss"
+                          )
+                        ).fromNow()}
+                      </small>
+                      <br></br>
+                      <img
+                        style={{
+                          width: "620px",
+                          height: "auto",
+                          marginTop: "20px",
+                          marginLeft: "75px",
+                        }}
+                        src={"http://localhost:55993/2212424861.png"}
+                        class="img-thumbnail"
+                      />
+                    </div>
+                  );
+                }
+              }
+            })()}
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button
@@ -204,104 +286,106 @@ export default class InappropriateContentRequests extends Component {
       </Modal>
     );
 
-    const tableRows = this.state.requests.map((inappripriateContent, key) => {
-      return (
-        <tr id={key}>
-          <td style={{ textAlign: "center" }}>
-            {/* {inappripriateContent.sender.username} */}
-          </td>
-          <td style={{ textAlign: "center" }}>
-            {/* {inappripriateContent.reportComment} */}
-          </td>
-          <td style={{ textAlign: "center" }}>
-            <button
-              type="button"
-              onClick={() => {
-                this.openInappropriateContentModal(inappripriateContent);
-              }}
-              class="btn btn-outline-primary btn-sm"
-              style={{
-                width: "120px",
-                fontSize: "17px",
-              }}
-            >
-              Show
-            </button>
-          </td>
-          <td style={{ textAlign: "center" }}>
-            {(() => {
-              //inappripriateContent.processed = true;
-              if (!inappripriateContent.processed) {
-                return (
-                  <div>
-                    <div class="action" style={{ marginLeft: "25px" }}>
-                      <a
-                        href="javascript:void(0)"
-                        onClick={() => {
-                          this.openInappropriateContentDeletingModal(
-                            inappripriateContent
-                          );
-                        }}
-                        class="text-danger mr-4"
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title=""
-                        data-original-title="Edit"
-                        style={{ fontSize: "20px" }}
-                      >
-                        <i class="fa fa-trash" aria-hidden="true"></i>
-                      </a>
-                      <a
-                        href="javascript:void(0)"
-                        onClick={() => {
-                          this.openDeactivateUserModal(inappripriateContent);
-                        }}
-                        class="text-danger mr-4"
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title=""
-                        data-original-title="Close"
-                        style={{ fontSize: "20px" }}
-                      >
-                        <i class="fa fa-ban"></i>
-                      </a>
-                    </div>
-                  </div>
-                );
-              } else {
-                //inappripriateContent.accepted = true;
-                if (inappripriateContent.accepted) {
+    const tableRows = this.state.inappripriateContents.map(
+      (inappripriateContent, key) => {
+        return (
+          <tr id={key}>
+            <td style={{ textAlign: "center" }}>
+              {inappripriateContent.username}
+            </td>
+            <td style={{ textAlign: "center" }}>
+              {inappripriateContent.reportComment}
+            </td>
+            <td style={{ textAlign: "center" }}>
+              <button
+                type="button"
+                onClick={() => {
+                  this.openInappropriateContentModal(inappripriateContent);
+                }}
+                class="btn btn-outline-primary btn-sm"
+                style={{
+                  width: "120px",
+                  fontSize: "17px",
+                }}
+              >
+                Show
+              </button>
+            </td>
+            <td style={{ textAlign: "center" }}>
+              {(() => {
+                //inappripriateContent.processed = true;
+                if (!inappripriateContent.processed) {
                   return (
                     <div>
-                      {" "}
-                      <b
-                        class="text-success mr-4"
-                        style={{ marginLeft: "25px" }}
-                      >
-                        {" "}
-                        Accepted
-                      </b>
+                      <div class="action" style={{ marginLeft: "25px" }}>
+                        <a
+                          href="javascript:void(0)"
+                          onClick={() => {
+                            this.openInappropriateContentDeletingModal(
+                              inappripriateContent
+                            );
+                          }}
+                          class="text-danger mr-4"
+                          data-toggle="tooltip"
+                          data-placement="top"
+                          title=""
+                          data-original-title="Edit"
+                          style={{ fontSize: "20px" }}
+                        >
+                          <i class="fa fa-trash" aria-hidden="true"></i>
+                        </a>
+                        <a
+                          href="javascript:void(0)"
+                          onClick={() => {
+                            this.openDeactivateUserModal(inappripriateContent);
+                          }}
+                          class="text-danger mr-4"
+                          data-toggle="tooltip"
+                          data-placement="top"
+                          title=""
+                          data-original-title="Close"
+                          style={{ fontSize: "20px" }}
+                        >
+                          <i class="fa fa-ban"></i>
+                        </a>
+                      </div>
                     </div>
                   );
                 } else {
-                  return (
-                    <div>
-                      <b
-                        class=" text-danger mr-4"
-                        style={{ marginLeft: "25px" }}
-                      >
+                  //inappripriateContent.accepted = true;
+                  if (inappripriateContent.accepted) {
+                    return (
+                      <div>
                         {" "}
-                        Rejected
-                      </b>
-                    </div>
-                  );
+                        <b
+                          class="text-success mr-4"
+                          style={{ marginLeft: "25px" }}
+                        >
+                          {" "}
+                          Accepted
+                        </b>
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div>
+                        <b
+                          class=" text-danger mr-4"
+                          style={{ marginLeft: "25px" }}
+                        >
+                          {" "}
+                          Rejected
+                        </b>
+                      </div>
+                    );
+                  }
                 }
-              }
-            })()}
-          </td>
-        </tr>
-      );
-    });
+              })()}
+            </td>
+          </tr>
+        );
+      }
+    );
 
     return (
       <div>

@@ -24,7 +24,7 @@ class PostService {
 
     const requestOptions = {
       method: "POST",
-       headers: { "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
       body: formData,
     };
 
@@ -34,8 +34,10 @@ class PostService {
   insertNewComment(postId, text, publisher) {
     const requestOptions = {
       method: "PUT",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
       body: JSON.stringify({ postId, text, publisher }),
     };
 
@@ -45,8 +47,10 @@ class PostService {
   likePost(postId, publisher) {
     const requestOptions = {
       method: "PUT",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
       body: JSON.stringify({ postId, publisher }),
     };
 
@@ -56,8 +60,10 @@ class PostService {
   dislikePost(postId, publisher) {
     const requestOptions = {
       method: "PUT",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
       body: JSON.stringify({ postId, publisher }),
     };
 
@@ -67,8 +73,10 @@ class PostService {
   savePostAsFavorite(postId, publisher) {
     const requestOptions = {
       method: "PUT",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
       body: JSON.stringify({ postId, publisher }),
     };
 
@@ -78,7 +86,7 @@ class PostService {
   getPostsForProfile(profileId) {
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
 
     return fetch(API_URL + "post/profile/" + profileId, requestOptions);
@@ -87,33 +95,39 @@ class PostService {
   getFavoritePosts(profileId) {
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
-    
+
     return fetch(API_URL + "post/favorites/" + profileId, requestOptions);
   }
 
   getLikedAndDislikedPosts(profileId) {
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
 
-    return fetch(API_URL + "post/likedAndDislikedPosts/" + profileId, requestOptions);
+    return fetch(
+      API_URL + "post/likedAndDislikedPosts/" + profileId,
+      requestOptions
+    );
   }
 
   getPostsFromFollowedProfiles(profileId) {
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
 
-    return fetch(API_URL + "post/postsFromFollowedProfiles/" + profileId, requestOptions);
+    return fetch(
+      API_URL + "post/postsFromFollowedProfiles/" + profileId,
+      requestOptions
+    );
   }
 
   getPublicPosts(profileId) {
     const requestOptions = {
-      method: "GET"
+      method: "GET",
     };
 
     return fetch(API_URL + "post/public/" + profileId, requestOptions);
@@ -121,7 +135,7 @@ class PostService {
 
   getAllPosts() {
     const requestOptions = {
-      method: "GET"
+      method: "GET",
     };
 
     return fetch(API_URL + "post", requestOptions);
@@ -130,10 +144,19 @@ class PostService {
   getSearchedPosts(searchParam) {
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
 
     return fetch(API_URL + "post/search/" + searchParam, requestOptions);
+  }
+
+  getById(postId) {
+    const requestOptions = {
+      method: "GET",
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
+    };
+
+    return fetch(API_URL + "post/" + postId, requestOptions);
   }
 }
 
