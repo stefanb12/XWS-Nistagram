@@ -363,6 +363,51 @@ namespace UserMicroservice.Service
             return profileCloseFriend;
         }
 
+        public async Task<List<Profile>> GetNotificationProfiles(int id)
+        {
+            ProfileSettings profileSettings = await _profileSettingsRepository.GetById(id);
+            List<Profile> notificationProfiles = new List<Profile>();
+            foreach (ProfileNotificationProfile profileNotificationProfile in profileSettings.NotificationProfiles)
+            {
+                notificationProfiles.Add(profileNotificationProfile.NotificationProfile);
+            }
+
+            return notificationProfiles;
+        }
+
+        public async Task<ProfileNotificationProfile> AddNotificationProfile(int profileId, int id)
+        {
+            ProfileSettings profile = await _profileSettingsRepository.GetById(profileId);
+            ProfileSettings notificationProfile = await _profileSettingsRepository.GetById(id);
+            if (profile == null || notificationProfile == null)
+            {
+                return null;
+            }
+            ProfileNotificationProfile profileNotificationProfile = new ProfileNotificationProfile();
+            profileNotificationProfile.NotificationProfileId = notificationProfile.Id;
+            profileNotificationProfile.ProfileSettingsId = profile.Id;
+            profile.NotificationProfiles.Add(profileNotificationProfile);
+            await _profileSettingsRepository.Update(profile);
+
+            return profileNotificationProfile;
+        }
+
+        public async Task<ProfileNotificationProfile> RemoveNotificationProfile(int profileId, int id)
+        {
+            ProfileSettings profile = await _profileSettingsRepository.GetById(profileId);
+            ProfileSettings notificationProfile = await _profileSettingsRepository.GetById(id);
+            if (profile == null || notificationProfile == null)
+            {
+                return null;
+            }
+            ProfileNotificationProfile profileNotificationProfile = profile.NotificationProfiles.Where(ps =>
+                ps.NotificationProfileId == notificationProfile.Id).SingleOrDefault();
+            profile.NotificationProfiles.Remove(profileNotificationProfile);
+            await _profileSettingsRepository.Update(profile);
+
+            return profileNotificationProfile;
+        }
+
         public async Task<ProfileSettings> GetProfileSettingsById(int id)
         {
             return await _profileSettingsRepository.GetById(id);
