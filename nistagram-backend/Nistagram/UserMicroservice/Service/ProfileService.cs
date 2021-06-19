@@ -232,13 +232,7 @@ namespace UserMicroservice.Service
             profile.MutedProfiles.Add(profileMutedProfile);
             await _profileSettingsRepository.Update(profile);
 
-            /*
-            ProfileMutedProfile profileMutingProfile = new ProfileMutedProfile();
-            profileMutingProfile.MutedProfileId = profile.Id;
-            profileMutingProfile.ProfileSettingsId = muteProfile.Id;
-            profile.MutedProfiles.Add(profileMutingProfile);
-            await _profileSettingsRepository.Update(muteProfile);
-            */
+            _profileUpdatedSender.SendUpdatedProfile(await GetById(profileId));
 
             return profileMutedProfile;
         }
@@ -256,19 +250,7 @@ namespace UserMicroservice.Service
             profile.MutedProfiles.Remove(profileMutedProfile);
             await _profileSettingsRepository.Update(profile);
 
-            /*
-            ProfileFollowing profileFollowing = followerProfile.Following.Where(profileFollowing =>
-                profileFollowing.ProfileId == followerProfile.Id &&
-                profileFollowing.FollowingId == followingProfile.Id).SingleOrDefault();
-            followerProfile.Following.Remove(profileFollowing);
-            await Update(followingProfile);
-
-            _profileUpdatedSender.SendUpdatedProfile(followingProfile);
-
-            ProfileFollower res = new ProfileFollower();
-            res.Profile = followingProfile;
-            res.Follower = followerProfile;
-            */
+            _profileUpdatedSender.SendUpdatedProfile(await GetById(profileId));
 
             return profileMutedProfile;
         }
@@ -299,6 +281,8 @@ namespace UserMicroservice.Service
             profile.BlockedProfiles.Add(profileBlockedProfile);
             await _profileSettingsRepository.Update(profile);
 
+            _profileUpdatedSender.SendUpdatedProfile(await GetById(profileId));
+
             return profileBlockedProfile;
         }
 
@@ -314,6 +298,8 @@ namespace UserMicroservice.Service
                 ps.BlockedProfileId == muteProfile.Id).SingleOrDefault();
             profile.BlockedProfiles.Remove(profileBlockedProfile);
             await _profileSettingsRepository.Update(profile);
+
+            _profileUpdatedSender.SendUpdatedProfile(await GetById(profileId));
 
             return profileBlockedProfile;
         }
@@ -344,6 +330,8 @@ namespace UserMicroservice.Service
             profile.CloseFriends.Add(profileCloseFriend);
             await Update(profile);
 
+            _profileUpdatedSender.SendUpdatedProfile(profile);
+
             return profileCloseFriend;
         }
 
@@ -359,6 +347,8 @@ namespace UserMicroservice.Service
                 p.CloseFriendId == closeFriend.Id).SingleOrDefault();
             profile.CloseFriends.Remove(profileCloseFriend);
             await Update(profile);
+
+            _profileUpdatedSender.SendUpdatedProfile(profile);
 
             return profileCloseFriend;
         }
@@ -389,6 +379,8 @@ namespace UserMicroservice.Service
             profile.NotificationProfiles.Add(profileNotificationProfile);
             await _profileSettingsRepository.Update(profile);
 
+            _profileUpdatedSender.SendUpdatedProfile(await GetById(profileId));
+
             return profileNotificationProfile;
         }
 
@@ -405,6 +397,8 @@ namespace UserMicroservice.Service
             profile.NotificationProfiles.Remove(profileNotificationProfile);
             await _profileSettingsRepository.Update(profile);
 
+            _profileUpdatedSender.SendUpdatedProfile(await GetById(profileId));
+
             return profileNotificationProfile;
         }
 
@@ -413,9 +407,11 @@ namespace UserMicroservice.Service
             return await _profileSettingsRepository.GetById(id);
         }
 
-        public async Task<ProfileSettings> UpdateProfileSettings(ProfileSettings entity)
+        public async Task<ProfileSettings> UpdateProfileSettings(ProfileSettings entity, int profileId)
         {
-            return await _profileSettingsRepository.Update(entity);
+            ProfileSettings profileSettings = await _profileSettingsRepository.Update(entity);
+            _profileUpdatedSender.SendUpdatedProfile(await GetById(profileId));
+            return profileSettings;
         }
 
         public async Task<string> SaveImage(IFormFile imageFile)

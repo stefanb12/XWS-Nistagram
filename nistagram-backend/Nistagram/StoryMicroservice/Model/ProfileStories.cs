@@ -13,6 +13,7 @@ namespace StoryMicroservice.Model
         public List<Story> Stories { get; set; }
         public List<int> Following { get; set; }
         public List<int> CloseFriends { get; set; }
+        public List<int> MutedProfiles { get; set; }
         public string ImageName { get; set; }
         public IFormFile ImageFile { get; set; }
         public string ImageSrc { get; set; }

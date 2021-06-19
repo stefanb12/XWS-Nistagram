@@ -50,14 +50,45 @@ namespace UserMicroservice.Messaging
                     }
                 }
 
+                List<int> blockedProfilesIds = new List<int>();
+                if (profile.ProfileSettings.BlockedProfiles != null)
+                {
+                    foreach (ProfileBlockedProfile blockedProfile in profile.ProfileSettings.BlockedProfiles)
+                    {
+                        blockedProfilesIds.Add(blockedProfile.BlockedProfileId);
+                    }
+                }
+
+                List<int> mutedProfilesIds = new List<int>();
+                if (profile.ProfileSettings.MutedProfiles != null)
+                {
+                    foreach (ProfileMutedProfile mutedProfile in profile.ProfileSettings.MutedProfiles)
+                    {
+                        mutedProfilesIds.Add(mutedProfile.MutedProfileId);
+                    }
+                }
+
+                List<int> notificationProfilesIds = new List<int>();
+                if (profile.ProfileSettings.NotificationProfiles != null)
+                {
+                    foreach (ProfileNotificationProfile notificationProfile in profile.ProfileSettings.NotificationProfiles)
+                    {
+                        notificationProfilesIds.Add(notificationProfile.NotificationProfileId);
+                    }
+                }
+
                 var integrationEventData = JsonConvert.SerializeObject(new
                 {
                     id = profile.Id,
                     username = profile.Username,
                     isPrivate = profile.IsPrivate,
-                    following = followingIds,
+                    deactivated = profile.Deactivated,
                     profileImage = profile.ImageName,
-                    closeFriends = closeFriendsIds
+                    following = followingIds,
+                    closeFriends = closeFriendsIds,
+                    blockedProfiles = blockedProfilesIds,
+                    mutedProfiles = mutedProfilesIds,
+                    notificationProfiles = notificationProfilesIds
                 });
 
                 var body = Encoding.UTF8.GetBytes(integrationEventData);

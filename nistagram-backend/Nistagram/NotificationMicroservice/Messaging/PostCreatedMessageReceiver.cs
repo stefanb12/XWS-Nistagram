@@ -54,8 +54,8 @@ namespace NotificationMicroservice.Messaging
 
         public void ReceiveMessage()
         {
-
             var consumer = new EventingBasicConsumer(_channel);
+            var scope = Services.CreateScope();
             consumer.Received += (model, ea) =>
             {
                 var body = ea.Body.ToArray();
@@ -63,18 +63,16 @@ namespace NotificationMicroservice.Messaging
                 Console.WriteLine(" [x] Received {0}", message);
 
                 var data = JObject.Parse(message);
-                using (var scope = Services.CreateScope())
-                {
-                    var scopedProcessingService =
-                        scope.ServiceProvider
-                            .GetRequiredService<IPostService>();
+                var scopedProcessingService =
+                    scope.ServiceProvider
+                        .GetRequiredService<IPostService>();
 
-                    scopedProcessingService.Insert(new Post()
-                    {
-                        OriginalId = data["originalId"].Value<int>(),
-                        ImageName = data["image"].Value<string>()
-                    });
-                }
+                scopedProcessingService.Insert(new Post()
+                {
+                    OriginalId = data["originalId"].Value<int>(),
+                    ImageName = data["image"].Value<string>()
+                });
+                
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };
