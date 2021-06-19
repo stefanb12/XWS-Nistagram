@@ -65,7 +65,7 @@ export default class ProfileVerificationRequest extends Component {
         onHide={this.closeImageModal}
         style={{
           marginTop: "120px",
-          minHeight: "560px",
+          height: "560px",
           overflow: "hidden",
         }}
       >
@@ -79,6 +79,7 @@ export default class ProfileVerificationRequest extends Component {
             style={{
               overflow: "auto",
               minHeight: "250px",
+              maxHeight: "560px",
             }}
           >
             <img
@@ -136,6 +137,7 @@ export default class ProfileVerificationRequest extends Component {
                         data-placement="top"
                         title=""
                         data-original-title="Edit"
+                        style={{ fontSize: "20px" }}
                       >
                         <i class="fa fa-check"></i>
                       </a>
@@ -149,6 +151,7 @@ export default class ProfileVerificationRequest extends Component {
                         data-placement="top"
                         title=""
                         data-original-title="Close"
+                        style={{ fontSize: "20px" }}
                       >
                         <i class="fa fa-times"></i>
                       </a>
