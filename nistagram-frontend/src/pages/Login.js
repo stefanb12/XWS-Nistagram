@@ -106,7 +106,7 @@ const Login = () => {
             }) => (
               <form onSubmit={handleSubmit} style={{ marginTop: "80px" }}>
                 <Box sx={{ mb: 3 }}>
-                  <Typography color="textPrimary" variant="h2">
+                  <Typography color="textPrimary" variant="h3">
                     Sign in
                   </Typography>
                   <Typography

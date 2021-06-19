@@ -11,12 +11,24 @@ class AuthService {
     return fetch(API_URL + "auth/login", requestOptions);
   }
 
-  registerUser(fullName, username, email, password, gender) {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fullName, username, email, password, gender }),
-    };
+  registerUser(fullName, username, email, password, gender, isAgent, website) {
+    let userRole;
+    var requestOptions;
+    if (isAgent) {
+      userRole = 1;
+      requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullName, username, email, password, gender, userRole, website }),
+      };
+    } else {
+      userRole = 0;
+      requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullName, username, email, password, gender, userRole}),
+      };
+    }
 
     return fetch(API_URL + "profile/registration", requestOptions);
   }

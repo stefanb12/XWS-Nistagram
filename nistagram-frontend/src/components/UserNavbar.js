@@ -9,13 +9,11 @@ import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import SearchIcon from "@material-ui/icons/Search";
-import Telegram from "@material-ui/icons/Telegram";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import {
-  BookmarkBorder,
   ExitToApp,
   FavoriteBorder,
   Home,
@@ -47,7 +45,6 @@ import hash from "../assets/images/hash.svg";
 import ExploreOutlinedIcon from "@material-ui/icons/ExploreOutlined";
 import ExploreIcon from "@material-ui/icons/Explore";
 import ChatOutlinedIcon from "@material-ui/icons/ChatOutlined";
-import ChatIcon from "@material-ui/icons/Chat";
 
 const useStyles = makeStyles((theme) => ({
   grow: {

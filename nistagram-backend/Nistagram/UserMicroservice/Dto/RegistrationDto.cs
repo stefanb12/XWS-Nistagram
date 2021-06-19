@@ -15,6 +15,7 @@ namespace UserMicroservice.Dto
         public string Email { get; set; }
         public Gender Gender { get; set; }
         public UserRole UserRole { get; set; }
+        public string Website { get; set; }
 
         public RegistrationDto()
         {
