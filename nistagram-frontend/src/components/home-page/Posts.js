@@ -8,6 +8,7 @@ import AuthService from "../../services/AuthService";
 import PostCard from "./PostCard";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
+import NotificationService from "../../services/NotificationService";
 
 export default class Posts extends Component {
   constructor(props) {
@@ -185,6 +186,10 @@ export default class Posts extends Component {
             )
               .then((res) => res.json())
               .then((result) => {
+                NotificationService.sendPostNotification(
+                  1,
+                  AuthService.getCurrentUser().id
+                );
                 this.setState({
                   posts: result,
                 });

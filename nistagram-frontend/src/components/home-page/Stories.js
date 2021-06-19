@@ -18,6 +18,7 @@ import moment from "moment";
 import { withRouter } from "react-router-dom";
 import ReactPlayer from "react-player";
 import InappropriateContentService from "../../services/InappropriateContentService";
+import NotificationService from "../../services/NotificationService";
 
 class Stories extends Component {
   constructor(props) {
@@ -131,13 +132,15 @@ class Stories extends Component {
       if (res.status === 200) {
         this.clearImages();
         this.closeAddStoryModal();
-        this.setState({
-          closeFriendsOnly: false,
-        });
+        NotificationService.sendStoryNotification(
+          1,
+          AuthService.getCurrentUser().id
+        );
         this.setState({
           storyAddedSnackbarShown: true,
           snackbarMessage: "Story added successfully!",
           snackbarSeverity: "success",
+          closeFriendsOnly: false,
         });
         StoryService.getAllStories()
           .then((res) => {

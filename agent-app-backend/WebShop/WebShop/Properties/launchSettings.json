@@ -1,0 +1,42 @@
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:37424",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "weatherforecast",
+      "environmentVariables": {
+        "DATABASE_SSL_MODE": "None",
+        "DATABASE_HOST": "localhost",
+        "DATABASE_PASSWORD": "root",
+        "DATABASE_USERNAME": "root",
+        "DATABASE_SCHEMA": "WebShopDb",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DATABASE_PORT": "3306"
+      }
+    },
+    "WebShop": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "weatherforecast",
+      "applicationUrl": "https://localhost:5001;http://localhost:5000",
+      "environmentVariables": {
+        "DATABASE_SSL_MODE": "None",
+        "DATABASE_HOST": "localhost",
+        "DATABASE_PASSWORD": "root",
+        "DATABASE_USERNAME": "root",
+        "DATABASE_SCHEMA": "WebShopDb",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DATABASE_PORT": "3306"
+      }
+    }
+  }
+}
