@@ -21,11 +21,14 @@ namespace UserMicroservice.Controllers
     {
         private readonly IProfileService _profileService;
         private readonly IFollowRequestService _followRequestService;
+        private readonly IRegistrationRequestService _registrationRequestService;
 
-        public ProfileController(IProfileService profileService, IFollowRequestService followRequestService)
+        public ProfileController(IProfileService profileService, IFollowRequestService followRequestService, 
+                                 IRegistrationRequestService registrationRequestService)
         {
             _profileService = profileService;
             _followRequestService = followRequestService;
+            _registrationRequestService = registrationRequestService;
         }
 
         [HttpPost("registration")]
@@ -35,6 +38,15 @@ namespace UserMicroservice.Controllers
 
             if (profile != null) 
             {
+                if (profile.UserRole == Model.Enum.UserRole.Agent)
+                {
+                    await _registrationRequestService.Insert(new RegistrationRequest()
+                    {
+                        AgentId = profile.Id,
+                        Accepted = false,
+                        Processed = false
+                    });
+                }
                 return CreatedAtAction(nameof(GetById), new { id = profile.Id }, profile);
             }
             return BadRequest();

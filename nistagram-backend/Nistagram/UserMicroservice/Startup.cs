@@ -48,10 +48,12 @@ namespace ProfileMicroservice
             services.AddScoped<IProfileSettingsRepository, ProfileSettingsRepository>();
             services.AddScoped<IFollowRequestRepository, FollowRequestRepository>();
             services.AddScoped<IProfileVerificationRequestRepository, ProfileVerificationRequestRepository>();
+            services.AddScoped<IRegistrationRequestRepository, RegistrationRequestRepository>();
 
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IFollowRequestService, FollowRequestService>();
             services.AddScoped<IProfileVerificationRequestService, ProfileVerificationRequestService>();
+            services.AddScoped<IRegistrationRequestService, RegistrationRequestService>();
 
             // JWT Token
             var appSettingsSection = Configuration.GetSection("AppSettings");

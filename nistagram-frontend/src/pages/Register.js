@@ -1,6 +1,8 @@
 import { Link as RouterLink } from "react-router-dom";
+import Collapse from '@material-ui/core/Collapse';
 import * as Yup from "yup";
 import { Formik } from "formik";
+import Hidden from '@material-ui/core/Hidden';
 import {
   Box,
   Button,
@@ -18,6 +20,7 @@ import {
 import React from "react";
 import AuthService from "../services/AuthService";
 import { Alert } from "@material-ui/lab";
+import { CheckBox } from "@material-ui/icons";
 
 const Register = () => {
   const [showSnackbar, setShowSnackbar] = React.useState(false);
@@ -29,7 +32,9 @@ const Register = () => {
     username,
     email,
     password,
-    gender
+    gender,
+    isAgent,
+    websiteLink
   ) => {
     let resStatus = false;
     await AuthService.registerUser(
@@ -37,7 +42,9 @@ const Register = () => {
       username,
       email,
       password,
-      gender
+      gender,
+      isAgent,
+      websiteLink
     ).then((result) => {
       if (result.status === 201) {
         setSnackBarMessage("Registration successful!");
@@ -88,6 +95,8 @@ const Register = () => {
               fullName: "",
               password: "",
               gender: "male",
+              isAgent: false,
+              websiteLink: ""
             }}
             validationSchema={Yup.object().shape({
               username: Yup.string().max(255).required("Username is required"),
@@ -98,15 +107,23 @@ const Register = () => {
               fullName: Yup.string()
                 .max(255)
                 .required("First name is required"),
-              password: Yup.string().max(255).required("password is required"),
+              password: Yup.string().max(255).required("Password is required"),
+              isAgent: Yup.bool(),
+              websiteLink:  Yup.string().when("isAgent", {
+                is: true,
+                then: Yup.string().required("Website link is required")
+              })
             })}
             onSubmit={async (values) => {
+              //console.log(values);
               let res = await handleRegistration(
                 values.fullName,
                 values.username,
                 values.email,
                 values.password,
-                values.gender
+                values.gender,
+                values.isAgent,
+                values.websiteLink
               );
               if (res) {
                 values.username = "";
@@ -114,6 +131,8 @@ const Register = () => {
                 values.fullName = "";
                 values.password = "";
                 values.gender = "male";
+                values.isAgent = false;
+                values.websiteLink = "";
               }
             }}
           >
@@ -127,8 +146,11 @@ const Register = () => {
               values,
             }) => (
               <form onSubmit={handleSubmit}>
-                <Box sx={{ mb: 3 }}>
-                  <Typography color="textPrimary" variant="h2">
+                <Box sx={{ mb: 3 }} 
+                  style={{
+                    marginTop: "-10px"
+                  }}>
+                  <Typography color="textPrimary" variant="h3">
                     Create new account
                   </Typography>
                   <Typography
@@ -207,6 +229,32 @@ const Register = () => {
                     label="Female"
                   />
                 </RadioGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={values.isAgent}
+                      onChange={handleChange}
+                      name="isAgent"
+                      color="primary"
+                    />
+                  }
+                  label="Register as agent"
+                />
+                <Collapse in={values.isAgent}>
+                  <TextField
+                    error={Boolean(touched.websiteLink && errors.websiteLink)}
+                    fullWidth
+                    //disabled={!values.isAgent}
+                    helperText={touched.websiteLink && errors.websiteLink}
+                    label="Website link"
+                    margin="normal"
+                    name="websiteLink"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.websiteLink}
+                    variant="outlined"
+                  />
+                </Collapse>
                 <Box sx={{ py: 2 }}>
                   <Button
                     color="primary"
