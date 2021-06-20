@@ -24,9 +24,13 @@ namespace UserMicroservice.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] AuthenticateDto model)
         {
-            User user = await _profileService.Authenticate(model.Username, model.Password, Encoding.ASCII.GetBytes(_appSettings.Secret));
+            Profile user = (Profile) await _profileService.Authenticate(model.Username, model.Password, Encoding.ASCII.GetBytes(_appSettings.Secret));
             
             if (user == null)
+            {
+                return BadRequest();
+            }
+            else if (user.Deactivated)
             {
                 return Unauthorized();
             }

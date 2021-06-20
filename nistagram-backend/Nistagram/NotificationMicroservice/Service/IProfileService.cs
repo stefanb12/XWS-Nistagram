@@ -8,5 +8,6 @@ namespace NotificationMicroservice.Service
 {
     public interface IProfileService : IService<Profile>
     {
+        Task<Profile> GetByOriginalId(int id);
     }
 }

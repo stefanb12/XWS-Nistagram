@@ -33,5 +33,6 @@ namespace UserMicroservice.Service
         Task<ProfileNotificationProfile> RemoveNotificationProfile(int profileId, int id);
         Task<ProfileSettings> GetProfileSettingsById(int id);
         Task<ProfileSettings> UpdateProfileSettings(ProfileSettings entity, int profileId);
+        Task<Profile> ActivateAgentProfile(int agentProfileId);
     }
 }

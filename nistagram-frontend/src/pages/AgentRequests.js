@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ProfileVerificationRequestService from "../services/ProfileVerificationRequestService";
 import { Button, Modal } from "react-bootstrap";
 import Register from "./Register.js";
+import RegistrationRequestService from "../services/RegistrationRequestService";
 
 export default class AgentRequest extends Component {
   constructor(props) {
@@ -18,11 +19,11 @@ export default class AgentRequest extends Component {
   }
 
   componentDidMount() {
-    this.getAllProfileVerificationRequests();
+    this.getAllRegistrationRequests();
   }
 
-  getAllProfileVerificationRequests = () => {
-    ProfileVerificationRequestService.getAllProfileVerificationRequests()
+  getAllRegistrationRequests = () => {
+    RegistrationRequestService.getAllRegistrationRequests()
       .then((res) => {
         return res.json();
       })
@@ -41,22 +42,22 @@ export default class AgentRequest extends Component {
   closeImageModal = () => this.setState({ isOpenImageModal: false });
 
   acceptRequest = (requestId) => {
-    ProfileVerificationRequestService.acceptRequest(requestId)
+    RegistrationRequestService.acceptRequest(requestId)
       .then((res) => {
         return res.json();
       })
       .then((data) => {
-        this.getAllProfileVerificationRequests();
+        this.getAllRegistrationRequests();
       });
   };
 
   rejectRequest = (requestId) => {
-    ProfileVerificationRequestService.rejectRequest(requestId)
+    RegistrationRequestService.rejectRequest(requestId)
       .then((res) => {
         return res.json();
       })
       .then((data) => {
-        this.getAllProfileVerificationRequests();
+        this.getAllRegistrationRequests();
       });
   };
 
@@ -114,10 +115,10 @@ export default class AgentRequest extends Component {
     const tableRows = this.state.requests.map((request, key) => {
       return (
         <tr id={key}>
-          <td style={{ textAlign: "center" }}>{request.username}</td>
-          <td style={{ textAlign: "center" }}>{request.fullName}</td>
-          <td style={{ textAlign: "center" }}>{request.email}</td>
-          <td style={{ textAlign: "center" }}>{request.website}</td>
+          <td style={{ textAlign: "center" }}>{request.agent.username}</td>
+          <td style={{ textAlign: "center" }}>{request.agent.fullName}</td>
+          <td style={{ textAlign: "center" }}>{request.agent.email}</td>
+          <td style={{ textAlign: "center" }}>{request.agent.website}</td>
           <td style={{ textAlign: "center" }}>
             {(() => {
               //request.processed = true;

@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using UserMicroservice.Email;
 using UserMicroservice.Messaging;
 using UserMicroservice.Model;
 using UserMicroservice.Repository;
@@ -22,13 +23,17 @@ namespace UserMicroservice.Service
         private IProfileSettingsRepository _profileSettingsRepository;
         private IProfileCreatedMessageSender _profileCreatedSender;
         private IProfileUpdatedMessageSender _profileUpdatedSender;
+        private IEmailSender _emailSender;
 
-        public ProfileService(IProfileRepository userRepository, IProfileSettingsRepository profileSettingsRepository, IProfileCreatedMessageSender profileCreatedSender, IProfileUpdatedMessageSender profileUpdatedSender)
+        public ProfileService(IProfileRepository userRepository, IProfileSettingsRepository profileSettingsRepository, 
+                              IProfileCreatedMessageSender profileCreatedSender, IProfileUpdatedMessageSender profileUpdatedSender, 
+                              IEmailSender emailSender)
         {
             _profileRepository = userRepository;
             _profileSettingsRepository = profileSettingsRepository;
             _profileCreatedSender = profileCreatedSender;
             _profileUpdatedSender = profileUpdatedSender;
+            _emailSender = emailSender;
         }
 
         public async Task<List<Profile>> GetFollowers(int id)
@@ -188,20 +193,23 @@ namespace UserMicroservice.Service
                 return null;
             }
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = secretKey;
-            var tokenDescriptor = new SecurityTokenDescriptor
+            if (!user.Deactivated)
             {
-                Subject = new ClaimsIdentity(new Claim[]
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = secretKey;
+                var tokenDescriptor = new SecurityTokenDescriptor
                 {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
                     new Claim(ClaimTypes.Name, user.Id.ToString()),
                     new Claim("UserRole", user.UserRole.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddHours(3),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.Token = tokenHandler.WriteToken(token);
+                    }),
+                    Expires = DateTime.UtcNow.AddHours(3),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                user.Token = tokenHandler.WriteToken(token);
+            }
 
             return user;
         }
@@ -412,6 +420,18 @@ namespace UserMicroservice.Service
             ProfileSettings profileSettings = await _profileSettingsRepository.Update(entity);
             _profileUpdatedSender.SendUpdatedProfile(await GetById(profileId));
             return profileSettings;
+        }
+
+        public async Task<Profile> ActivateAgentProfile(int agentProfileId)
+        {
+            Profile entity = await _profileRepository.GetById(agentProfileId);
+            entity.Deactivated = false;
+            Profile agent = await Update(entity);
+            if (agent != null)
+            {
+                _emailSender.SendRegistrationRequestAcceptanceEmail(agent.Email, agent.Username);
+            }
+            return agent;
         }
 
         public async Task<string> SaveImage(IFormFile imageFile)

@@ -44,8 +44,8 @@ namespace NotificationMicroservice
             services.AddScoped<IProfileRepository, ProfileRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
 
-            services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IPostService, PostService>();
 
             string hostedService = Environment.GetEnvironmentVariable("HOSTED_SERVICE") ?? "true";
