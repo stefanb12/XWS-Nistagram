@@ -38,12 +38,14 @@ namespace PostMicroservice.Controllers
                 return NoContent();
             }
 
-            for(int i = 0; i < post.Contents.Count; i++)
+            List<PostDto> dto = new List<PostDto>();
+            for (int i = 0; i < post.Contents.Count; i++)
             {
                 post.Contents[i].ImageSrc = String.Format("http://localhost:55993/{0}", post.Contents[i].ImageName);
             }
+            dto.Add(PostMapper.PostToPostDto(post));
 
-            return Ok(post);
+            return Ok(dto);
         }
 
         [HttpGet("profile/{profileId}")]

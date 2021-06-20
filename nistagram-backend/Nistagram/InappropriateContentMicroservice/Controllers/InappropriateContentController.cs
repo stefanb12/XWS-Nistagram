@@ -3,6 +3,8 @@ using InappropriateContentMicroservice.Mapper;
 using InappropriateContentMicroservice.Model;
 using InappropriateContentMicroservice.Service;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace InappropriateContentMicroservice.Controllers
@@ -37,6 +39,20 @@ namespace InappropriateContentMicroservice.Controllers
             }
 
             return Ok(await _inappropriateContentService.Insert(inappropriateContent));
+        }
+
+        [HttpGet("getAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            List<InappropriateContentDto> dtos = new List<InappropriateContentDto>();
+            foreach (InappropriateContent inappropriateContent in await _inappropriateContentService.GetAll())
+            {
+                inappropriateContent.Sender = await _profileService.GetById(inappropriateContent.SenderId);
+                InappropriateContentDto dto = InappropriateContentMapper.InappropriateContentToInappropriateContentDto(inappropriateContent);
+                dtos.Add(dto);
+            }
+
+            return Ok(dtos.OrderByDescending(request => !request.Processed).ToList());
         }
     }
 }

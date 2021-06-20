@@ -26,5 +26,26 @@ namespace InappropriateContentMicroservice.Mapper
 
             return inappropriateContent;
         }
+
+        public static InappropriateContentDto InappropriateContentToInappropriateContentDto(InappropriateContent inappropriateContent)
+        {
+            InappropriateContentDto dto = new InappropriateContentDto();
+
+            dto.ReportComment = inappropriateContent.ReportComment;
+            dto.Processed = inappropriateContent.Processed;
+            dto.IsPost = inappropriateContent.IsPost;
+            dto.SenderId = inappropriateContent.SenderId;
+            dto.Username = inappropriateContent.Sender.Username;
+
+            if (!inappropriateContent.IsPost)
+            {
+                dto.StoryId = inappropriateContent.Story.OriginalId;
+            } else
+            {
+                dto.PostId = inappropriateContent.PostId;
+            }  
+
+            return dto;
+        }
     }
 }

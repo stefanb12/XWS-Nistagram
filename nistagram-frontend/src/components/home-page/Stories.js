@@ -479,7 +479,7 @@ class Stories extends Component {
           <div
             class="dropdown"
             ref={dropdownRef}
-            style={{ marginLeft: "120px", marginTop: "5px" }}
+            style={{ marginLeft: "100px", marginTop: "5px" }}
           >
             <button
               class="btn p-0"

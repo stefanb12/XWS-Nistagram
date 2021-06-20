@@ -6,8 +6,10 @@ class InappropriateContent {
   insertInappropriateContent(reportComment, isPost, senderId, postId, storyId) {
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
       body: JSON.stringify({
         reportComment,
         isPost,
@@ -18,6 +20,18 @@ class InappropriateContent {
     };
 
     return fetch(API_URL + "inappropriateContent", requestOptions);
+  }
+
+  getAll() {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
+    };
+
+    return fetch(API_URL + "inappropriateContent/getAll", requestOptions);
   }
 }
 
