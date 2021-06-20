@@ -1074,6 +1074,25 @@
                 "UserRole": "User , Agent"
             }*/
         },
+        {
+            "DownstreamPathTemplate": "/api/story/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55996
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/story/{id}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
 
         // InappropriateContentMicroservice
         {

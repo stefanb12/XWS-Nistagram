@@ -4,6 +4,7 @@ import InappropriateContentService from "../services/InappropriateContentService
 import PostService from "../services/PostService";
 import PostCard from "../components/home-page/PostCard";
 import moment from "moment";
+import StoryService from "../services/StoryService";
 
 export default class InappropriateContentRequests extends Component {
   constructor(props) {
@@ -18,6 +19,7 @@ export default class InappropriateContentRequests extends Component {
       message: "",
       snackbarType: "success",
       posts: [],
+      story: null,
       inappropriateContent: null,
     };
   }
@@ -60,22 +62,22 @@ export default class InappropriateContentRequests extends Component {
           });
         });
     } else {
-      this.setState({
-        inappropriateContent: inappropriateContent,
-      });
+      await StoryService.getById(inappropriateContent.storyId)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          console.log(data);
+          this.setState({
+            story: data,
+            inappropriateContent: inappropriateContent,
+          });
+        });
     }
 
-    this.setState(
-      {
-        isOpenInappropriateContentModal: true,
-      },
-      () => {
-        console.log(
-          "inappripriateContent after set:",
-          this.state.inappropriateContent
-        );
-      }
-    );
+    this.setState({
+      isOpenInappropriateContentModal: true,
+    });
   };
 
   closeInappropriateContentModal = () =>
@@ -216,7 +218,6 @@ export default class InappropriateContentRequests extends Component {
           <div>
             {(() => {
               if (this.state.inappropriateContent !== null) {
-                console.log(this.state.inappropriateContent.isPost);
                 if (this.state.inappropriateContent.isPost) {
                   return (
                     <div>
@@ -225,11 +226,10 @@ export default class InappropriateContentRequests extends Component {
                     </div>
                   );
                 } else {
-                  console.log("story");
                   return (
                     <div>
                       <img
-                        src={"http://localhost:55993/2212424861.png"}
+                        src={this.state.story.publisherImageSrc}
                         class="img-fluid avatar avatar-medium shadow rounded-pill"
                         alt=""
                         style={{
@@ -244,7 +244,7 @@ export default class InappropriateContentRequests extends Component {
                           fontSize: "18px",
                         }}
                       >
-                        stefanb
+                        {this.state.story.publisherUsername}
                       </b>
                       <small
                         style={{
@@ -252,7 +252,7 @@ export default class InappropriateContentRequests extends Component {
                         }}
                       >
                         {moment(
-                          moment(this.state.currentStoryPublishingDate).format(
+                          moment(this.state.story.publishingDate).format(
                             "YYYY-MM-DD HH:mm:ss"
                           )
                         ).fromNow()}
@@ -265,7 +265,7 @@ export default class InappropriateContentRequests extends Component {
                           marginTop: "20px",
                           marginLeft: "75px",
                         }}
-                        src={"http://localhost:55993/2212424861.png"}
+                        src={this.state.story.imageSrc}
                         class="img-thumbnail"
                       />
                     </div>

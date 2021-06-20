@@ -50,6 +50,20 @@ namespace StoryMicroservice.Controllers
             return Ok(returnValue);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(string id)
+        {
+            Story story = await _storyService.GetById(id);
+
+            if (story == null)
+            {
+                return NoContent();
+            }
+
+            story.Publisher = await _profileService.GetProfileByOriginalId(story.PublisherId); 
+            return Ok(StoryMapper.StoryToStoryDto(story));
+        }
+
         [HttpGet("getAllProfileStories/{id}")]
         public async Task<IActionResult> GetFollowingProfilesStories(int id)
         {
