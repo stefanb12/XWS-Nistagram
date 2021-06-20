@@ -44,6 +44,7 @@ namespace StoryMicroservice.Mapper
             {
                 dto.PublisherImageSrc = String.Format("http://localhost:55988/{0}", story.Publisher.ImageName);
                 dto.PublisherUsername = story.Publisher.Username;
+                dto.PublisherOriginalId = story.Publisher.OriginalId;
             }
             dto.Deleted = story.Deleted;
 

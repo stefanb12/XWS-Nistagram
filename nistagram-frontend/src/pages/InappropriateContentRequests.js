@@ -40,11 +40,32 @@ export default class InappropriateContentRequests extends Component {
       });
   };
 
-  openInappropriateContentDeletingModal = (inappropriateContent) => {
-    this.setState({
-      isOpenInappropriateContentDeletingModal: true,
-      inappropriateContent: inappropriateContent,
-    });
+  openInappropriateContentDeletingModal = async (inappropriateContent) => {
+    if (inappropriateContent.isPost) {
+      await PostService.getById(inappropriateContent.postId)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          this.setState({
+            posts: data,
+            inappropriateContent: inappropriateContent,
+            isOpenInappropriateContentDeletingModal: true,
+          });
+        });
+    } else {
+      await StoryService.getById(inappropriateContent.storyId)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          this.setState({
+            story: data,
+            inappropriateContent: inappropriateContent,
+            isOpenInappropriateContentDeletingModal: true,
+          });
+        });
+    }
   };
 
   closeInappropriateContentDeletingModal = () =>
@@ -89,11 +110,32 @@ export default class InappropriateContentRequests extends Component {
       inappropriateContent: null,
     });
 
-  openDeactivateUserModal = (inappropriateContent) => {
-    this.setState({
-      isOpenDeactivateUserModal: true,
-      inappropriateContent: inappropriateContent,
-    });
+  openDeactivateUserModal = async (inappropriateContent) => {
+    if (inappropriateContent.isPost) {
+      await PostService.getById(inappropriateContent.postId)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          this.setState({
+            posts: data,
+            inappropriateContent: inappropriateContent,
+            isOpenDeactivateUserModal: true,
+          });
+        });
+    } else {
+      await StoryService.getById(inappropriateContent.storyId)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          this.setState({
+            story: data,
+            inappropriateContent: inappropriateContent,
+            isOpenDeactivateUserModal: true,
+          });
+        });
+    }
   };
 
   closeDeactivateUserModal = () =>
@@ -102,11 +144,32 @@ export default class InappropriateContentRequests extends Component {
       inappropriateContent: null,
     });
 
-  openRejectRequestModal = (inappropriateContent) => {
-    this.setState({
-      isOpenRejectRequestModal: true,
-      inappropriateContent: inappropriateContent,
-    });
+  openRejectRequestModal = async (inappropriateContent) => {
+    if (inappropriateContent.isPost) {
+      await PostService.getById(inappropriateContent.postId)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          this.setState({
+            posts: data,
+            inappropriateContent: inappropriateContent,
+            isOpenRejectRequestModal: true,
+          });
+        });
+    } else {
+      await StoryService.getById(inappropriateContent.storyId)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          this.setState({
+            story: data,
+            inappropriateContent: inappropriateContent,
+            isOpenRejectRequestModal: true,
+          });
+        });
+    }
   };
 
   closeRejectRequestModal = () =>
@@ -192,7 +255,7 @@ export default class InappropriateContentRequests extends Component {
           return res.json();
         })
         .then((data) => {
-          publisherId = data[0].publisher.id;
+          publisherId = data.publisherOriginalId;
           this.deactivateRequest(inappropriateContentId, publisherId);
         });
     }
@@ -535,7 +598,7 @@ export default class InappropriateContentRequests extends Component {
                       <div>
                         {" "}
                         <b
-                          class="text-success mr-4"
+                          class="text-danger mr-4"
                           style={{ marginLeft: "25px" }}
                         >
                           Inappropriate content - deleted
@@ -559,7 +622,7 @@ export default class InappropriateContentRequests extends Component {
                     return (
                       <div>
                         <b
-                          class=" text-danger mr-4"
+                          class=" text-success mr-4"
                           style={{ marginLeft: "25px" }}
                         >
                           Request rejected
