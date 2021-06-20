@@ -21,11 +21,14 @@ namespace UserMicroservice.Controllers
     {
         private readonly IProfileService _profileService;
         private readonly IFollowRequestService _followRequestService;
+        private readonly IRegistrationRequestService _registrationRequestService;
 
-        public ProfileController(IProfileService profileService, IFollowRequestService followRequestService)
+        public ProfileController(IProfileService profileService, IFollowRequestService followRequestService, 
+                                 IRegistrationRequestService registrationRequestService)
         {
             _profileService = profileService;
             _followRequestService = followRequestService;
+            _registrationRequestService = registrationRequestService;
         }
 
         [HttpPost("registration")]
@@ -35,6 +38,15 @@ namespace UserMicroservice.Controllers
 
             if (profile != null) 
             {
+                if (profile.UserRole == Model.Enum.UserRole.Agent)
+                {
+                    await _registrationRequestService.Insert(new RegistrationRequest()
+                    {
+                        AgentId = profile.Id,
+                        Accepted = false,
+                        Processed = false
+                    });
+                }
                 return CreatedAtAction(nameof(GetById), new { id = profile.Id }, profile);
             }
             return BadRequest();
@@ -275,6 +287,43 @@ namespace UserMicroservice.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id}/notificationProfiles")]
+        public async Task<IActionResult> GetNotificationProfiles(int id)
+        {
+            List<Profile> notificationProfiles = await _profileService.GetNotificationProfiles(id);
+
+            List<ProfileDto> result = new List<ProfileDto>();
+            foreach (Profile notificationProfile in notificationProfiles)
+            {
+                ProfileDto dto = ProfileMapper.ProfileToProfileDto(notificationProfile);
+                dto.ImageSrc = String.Format("http://localhost:55988/{0}", notificationProfile.ImageName);
+                result.Add(dto);
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("{profileId}/addNotificationProfile/{id}")]
+        public async Task<IActionResult> AddNotificationProfile(int profileId, int id)
+        {
+            ProfileNotificationProfile result = await _profileService.AddNotificationProfile(profileId, id);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("{profileId}/removeNotificationProfile/{id}")]
+        public async Task<IActionResult> RemoveNotificationProfile(int profileId, int id)
+        {
+            ProfileNotificationProfile result = await _profileService.RemoveNotificationProfile(profileId, id);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
+
         [HttpGet("{id}/getProfilePrivacy")]
         public async Task<IActionResult> GetProfilePrivacy(int id)
         {
@@ -311,7 +360,7 @@ namespace UserMicroservice.Controllers
 
             profileSettings.ReceiveAllMessages = profilePrivacyDto.ReceiveAllMessages;
             profileSettings.TagAllowed = profilePrivacyDto.TagAllowed;
-            await _profileService.UpdateProfileSettings(profileSettings);
+            await _profileService.UpdateProfileSettings(profileSettings, profile.Id);
 
             return Ok(profileSettings);
         }

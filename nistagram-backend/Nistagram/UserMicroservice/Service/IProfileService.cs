@@ -28,7 +28,10 @@ namespace UserMicroservice.Service
         Task<List<Profile>> GetCloseFriends(int id);
         Task<ProfileCloseFriend> AddCloseFriend(int profileId, int id);
         Task<ProfileCloseFriend> RemoveCloseFriend(int profileId, int id);
+        Task<List<Profile>> GetNotificationProfiles(int id);
+        Task<ProfileNotificationProfile> AddNotificationProfile(int profileId, int id);
+        Task<ProfileNotificationProfile> RemoveNotificationProfile(int profileId, int id);
         Task<ProfileSettings> GetProfileSettingsById(int id);
-        Task<ProfileSettings> UpdateProfileSettings(ProfileSettings entity);
+        Task<ProfileSettings> UpdateProfileSettings(ProfileSettings entity, int profileId);
     }
 }

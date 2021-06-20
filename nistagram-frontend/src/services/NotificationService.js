@@ -6,8 +6,10 @@ class NotificationService {
   sendLikeNotification(receiverId, senderId, postId) {
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
       body: JSON.stringify({ receiverId, senderId, postId }),
     };
 
@@ -17,8 +19,10 @@ class NotificationService {
   sendDislikeNotification(receiverId, senderId, postId) {
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
       body: JSON.stringify({ receiverId, senderId, postId }),
     };
 
@@ -28,8 +32,10 @@ class NotificationService {
   sendCommentNotification(receiverId, senderId, postId) {
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
       body: JSON.stringify({ receiverId, senderId, postId }),
     };
 
@@ -39,8 +45,10 @@ class NotificationService {
   sendFollowNotification(receiverId, senderId, postId) {
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
       body: JSON.stringify({ receiverId, senderId, postId }),
     };
 
@@ -50,8 +58,10 @@ class NotificationService {
   sendFollowRequestNotification(receiverId, senderId, postId) {
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
       body: JSON.stringify({ receiverId, senderId, postId }),
     };
 
@@ -61,19 +71,49 @@ class NotificationService {
   deleteFollowRequestNotification(receiverId, senderId) {
     const requestOptions = {
       method: "DELETE",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
       body: JSON.stringify({ receiverId, senderId }),
     };
 
     return fetch(API_URL + "notification/followRequest", requestOptions);
   }
 
+  sendPostNotification(receiverId, senderId) {
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
+      body: JSON.stringify({ receiverId, senderId }),
+    };
+
+    return fetch(API_URL + "notification/post", requestOptions);
+  }
+
+  sendStoryNotification(receiverId, senderId) {
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
+      body: JSON.stringify({ receiverId, senderId }),
+    };
+
+    return fetch(API_URL + "notification/story", requestOptions);
+  }
+
   updateSeenNotifications(profileId) {
     const requestOptions = {
       method: "PUT",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
     };
 
     return fetch(API_URL + "notification/seen/" + profileId, requestOptions);
@@ -82,7 +122,7 @@ class NotificationService {
   getNotificationForProfile(profileId) {
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
 
     return fetch(API_URL + "notification/profile/" + profileId, requestOptions);

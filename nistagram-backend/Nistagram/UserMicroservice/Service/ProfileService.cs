@@ -232,13 +232,7 @@ namespace UserMicroservice.Service
             profile.MutedProfiles.Add(profileMutedProfile);
             await _profileSettingsRepository.Update(profile);
 
-            /*
-            ProfileMutedProfile profileMutingProfile = new ProfileMutedProfile();
-            profileMutingProfile.MutedProfileId = profile.Id;
-            profileMutingProfile.ProfileSettingsId = muteProfile.Id;
-            profile.MutedProfiles.Add(profileMutingProfile);
-            await _profileSettingsRepository.Update(muteProfile);
-            */
+            _profileUpdatedSender.SendUpdatedProfile(await GetById(profileId));
 
             return profileMutedProfile;
         }
@@ -256,19 +250,7 @@ namespace UserMicroservice.Service
             profile.MutedProfiles.Remove(profileMutedProfile);
             await _profileSettingsRepository.Update(profile);
 
-            /*
-            ProfileFollowing profileFollowing = followerProfile.Following.Where(profileFollowing =>
-                profileFollowing.ProfileId == followerProfile.Id &&
-                profileFollowing.FollowingId == followingProfile.Id).SingleOrDefault();
-            followerProfile.Following.Remove(profileFollowing);
-            await Update(followingProfile);
-
-            _profileUpdatedSender.SendUpdatedProfile(followingProfile);
-
-            ProfileFollower res = new ProfileFollower();
-            res.Profile = followingProfile;
-            res.Follower = followerProfile;
-            */
+            _profileUpdatedSender.SendUpdatedProfile(await GetById(profileId));
 
             return profileMutedProfile;
         }
@@ -299,6 +281,8 @@ namespace UserMicroservice.Service
             profile.BlockedProfiles.Add(profileBlockedProfile);
             await _profileSettingsRepository.Update(profile);
 
+            _profileUpdatedSender.SendUpdatedProfile(await GetById(profileId));
+
             return profileBlockedProfile;
         }
 
@@ -314,6 +298,8 @@ namespace UserMicroservice.Service
                 ps.BlockedProfileId == muteProfile.Id).SingleOrDefault();
             profile.BlockedProfiles.Remove(profileBlockedProfile);
             await _profileSettingsRepository.Update(profile);
+
+            _profileUpdatedSender.SendUpdatedProfile(await GetById(profileId));
 
             return profileBlockedProfile;
         }
@@ -344,6 +330,8 @@ namespace UserMicroservice.Service
             profile.CloseFriends.Add(profileCloseFriend);
             await Update(profile);
 
+            _profileUpdatedSender.SendUpdatedProfile(profile);
+
             return profileCloseFriend;
         }
 
@@ -360,7 +348,58 @@ namespace UserMicroservice.Service
             profile.CloseFriends.Remove(profileCloseFriend);
             await Update(profile);
 
+            _profileUpdatedSender.SendUpdatedProfile(profile);
+
             return profileCloseFriend;
+        }
+
+        public async Task<List<Profile>> GetNotificationProfiles(int id)
+        {
+            ProfileSettings profileSettings = await _profileSettingsRepository.GetById(id);
+            List<Profile> notificationProfiles = new List<Profile>();
+            foreach (ProfileNotificationProfile profileNotificationProfile in profileSettings.NotificationProfiles)
+            {
+                notificationProfiles.Add(profileNotificationProfile.NotificationProfile);
+            }
+
+            return notificationProfiles;
+        }
+
+        public async Task<ProfileNotificationProfile> AddNotificationProfile(int profileId, int id)
+        {
+            ProfileSettings profile = await _profileSettingsRepository.GetById(profileId);
+            ProfileSettings notificationProfile = await _profileSettingsRepository.GetById(id);
+            if (profile == null || notificationProfile == null)
+            {
+                return null;
+            }
+            ProfileNotificationProfile profileNotificationProfile = new ProfileNotificationProfile();
+            profileNotificationProfile.NotificationProfileId = notificationProfile.Id;
+            profileNotificationProfile.ProfileSettingsId = profile.Id;
+            profile.NotificationProfiles.Add(profileNotificationProfile);
+            await _profileSettingsRepository.Update(profile);
+
+            _profileUpdatedSender.SendUpdatedProfile(await GetById(profileId));
+
+            return profileNotificationProfile;
+        }
+
+        public async Task<ProfileNotificationProfile> RemoveNotificationProfile(int profileId, int id)
+        {
+            ProfileSettings profile = await _profileSettingsRepository.GetById(profileId);
+            ProfileSettings notificationProfile = await _profileSettingsRepository.GetById(id);
+            if (profile == null || notificationProfile == null)
+            {
+                return null;
+            }
+            ProfileNotificationProfile profileNotificationProfile = profile.NotificationProfiles.Where(ps =>
+                ps.NotificationProfileId == notificationProfile.Id).SingleOrDefault();
+            profile.NotificationProfiles.Remove(profileNotificationProfile);
+            await _profileSettingsRepository.Update(profile);
+
+            _profileUpdatedSender.SendUpdatedProfile(await GetById(profileId));
+
+            return profileNotificationProfile;
         }
 
         public async Task<ProfileSettings> GetProfileSettingsById(int id)
@@ -368,9 +407,11 @@ namespace UserMicroservice.Service
             return await _profileSettingsRepository.GetById(id);
         }
 
-        public async Task<ProfileSettings> UpdateProfileSettings(ProfileSettings entity)
+        public async Task<ProfileSettings> UpdateProfileSettings(ProfileSettings entity, int profileId)
         {
-            return await _profileSettingsRepository.Update(entity);
+            ProfileSettings profileSettings = await _profileSettingsRepository.Update(entity);
+            _profileUpdatedSender.SendUpdatedProfile(await GetById(profileId));
+            return profileSettings;
         }
 
         public async Task<string> SaveImage(IFormFile imageFile)

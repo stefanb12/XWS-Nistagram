@@ -87,17 +87,21 @@ namespace NotificationMicroservice.Controllers
         [HttpPost("comment")]
         public async Task<IActionResult> SendCommentNotification([FromBody] NotificationDto dto)
         {
+            Post post = await _postService.GetById(dto.PostId);
+            Notification firstNotification = NotificationMapper.NotificationDtoToNotification(dto, post);
+            Notification secondNotification = NotificationMapper.NotificationDtoToNotification(dto, post);
+            Profile sender = await _profileService.GetById(dto.SenderId);
+            firstNotification.Content = sender.Username + " comment post.";
+
             if (dto.SenderId == dto.ReceiverId)
             {
-                return Ok();
+                return Ok(await _notificationService.Insert(firstNotification));
             }
 
-            Post post = await _postService.GetById(dto.PostId);
-            Notification notification = NotificationMapper.NotificationDtoToNotification(dto, post);
-            Profile sender = await _profileService.GetById(dto.SenderId);
-            notification.Content = sender.Username + " comment your post.";
+            await _notificationService.Insert(firstNotification);
+            secondNotification.Content = sender.Username + " comment your post.";
 
-            return Ok(await _notificationService.Insert(notification));
+            return Ok(await _notificationService.Insert(secondNotification));
         }
 
         [HttpPost("follow")]
@@ -138,5 +142,27 @@ namespace NotificationMicroservice.Controllers
             }
             return Ok(result);
         }
+
+        [HttpPost("post")]
+        public async Task<IActionResult> SendPostNotification([FromBody] NotificationDto dto)
+        {
+            //Post post = await _postService.GetById(dto.PostId);
+            Notification notification = NotificationMapper.NotificationDtoToNotification(dto, null);
+            Profile sender = await _profileService.GetById(dto.SenderId);
+            notification.Content = sender.Username + " added new post.";
+
+            return Ok(await _notificationService.Insert(notification));
+        }
+
+        [HttpPost("story")]
+        public async Task<IActionResult> SendStoryNotification([FromBody] NotificationDto dto)
+        {
+            Notification notification = NotificationMapper.NotificationDtoToNotification(dto, null);
+            Profile sender = await _profileService.GetById(dto.SenderId);
+            notification.Content = sender.Username + " added new story.";
+
+            return Ok(await _notificationService.Insert(notification));
+        }
+
     }
 }

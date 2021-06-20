@@ -18,6 +18,11 @@ namespace UserMicroservice.Mapper
             profile.Email = dto.Email;
             profile.Gender = dto.Gender;
             profile.UserRole = dto.UserRole;
+            profile.Website = dto.Website;
+            if (profile.UserRole == Model.Enum.UserRole.Agent)
+            {
+                profile.Deactivated = true;
+            }
             profile.ProfileSettings = new ProfileSettings();
             return profile;
         }

@@ -9,6 +9,7 @@ namespace NotificationMicroservice.Database
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<NotificationProfile> NotificationProfiles { get; set; }
 
         public NotificationDbContext() : base() { }
 
@@ -36,6 +37,7 @@ namespace NotificationMicroservice.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             modelBuilder.Entity<Profile>().HasData(
                 new Profile { Id = 1, OriginalId = 1, Username = "stefanb", ImageName = "user1213352029.jpg" },
                 new Profile { Id = 2, OriginalId = 2, Username = "matijam", ImageName = "user2213352029.jpg" },
@@ -60,6 +62,10 @@ namespace NotificationMicroservice.Database
                 new Notification { Id = 7, Time = new DateTime(2021, 06, 04), Content = "stefanb started following you.", Seen = false, FollowRequest = false, ReceiverId = 3, SenderId = 1, PostId = 1 },
                 new Notification { Id = 8, Time = new DateTime(2021, 06, 05), Content = "matijam started following you.", Seen = false, FollowRequest = false, ReceiverId = 4, SenderId = 2, PostId = 1 },
                 new Notification { Id = 9, Time = new DateTime(2021, 06, 04), Content = "stefanb started following you.", Seen = false, FollowRequest = false, ReceiverId = 5, SenderId = 1, PostId = 1 }
+            );
+
+            modelBuilder.Entity<NotificationProfile>().HasData(
+                new NotificationProfile { Id = 1, ProfileId = 1, NotificationProfileId = 4 }
             );
         }
     }

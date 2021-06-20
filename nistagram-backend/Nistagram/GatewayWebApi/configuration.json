@@ -493,6 +493,63 @@
                 "UserRole": "User , Agent"
             }
         },
+        {
+            "DownstreamPathTemplate": "/api/profile/{id}/notificationProfiles",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{id}/notificationProfiles",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/profile/{profileId}/addNotificationProfile/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{profileId}/addNotificationProfile/{id}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/profile/{profileId}/removeNotificationProfile/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{profileId}/removeNotificationProfile/{id}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
 
         // PostMicroservice
         {
@@ -855,6 +912,44 @@
             ],
             "UpstreamPathTemplate": "/gateway/notification/seen/{profileId}",
             "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/notification/post",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 56002
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/notification/post",
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/notification/story",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 56002
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/notification/story",
+            "UpstreamHttpMethod": [ "POST" ],
             "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
