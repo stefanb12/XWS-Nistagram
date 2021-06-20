@@ -57,6 +57,7 @@ namespace StoryMicroservice.Messaging
         {
 
             var consumer = new EventingBasicConsumer(_channel);
+            var scope = Services.CreateScope();
             consumer.Received += (model, ea) =>
             {
                 var body = ea.Body.ToArray();
@@ -65,22 +66,20 @@ namespace StoryMicroservice.Messaging
 
                 var data = JObject.Parse(message);
 
-                using (var scope = Services.CreateScope())
-                {
-                    var scopedProcessingService =
-                        scope.ServiceProvider
-                            .GetRequiredService<IProfileService>();
+                var scopedProcessingService =
+                    scope.ServiceProvider
+                        .GetRequiredService<IProfileService>();
 
-                    scopedProcessingService.Insert(new Profile()
-                    {
-                        OriginalId = data["id"].Value<int>(),
-                        Username = data["username"].Value<string>(),
-                        IsPrivate = data["isPrivate"].Value<bool>(),
-                        ImageName = data["profileImage"].Value<string>(),
-                        Following = new List<int>(),
-                        CloseFriends = new List<int>()
-                    });
-                }
+                scopedProcessingService.Insert(new Profile()
+                {
+                    OriginalId = data["id"].Value<int>(),
+                    Username = data["username"].Value<string>(),
+                    IsPrivate = data["isPrivate"].Value<bool>(),
+                    ImageName = data["profileImage"].Value<string>(),
+                    Following = new List<int>(),
+                    CloseFriends = new List<int>(),
+                    MutedProfiles = new List<int>()
+                });
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };

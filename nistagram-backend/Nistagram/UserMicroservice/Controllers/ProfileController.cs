@@ -360,7 +360,7 @@ namespace UserMicroservice.Controllers
 
             profileSettings.ReceiveAllMessages = profilePrivacyDto.ReceiveAllMessages;
             profileSettings.TagAllowed = profilePrivacyDto.TagAllowed;
-            await _profileService.UpdateProfileSettings(profileSettings);
+            await _profileService.UpdateProfileSettings(profileSettings, profile.Id);
 
             return Ok(profileSettings);
         }

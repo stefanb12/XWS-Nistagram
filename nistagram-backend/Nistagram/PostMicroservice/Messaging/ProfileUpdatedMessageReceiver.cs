@@ -56,6 +56,7 @@ namespace PostMicroservice.Messaging
         public void ReceiveMessage()
         {
             var consumer = new EventingBasicConsumer(_channel);
+            var scope = Services.CreateScope();
             consumer.Received += (model, ea) =>
             {
                 var body = ea.Body.ToArray();
@@ -64,21 +65,19 @@ namespace PostMicroservice.Messaging
 
                 var data = JObject.Parse(message);
 
-                using (var scope = Services.CreateScope())
-                {
-                    var scopedProcessingService =
-                        scope.ServiceProvider
-                            .GetRequiredService<IProfileService>();
+                var scopedProcessingService =
+                    scope.ServiceProvider
+                        .GetRequiredService<IProfileService>();
 
-                    scopedProcessingService.Update(new Profile()
-                    {
-                        OriginalId = data["id"].Value<int>(),
-                        Username = data["username"].Value<string>(),
-                        IsPrivate = data["isPrivate"].Value<bool>(),
-                        //Following = data["following"].ToObject<List<int>>(),
-                        ImageName = data["profileImage"].Value<string>()
-                    });
-                }
+                scopedProcessingService.Update(new Profile()
+                {
+                    OriginalId = data["id"].Value<int>(),
+                    Username = data["username"].Value<string>(),
+                    IsPrivate = data["isPrivate"].Value<bool>(),
+                    //Following = data["following"].ToObject<List<int>>(),
+                    ImageName = data["profileImage"].Value<string>()
+                });
+                
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };

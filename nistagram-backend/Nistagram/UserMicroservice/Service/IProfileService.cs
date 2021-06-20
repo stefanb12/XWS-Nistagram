@@ -32,6 +32,6 @@ namespace UserMicroservice.Service
         Task<ProfileNotificationProfile> AddNotificationProfile(int profileId, int id);
         Task<ProfileNotificationProfile> RemoveNotificationProfile(int profileId, int id);
         Task<ProfileSettings> GetProfileSettingsById(int id);
-        Task<ProfileSettings> UpdateProfileSettings(ProfileSettings entity);
+        Task<ProfileSettings> UpdateProfileSettings(ProfileSettings entity, int profileId);
     }
 }

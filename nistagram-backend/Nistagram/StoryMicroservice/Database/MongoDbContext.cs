@@ -56,7 +56,7 @@ namespace StoryMicroservice.Database
                 {
                     Id = "60bd70ad107c45e92fd80692",
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 18, 15, 29, 59),
+                    PublishingDate = new DateTime(2021, 06, 19, 15, 29, 59),
                     PublisherId = 1,
                     ImageName = "sc2210938836.jpg"
                 },
@@ -64,7 +64,7 @@ namespace StoryMicroservice.Database
                 {
                     Id = "60bd70ad107c45e92fd80693",
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 18, 14, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 19, 14, 59, 59),
                     PublisherId = 2,
                     ImageName = "sc1211007001.jpg"
                 },
@@ -72,7 +72,7 @@ namespace StoryMicroservice.Database
                 {
                     Id = "60bd70ad107c45e92fd80694",
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 18, 12, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 19, 12, 59, 59),
                     PublisherId = 2,
                     ImageName = "2212424861.png"
                 },
@@ -80,7 +80,7 @@ namespace StoryMicroservice.Database
                 {
                     Id = "60bd70ad107c45e92fd80695",
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 18, 16, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 19, 16, 59, 59),
                     PublisherId = 3,
                     ImageName = "2212424862.png"
                 },
@@ -88,7 +88,7 @@ namespace StoryMicroservice.Database
                 {
                     Id = "60bd70ad107c45e92fd80696",
                     ForCloseFriends = true,
-                    PublishingDate = new DateTime(2021, 06, 18, 14, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 19, 14, 59, 59),
                     PublisherId = 4,
                     ImageName = "2212424863.png"
                 }
@@ -106,7 +106,8 @@ namespace StoryMicroservice.Database
                     IsPrivate = false,
                     ImageName = "user1213352029.jpg",
                     Following = new List<int>() {2, 3, 5},
-                    CloseFriends = new List<int>() {2}
+                    CloseFriends = new List<int>() {2},
+                    MutedProfiles = new List<int>()
                 },
                 new Profile {
                     OriginalId = 2 ,
@@ -114,7 +115,8 @@ namespace StoryMicroservice.Database
                     IsPrivate = true,
                     ImageName = "user2213352029.jpg",
                     Following = new List<int>() {1, 4},
-                    CloseFriends = new List<int>() {3}
+                    CloseFriends = new List<int>() {3},
+                    MutedProfiles = new List<int>()
                 },
                 new Profile {
                     OriginalId = 3 ,
@@ -122,7 +124,8 @@ namespace StoryMicroservice.Database
                     IsPrivate = true,
                     ImageName = "user3213352029.png",
                     Following = new List<int>() {1, 2},
-                    CloseFriends = new List<int>() {2}
+                    CloseFriends = new List<int>() {2},
+                    MutedProfiles = new List<int>()
                 },
                 new Profile {
                     OriginalId = 4 ,
@@ -130,7 +133,8 @@ namespace StoryMicroservice.Database
                     IsPrivate = false,
                     ImageName = "user4213352029.png",
                     Following = new List<int>(),
-                    CloseFriends = new List<int>()
+                    CloseFriends = new List<int>(),
+                    MutedProfiles = new List<int>()
                 },
                 new Profile {
                     OriginalId = 5 ,
@@ -138,7 +142,8 @@ namespace StoryMicroservice.Database
                     IsPrivate = false,
                     ImageName = "user5213352029.jpg",
                     Following = new List<int>(),
-                    CloseFriends = new List<int>()
+                    CloseFriends = new List<int>(),
+                    MutedProfiles = new List<int>()
                 }
             };
 
