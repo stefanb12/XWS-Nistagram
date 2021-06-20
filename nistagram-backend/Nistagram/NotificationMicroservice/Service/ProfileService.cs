@@ -15,6 +15,13 @@ namespace NotificationMicroservice.Service
         {
             _profileRepository = profileRepository;
         }
+
+        public async Task<Profile> GetByOriginalId(int id)
+        {
+            var profiles =  await _profileRepository.GetAll();
+            return profiles.FirstOrDefault(p => p.OriginalId == id);
+        }
+
         public async Task<Profile> GetById(int id)
         {
             return await _profileRepository.GetById(id);

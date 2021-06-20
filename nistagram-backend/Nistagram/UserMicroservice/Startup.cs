@@ -15,6 +15,7 @@ using ProfileMicroservice.Database;
 using ProfileMicroservice.Repository;
 using ProfileMicroservice.Service;
 using UserMicroservice;
+using UserMicroservice.Email;
 using UserMicroservice.Messaging;
 using UserMicroservice.Repository;
 using UserMicroservice.Service;
@@ -43,6 +44,8 @@ namespace ProfileMicroservice
 
             services.AddScoped<IProfileCreatedMessageSender, ProfileCreatedMessageSender>();
             services.AddScoped<IProfileUpdatedMessageSender, ProfileUpdatedMessageSender>();
+
+            services.AddScoped<IEmailSender, EmailSender>();
 
             services.AddScoped<IProfileRepository, ProfileRepository>();
             services.AddScoped<IProfileSettingsRepository, ProfileSettingsRepository>();
