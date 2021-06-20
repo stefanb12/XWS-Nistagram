@@ -29,54 +29,6 @@ namespace PostMicroservice.Mapper
             post.Location.City = dto.Location.City;
             post.Location.Country = dto.Location.Country;
             post.PublisherId = publisher.Id;
-            /*post.Publisher = new Profile();
-            post.Publisher.OriginalId = dto.Publisher.Id;
-            post.Publisher.Username = dto.Publisher.Username;
-            post.Publisher.ImageName = dto.Publisher.ImageName;*/
-
-            /*if (dto.Dislikes != null)
-            {
-                List<PostDislike> dislikes = new List<PostDislike>();
-                foreach(ProfileDto profileDto in dto.Dislikes)
-                {
-                    PostDislike postDislike = new PostDislike();
-                    postDislike.Dislike.Id = profileDto.Id;
-                    postDislike.Dislike.Username = profileDto.Username;
-                    postDislike.Post = post;
-                    dislikes.Add(postDislike);
-                }
-                post.Dislikes = dislikes;
-            }
-
-            if (dto.Likes != null)
-            {
-                List<PostLike> likes = new List<PostLike>();
-                foreach (ProfileDto profileDto in dto.Likes)
-                {
-                    PostLike postLike = new PostLike();
-                    postLike.Like.Id = profileDto.Id;
-                    postLike.Like.Username = profileDto.Username;
-                    postLike.Post = post;
-                    likes.Add(postLike);
-                }
-                post.Likes = likes;
-            }
-
-            if (dto.Comments != null)
-            {
-                List<Comment> comments = new List<Comment>();
-                foreach (CommentDto commentDto in dto.Comments)
-                {
-                    Comment comment = new Comment();
-                    comment.Text = commentDto.Text;
-                    comment.Date = commentDto.Date;
-                    comment.Publisher.OriginalId = commentDto.Publisher.Id;
-                    comment.Publisher.Username = commentDto.Publisher.Username;
-                    comment.Publisher.ImageName = commentDto.Publisher.ImageName;
-                    comments.Add(comment);
-                }
-                post.Comments = comments;
-            }*/
            
             List<Content> contents = new List<Content>();
             foreach(IFormFile file in dto.ImageFiles)
@@ -86,6 +38,7 @@ namespace PostMicroservice.Mapper
                 contents.Add(content);
             }
             post.Contents = contents;
+            post.Deleted = dto.Deleted;
 
             return post;
         }
@@ -176,6 +129,7 @@ namespace PostMicroservice.Mapper
             {
                 dto.ImagesSrc.Add(post.Contents[i].ImageSrc);
             }
+            dto.Deleted = post.Deleted;
 
             return dto;
         }

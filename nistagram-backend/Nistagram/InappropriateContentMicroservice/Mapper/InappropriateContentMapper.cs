@@ -1,5 +1,6 @@
 ﻿using InappropriateContentMicroservice.Dto;
 using InappropriateContentMicroservice.Model;
+using InappropriateContentMicroservice.Model.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace InappropriateContentMicroservice.Mapper
             {
                 inappropriateContent.StoryId = story.Id;
             }
+            inappropriateContent.ActionTaken = ActionTaken.Unprocessed;
 
             return inappropriateContent;
         }
@@ -31,18 +33,20 @@ namespace InappropriateContentMicroservice.Mapper
         {
             InappropriateContentDto dto = new InappropriateContentDto();
 
+            dto.Id = inappropriateContent.Id;
             dto.ReportComment = inappropriateContent.ReportComment;
             dto.Processed = inappropriateContent.Processed;
             dto.IsPost = inappropriateContent.IsPost;
             dto.SenderId = inappropriateContent.SenderId;
             dto.Username = inappropriateContent.Sender.Username;
+            dto.ActionTaken = Enum.GetName(typeof(ActionTaken), inappropriateContent.ActionTaken);
 
-            if (!inappropriateContent.IsPost)
-            {
-                dto.StoryId = inappropriateContent.Story.OriginalId;
-            } else
+            if (inappropriateContent.IsPost)
             {
                 dto.PostId = inappropriateContent.PostId;
+            } else
+            {
+                dto.StoryId = inappropriateContent.Story.OriginalId;
             }  
 
             return dto;

@@ -211,6 +211,21 @@ namespace PostMicroservice.Controllers
             return Ok(PostMapper.PostToPostDto(updatedPost));
         }
 
+        [HttpPut("delete/{postId}")]
+        public async Task<IActionResult> DeletePost(int postId)
+        {
+            Post post = await _postService.GetById(postId);
+            if (post == null)
+            {
+                BadRequest();
+            }
+            
+            post.Deleted = true;
+            PostDto deletedPost = PostMapper.PostToPostDto(await _postService.Update(post));
+            // pozovi postUpdated message sender
+            return Ok(deletedPost);
+        }
+
         [HttpGet("search/{searchParam}")]
         public async Task<IActionResult> GetSearchResult(string searchParam)
         {

@@ -36,6 +36,18 @@ class StoryService {
     return fetch(API_URL + "story/highlight", requestOptions);
   }
 
+  deleteStory(storyId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
+    };
+
+    return fetch(API_URL + "story/delete/" + storyId, requestOptions);
+  }
+
   getStoryHighlightsForProfile(profileId) {
     const requestOptions = {
       method: "GET",

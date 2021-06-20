@@ -250,6 +250,21 @@ namespace UserMicroservice.Controllers
             return Ok(result);
         }
 
+        [HttpPut("deactivate/{profileId}")]
+        public async Task<IActionResult> DeactivateProfile(int profileId)
+        {
+            Profile profile = await _profileService.GetById(profileId);
+            if (profile == null)
+            {
+                BadRequest();
+            }
+
+            profile.Deactivated = true;
+            ProfileDto deactivatedProfile = ProfileMapper.ProfileToProfileDto(await _profileService.Update(profile));
+            // pozovi profileUpdated message sender
+            return Ok(deactivatedProfile);
+        }
+
         [HttpGet("{id}/closeFriends")]
         public async Task<IActionResult> GetCloseFriends(int id)
         {

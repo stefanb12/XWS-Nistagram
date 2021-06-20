@@ -399,6 +399,25 @@
             }
         },
         {
+            "DownstreamPathTemplate": "/api/profile/deactivate/{profileId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/deactivate/{profileId}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
+        {
             "DownstreamPathTemplate": "/api/profile/{id}/closeFriends",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
@@ -619,6 +638,25 @@
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User , Agent"
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/post/delete/{postId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/delete/{postId}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
             }
         },
         {
@@ -1093,6 +1131,25 @@
                 "UserRole": "Admin"
             }
         },
+        {
+            "DownstreamPathTemplate": "/api/story/delete/{storyId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55996
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/story/delete/{storyId}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
 
         // InappropriateContentMicroservice
         {
@@ -1125,6 +1182,63 @@
             ],
             "UpstreamPathTemplate": "/gateway/inappropriateContent/getAll",
             "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/inappropriateContent/delete/{inappropriateContentId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55997
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/inappropriateContent/delete/{inappropriateContentId}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/inappropriateContent/reject/{inappropriateContentId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55997
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/inappropriateContent/reject/{inappropriateContentId}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/inappropriateContent/deactivate/{inappropriateContentId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55997
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/inappropriateContent/deactivate/{inappropriateContentId}",
+            "UpstreamHttpMethod": [ "PUT" ],
             "AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []

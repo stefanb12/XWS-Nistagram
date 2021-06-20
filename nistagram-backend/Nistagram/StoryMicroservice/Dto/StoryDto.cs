@@ -15,6 +15,7 @@ namespace StoryMicroservice.Dto
         public string ImageSrc { get; set; }
         public string PublisherImageSrc { get; set; }
         public string PublisherUsername { get; set; }
+        public bool Deleted { get; set; }
 
         public StoryDto()
         {

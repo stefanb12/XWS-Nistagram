@@ -130,6 +130,21 @@ namespace StoryMicroservice.Controllers
             return Ok(await _storyHighlightsService.Insert(storyHighlight));
         }
 
+        [HttpPut("delete/{storyId}")]
+        public async Task<IActionResult> deleteStory(string storyId)
+        {
+            Story story = await _storyService.GetById(storyId);
+            if (story == null)
+            {
+                BadRequest();
+            }
+
+            story.Deleted = true;
+            StoryDto deletedStory = StoryMapper.StoryToStoryDto(await _storyService.Update(story));
+            // pozovi storyUpdated message sender
+            return Ok(deletedStory);
+        }
+
         [HttpGet("highlight/profile/{profileId}")]
         public async Task<IActionResult> GetStoryHighlightsForProfile(int profileId)
         {
