@@ -19,6 +19,7 @@ namespace PostMicroservice.Model
         public virtual List<PostLike> Likes { get; set; }
         public virtual List<PostFavorite> Favorites { get; set; }
         public virtual List<Content> Contents { get; set; }
+        public bool Deleted { get; set; }
 
         public Post()
         {

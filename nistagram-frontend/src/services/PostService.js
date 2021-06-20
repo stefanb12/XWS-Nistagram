@@ -83,6 +83,18 @@ class PostService {
     return fetch(API_URL + "post/favorite", requestOptions);
   }
 
+  deletePost(postId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
+    };
+
+    return fetch(API_URL + "post/delete/" + postId, requestOptions);
+  }
+
   getPostsForProfile(profileId) {
     const requestOptions = {
       method: "GET",

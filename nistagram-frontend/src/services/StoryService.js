@@ -16,7 +16,7 @@ class StoryService {
 
     const requestOptions = {
       method: "POST",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
       body: formData,
     };
 
@@ -26,27 +26,44 @@ class StoryService {
   addStoryHighlight(name, publisherId, storiesIds) {
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json",
-                 "Authorization" : "Bearer " + AuthService.getUserToken() },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
       body: JSON.stringify({ name, publisherId, storiesIds }),
     };
 
     return fetch(API_URL + "story/highlight", requestOptions);
   }
 
+  deleteStory(storyId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
+    };
+
+    return fetch(API_URL + "story/delete/" + storyId, requestOptions);
+  }
+
   getStoryHighlightsForProfile(profileId) {
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
-    
-    return fetch(API_URL + "story/highlight/profile/" + profileId, requestOptions);
+
+    return fetch(
+      API_URL + "story/highlight/profile/" + profileId,
+      requestOptions
+    );
   }
 
   getActiveStoriesForProfile(profileId) {
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
 
     return fetch(API_URL + "story/active/profile/" + profileId, requestOptions);
@@ -55,7 +72,7 @@ class StoryService {
   getStoriesForProfile(profileId) {
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
 
     return fetch(API_URL + "story/profile/" + profileId, requestOptions);
@@ -65,10 +82,22 @@ class StoryService {
     let profile = AuthService.getCurrentUser();
     const requestOptions = {
       method: "GET",
-      headers: { "Authorization" : "Bearer " + AuthService.getUserToken() }
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
 
-    return fetch(API_URL + "story/getAllProfileStories/" + profile.id, requestOptions);
+    return fetch(
+      API_URL + "story/getAllProfileStories/" + profile.id,
+      requestOptions
+    );
+  }
+
+  getById(storyId) {
+    const requestOptions = {
+      method: "GET",
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
+    };
+
+    return fetch(API_URL + "story/" + storyId, requestOptions);
   }
 }
 

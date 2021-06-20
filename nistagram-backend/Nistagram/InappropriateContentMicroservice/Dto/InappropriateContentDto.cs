@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace InappropriateContentMicroservice.Dto
+﻿namespace InappropriateContentMicroservice.Dto
 {
     public class InappropriateContentDto
     {
@@ -15,6 +10,7 @@ namespace InappropriateContentMicroservice.Dto
         public int PostId { get; set; }
         public string StoryId { get; set; }
         public string Username { get; set; }
+        public string ActionTaken { get; set; }
 
         public InappropriateContentDto()
         {

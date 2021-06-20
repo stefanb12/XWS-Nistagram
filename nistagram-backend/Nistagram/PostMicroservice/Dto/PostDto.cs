@@ -18,6 +18,7 @@ namespace PostMicroservice.Dto
         public List<ProfileDto> Dislikes { get; set; }
         public List<ProfileDto> Likes { get; set; }
         public List<ProfileDto> Favorites { get; set; }
+        public bool Deleted { get; set; }
 
         public PostDto() {}
     }

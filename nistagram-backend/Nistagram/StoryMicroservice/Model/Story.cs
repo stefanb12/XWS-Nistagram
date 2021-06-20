@@ -18,6 +18,7 @@ namespace StoryMicroservice.Model
         public IFormFile ImageFile { get; set; }
         [BsonIgnore]
         public string ImageSrc { get; set; }
+        public bool Deleted { get; set; }
 
         public Story()
         {

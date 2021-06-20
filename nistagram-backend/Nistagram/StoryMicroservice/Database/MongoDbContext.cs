@@ -58,7 +58,8 @@ namespace StoryMicroservice.Database
                     ForCloseFriends = false,
                     PublishingDate = new DateTime(2021, 06, 20, 15, 29, 59),
                     PublisherId = 1,
-                    ImageName = "sc2210938836.jpg"
+                    ImageName = "sc2210938836.jpg",
+                    Deleted = false
                 },
                 new Story
                 {
@@ -66,7 +67,8 @@ namespace StoryMicroservice.Database
                     ForCloseFriends = false,
                     PublishingDate = new DateTime(2021, 06, 20, 14, 59, 59),
                     PublisherId = 2,
-                    ImageName = "sc1211007001.jpg"
+                    ImageName = "sc1211007001.jpg",
+                    Deleted = false
                 },
                 new Story
                 {
@@ -74,7 +76,8 @@ namespace StoryMicroservice.Database
                     ForCloseFriends = false,
                     PublishingDate = new DateTime(2021, 06, 20, 12, 59, 59),
                     PublisherId = 2,
-                    ImageName = "2212424861.png"
+                    ImageName = "2212424861.png",
+                    Deleted = false
                 },
                 new Story
                 {
@@ -82,7 +85,8 @@ namespace StoryMicroservice.Database
                     ForCloseFriends = false,
                     PublishingDate = new DateTime(2021, 06, 20, 16, 59, 59),
                     PublisherId = 3,
-                    ImageName = "2212424862.png"
+                    ImageName = "2212424862.png",
+                    Deleted = false
                 },
                 new Story
                 {
@@ -90,7 +94,8 @@ namespace StoryMicroservice.Database
                     ForCloseFriends = true,
                     PublishingDate = new DateTime(2021, 06, 20, 14, 59, 59),
                     PublisherId = 4,
-                    ImageName = "2212424863.png"
+                    ImageName = "2212424863.png",
+                    Deleted = false
                 }
             };
 

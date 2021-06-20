@@ -38,6 +38,15 @@ namespace StoryMicroservice.Mapper
             dto.PublishingDate = story.PublishingDate;
             dto.ForCloseFriends = story.ForCloseFriends;
             dto.ImageName = story.ImageName;
+            dto.ImageSrc = String.Format("http://localhost:55996/{0}", story.ImageName);
+
+            if (story.Publisher != null)
+            {
+                dto.PublisherImageSrc = String.Format("http://localhost:55988/{0}", story.Publisher.ImageName);
+                dto.PublisherUsername = story.Publisher.Username;
+                dto.PublisherOriginalId = story.Publisher.OriginalId;
+            }
+            dto.Deleted = story.Deleted;
 
             return dto;
         }
