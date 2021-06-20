@@ -10,12 +10,12 @@ namespace NotificationMicroservice.Service
     public class NotificationService : INotificationService
     {
         private INotificationRepository _notificationRepository;
-        private IProfileRepository _profileRepository;
+        private IProfileService _profileService;
 
-        public NotificationService(INotificationRepository notificationRepository, IProfileRepository profileRepository)
+        public NotificationService(INotificationRepository notificationRepository, IProfileService profileService)
         {
             _notificationRepository = notificationRepository;
-            _profileRepository = profileRepository;
+            _profileService = profileService;
         }
 
         public async Task<List<Notification>> UpdateSeenNotifications(int profileId)
@@ -32,7 +32,7 @@ namespace NotificationMicroservice.Service
 
         public async Task<List<Notification>> FindNotificationsForProfile(int profileId)
         {
-            Profile profile = await _profileRepository.GetById(profileId);
+            Profile profile = await _profileService.GetByOriginalId(profileId);
             List<Notification> result = new List<Notification>();
 
             foreach(Notification notification in await GetAll())
@@ -47,13 +47,18 @@ namespace NotificationMicroservice.Service
                     result.Add(notification);
                 } 
 
-                foreach(NotificationProfile notificationProfile in profile.NotificationProfiles)
+                
+                if (profile.NotificationProfiles != null)
                 {
-                    if(notificationProfile.NotificationProfileId == notification.SenderId && (notification.Content.Contains("added") || notification.Content.EndsWith("comment post.")))
+                    foreach (NotificationProfile notificationProfile in profile.NotificationProfiles)
                     {
-                        result.Add(notification);
+                        if (notificationProfile.NotificationProfileId == notification.SenderId && (notification.Content.Contains("added") || notification.Content.EndsWith("comment post.")))
+                        {
+                            result.Add(notification);
+                        }
                     }
                 }
+
             }
 
             /*if(result.Exists(notification => notification.Content.EndsWith("comment post.")) && result.Exists(notification => notification.Content.EndsWith("comment your post.")))

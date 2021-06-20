@@ -19,6 +19,7 @@ import jwt_decode from "jwt-decode";
 const Login = () => {
   const history = useHistory();
   const [open, setOpen] = React.useState(false);
+  const [snackBarMessage, setSnackBarMessage] = React.useState("");
 
   const handleClick = () => {
     setOpen(true);
@@ -55,7 +56,11 @@ const Login = () => {
           } else if (result.userRole === 2) {
             history.push("/admin/profileVerificationRequests");
           }
+        } else if (resStatus === 400) {
+          setSnackBarMessage("Invalid username or password");
+          handleClick();
         } else if (resStatus === 401) {
+          setSnackBarMessage("Your profile is not active");
           handleClick();
         }
 
@@ -72,7 +77,7 @@ const Login = () => {
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert onClose={handleClose} severity="error">
-          Invalid username or password
+          {snackBarMessage}
         </Alert>
       </Snackbar>
       <Box
