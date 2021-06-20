@@ -50,6 +50,20 @@ namespace StoryMicroservice.Controllers
             return Ok(returnValue);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(string id)
+        {
+            Story story = await _storyService.GetById(id);
+
+            if (story == null)
+            {
+                return NoContent();
+            }
+
+            story.Publisher = await _profileService.GetProfileByOriginalId(story.PublisherId); 
+            return Ok(StoryMapper.StoryToStoryDto(story));
+        }
+
         [HttpGet("getAllProfileStories/{id}")]
         public async Task<IActionResult> GetFollowingProfilesStories(int id)
         {
@@ -114,6 +128,21 @@ namespace StoryMicroservice.Controllers
             }
             storyHighlight.Stories = stories;
             return Ok(await _storyHighlightsService.Insert(storyHighlight));
+        }
+
+        [HttpPut("delete/{storyId}")]
+        public async Task<IActionResult> deleteStory(string storyId)
+        {
+            Story story = await _storyService.GetById(storyId);
+            if (story == null)
+            {
+                BadRequest();
+            }
+
+            story.Deleted = true;
+            StoryDto deletedStory = StoryMapper.StoryToStoryDto(await _storyService.Update(story));
+            // pozovi storyUpdated message sender
+            return Ok(deletedStory);
         }
 
         [HttpGet("highlight/profile/{profileId}")]

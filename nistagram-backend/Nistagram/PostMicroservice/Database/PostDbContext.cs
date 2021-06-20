@@ -69,9 +69,9 @@ namespace PostMicroservice.Database
             );
 
             modelBuilder.Entity<Post>().HasData( // "Dodaj tagove"
-               new Post { Id = 1, PublisherId = 1, Description = "Nature", PublishingDate = new DateTime(2021, 05, 01, 11, 01, 01), LocationId = 1 },
-               new Post { Id = 2, PublisherId = 2, Description = "Waterfall", PublishingDate = new DateTime(2021, 06, 01, 19, 10, 10), LocationId = 2 },
-               new Post { Id = 3, PublisherId = 4, Description = "Vacation", PublishingDate = new DateTime(2021, 01, 01, 18, 10, 10), LocationId = 3 }
+               new Post { Id = 1, PublisherId = 1, Description = "Nature", PublishingDate = new DateTime(2021, 05, 01, 11, 01, 01), LocationId = 1, Deleted = false },
+               new Post { Id = 2, PublisherId = 2, Description = "Waterfall", PublishingDate = new DateTime(2021, 06, 01, 19, 10, 10), LocationId = 2, Deleted = false },
+               new Post { Id = 3, PublisherId = 4, Description = "Vacation", PublishingDate = new DateTime(2021, 01, 01, 18, 10, 10), LocationId = 3, Deleted = false }
             );
 
             modelBuilder.Entity<Content>().HasData(

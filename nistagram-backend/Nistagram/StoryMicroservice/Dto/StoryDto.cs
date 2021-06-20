@@ -13,6 +13,10 @@ namespace StoryMicroservice.Dto
         public DateTime PublishingDate { get; set; }
         public string ImageName { get; set; }
         public string ImageSrc { get; set; }
+        public string PublisherImageSrc { get; set; }
+        public string PublisherUsername { get; set; }
+        public int PublisherOriginalId { get; set; }
+        public bool Deleted { get; set; }
 
         public StoryDto()
         {

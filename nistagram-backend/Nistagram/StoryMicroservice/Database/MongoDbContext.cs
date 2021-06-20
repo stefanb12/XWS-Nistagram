@@ -56,41 +56,46 @@ namespace StoryMicroservice.Database
                 {
                     Id = "60bd70ad107c45e92fd80692",
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 19, 15, 29, 59),
+                    PublishingDate = new DateTime(2021, 06, 20, 15, 29, 59),
                     PublisherId = 1,
-                    ImageName = "sc2210938836.jpg"
+                    ImageName = "sc2210938836.jpg",
+                    Deleted = false
                 },
                 new Story
                 {
                     Id = "60bd70ad107c45e92fd80693",
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 19, 14, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 20, 14, 59, 59),
                     PublisherId = 2,
-                    ImageName = "sc1211007001.jpg"
+                    ImageName = "sc1211007001.jpg",
+                    Deleted = false
                 },
                 new Story
                 {
                     Id = "60bd70ad107c45e92fd80694",
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 19, 12, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 20, 12, 59, 59),
                     PublisherId = 2,
-                    ImageName = "2212424861.png"
+                    ImageName = "2212424861.png",
+                    Deleted = false
                 },
                 new Story
                 {
                     Id = "60bd70ad107c45e92fd80695",
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 19, 16, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 20, 16, 59, 59),
                     PublisherId = 3,
-                    ImageName = "2212424862.png"
+                    ImageName = "2212424862.png",
+                    Deleted = false
                 },
                 new Story
                 {
                     Id = "60bd70ad107c45e92fd80696",
                     ForCloseFriends = true,
-                    PublishingDate = new DateTime(2021, 06, 19, 14, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 20, 14, 59, 59),
                     PublisherId = 4,
-                    ImageName = "2212424863.png"
+                    ImageName = "2212424863.png",
+                    Deleted = false
                 }
             };
 

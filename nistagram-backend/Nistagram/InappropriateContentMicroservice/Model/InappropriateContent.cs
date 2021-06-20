@@ -1,4 +1,6 @@
-﻿namespace InappropriateContentMicroservice.Model
+﻿using InappropriateContentMicroservice.Model.Enum;
+
+namespace InappropriateContentMicroservice.Model
 {
     public class InappropriateContent
     {
@@ -12,6 +14,7 @@
         public virtual Post Post { get; set; }
         public int StoryId { get; set; }
         public virtual Story Story { get; set; }
+        public ActionTaken ActionTaken { get; set; }
 
         public InappropriateContent()
         {

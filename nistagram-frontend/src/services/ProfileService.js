@@ -200,6 +200,18 @@ class ProfileService {
     );
   }
 
+  deactivate(profileId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
+    };
+
+    return fetch(API_URL + "profile/deactivate/" + profileId, requestOptions);
+  }
+
   getCloseFriends(profileId) {
     const requestOptions = {
       method: "GET",

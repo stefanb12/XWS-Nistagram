@@ -22,6 +22,51 @@ class InappropriateContent {
     return fetch(API_URL + "inappropriateContent", requestOptions);
   }
 
+  deleteInappropriateContent(inappropriateContentId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
+    };
+
+    return fetch(
+      API_URL + "inappropriateContent/delete/" + inappropriateContentId,
+      requestOptions
+    );
+  }
+
+  deactivateProfile(inappropriateContentId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
+    };
+
+    return fetch(
+      API_URL + "inappropriateContent/deactivate/" + inappropriateContentId,
+      requestOptions
+    );
+  }
+
+  rejectRequest(inappropriateContentId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
+    };
+
+    return fetch(
+      API_URL + "inappropriateContent/reject/" + inappropriateContentId,
+      requestOptions
+    );
+  }
+
   getAll() {
     const requestOptions = {
       method: "GET",
