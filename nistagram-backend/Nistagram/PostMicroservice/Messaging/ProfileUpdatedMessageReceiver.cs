@@ -69,15 +69,28 @@ namespace PostMicroservice.Messaging
                     scope.ServiceProvider
                         .GetRequiredService<IProfileService>();
 
+                List<ProfileFollowing> following = new List<ProfileFollowing>();
+                foreach(int followingId in data["following"].ToObject<List<int>>())
+                {
+                    following.Add(new ProfileFollowing() { ProfileId = data["id"].Value<int>(), FollowingId = followingId });
+                }
+
+                List<ProfileMutedProfile> mutedProfiles = new List<ProfileMutedProfile>();
+                foreach (int mutedProfileId in data["mutedProfiles"].ToObject<List<int>>())
+                {
+                    mutedProfiles.Add(new ProfileMutedProfile() { ProfileId = data["id"].Value<int>(), MutedProfileId = mutedProfileId });
+                }
+
                 scopedProcessingService.Update(new Profile()
                 {
                     OriginalId = data["id"].Value<int>(),
                     Username = data["username"].Value<string>(),
+                    ImageName = data["profileImage"].Value<string>(),
                     IsPrivate = data["isPrivate"].Value<bool>(),
-                    //Following = data["following"].ToObject<List<int>>(),
-                    ImageName = data["profileImage"].Value<string>()
+                    Deactivated = data["deactivated"].Value<bool>(),
+                    Following = following,
+                    MutedProfiles = mutedProfiles
                 });
-                
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };

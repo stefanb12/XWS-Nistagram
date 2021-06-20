@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 
 namespace NotificationMicroservice.Messaging
 {
@@ -68,11 +69,25 @@ namespace NotificationMicroservice.Messaging
                     scope.ServiceProvider
                         .GetRequiredService<IProfileService>();
 
+                List<ProfileNotificationProfile> notificationProfiles = new List<ProfileNotificationProfile>();
+                foreach (int notificationProfileId in data["notificationProfiles"].ToObject<List<int>>())
+                {
+                    notificationProfiles.Add(new ProfileNotificationProfile() { ProfileId = data["id"].Value<int>(), NotificationProfileId = notificationProfileId });
+                }
+
+                List<ProfileMutedProfile> mutedProfiles = new List<ProfileMutedProfile>();
+                foreach (int mutedProfileId in data["mutedProfiles"].ToObject<List<int>>())
+                {
+                    mutedProfiles.Add(new ProfileMutedProfile() { ProfileId = data["id"].Value<int>(), MutedProfileId = mutedProfileId });
+                }
+
                 scopedProcessingService.Update(new Profile()
                 {
                     OriginalId = data["id"].Value<int>(),
                     Username = data["username"].Value<string>(),
-                    ImageName = data["profileImage"].Value<string>()
+                    ImageName = data["profileImage"].Value<string>(),
+                    NotificationProfiles = notificationProfiles,
+                    MutedProfiles = mutedProfiles
                 });
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);

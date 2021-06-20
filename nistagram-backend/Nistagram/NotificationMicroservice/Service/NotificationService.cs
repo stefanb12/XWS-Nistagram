@@ -50,7 +50,7 @@ namespace NotificationMicroservice.Service
                 
                 if (profile.NotificationProfiles != null)
                 {
-                    foreach (NotificationProfile notificationProfile in profile.NotificationProfiles)
+                    foreach (ProfileNotificationProfile notificationProfile in profile.NotificationProfiles)
                     {
                         if (notificationProfile.NotificationProfileId == notification.SenderId && (notification.Content.Contains("added") || notification.Content.EndsWith("comment post.")))
                         {

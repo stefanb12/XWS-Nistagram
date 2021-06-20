@@ -56,7 +56,7 @@ namespace StoryMicroservice.Database
                 {
                     Id = "60bd70ad107c45e92fd80692",
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 19, 15, 29, 59),
+                    PublishingDate = new DateTime(2021, 06, 20, 15, 29, 59),
                     PublisherId = 1,
                     ImageName = "sc2210938836.jpg"
                 },
@@ -64,7 +64,7 @@ namespace StoryMicroservice.Database
                 {
                     Id = "60bd70ad107c45e92fd80693",
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 19, 14, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 20, 14, 59, 59),
                     PublisherId = 2,
                     ImageName = "sc1211007001.jpg"
                 },
@@ -72,7 +72,7 @@ namespace StoryMicroservice.Database
                 {
                     Id = "60bd70ad107c45e92fd80694",
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 19, 12, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 20, 12, 59, 59),
                     PublisherId = 2,
                     ImageName = "2212424861.png"
                 },
@@ -80,7 +80,7 @@ namespace StoryMicroservice.Database
                 {
                     Id = "60bd70ad107c45e92fd80695",
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 06, 19, 16, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 20, 16, 59, 59),
                     PublisherId = 3,
                     ImageName = "2212424862.png"
                 },
@@ -88,7 +88,7 @@ namespace StoryMicroservice.Database
                 {
                     Id = "60bd70ad107c45e92fd80696",
                     ForCloseFriends = true,
-                    PublishingDate = new DateTime(2021, 06, 19, 14, 59, 59),
+                    PublishingDate = new DateTime(2021, 06, 20, 14, 59, 59),
                     PublisherId = 4,
                     ImageName = "2212424863.png"
                 }
@@ -104,6 +104,7 @@ namespace StoryMicroservice.Database
                     OriginalId = 1 ,
                     Username = "stefanb",
                     IsPrivate = false,
+                    Deactivated = false,
                     ImageName = "user1213352029.jpg",
                     Following = new List<int>() {2, 3, 5},
                     CloseFriends = new List<int>() {2},
@@ -113,6 +114,7 @@ namespace StoryMicroservice.Database
                     OriginalId = 2 ,
                     Username = "matijam",
                     IsPrivate = true,
+                    Deactivated = false,
                     ImageName = "user2213352029.jpg",
                     Following = new List<int>() {1, 4},
                     CloseFriends = new List<int>() {3},
@@ -122,6 +124,7 @@ namespace StoryMicroservice.Database
                     OriginalId = 3 ,
                     Username = "aleksai",
                     IsPrivate = true,
+                    Deactivated = false,
                     ImageName = "user3213352029.png",
                     Following = new List<int>() {1, 2},
                     CloseFriends = new List<int>() {2},
@@ -131,6 +134,7 @@ namespace StoryMicroservice.Database
                     OriginalId = 4 ,
                     Username = "stefans",
                     IsPrivate = false,
+                    Deactivated = false,
                     ImageName = "user4213352029.png",
                     Following = new List<int>(),
                     CloseFriends = new List<int>(),
@@ -140,6 +144,7 @@ namespace StoryMicroservice.Database
                     OriginalId = 5 ,
                     Username = "majam",
                     IsPrivate = false,
+                    Deactivated = false,
                     ImageName = "user5213352029.jpg",
                     Following = new List<int>(),
                     CloseFriends = new List<int>(),

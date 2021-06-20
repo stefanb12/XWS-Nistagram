@@ -53,7 +53,7 @@ namespace PostMicroservice.Messaging
                               routingKey: "");
         }
 
-        public async void ReceiveMessage()
+        public void ReceiveMessage()
         {
 
             var consumer = new EventingBasicConsumer(_channel);
@@ -76,8 +76,9 @@ namespace PostMicroservice.Messaging
                 {
                     OriginalId = data["id"].Value<int>(),
                     Username = data["username"].Value<string>(),
-                    ImageName = data["profileImage"].Value<string>()
-                    //Following = new List<int>()
+                    ImageName = data["profileImage"].Value<string>(),
+                    Following = new List<ProfileFollowing>(),
+                    MutedProfiles = new List<ProfileMutedProfile>()
                 });
                 
 

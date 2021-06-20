@@ -75,7 +75,9 @@ namespace NotificationMicroservice.Messaging
                 {
                     OriginalId = data["id"].Value<int>(),
                     Username = data["username"].Value<string>(),
-                    ImageName = data["profileImage"].Value<string>()
+                    ImageName = data["profileImage"].Value<string>(),
+                    NotificationProfiles = new List<ProfileNotificationProfile>(),
+                    MutedProfiles = new List<ProfileMutedProfile>()
                 });
                 
 
