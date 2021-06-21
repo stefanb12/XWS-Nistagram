@@ -54,8 +54,12 @@ namespace PostMicroservice.Service
         {
             profile.Username = entity.Username;
             profile.IsPrivate = entity.IsPrivate;
-            profile.Following = entity.Following;
+            profile.Deactivated = entity.Deactivated;
             profile.ImageName = entity.ImageName;
+            profile.Following.Clear();
+            profile.Following = entity.Following;
+            profile.MutedProfiles.Clear();
+            profile.MutedProfiles = entity.MutedProfiles;
             return profile;
         }
 

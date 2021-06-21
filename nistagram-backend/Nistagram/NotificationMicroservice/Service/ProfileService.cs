@@ -48,6 +48,11 @@ namespace NotificationMicroservice.Service
         {
             profile.Username = entity.Username;
             profile.ImageName = entity.ImageName;
+            profile.NotificationProfiles.Clear();
+            profile.NotificationProfiles.AddRange(entity.NotificationProfiles);
+            profile.MutedProfiles.Clear();
+            profile.MutedProfiles.AddRange(entity.MutedProfiles);
+
             return profile;
         }
 

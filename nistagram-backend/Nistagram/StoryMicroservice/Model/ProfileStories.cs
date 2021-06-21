@@ -9,6 +9,7 @@ namespace StoryMicroservice.Model
     public class ProfileStories : User
     {
         public bool IsPrivate { get; set; }
+        public bool Deactivated { get; set; }
         public int OriginalId { get; set; }
         public List<Story> Stories { get; set; }
         public List<int> Following { get; set; }

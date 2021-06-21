@@ -1,25 +1,24 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using InappropriateContentMicroservice.Model;
+using InappropriateContentMicroservice.Service;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using PostMicroservice.Model;
-using PostMicroservice.Service;
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace PostMicroservice.Messaging
+namespace InappropriateContentMicroservice.Messaging
 {
-    public class ProfileUpdatedMessageReceiver : IHostedService, IMessageReceiver
+    public class PostCreatedMessageReceiver : IHostedService, IMessageReceiver
     {
         private IConnection _connection;
         private IModel _channel;
         public IServiceProvider Services;
 
-        public ProfileUpdatedMessageReceiver(IServiceProvider services)
+        public PostCreatedMessageReceiver(IServiceProvider services)
         {
             Services = services;
             InitRabbitMQ();
@@ -42,14 +41,14 @@ namespace PostMicroservice.Messaging
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
-            _channel.ExchangeDeclare(exchange: "profile.updated", type: ExchangeType.Fanout);
-            _channel.QueueDeclare(queue: "post.profile.updated",
+            _channel.ExchangeDeclare(exchange: "post.created", type: ExchangeType.Fanout);
+            _channel.QueueDeclare(queue: "inappropriatecontent.post.created",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: false,
                                   arguments: null);
-            _channel.QueueBind(queue: "post.profile.updated",
-                              exchange: "profile.updated",
+            _channel.QueueBind(queue: "inappropriatecontent.post.created",
+                              exchange: "post.created",
                               routingKey: "");
         }
 
@@ -64,38 +63,21 @@ namespace PostMicroservice.Messaging
                 Console.WriteLine(" [x] Received {0}", message);
 
                 var data = JObject.Parse(message);
-
                 var scopedProcessingService =
                     scope.ServiceProvider
-                        .GetRequiredService<IProfileService>();
+                        .GetRequiredService<IPostService>();
 
-                List<ProfileFollowing> following = new List<ProfileFollowing>();
-                foreach(int followingId in data["following"].ToObject<List<int>>())
+                scopedProcessingService.Insert(new Post()
                 {
-                    following.Add(new ProfileFollowing() { ProfileId = data["id"].Value<int>(), FollowingId = followingId });
-                }
-
-                List<ProfileMutedProfile> mutedProfiles = new List<ProfileMutedProfile>();
-                foreach (int mutedProfileId in data["mutedProfiles"].ToObject<List<int>>())
-                {
-                    mutedProfiles.Add(new ProfileMutedProfile() { ProfileId = data["id"].Value<int>(), MutedProfileId = mutedProfileId });
-                }
-
-                scopedProcessingService.Update(new Profile()
-                {
-                    OriginalId = data["id"].Value<int>(),
-                    Username = data["username"].Value<string>(),
-                    ImageName = data["profileImage"].Value<string>(),
-                    IsPrivate = data["isPrivate"].Value<bool>(),
-                    Deactivated = data["deactivated"].Value<bool>(),
-                    Following = following,
-                    MutedProfiles = mutedProfiles
+                    OriginalId = data["originalId"].Value<int>(),
+                    ImageName = data["image"].Value<string>()
                 });
+
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };
 
-            _channel.BasicConsume(queue: "post.profile.updated",
+            _channel.BasicConsume(queue: "inappropriatecontent.post.created",
                                   autoAck: false,
                                   consumer: consumer);
         }

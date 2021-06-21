@@ -1,17 +1,16 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using InappropriateContentMicroservice.Model;
+using InappropriateContentMicroservice.Service;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using PostMicroservice.Model;
-using PostMicroservice.Service;
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace PostMicroservice.Messaging
+namespace InappropriateContentMicroservice.Messaging
 {
     public class ProfileUpdatedMessageReceiver : IHostedService, IMessageReceiver
     {
@@ -43,12 +42,12 @@ namespace PostMicroservice.Messaging
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
             _channel.ExchangeDeclare(exchange: "profile.updated", type: ExchangeType.Fanout);
-            _channel.QueueDeclare(queue: "post.profile.updated",
+            _channel.QueueDeclare(queue: "inappropriatecontent.profile.updated",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: false,
                                   arguments: null);
-            _channel.QueueBind(queue: "post.profile.updated",
+            _channel.QueueBind(queue: "inappropriatecontent.profile.updated",
                               exchange: "profile.updated",
                               routingKey: "");
         }
@@ -69,33 +68,17 @@ namespace PostMicroservice.Messaging
                     scope.ServiceProvider
                         .GetRequiredService<IProfileService>();
 
-                List<ProfileFollowing> following = new List<ProfileFollowing>();
-                foreach(int followingId in data["following"].ToObject<List<int>>())
-                {
-                    following.Add(new ProfileFollowing() { ProfileId = data["id"].Value<int>(), FollowingId = followingId });
-                }
-
-                List<ProfileMutedProfile> mutedProfiles = new List<ProfileMutedProfile>();
-                foreach (int mutedProfileId in data["mutedProfiles"].ToObject<List<int>>())
-                {
-                    mutedProfiles.Add(new ProfileMutedProfile() { ProfileId = data["id"].Value<int>(), MutedProfileId = mutedProfileId });
-                }
-
                 scopedProcessingService.Update(new Profile()
                 {
                     OriginalId = data["id"].Value<int>(),
                     Username = data["username"].Value<string>(),
                     ImageName = data["profileImage"].Value<string>(),
-                    IsPrivate = data["isPrivate"].Value<bool>(),
-                    Deactivated = data["deactivated"].Value<bool>(),
-                    Following = following,
-                    MutedProfiles = mutedProfiles
                 });
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };
 
-            _channel.BasicConsume(queue: "post.profile.updated",
+            _channel.BasicConsume(queue: "inappropriatecontent.profile.updated",
                                   autoAck: false,
                                   consumer: consumer);
         }

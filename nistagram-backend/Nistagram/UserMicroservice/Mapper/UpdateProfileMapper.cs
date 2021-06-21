@@ -35,6 +35,7 @@ namespace UserMicroservice.Mapper
             dto.MobilePhone = profile.MobilePhone;
             dto.DateOfBirth = profile.DateOfBirth;
             dto.Gender = profile.Gender;
+            dto.UserRole = profile.UserRole;
             dto.ImageSrc = profile.ImageSrc;
 
             return dto;

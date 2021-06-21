@@ -9,7 +9,8 @@ namespace NotificationMicroservice.Database
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-        public DbSet<NotificationProfile> NotificationProfiles { get; set; }
+        public DbSet<ProfileNotificationProfile> NotificationProfiles { get; set; }
+        public DbSet<ProfileMutedProfile> MutedProfiles { get; set; }
 
         public NotificationDbContext() : base() { }
 
@@ -64,8 +65,26 @@ namespace NotificationMicroservice.Database
                 new Notification { Id = 9, Time = new DateTime(2021, 06, 04), Content = "stefanb started following you.", Seen = false, FollowRequest = false, ReceiverId = 5, SenderId = 1, PostId = 1 }
             );
 
-            modelBuilder.Entity<NotificationProfile>().HasData(
-                new NotificationProfile { Id = 1, ProfileId = 1, NotificationProfileId = 4 }
+            // MutedProfiles
+            modelBuilder.Entity<ProfileMutedProfile>().HasKey(t => new { t.ProfileId, t.MutedProfileId });
+            modelBuilder.Entity<ProfileMutedProfile>()
+                .HasOne(pt => pt.Profile)
+                .WithMany(p => p.MutedProfiles)
+                .HasForeignKey(pt => pt.ProfileId);
+
+            modelBuilder.Entity<ProfileMutedProfile>().HasData(
+                new ProfileMutedProfile { ProfileId = 1, MutedProfileId = 2 }
+            );
+
+            // ProfileNotifications
+            modelBuilder.Entity<ProfileNotificationProfile>().HasKey(t => new { t.ProfileId, t.NotificationProfileId });
+            modelBuilder.Entity<ProfileNotificationProfile>()
+                .HasOne(pt => pt.Profile)
+                .WithMany(p => p.NotificationProfiles)
+                .HasForeignKey(pt => pt.ProfileId);
+
+            modelBuilder.Entity<ProfileNotificationProfile>().HasData(
+                new ProfileNotificationProfile { ProfileId = 1, NotificationProfileId = 2 }
             );
         }
     }

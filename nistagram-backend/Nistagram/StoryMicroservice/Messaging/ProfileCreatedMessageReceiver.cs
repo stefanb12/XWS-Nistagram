@@ -74,8 +74,8 @@ namespace StoryMicroservice.Messaging
                 {
                     OriginalId = data["id"].Value<int>(),
                     Username = data["username"].Value<string>(),
-                    IsPrivate = data["isPrivate"].Value<bool>(),
                     ImageName = data["profileImage"].Value<string>(),
+                    IsPrivate = data["isPrivate"].Value<bool>(),
                     Following = new List<int>(),
                     CloseFriends = new List<int>(),
                     MutedProfiles = new List<int>()

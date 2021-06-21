@@ -141,6 +141,17 @@ namespace PostMicroservice.Database
                 new ProfileFollowing { ProfileId = 1, FollowingId = 5 }
             );
 
+            // MutedProfiles
+            modelBuilder.Entity<ProfileMutedProfile>().HasKey(t => new { t.ProfileId, t.MutedProfileId });
+            modelBuilder.Entity<ProfileMutedProfile>()
+                .HasOne(pt => pt.Profile)
+                .WithMany(p => p.MutedProfiles)
+                .HasForeignKey(pt => pt.ProfileId);
+
+            modelBuilder.Entity<ProfileMutedProfile>().HasData(
+                new ProfileMutedProfile { ProfileId = 1, MutedProfileId = 2 }
+            );
+
         }
     }
 }

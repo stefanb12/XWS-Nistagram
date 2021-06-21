@@ -90,7 +90,7 @@ namespace UserMicroservice.Service
             followerProfile.Following.Add(profileFollowing);
             await Update(followingProfile);
 
-            _profileUpdatedSender.SendUpdatedProfile(followingProfile);
+            _profileUpdatedSender.SendUpdatedProfile(followerProfile);
             return profileFollower;
         }
 
@@ -114,7 +114,7 @@ namespace UserMicroservice.Service
             followerProfile.Following.Remove(profileFollowing);
             await Update(followingProfile);
 
-            _profileUpdatedSender.SendUpdatedProfile(followingProfile);
+            _profileUpdatedSender.SendUpdatedProfile(followerProfile);
 
             ProfileFollower res = new ProfileFollower();
             res.Profile = followingProfile;
@@ -287,11 +287,25 @@ namespace UserMicroservice.Service
             profileBlockedProfile.BlockedProfileId = blockProfile.Id;
             profileBlockedProfile.ProfileSettingsId = profile.Id;
             profile.BlockedProfiles.Add(profileBlockedProfile);
+            if(await DoesExistInFollowing(profileId, id))
+            {
+                await UnfollowAnotherProfile(profileId, id);
+            }
             await _profileSettingsRepository.Update(profile);
 
             _profileUpdatedSender.SendUpdatedProfile(await GetById(profileId));
 
             return profileBlockedProfile;
+        }
+
+        private async Task<bool> DoesExistInFollowing(int profileId, int id)
+        {
+            Profile profile = await GetById(profileId);
+            if(profile.Following.Exists(pf => pf.FollowingId == id))
+            {
+                return true;
+            }
+            return false;
         }
 
         public async Task<ProfileBlockedProfile> UnBlockProfile(int profileId, int id)

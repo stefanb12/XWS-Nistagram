@@ -117,7 +117,7 @@ class UserPrivacy extends Component {
   };
 
   openBlockProfilesModal = () => {
-    ProfileService.getFollowing(AuthService.getCurrentUser().id)
+    ProfileService.getAllUsers()
       .then((res) => res.json())
       .then((result) => {
         this.setState({
@@ -412,45 +412,50 @@ class UserPrivacy extends Component {
         <Modal.Body>
           <div style={{ overflow: "auto", maxHeight: "300px" }}>
             {this.state.following.map((profile) => {
-              return (
-                <div class="list-group-item d-flex align-items-center">
-                  <img
-                    src={profile.imageSrc}
-                    alt=""
-                    width="50px"
-                    class="rounded-sm ml-n2"
-                  />
-                  <div class="flex-fill pl-3 pr-3">
-                    <div>
-                      <a href="#" class="text-dark font-weight-600">
-                        {profile.username}
-                      </a>
+              if (
+                profile.userRole !== 2 &&
+                profile.id !== AuthService.getCurrentUser().id
+              ) {
+                return (
+                  <div class="list-group-item d-flex align-items-center">
+                    <img
+                      src={profile.imageSrc}
+                      alt=""
+                      width="50px"
+                      class="rounded-sm ml-n2"
+                    />
+                    <div class="flex-fill pl-3 pr-3">
+                      <div>
+                        <a href="#" class="text-dark font-weight-600">
+                          {profile.username}
+                        </a>
+                      </div>
+                      {/* <div class="text-muted fs-13px">{follower.fullName}</div> */}
                     </div>
-                    {/* <div class="text-muted fs-13px">{follower.fullName}</div> */}
+                    {this.isProfileBlocked(profile.username) ? (
+                      <a
+                        href="javascript:void(0)"
+                        class="btn btn-danger"
+                        style={{ width: "28%" }}
+                        onClick={() => this.unblockProfile(profile.id)}
+                      >
+                        <BlockIcon style={{ marginRight: "3%" }} />
+                        Unblock
+                      </a>
+                    ) : (
+                      <a
+                        href="javascript:void(0)"
+                        class="btn btn-outline-danger"
+                        style={{ width: "28%" }}
+                        onClick={() => this.blockProfile(profile.id)}
+                      >
+                        <BlockIcon style={{ marginRight: "3%" }} />
+                        Block
+                      </a>
+                    )}
                   </div>
-                  {this.isProfileBlocked(profile.username) ? (
-                    <a
-                      href="javascript:void(0)"
-                      class="btn btn-danger"
-                      style={{ width: "26%" }}
-                      onClick={() => this.unblockProfile(profile.id)}
-                    >
-                      <BlockIcon style={{ marginRight: "3%" }} />
-                      Unblock
-                    </a>
-                  ) : (
-                    <a
-                      href="javascript:void(0)"
-                      class="btn btn-outline-danger"
-                      style={{ width: "26%" }}
-                      onClick={() => this.blockProfile(profile.id)}
-                    >
-                      <BlockIcon style={{ marginRight: "3%" }} />
-                      Block
-                    </a>
-                  )}
-                </div>
-              );
+                );
+              }
             })}
           </div>
         </Modal.Body>
@@ -724,7 +729,8 @@ class UserPrivacy extends Component {
                   Notification profiles
                 </Button>
                 <p style={{ fontSize: "14px", marginBottom: "4%" }}>
-                  You will receive notification when someone from this list adds post, story, comment or send you a message.
+                  You will receive notification when someone from this list adds
+                  post, story, comment or send you a message.
                 </p>
               </ListGroup.Item>
             </ListGroup>

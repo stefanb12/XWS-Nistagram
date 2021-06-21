@@ -1,15 +1,19 @@
 ﻿using Newtonsoft.Json;
-using PostMicroservice.Model;
 using RabbitMQ.Client;
+using StoryMicroservice.Model;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-namespace PostMicroservice.Messaging
-{
-    public class PostCreatedMessageSender : IPostCreatedMessageSender
-    {
-        public PostCreatedMessageSender() { }
+using System.Threading.Tasks;
 
-        public void SendCreatedPost(Post post)
+namespace StoryMicroservice.Messaging
+{
+    public class StoryCreatedMessageSender : IStoryCreatedMessageSender
+    {
+        public StoryCreatedMessageSender() { }
+
+        public void SendCreatedStory(Story story)
         {
             var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
             var factory = new ConnectionFactory() { HostName = "localhost" };
@@ -27,17 +31,17 @@ namespace PostMicroservice.Messaging
             var connection = factory.CreateConnection();
             var channel = connection.CreateModel();
 
-            channel.ExchangeDeclare(exchange: "post.created", type: ExchangeType.Fanout);
+            channel.ExchangeDeclare(exchange: "story.created", type: ExchangeType.Fanout);
 
             var integrationEventData = JsonConvert.SerializeObject(new
             {
-                originalId = post.Id,
-                image = post.Contents[0].ImageName
+                originalId = story.Id,
+                image = story.ImageName
             });
 
             var body = Encoding.UTF8.GetBytes(integrationEventData);
 
-            channel.BasicPublish(exchange: "post.created",
+            channel.BasicPublish(exchange: "story.created",
                                     routingKey: "",
                                     basicProperties: null,
                                     body: body);
