@@ -141,6 +141,7 @@ namespace ProfileMicroservice.Database
                 new FollowRequest { Id = 2, Accepted = false, Processed = false, ReceiverId = 3, SenderId = 5 }
             );
 
+            // ProfileNotifications
             modelBuilder.Entity<ProfileNotificationProfile>().HasKey(t => new { t.ProfileSettingsId, t.NotificationProfileId });
             modelBuilder.Entity<ProfileNotificationProfile>()
                 .HasOne(pt => pt.ProfileSettings)
@@ -148,7 +149,7 @@ namespace ProfileMicroservice.Database
                 .HasForeignKey(pt => pt.ProfileSettingsId);
 
             modelBuilder.Entity<ProfileNotificationProfile>().HasData(
-                new ProfileNotificationProfile { ProfileSettingsId = 1, NotificationProfileId = 4 }
+                new ProfileNotificationProfile { ProfileSettingsId = 1, NotificationProfileId = 2 }
             );
         }
     }

@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UserMicroservice.Dto;
 using UserMicroservice.Mapper;
+using UserMicroservice.Messaging;
 using UserMicroservice.Model;
 using UserMicroservice.Service;
 
@@ -22,13 +23,15 @@ namespace UserMicroservice.Controllers
         private readonly IProfileService _profileService;
         private readonly IFollowRequestService _followRequestService;
         private readonly IRegistrationRequestService _registrationRequestService;
+        private readonly IProfileUpdatedMessageSender _profileUpdatedMessageSender;
 
         public ProfileController(IProfileService profileService, IFollowRequestService followRequestService, 
-                                 IRegistrationRequestService registrationRequestService)
+                                 IRegistrationRequestService registrationRequestService, IProfileUpdatedMessageSender profileUpdatedMessageSender)
         {
             _profileService = profileService;
             _followRequestService = followRequestService;
             _registrationRequestService = registrationRequestService;
+            _profileUpdatedMessageSender = profileUpdatedMessageSender;
         }
 
         [HttpPost("registration")]
@@ -260,9 +263,10 @@ namespace UserMicroservice.Controllers
             }
 
             profile.Deactivated = true;
-            ProfileDto deactivatedProfile = ProfileMapper.ProfileToProfileDto(await _profileService.Update(profile));
-            // pozovi profileUpdated message sender
-            return Ok(deactivatedProfile);
+            Profile deactivatedProfile = await _profileService.Update(profile);
+            _profileUpdatedMessageSender.SendUpdatedProfile(deactivatedProfile);
+
+            return Ok(ProfileMapper.ProfileToProfileDto(deactivatedProfile));
         }
 
         [HttpGet("{id}/closeFriends")]

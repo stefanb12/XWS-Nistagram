@@ -221,9 +221,7 @@ namespace PostMicroservice.Controllers
             }
             
             post.Deleted = true;
-            PostDto deletedPost = PostMapper.PostToPostDto(await _postService.Update(post));
-            // pozovi postUpdated message sender
-            return Ok(deletedPost);
+            return Ok(PostMapper.PostToPostDto(await _postService.Update(post)));
         }
 
         [HttpGet("search/{searchParam}")]

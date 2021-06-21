@@ -14,7 +14,6 @@ namespace InappropriateContentMicroservice.Model
         public IFormFile ImageFile { get; set; }
         [NotMapped]
         public string ImageSrc { get; set; }
-        public bool Deleted { get; set; }
 
         public Story()
         {
