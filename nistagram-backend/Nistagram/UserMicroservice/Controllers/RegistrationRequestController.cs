@@ -31,7 +31,7 @@ namespace UserMicroservice.Controllers
             {
                 dtos.Add(RegistrationRequestMapper.RegistrationRequestToRegistrationRequestDto(request));
             }
-            return Ok(dtos);
+            return Ok(dtos.OrderByDescending(request => !request.Processed).ToList());
         }
 
         [HttpPut("acceptRequest/{requestId}")]

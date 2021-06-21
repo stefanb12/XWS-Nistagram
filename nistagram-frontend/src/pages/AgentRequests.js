@@ -1,8 +1,26 @@
 import React, { Component } from "react";
 import ProfileVerificationRequestService from "../services/ProfileVerificationRequestService";
-import { Button, Modal } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import Register from "./Register.js";
 import RegistrationRequestService from "../services/RegistrationRequestService";
+import * as Yup from "yup";
+import { Formik } from "formik";
+import AuthService from "../services/AuthService";
+import { Alert } from "@material-ui/lab";
+import {
+  Box,
+  Button, 
+  Checkbox,
+  Container,
+  FormControlLabel,
+  FormHelperText,
+  Link,
+  TextField,
+  Typography,
+  RadioGroup,
+  Radio,
+  Snackbar,
+} from "@material-ui/core";
 
 export default class AgentRequest extends Component {
   constructor(props) {
@@ -21,6 +39,46 @@ export default class AgentRequest extends Component {
   componentDidMount() {
     this.getAllRegistrationRequests();
   }
+
+  handleRegistration = async (
+    fullName,
+    username,
+    email,
+    password,
+    gender,
+    websiteLink
+  ) => {
+    let resStatus = false;
+    let isAgent = true;
+    await AuthService.registerUser(
+      fullName,
+      username,
+      email,
+      password,
+      gender,
+      isAgent,
+      websiteLink
+    ).then((result) => {
+      if (result.status === 201) {
+        this.setState({
+          message : "Registration successful!",
+          snackbarType: "success",
+          open: true,
+          isOpenNewAgentModal: false
+        })
+        this.getAllRegistrationRequests();
+        resStatus = true;
+      } else if (result.status === 400) {
+        this.setState({
+          message : "Profile with entered username already exists!",
+          snackbarType: "error",
+          open: true
+        })
+        resStatus = false;
+      }
+    });
+    return resStatus;
+  };
 
   getAllRegistrationRequests = () => {
     RegistrationRequestService.getAllRegistrationRequests()
@@ -75,6 +133,12 @@ export default class AgentRequest extends Component {
     // registracija
     this.closeNewAgentModal();
   };
+  
+  handleClose = (event, reason) => {
+    this.setState({
+      open: false
+    })
+  };
 
   render() {
     const newAgentModalDialog = (
@@ -82,18 +146,18 @@ export default class AgentRequest extends Component {
         show={this.state.isOpenNewAgentModal}
         onHide={this.closeNewAgentModal}
         size="lg"
-        style={{ height: "720px", overflow: "hidden", marginTop: "70px" }}
+        style={{ height: "850px", overflow: "hidden", marginTop: "50px" }}
       >
-        {/* <Modal.Header closeButton>
+        <Modal.Header closeButton>
           <Modal.Title style={{ marginLeft: "315px", color: "#74767a" }}>
             New agent
           </Modal.Title>
-        </Modal.Header> */}
+        </Modal.Header> 
         <Modal.Body
           style={{
             overflowX: "hidden",
             overflowY: "auto",
-            height: "480px",
+            height: "560px",
           }}
         >
           <div
@@ -101,14 +165,158 @@ export default class AgentRequest extends Component {
           //   marginLeft: "25px",
           // }}
           >
-            <Register />
+              <Container maxWidth="sm">
+            <Formik
+              initialValues={{
+                username: "",
+                email: "",
+                fullName: "",
+                password: "",
+                gender: "male",
+                websiteLink: ""
+              }}
+              validationSchema={Yup.object().shape({
+                username: Yup.string().max(255).required("Username is required"),
+                email: Yup.string()
+                  .email("Must be a valid email")
+                  .max(255)
+                  .required("Email is required"),
+                fullName: Yup.string()
+                  .max(255)
+                  .required("First name is required"),
+                password: Yup.string().max(255).required("Password is required"),
+                websiteLink: Yup.string().max(255).required("Website link is required")
+              })}
+              onSubmit={async (values) => {
+                let res = await this.handleRegistration(
+                  values.fullName,
+                  values.username,
+                  values.email,
+                  values.password,
+                  values.gender,
+                  values.websiteLink
+                );
+                if (res) {
+                  values.username = "";
+                  values.email = "";
+                  values.fullName = "";
+                  values.password = "";
+                  values.gender = "male";
+                  values.websiteLink = "";
+                }
+              }}
+            >
+              {({
+                errors,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+                isSubmitting,
+                touched,
+                values,
+              }) => (
+                <form onSubmit={handleSubmit}>
+                  <TextField
+                    error={Boolean(touched.fullName && errors.fullName)}
+                    fullWidth
+                    helperText={touched.fullName && errors.fullName}
+                    label="Full name"
+                    margin="normal"
+                    name="fullName"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.fullName}
+                    variant="outlined"
+                  />
+                  <TextField
+                    error={Boolean(touched.email && errors.email)}
+                    fullWidth
+                    helperText={touched.email && errors.email}
+                    label="Email Address"
+                    margin="normal"
+                    name="email"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="email"
+                    value={values.email}
+                    variant="outlined"
+                  />
+                  <TextField
+                    error={Boolean(touched.username && errors.username)}
+                    fullWidth
+                    helperText={touched.username && errors.username}
+                    label="Username"
+                    margin="normal"
+                    name="username"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.username}
+                    variant="outlined"
+                  />
+                  <TextField
+                    error={Boolean(touched.password && errors.password)}
+                    fullWidth
+                    helperText={touched.password && errors.password}
+                    label="Password"
+                    margin="normal"
+                    name="password"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="password"
+                    value={values.password}
+                    variant="outlined"
+                  />
+                  <RadioGroup
+                    label="Password"
+                    name="gender"
+                    onChange={handleChange}
+                    value={values.gender}
+                    row
+                  >
+                    <FormControlLabel
+                      value="male"
+                      control={<Radio />}
+                      label="Male"
+                    />
+                    <FormControlLabel
+                      value="female"
+                      control={<Radio />}
+                      label="Female"
+                    />
+                  </RadioGroup>
+                  <TextField
+                    error={Boolean(touched.websiteLink && errors.websiteLink)}
+                    fullWidth
+                    //disabled={!values.isAgent}
+                    helperText={touched.websiteLink && errors.websiteLink}
+                    label="Website link"
+                    margin="normal"
+                    name="websiteLink"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.websiteLink}
+                    variant="outlined"
+                  />
+                  <Box sx={{ py: 2 }}>
+                    <Button
+                      color="primary"
+                      //disabled={isSubmitting}
+                      fullWidth
+                      size="large"
+                      type="submit"
+                      variant="contained"
+                    >
+                      Register
+                    </Button>
+                  </Box>
+                </form>
+              )}
+            </Formik>
+          </Container>
           </div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={this.closeNewAgentModal}>
-            Close
-          </Button>
-        </Modal.Footer>
+        
+
       </Modal>
     );
 
@@ -194,6 +402,17 @@ export default class AgentRequest extends Component {
 
     return (
       <div>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+          open={this.state.open}
+          autoHideDuration={3000}
+          onClose={this.handleClose}
+        >
+          <Alert severity={this.state.snackbarType}>{this.state.message}</Alert>
+        </Snackbar>
         {newAgentModalDialog}
         <div class="container" style={{ maxWidth: "90%", marginTop: "20px" }}>
           <div class="row">
