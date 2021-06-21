@@ -27,26 +27,26 @@ namespace UserMicroservice.Messaging
                 };
             }
 
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
+            var connection = factory.CreateConnection();
+            var channel = connection.CreateModel();
+            
+            channel.ExchangeDeclare(exchange: "profile.created", type: ExchangeType.Fanout);
+
+            var integrationEventData = JsonConvert.SerializeObject(new
             {
-                channel.ExchangeDeclare(exchange: "profile.created", type: ExchangeType.Fanout);
+                id = profile.Id,
+                username = profile.Username,
+                isPrivate = profile.IsPrivate,
+                profileImage = profile.ImageName
+            });
 
-                var integrationEventData = JsonConvert.SerializeObject(new
-                {
-                    id = profile.Id,
-                    username = profile.Username,
-                    isPrivate = profile.IsPrivate,
-                    profileImage = profile.ImageName
-                });
+            var body = Encoding.UTF8.GetBytes(integrationEventData);
 
-                var body = Encoding.UTF8.GetBytes(integrationEventData);
-
-                channel.BasicPublish(exchange: "profile.created",
-                                     routingKey: "",
-                                     basicProperties: null,
-                                     body: body);
-            }
+            channel.BasicPublish(exchange: "profile.created",
+                                    routingKey: "",
+                                    basicProperties: null,
+                                    body: body);
+            
         }
     }
 }

@@ -27,77 +27,76 @@ namespace UserMicroservice.Messaging
                 };
             }
 
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
+            var connection = factory.CreateConnection();
+            var channel = connection.CreateModel();
+ 
+            channel.ExchangeDeclare(exchange: "profile.updated", type: ExchangeType.Fanout);
+
+            List<int> followingIds = new List<int>();
+            if (profile.Following != null)
             {
-                channel.ExchangeDeclare(exchange: "profile.updated", type: ExchangeType.Fanout);
-
-                List<int> followingIds = new List<int>();
-                if (profile.Following != null)
+                foreach (ProfileFollowing followed in profile.Following)
                 {
-                    foreach (ProfileFollowing followed in profile.Following)
-                    {
-                        followingIds.Add(followed.FollowingId);
-                    }
+                    followingIds.Add(followed.FollowingId);
                 }
-
-                List<int> closeFriendsIds = new List<int>();
-                if (profile.CloseFriends != null)
-                {
-                    foreach (ProfileCloseFriend closeFriend in profile.CloseFriends)
-                    {
-                        closeFriendsIds.Add(closeFriend.CloseFriendId);
-                    }
-                }
-
-                List<int> blockedProfilesIds = new List<int>();
-                if (profile.ProfileSettings.BlockedProfiles != null)
-                {
-                    foreach (ProfileBlockedProfile blockedProfile in profile.ProfileSettings.BlockedProfiles)
-                    {
-                        blockedProfilesIds.Add(blockedProfile.BlockedProfileId);
-                    }
-                }
-
-                List<int> mutedProfilesIds = new List<int>();
-                if (profile.ProfileSettings.MutedProfiles != null)
-                {
-                    foreach (ProfileMutedProfile mutedProfile in profile.ProfileSettings.MutedProfiles)
-                    {
-                        mutedProfilesIds.Add(mutedProfile.MutedProfileId);
-                    }
-                }
-
-                List<int> notificationProfilesIds = new List<int>();
-                if (profile.ProfileSettings.NotificationProfiles != null)
-                {
-                    foreach (ProfileNotificationProfile notificationProfile in profile.ProfileSettings.NotificationProfiles)
-                    {
-                        notificationProfilesIds.Add(notificationProfile.NotificationProfileId);
-                    }
-                }
-
-                var integrationEventData = JsonConvert.SerializeObject(new
-                {
-                    id = profile.Id,
-                    username = profile.Username,
-                    isPrivate = profile.IsPrivate,
-                    deactivated = profile.Deactivated,
-                    profileImage = profile.ImageName,
-                    following = followingIds,
-                    closeFriends = closeFriendsIds,
-                    blockedProfiles = blockedProfilesIds,
-                    mutedProfiles = mutedProfilesIds,
-                    notificationProfiles = notificationProfilesIds
-                });
-
-                var body = Encoding.UTF8.GetBytes(integrationEventData);
-
-                channel.BasicPublish(exchange: "profile.updated",
-                                     routingKey: "",
-                                     basicProperties: null,
-                                     body: body);
             }
+
+            List<int> closeFriendsIds = new List<int>();
+            if (profile.CloseFriends != null)
+            {
+                foreach (ProfileCloseFriend closeFriend in profile.CloseFriends)
+                {
+                    closeFriendsIds.Add(closeFriend.CloseFriendId);
+                }
+            }
+
+            List<int> blockedProfilesIds = new List<int>();
+            if (profile.ProfileSettings.BlockedProfiles != null)
+            {
+                foreach (ProfileBlockedProfile blockedProfile in profile.ProfileSettings.BlockedProfiles)
+                {
+                    blockedProfilesIds.Add(blockedProfile.BlockedProfileId);
+                }
+            }
+
+            List<int> mutedProfilesIds = new List<int>();
+            if (profile.ProfileSettings.MutedProfiles != null)
+            {
+                foreach (ProfileMutedProfile mutedProfile in profile.ProfileSettings.MutedProfiles)
+                {
+                    mutedProfilesIds.Add(mutedProfile.MutedProfileId);
+                }
+            }
+
+            List<int> notificationProfilesIds = new List<int>();
+            if (profile.ProfileSettings.NotificationProfiles != null)
+            {
+                foreach (ProfileNotificationProfile notificationProfile in profile.ProfileSettings.NotificationProfiles)
+                {
+                    notificationProfilesIds.Add(notificationProfile.NotificationProfileId);
+                }
+            }
+
+            var integrationEventData = JsonConvert.SerializeObject(new
+            {
+                id = profile.Id,
+                username = profile.Username,
+                isPrivate = profile.IsPrivate,
+                deactivated = profile.Deactivated,
+                profileImage = profile.ImageName,
+                following = followingIds,
+                closeFriends = closeFriendsIds,
+                blockedProfiles = blockedProfilesIds,
+                mutedProfiles = mutedProfilesIds,
+                notificationProfiles = notificationProfilesIds
+            });
+
+            var body = Encoding.UTF8.GetBytes(integrationEventData);
+
+            channel.BasicPublish(exchange: "profile.updated",
+                                    routingKey: "",
+                                    basicProperties: null,
+                                    body: body);
         }
     }
 }

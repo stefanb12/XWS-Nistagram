@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using StoryMicroservice.Messaging;
 using StoryMicroservice.Model;
 using StoryMicroservice.Repository;
 using System;
@@ -15,11 +16,13 @@ namespace StoryMicroservice.Service
         private IStoryRepository _storyRepository;
 
         private readonly IWebHostEnvironment _hostEnvironment;
+        private IStoryCreatedMessageSender _storyCreatedSender;
 
-        public StoryService(IStoryRepository storyRepository, IWebHostEnvironment hostEnvironment)
+        public StoryService(IStoryRepository storyRepository, IWebHostEnvironment hostEnvironment, IStoryCreatedMessageSender storyCreatedSender)
         {
             _storyRepository = storyRepository;
             _hostEnvironment = hostEnvironment;
+            _storyCreatedSender = storyCreatedSender;
         }
 
         public async Task<List<Story>> GetActiveStoriesForProfile(int profileId)
@@ -64,7 +67,11 @@ namespace StoryMicroservice.Service
         {
             entity.ImageName = await SaveImage(entity.ImageFile);
             entity.PublishingDate = DateTime.Now;
-            return await _storyRepository.Insert(entity);
+
+            Story story = await _storyRepository.Insert(entity);
+            _storyCreatedSender.SendCreatedStory(story);
+
+            return story;
         }
 
         public async Task<Story> Update(Story entity)

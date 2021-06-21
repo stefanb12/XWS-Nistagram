@@ -412,14 +412,11 @@ export default function UserNavbar() {
 
   const notificationItems = notifications.map((notification) => {
     if (notification.followRequest === true) {
+      let imgSrc = "http://localhost:55988/" + notification.sender.imageName;
       return (
         <StyledMenuItem>
           <div class="dropdown-list-image mr-3">
-            <img
-              class="img-xs rounded-circle"
-              src={notification.sender.imageSrc}
-              alt=""
-            />
+            <img class="img-xs rounded-circle" src={imgSrc} alt="" />
           </div>
           <div class="font-weight mr-3">
             <div>
@@ -467,13 +464,11 @@ export default function UserNavbar() {
         <StyledMenuItem>
           {(() => {
             if (notification.sender != null) {
+              let imgSrc =
+                "http://localhost:55988/" + notification.sender.imageName;
               return (
                 <div class="dropdown-list-image mr-3">
-                  <img
-                    class="img-xs rounded-circle"
-                    src={notification.sender.imageSrc}
-                    alt=""
-                  />
+                  <img class="img-xs rounded-circle" src={imgSrc} alt="" />
                 </div>
               );
             } else {
@@ -495,14 +490,12 @@ export default function UserNavbar() {
               {notification.content}
               {(() => {
                 if (notification.post !== null) {
+                  let imgSrc =
+                    "http://localhost:55993/" + notification.post.imageName;
                   if (notification.post.id !== 1) {
                     return (
                       <div style={{ float: "right", marginLeft: "10px" }}>
-                        <img
-                          class="img-xs"
-                          src={notification.post.imageSrc}
-                          alt=""
-                        />
+                        <img class="img-xs" src={imgSrc} alt="" />
                       </div>
                     );
                   }

@@ -149,7 +149,7 @@ namespace ProfileMicroservice.Database
                 .HasForeignKey(pt => pt.ProfileSettingsId);
 
             modelBuilder.Entity<ProfileNotificationProfile>().HasData(
-                new ProfileNotificationProfile { ProfileSettingsId = 1, NotificationProfileId = 4 }
+                new ProfileNotificationProfile { ProfileSettingsId = 1, NotificationProfileId = 2 }
             );
         }
     }
