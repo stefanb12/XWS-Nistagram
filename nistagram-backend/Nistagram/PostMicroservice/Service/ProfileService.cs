@@ -30,12 +30,25 @@ namespace PostMicroservice.Service
 
         public async Task<Profile> GetById(int id)
         {
-            return await _profileRepository.GetById(id);
+            Profile profile = await _profileRepository.GetById(id);
+            if (profile.Deactivated)
+            {
+                profile = null;
+            }
+            return profile;
         }
 
         public async Task<IEnumerable<Profile>> GetAll()
         {
-            return await _profileRepository.GetAll();
+            List<Profile> profiles = new List<Profile>();
+            foreach (Profile profile in await _profileRepository.GetAll())
+            {
+                if (!profile.Deactivated)
+                {
+                    profiles.Add(profile);
+                }
+            }
+            return profiles;
         }
 
         public async Task<Profile> Insert(Profile entity)
@@ -60,6 +73,8 @@ namespace PostMicroservice.Service
             profile.Following = entity.Following;
             profile.MutedProfiles.Clear();
             profile.MutedProfiles = entity.MutedProfiles;
+            profile.BlockedProfiles.Clear();
+            profile.BlockedProfiles = entity.BlockedProfiles;
             return profile;
         }
 

@@ -122,6 +122,17 @@ class ProfileService {
     return fetch(API_URL + "profile/getAll", requestOptions);
   }
 
+  getAllWithoutBlocked(id) {
+    const requestOptions = {
+      method: "GET",
+    };
+
+    return fetch(
+      API_URL + "profile/getAllWithoutBlocked/" + id,
+      requestOptions
+    );
+  }
+
   getMuted(profileId) {
     const requestOptions = {
       method: "GET",

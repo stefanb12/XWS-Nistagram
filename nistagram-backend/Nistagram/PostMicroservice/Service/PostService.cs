@@ -92,11 +92,13 @@ namespace PostMicroservice.Service
         public async Task<List<Post>> GetAllPublicPosts(int profileId)
         {
             List<Post> publicPosts = new List<Post>();
+            Profile loggedUser = await _profileService.GetProfileByOriginalId(profileId);
+
             foreach (Post post in await GetAll())    
             {
                 foreach (Profile profile in await _profileService.GetAllPublicProfiles())
                 {
-                    if (profile.OriginalId == post.Publisher.OriginalId && profileId != post.Publisher.OriginalId)
+                    if (profile.OriginalId == post.Publisher.OriginalId && profileId != post.Publisher.OriginalId && !DoesProfileExistInMuted(loggedUser, post.PublisherId))
                     {
                         publicPosts.Add(post);
                     }
@@ -112,20 +114,39 @@ namespace PostMicroservice.Service
 
             foreach (Post post in await GetAll())
             {
-                if (profileId == post.Publisher.OriginalId)
+                if (!DoesProfileExistInMuted(profile, post.PublisherId))
                 {
-                    posts.Add(post);
-                    continue;
-                }
-                foreach (ProfileFollowing profileFollowing in profile.Following)
-                {
-                    if (profileFollowing.FollowingId == post.Publisher.OriginalId || profileId == post.Publisher.OriginalId)
+                    if (profileId == post.Publisher.OriginalId)
                     {
                         posts.Add(post);
+                        continue;
                     }
-                }
+
+                    foreach (ProfileFollowing profileFollowing in profile.Following)
+                    {
+                        if (profileFollowing.FollowingId == post.Publisher.OriginalId || profileId == post.Publisher.OriginalId)
+                        {
+                            posts.Add(post);
+                        }
+                    }
+                }   
             }
             return posts.OrderByDescending(post => post.PublishingDate).ToList();
+        }
+
+        private bool DoesProfileExistInMuted(Profile profile, int id)
+        {
+            if(profile != null)
+            {
+                if (profile.MutedProfiles != null)
+                {
+                    if (profile.MutedProfiles.Exists(pf => pf.MutedProfileId == id))
+                    {
+                        return true;
+                    }
+                }  
+            }
+            return false;
         }
 
         public async Task<Post> InsertNewComment(Post post, Comment comment)
@@ -267,6 +288,41 @@ namespace PostMicroservice.Service
             return searchedPosts;
         }
 
+        public async Task<List<Post>> GetSearchResultWithoutBlockedAndMuted(string searchParam, int id)
+        {
+            List<Post> searchedPosts = await GetSearchResult(searchParam);
+            Profile profile = await _profileService.GetById(id);
+            List<Post> result = new List<Post>();
+
+            foreach (Post post in searchedPosts)
+            {
+                if (await DoesExistInMutedOrBlocked(profile.Id, post.PublisherId) == false)
+                {
+                    result.Add(post);
+                }
+            }
+
+            return result;
+        }
+
+        private async Task<bool> DoesExistInMutedOrBlocked(int profileId, int id)
+        {
+            Profile profile = await _profileService.GetById(profileId);
+            Profile profileBlocked = await _profileService.GetById(id);
+            // || profileBlocked.BlockedProfiles.Exists(pf => pf.BlockedProfileId != profileId)
+            if (profile.MutedProfiles.Exists(pf => pf.MutedProfileId == id))
+            {
+                return true;
+            }else if (profile.BlockedProfiles.Exists(pf => pf.BlockedProfileId == id))
+            {
+                return true;
+            }else if (profileBlocked.BlockedProfiles.Exists(pf => pf.BlockedProfileId != profileId))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public List<string> getTags(List<Tag> tags)
         {
             List<string> result = new List<string>();
@@ -340,12 +396,26 @@ namespace PostMicroservice.Service
 
         public async Task<Post> GetById(int id)
         {
-            return await _postRepository.GetById(id);
+            Post post = await _postRepository.GetById(id);
+            if (post.Publisher.Deactivated || post.Deleted)
+            {
+                post = null;
+            }
+            return post;
         }
 
         public async Task<IEnumerable<Post>> GetAll()
         {
-            return await _postRepository.GetAll();
+            List<Post> result = new List<Post>();
+            IEnumerable<Post> posts = await _postRepository.GetAll();
+            foreach (Post post in posts)
+            {
+                if (!post.Publisher.Deactivated && !post.Deleted)
+                {
+                    result.Add(post);
+                }
+            }
+            return result;
         }
 
         public async Task<Post> Insert(Post entity)

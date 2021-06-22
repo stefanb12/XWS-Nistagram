@@ -13,6 +13,7 @@ namespace PostMicroservice.Model
         public string ImageName { get; set; }
         public virtual List<ProfileFollowing> Following { get; set; }
         public virtual List<ProfileMutedProfile> MutedProfiles { get; set; }
+        public virtual List<ProfileBlockedProfile> BlockedProfiles { get; set; }
         [NotMapped]
         public IFormFile ImageFile { get; set; }
         [NotMapped]
