@@ -246,6 +246,28 @@ namespace PostMicroservice.Controllers
             return Ok(publicPostsDto);
         }
 
+        [HttpGet("{searchParam}/searchWithoutBlockedAndMuted/{id}")]
+        public async Task<IActionResult> GetSearchResultWithoutBlockedAndMuted(string searchParam, int id)
+        {
+            List<Post> searchedPosts = await _postService.GetSearchResultWithoutBlockedAndMuted(searchParam, id);
+            if (searchedPosts.Count == 0)
+            {
+                return NotFound();
+            }
+
+            List<PostDto> publicPostsDto = new List<PostDto>();
+            foreach (Post post in searchedPosts)
+            {
+                for (int i = 0; i < post.Contents.Count; i++)
+                {
+                    post.Contents[i].ImageSrc = String.Format("http://localhost:55993/{0}", post.Contents[i].ImageName);
+                }
+                publicPostsDto.Add(PostMapper.PostToPostDto(post));
+            }
+
+            return Ok(publicPostsDto);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Insert([FromForm] PostDto postDto)
         {

@@ -18,5 +18,6 @@ namespace PostMicroservice.Service
         Task<Post> DisikePost(Post post, Profile profile);
         Task<List<Post>> GetSearchResult(string searchParam);
         Task<Post> SavePostAsFavorite(Post post, Profile profile);
+        Task<List<Post>> GetSearchResultWithoutBlockedAndMuted(string searchParam, int id);
     }
 }

@@ -288,6 +288,41 @@ namespace PostMicroservice.Service
             return searchedPosts;
         }
 
+        public async Task<List<Post>> GetSearchResultWithoutBlockedAndMuted(string searchParam, int id)
+        {
+            List<Post> searchedPosts = await GetSearchResult(searchParam);
+            Profile profile = await _profileService.GetById(id);
+            List<Post> result = new List<Post>();
+
+            foreach (Post post in searchedPosts)
+            {
+                if (await DoesExistInMutedOrBlocked(profile.Id, post.PublisherId) == false)
+                {
+                    result.Add(post);
+                }
+            }
+
+            return result;
+        }
+
+        private async Task<bool> DoesExistInMutedOrBlocked(int profileId, int id)
+        {
+            Profile profile = await _profileService.GetById(profileId);
+            Profile profileBlocked = await _profileService.GetById(id);
+            // || profileBlocked.BlockedProfiles.Exists(pf => pf.BlockedProfileId != profileId)
+            if (profile.MutedProfiles.Exists(pf => pf.MutedProfileId == id))
+            {
+                return true;
+            }else if (profile.BlockedProfiles.Exists(pf => pf.BlockedProfileId == id))
+            {
+                return true;
+            }else if (profileBlocked.BlockedProfiles.Exists(pf => pf.BlockedProfileId != profileId))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public List<string> getTags(List<Tag> tags)
         {
             List<string> result = new List<string>();

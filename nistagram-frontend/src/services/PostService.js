@@ -170,6 +170,18 @@ class PostService {
 
     return fetch(API_URL + "post/" + postId, requestOptions);
   }
+
+  getSearchResultWithoutBlockedAndMuted(searchParam, id) {
+    const requestOptions = {
+      method: "GET",
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
+    };
+
+    return fetch(
+      API_URL + "post/" + searchParam + "/searchWithoutBlockedAndMuted/" + id,
+      requestOptions
+    );
+  }
 }
 
 export default new PostService();

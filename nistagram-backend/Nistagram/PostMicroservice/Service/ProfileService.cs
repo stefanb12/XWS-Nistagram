@@ -73,6 +73,8 @@ namespace PostMicroservice.Service
             profile.Following = entity.Following;
             profile.MutedProfiles.Clear();
             profile.MutedProfiles = entity.MutedProfiles;
+            profile.BlockedProfiles.Clear();
+            profile.BlockedProfiles = entity.BlockedProfiles;
             return profile;
         }
 

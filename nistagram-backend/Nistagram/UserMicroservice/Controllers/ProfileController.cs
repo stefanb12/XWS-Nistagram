@@ -178,6 +178,24 @@ namespace UserMicroservice.Controllers
 
             return Ok(dtos);
         }
+        [HttpGet("getAllWithoutBlocked/{id}")]
+        public async Task<IActionResult> GetAllWithoutBlocked(int id)
+        {
+            List<UpdateDto> dtos = new List<UpdateDto>();
+            ProfileSettings profileSettings = await _profileService.GetProfileSettingsById(id);
+            foreach (Profile profile in await _profileService.GetAll())
+            {
+                ProfileSettings blockedProfileSettings = await _profileService.GetProfileSettingsById(profile.Id);
+                if (profileSettings.BlockedProfiles.Exists(bp => bp.BlockedProfileId == profile.Id) == false && blockedProfileSettings.BlockedProfiles.Exists(bp => bp.BlockedProfileId == id) == false)
+                {
+                    profile.ImageSrc = String.Format("http://localhost:55988/{0}", profile.ImageName);
+                    UpdateDto dto = UpdateProfileMapper.ProfileToProfileDto(profile);
+                    dtos.Add(dto);
+                }
+            }
+
+            return Ok(dtos);
+        }
 
         [HttpGet("{id}/muted")]
         public async Task<IActionResult> GetMutedProfiles(int id)
