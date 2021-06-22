@@ -58,12 +58,8 @@ namespace PostMicroservice
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IPostService, PostService>();
 
-            string hostedService = Environment.GetEnvironmentVariable("HOSTED_SERVICE") ?? "true";
-            if (hostedService == "true")
-            {
-                services.AddHostedService<ProfileCreatedMessageReceiver>();
-                services.AddHostedService<ProfileUpdatedMessageReceiver>();
-            }
+            services.AddHostedService<ProfileCreatedMessageReceiver>();
+            services.AddHostedService<ProfileUpdatedMessageReceiver>();
         }
 
         private string CreateConnectionStringFromEnvironment()

@@ -65,12 +65,8 @@ namespace StoryMicroservice
             services.AddSingleton<IStoryHighlightsRepository, StoryHighlightsRepository>();
             services.AddSingleton<IStoryHighlightsService, StoryHighlightsService>();
 
-            string hostedService = Environment.GetEnvironmentVariable("HOSTED_SERVICE") ?? "true";
-            if (hostedService == "true")
-            {
-                services.AddHostedService<ProfileCreatedMessageReceiver>();
-                services.AddHostedService<ProfileUpdatedMessageReceiver>();
-            }
+            services.AddHostedService<ProfileCreatedMessageReceiver>();
+            services.AddHostedService<ProfileUpdatedMessageReceiver>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
