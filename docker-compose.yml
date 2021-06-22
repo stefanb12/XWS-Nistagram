@@ -41,24 +41,24 @@ services:
     networks:
       - public_net
 
-  # mysql-inappropriatecontent-microservice:
-  #   image: mysql:latest
-  #   container_name: mysql-inappropriatecontent-microservice
-  #   volumes:
-  #       - mysql-db-inappropriatecontent:/var/lib/mysql
-  #       - sql-inappropriatecontent:/docker-entrypoint-initdb.d/
-  #   restart: always
-  #   environment:
-  #     MYSQL_DATABASE: "InappropriateContentMicroserviceDb"
-  #     MYSQL_USER: "user"
-  #     MYSQL_PASSWORD: "user"
-  #     MYSQL_ROOT_PASSWORD: "root"
-  #   expose:
-  #     - '3306'
-  #   ports:
-  #     - '3309:3306'
-  #   networks:
-  #     - public_net
+  mysql-inappropriatecontent-microservice:
+    image: mysql:latest
+    container_name: mysql-inappropriatecontent-microservice
+    volumes:
+        - mysql-db-inappropriatecontent:/var/lib/mysql
+        - sql-inappropriatecontent:/docker-entrypoint-initdb.d/
+    restart: always
+    environment:
+      MYSQL_DATABASE: "InappropriateContentMicroserviceDb"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "user"
+      MYSQL_ROOT_PASSWORD: "root"
+    expose:
+      - '3306'
+    ports:
+      - '3309:3306'
+    networks:
+      - public_net
 
   mysql-post-microservice:
     image: mysql:latest
@@ -142,30 +142,30 @@ services:
     volumes:
       - sql-notification:/app/sql-notification
 
-  # inappropriatecontent-microservice:
-  #   build: 
-  #     context: .
-  #     dockerfile: nistagram-backend/Nistagram/InappropriateContentMicroservice/Dockerfile
-  #   image: inappropriatecontentmicroservice:latest
-  #   restart: on-failure
-  #   environment:
-  #     DATABASE_USERNAME: "user"
-  #     DATABASE_PASSWORD: "user"
-  #     DATABASE_HOST: "mysql-inappropriatecontent-microservice"
-  #     DATABASE_SCHEMA: "InappropriateContentMicroserviceDb"
-  #     HOSTED_SERVICE: "false"
-  #     RABBITMQ_HOST_NAME: "rabbitmq"
-  #   depends_on:
-  #     - mysql-inappropriatecontent-microservice
-  #     - rabbitmq
-  #   expose: 
-  #     - "80"
-  #   ports:
-  #     - "55997:80"
-  #   networks:
-  #     - public_net
-  #   volumes:
-  #     - sql-inappropriatecontent:/app/sql-inappropriatecontent
+  inappropriatecontent-microservice:
+    build: 
+      context: .
+      dockerfile: nistagram-backend/Nistagram/InappropriateContentMicroservice/Dockerfile
+    image: inappropriatecontentmicroservice:latest
+    restart: on-failure
+    environment:
+      DATABASE_USERNAME: "user"
+      DATABASE_PASSWORD: "user"
+      DATABASE_HOST: "mysql-inappropriatecontent-microservice"
+      DATABASE_SCHEMA: "InappropriateContentMicroserviceDb"
+      HOSTED_SERVICE: "false"
+      RABBITMQ_HOST_NAME: "rabbitmq"
+    depends_on:
+      - mysql-inappropriatecontent-microservice
+      - rabbitmq
+    expose: 
+      - "80"
+    ports:
+      - "55997:80"
+    networks:
+      - public_net
+    volumes:
+      - sql-inappropriatecontent:/app/sql-inappropriatecontent
 
   post-microservice:
     build: 
@@ -245,7 +245,7 @@ services:
     depends_on:
       - user-microservice
       - notification-microservice
-      #- inappropriatecontent-microservice
+      - inappropriatecontent-microservice
       - post-microservice
       - story-microservice
     expose: 

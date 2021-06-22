@@ -1,19 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using InappropriateContentMicroservice.Database;
 using InappropriateContentMicroservice.Messaging;
 using InappropriateContentMicroservice.Repository;
 using InappropriateContentMicroservice.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace InappropriateContentMicroservice
 {
@@ -39,7 +34,7 @@ namespace InappropriateContentMicroservice
 
             var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
             if (hostName == "rabbitmq")
-            {             
+            {
                 services.AddScoped<IMessageReceiver, ProfileCreatedMessageReceiver>();
                 services.AddScoped<IMessageReceiver, ProfileUpdatedMessageReceiver>();
                 services.AddScoped<IMessageReceiver, PostCreatedMessageReceiver>();
@@ -56,14 +51,11 @@ namespace InappropriateContentMicroservice
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IStoryService, StoryService>();
 
-            string hostedService = Environment.GetEnvironmentVariable("HOSTED_SERVICE") ?? "true";
-            if (hostedService == "true")
-            {
-                services.AddHostedService<ProfileCreatedMessageReceiver>();
-                services.AddHostedService<ProfileUpdatedMessageReceiver>();
-                services.AddHostedService<PostCreatedMessageReceiver>();
-                services.AddHostedService<StoryCreatedMessageReceiver>();
-            }
+            services.AddHostedService<ProfileCreatedMessageReceiver>();
+            services.AddHostedService<ProfileUpdatedMessageReceiver>();
+            services.AddHostedService<PostCreatedMessageReceiver>();
+            services.AddHostedService<StoryCreatedMessageReceiver>();
+
         }
 
         private string CreateConnectionStringFromEnvironment()
