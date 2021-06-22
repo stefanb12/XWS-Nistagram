@@ -148,7 +148,7 @@ namespace NotificationMicroservice.Controllers
         {
             //Post post = await _postService.GetById(dto.PostId);
             Notification notification = NotificationMapper.NotificationDtoToNotification(dto, null);
-            Profile sender = await _profileService.GetById(dto.SenderId);
+            Profile sender = await _profileService.GetByOriginalId(dto.SenderId);
             notification.Content = sender.Username + " added new post.";
 
             return Ok(await _notificationService.Insert(notification));
@@ -158,11 +158,10 @@ namespace NotificationMicroservice.Controllers
         public async Task<IActionResult> SendStoryNotification([FromBody] NotificationDto dto)
         {
             Notification notification = NotificationMapper.NotificationDtoToNotification(dto, null);
-            Profile sender = await _profileService.GetById(dto.SenderId);
+            Profile sender = await _profileService.GetByOriginalId(dto.SenderId);
             notification.Content = sender.Username + " added new story.";
 
             return Ok(await _notificationService.Insert(notification));
         }
-
     }
 }

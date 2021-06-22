@@ -114,7 +114,7 @@ namespace PostMicroservice.Service
 
             foreach (Post post in await GetAll())
             {
-                if (!DoesProfileExistInMuted(profile, post.PublisherId))
+                if (!DoesProfileExistInMuted(profile, post.PublisherId) && !post.Publisher.Deactivated)
                 {
                     if (profileId == post.Publisher.OriginalId)
                     {

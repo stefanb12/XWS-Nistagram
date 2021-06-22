@@ -44,6 +44,7 @@ namespace StoryMicroservice.Service
             profile.Username = entity.Username;
             profile.IsPrivate = entity.IsPrivate;
             profile.ImageName = entity.ImageName;
+            profile.Deactivated = entity.Deactivated;
             profile.Following = entity.Following;
             profile.CloseFriends = entity.CloseFriends;
             profile.MutedProfiles = entity.MutedProfiles;
@@ -82,7 +83,7 @@ namespace StoryMicroservice.Service
             Profile profile = await GetProfileByOriginalId(profileId);
             foreach(ProfileStories ps in profileStories)
             {
-                if (profile.IsFollowingAndNotMuted(ps.OriginalId) || ps.OriginalId == profileId)
+                if ((profile.IsFollowingAndNotMuted(ps.OriginalId) || ps.OriginalId == profileId) && !ps.Deactivated)
                 {
                     if (ps.OriginalId != profileId)
                     {
