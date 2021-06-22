@@ -48,13 +48,9 @@ namespace NotificationMicroservice
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IPostService, PostService>();
 
-            string hostedService = Environment.GetEnvironmentVariable("HOSTED_SERVICE") ?? "true";
-            if (hostedService == "true")
-            {
-                services.AddHostedService<ProfileCreatedMessageReceiver>();
-                services.AddHostedService<ProfileUpdatedMessageReceiver>();
-                services.AddHostedService<PostCreatedMessageReceiver>();
-            }
+            services.AddHostedService<ProfileCreatedMessageReceiver>();
+            services.AddHostedService<ProfileUpdatedMessageReceiver>();
+            services.AddHostedService<PostCreatedMessageReceiver>();
         }
 
         private string CreateConnectionStringFromEnvironment()
