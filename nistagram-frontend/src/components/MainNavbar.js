@@ -139,7 +139,7 @@ export default function MainNavbar() {
     ProfileService.getAllUsers()
       .then((res) => res.json())
       .then((result) => {
-        setAllUsers(result);
+        //setAllUsers(result);
       });
 
     PostService.getAllPosts()
@@ -280,7 +280,12 @@ export default function MainNavbar() {
       await ProfileService.getAllUsers()
         .then((res) => res.json())
         .then((result) => {
-          setAllUsers(result);
+          for (let i = 0; i < result.length; i++) {
+            if (result[i].userRole !== 2) {
+              allUsers.push(result[i]);
+            }
+          }
+          //setAllUsers(result);
         });
 
       await PostService.getAllPosts()
@@ -298,7 +303,15 @@ export default function MainNavbar() {
           imageSrc: allUsers[i].imageSrc,
           type: "user",
         };
-        searchData.push(user);
+        let exist = false;
+        for (let j = 0; j < searchData.length; j++) {
+          if (searchData[j].searchParam == allUsers[i].username) {
+            exist = true;
+          }
+        }
+        if (exist == false) {
+          searchData.push(user);
+        }
       }
 
       for (let i = 0; i < publicPosts.length; i++) {

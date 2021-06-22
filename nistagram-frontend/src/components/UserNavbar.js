@@ -188,7 +188,12 @@ export default function UserNavbar() {
     await ProfileService.getAllUsers()
       .then((res) => res.json())
       .then((result) => {
-        setAllUsers(result);
+        /*for (let i = 0; i < result.length; i++) {
+          if (result[i].userRole !== 2) {
+            allUsers.push(result[i]);
+          }
+        }*/
+        //setAllUsers(result);
       });
 
     await PostService.getAllPosts()
@@ -673,7 +678,10 @@ export default function UserNavbar() {
   );
 
   const onChoseSearchResult = async (event, row) => {
-    await PostService.getSearchedPosts(row.searchParam)
+    await PostService.getSearchResultWithoutBlockedAndMuted(
+      row.searchParam,
+      AuthService.getCurrentUser().id
+    )
       .then((res) => res.json())
       .then((result) => {
         setsearchedPosts(result);
@@ -687,7 +695,10 @@ export default function UserNavbar() {
       });
     } else if (row.type == "tag" || row.type == "location") {
       setSearchValue("");
-      await PostService.getSearchedPosts(row.searchParam)
+      await PostService.getSearchResultWithoutBlockedAndMuted(
+        row.searchParam,
+        AuthService.getCurrentUser().id
+      )
         .then((res) => res.json())
         .then((result) => {
           history.push({
@@ -704,11 +715,16 @@ export default function UserNavbar() {
 
   const onSearchChange = async (event) => {
     setSearchValue(event.target.value);
-    if (searchValue == "" && mounted == false) {
-      await ProfileService.getAllUsers()
+    if (searchValue == "") {
+      await ProfileService.getAllWithoutBlocked(AuthService.getCurrentUser().id)
         .then((res) => res.json())
         .then((result) => {
-          setAllUsers(result);
+          for (let i = 0; i < result.length; i++) {
+            if (result[i].userRole !== 2) {
+              allUsers.push(result[i]);
+            }
+          }
+          //setAllUsers(result);
         });
 
       await PostService.getAllPosts()
@@ -718,7 +734,7 @@ export default function UserNavbar() {
         });
     }
 
-    if (mounted == false) {
+    if (true) {
       for (let i = 0; i < allUsers.length; i++) {
         var user = {
           id: allUsers[i].id,
@@ -726,7 +742,16 @@ export default function UserNavbar() {
           imageSrc: allUsers[i].imageSrc,
           type: "user",
         };
-        searchData.push(user);
+
+        let exist = false;
+        for (let j = 0; j < searchData.length; j++) {
+          if (searchData[j].searchParam == allUsers[i].username) {
+            exist = true;
+          }
+        }
+        if (exist == false) {
+          searchData.push(user);
+        }
       }
 
       for (let i = 0; i < publicPosts.length; i++) {

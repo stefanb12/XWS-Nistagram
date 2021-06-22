@@ -152,6 +152,17 @@ namespace PostMicroservice.Database
                 new ProfileMutedProfile { ProfileId = 1, MutedProfileId = 2 }
             );
 
+            // BlockedProfiles
+            modelBuilder.Entity<ProfileBlockedProfile>().HasKey(t => new { t.ProfileId, t.BlockedProfileId });
+            modelBuilder.Entity<ProfileBlockedProfile>()
+                .HasOne(pt => pt.Profile)
+                .WithMany(p => p.BlockedProfiles)
+                .HasForeignKey(pt => pt.ProfileId);
+
+            modelBuilder.Entity<ProfileBlockedProfile>().HasData(
+                new ProfileBlockedProfile { ProfileId = 1, BlockedProfileId = 4 }
+            );
+
         }
     }
 }

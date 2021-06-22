@@ -81,6 +81,12 @@ namespace PostMicroservice.Messaging
                     mutedProfiles.Add(new ProfileMutedProfile() { ProfileId = data["id"].Value<int>(), MutedProfileId = mutedProfileId });
                 }
 
+                List<ProfileBlockedProfile> blockedProfiles = new List<ProfileBlockedProfile>();
+                foreach (int blockedProfileId in data["blockedProfiles"].ToObject<List<int>>())
+                {
+                    blockedProfiles.Add(new ProfileBlockedProfile() { ProfileId = data["id"].Value<int>(), BlockedProfileId = blockedProfileId });
+                }
+
                 scopedProcessingService.Update(new Profile()
                 {
                     OriginalId = data["id"].Value<int>(),
@@ -89,7 +95,8 @@ namespace PostMicroservice.Messaging
                     IsPrivate = data["isPrivate"].Value<bool>(),
                     Deactivated = data["deactivated"].Value<bool>(),
                     Following = following,
-                    MutedProfiles = mutedProfiles
+                    MutedProfiles = mutedProfiles,
+                    BlockedProfiles = blockedProfiles
                 });
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
