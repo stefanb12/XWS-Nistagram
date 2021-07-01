@@ -15,9 +15,13 @@ namespace UserMicroservice.Messaging
         public void SendUpdatedProfile(Profile profile)
         {
             var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
+            if (hostName.Equals("rabbitmq"))
+            {
+                hostName = "host.docker.internal";
+            }
             var factory = new ConnectionFactory()
             {
-                HostName = "host.docker.internal",
+                HostName = hostName,
                 Port = 5672,
                 UserName = "guest",
                 Password = "guest"
