@@ -1,41 +1,79 @@
 [{
   "_id": {
-    "$oid": "60bc22d49d53e41f79168897"
+    "$oid": "60d21692f02ad16a0dd11a7d"
   },
   "Username": "stefanb",
   "IsPrivate": false,
+  "Deactivated": false,
   "OriginalId": 1,
+  "Following": [
+    2,
+    3,
+    5
+  ],
+  "CloseFriends": [
+    2
+  ],
+  "MutedProfiles": [
+    2
+  ],
   "ImageName": "user1213352029.jpg"
 },{
   "_id": {
-    "$oid": "60bc22d49d53e41f79168898"
+    "$oid": "60d21692f02ad16a0dd11a7e"
   },
   "Username": "matijam",
   "IsPrivate": true,
+  "Deactivated": false,
   "OriginalId": 2,
+  "Following": [
+    1,
+    4
+  ],
+  "CloseFriends": [
+    3
+  ],
+  "MutedProfiles": [],
   "ImageName": "user2213352029.jpg"
 },{
   "_id": {
-    "$oid": "60bc22d49d53e41f79168899"
+    "$oid": "60d21692f02ad16a0dd11a7f"
   },
   "Username": "aleksai",
   "IsPrivate": true,
+  "Deactivated": false,
   "OriginalId": 3,
+  "Following": [
+    1,
+    2
+  ],
+  "CloseFriends": [
+    2
+  ],
+  "MutedProfiles": [],
   "ImageName": "user3213352029.png"
 },{
   "_id": {
-    "$oid": "60bc22d49d53e41f7916889a"
+    "$oid": "60d21692f02ad16a0dd11a80"
   },
   "Username": "stefans",
   "IsPrivate": false,
+  "Deactivated": false,
   "OriginalId": 4,
+  "Following": [],
+  "CloseFriends": [],
+  "MutedProfiles": [],
   "ImageName": "user4213352029.png"
 },{
   "_id": {
-    "$oid": "60bc22d49d53e41f7916889b"
+    "$oid": "60d21692f02ad16a0dd11a81"
   },
   "Username": "majam",
   "IsPrivate": false,
+  "Deactivated": false,
   "OriginalId": 5,
+  "Following": [],
+  "CloseFriends": [],
+  "MutedProfiles": [],
   "ImageName": "user5213352029.jpg"
 }]

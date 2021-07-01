@@ -2,55 +2,55 @@
   "_id": {
     "$oid": "60bd70ad107c45e92fd80692"
   },
-  "Visible": true,
   "ForCloseFriends": false,
   "PublishingDate": {
-    "$date": "2021-06-08T13:29:59Z"
+    "$date": "2021-06-22T13:29:59Z"
   },
   "PublisherId": 1,
-  "ImageName": "sc2210938836.jpg"
+  "ImageName": "sc2210938836.jpg",
+  "Deleted": false
 },{
   "_id": {
     "$oid": "60bd70ad107c45e92fd80693"
   },
-  "Visible": true,
   "ForCloseFriends": false,
   "PublishingDate": {
-    "$date": "2021-06-08T12:59:59Z"
+    "$date": "2021-06-22T12:59:59Z"
   },
   "PublisherId": 2,
-  "ImageName": "sc1211007001.jpg"
+  "ImageName": "sc1211007001.jpg",
+  "Deleted": false
 },{
   "_id": {
     "$oid": "60bd70ad107c45e92fd80694"
   },
-  "Visible": true,
   "ForCloseFriends": false,
   "PublishingDate": {
-    "$date": "2021-06-08T10:59:59Z"
+    "$date": "2021-06-22T10:59:59Z"
   },
   "PublisherId": 2,
-  "ImageName": "2212424861.png"
+  "ImageName": "2212424861.png",
+  "Deleted": false
 },{
   "_id": {
     "$oid": "60bd70ad107c45e92fd80695"
   },
-  "Visible": true,
   "ForCloseFriends": false,
   "PublishingDate": {
-    "$date": "2021-06-08T14:59:59Z"
+    "$date": "2021-06-22T14:59:59Z"
   },
   "PublisherId": 3,
-  "ImageName": "2212424862.png"
+  "ImageName": "2212424862.png",
+  "Deleted": false
 },{
   "_id": {
     "$oid": "60bd70ad107c45e92fd80696"
   },
-  "Visible": true,
   "ForCloseFriends": true,
   "PublishingDate": {
-    "$date": "2021-06-08T12:59:59Z"
+    "$date": "2021-06-22T12:59:59Z"
   },
   "PublisherId": 4,
-  "ImageName": "2212424863.png"
+  "ImageName": "2212424863.png",
+  "Deleted": false
 }]
