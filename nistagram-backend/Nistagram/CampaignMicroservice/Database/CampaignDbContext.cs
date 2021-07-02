@@ -52,6 +52,32 @@ namespace CampaignMicroservice.Database
                 .HasOne(tgp => tgp.Campaign)
                 .WithMany(c => c.TargetGroup)
                 .HasForeignKey(tgp => tgp.CampaignId);
+
+            modelBuilder.Entity<Profile>().HasData(
+                new Profile { Id = 1, OriginalId = 1, Username = "stefanb", ImageName = "user1213352029.jpg" },
+                new Profile { Id = 2, OriginalId = 2, Username = "matijam", ImageName = "user2213352029.jpg" },
+                new Profile { Id = 3, OriginalId = 3, Username = "aleksai", ImageName = "user3213352029.png" },
+                new Profile { Id = 4, OriginalId = 4, Username = "stefans", ImageName = "user4213352029.png" },
+                new Profile { Id = 5, OriginalId = 5, Username = "majam", ImageName = "user5213352029.jpg" }
+            );
+
+            modelBuilder.Entity<Post>().HasData(
+                new Post { Id = 1, OriginalId = 1 },
+                new Post { Id = 2, OriginalId = 2 },
+                new Post { Id = 3, OriginalId = 3 }
+            );
+
+            modelBuilder.Entity<Story>().HasData(
+                new Story { Id = 1, OriginalId = "60bd70ad107c45e92fd80692" },
+                new Story { Id = 2, OriginalId = "60bd70ad107c45e92fd80693" },
+                new Story { Id = 3, OriginalId = "60bd70ad107c45e92fd80694" },
+                new Story { Id = 4, OriginalId = "60bd70ad107c45e92fd80695" },
+                new Story { Id = 5, OriginalId = "60bd70ad107c45e92fd80696" }
+            );
+
+            modelBuilder.Entity<Commercial>().HasData(
+                new Commercial { Id = 1, AgentId = 4, ImageName = "1213352229.jpg" }
+            );
         }
         }
 }
