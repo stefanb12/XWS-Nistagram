@@ -4,7 +4,8 @@
     {
         public int Id { get; set; }
         public string WebsiteLink { get; set; }
-        public Content Content { get; set; }
+        public int ContentId { get; set; }
+        public virtual Content Content { get; set; }
 
         public Commercial()
         {

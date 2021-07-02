@@ -5,9 +5,8 @@ namespace CampaignMicroservice.Model
 {
     public class Post
     {
-        public List<string> Tags { get; set; }
-        public string Description { get; set; }
-        public DateTime PublishingDate { get; set; }
+        public int Id { get; set; }
+        public int OriginalId { get; set; }
 
         public Post()
         {
