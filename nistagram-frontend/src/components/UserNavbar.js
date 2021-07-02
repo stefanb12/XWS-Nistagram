@@ -14,6 +14,8 @@ import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import {
+  Assignment,
+  AssignmentOutlined,
   ExitToApp,
   FavoriteBorder,
   Home,
@@ -183,6 +185,9 @@ export default function UserNavbar() {
   const [exploreIcon, setExploreIcon] = React.useState(<ExploreOutlinedIcon />);
   const [homeIcon, setHomeIcon] = React.useState(<Home />);
   const [chatIcon, setChatIcon] = React.useState(<ChatOutlinedIcon />);
+  const [campaignsIcon, setCampaignsIcon] = React.useState(
+    <AssignmentOutlined />
+  );
 
   useEffect(async () => {
     await ProfileService.getAllUsers()
@@ -271,13 +276,23 @@ export default function UserNavbar() {
     setExploreIcon(<ExploreOutlinedIcon />);
     setHomeIcon(<Home />);
     setChatIcon(<ChatOutlinedIcon />);
+    setCampaignsIcon(<AssignmentOutlined />);
     history.push("/user");
+  };
+
+  const navigateToCampaigns = () => {
+    setExploreIcon(<ExploreOutlinedIcon />);
+    setHomeIcon(<HomeOutlined />);
+    setChatIcon(<ChatOutlinedIcon />);
+    setCampaignsIcon(<Assignment />);
+    history.push("/user/campaigns");
   };
 
   const navigateToProfile = () => {
     setExploreIcon(<ExploreOutlinedIcon />);
     setHomeIcon(<HomeOutlined />);
     setChatIcon(<ChatOutlinedIcon />);
+    setCampaignsIcon(<AssignmentOutlined />);
     history.push({
       pathname: "/user/profile",
       state: { profileId: AuthService.getCurrentUser().id },
@@ -289,13 +304,8 @@ export default function UserNavbar() {
     setExploreIcon(<ExploreOutlinedIcon />);
     setHomeIcon(<HomeOutlined />);
     setChatIcon(<ChatOutlinedIcon />);
+    setCampaignsIcon(<AssignmentOutlined />);
     history.push("/user/settings");
-    handleMenuClose();
-  };
-
-  const handleLogout = () => {
-    AuthService.logout();
-    history.push("/app/login");
     handleMenuClose();
   };
 
@@ -303,7 +313,14 @@ export default function UserNavbar() {
     setExploreIcon(<ExploreIcon />);
     setHomeIcon(<HomeOutlined />);
     setChatIcon(<ChatOutlinedIcon />);
+    setCampaignsIcon(<AssignmentOutlined />);
     history.push("/user/explore");
+  };
+
+  const handleLogout = () => {
+    AuthService.logout();
+    history.push("/app/login");
+    handleMenuClose();
   };
 
   const handleConfirmFollowRequest = (followerId, followingId) => {
@@ -389,7 +406,7 @@ export default function UserNavbar() {
       .then((result) => {
         if (status === 200) {
           setNotifications(result);
-          if (notifications.length === 0) {
+          if (result.length === 0) {
             handleAlertClick("You dont have any notifications", "info");
           }
         } else if (status == 404) {
@@ -891,6 +908,19 @@ export default function UserNavbar() {
             >
               <Badge color="secondary">{exploreIcon}</Badge>
             </IconButton>
+            {(() => {
+              if (localStorage.getItem("userRole") === "Agent") {
+                return (
+                  <IconButton
+                    aria-label="show 12 new notifications"
+                    color="inherit"
+                    onClick={navigateToCampaigns}
+                  >
+                    <Badge color="secondary">{campaignsIcon}</Badge>
+                  </IconButton>
+                );
+              }
+            })()}
             <IconButton
               aria-label="show 12 new notifications"
               color="inherit"
