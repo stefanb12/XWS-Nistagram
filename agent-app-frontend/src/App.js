@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import MainLayout from "./components/MainLayout";
 import NotFound from "./pages/NotFound";
-
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (

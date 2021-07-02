@@ -4,6 +4,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import NotFound from "../pages/NotFound";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
+import AdminProducts from "../pages/AdminProducts";
 
 const MainLayoutRoot = {
   height: "100%",
@@ -47,6 +48,9 @@ export default function MainLayout({ routes }) {
               <Route exact path="/products">
                 <NotFound />
                 sadasd
+              </Route>
+              <Route exact path="/admin/products">
+                <AdminProducts />
               </Route>
               <Route path="/">
                 <NotFound />
