@@ -7,6 +7,15 @@ import {
   Radio,
 } from "@material-ui/core";
 import "../assets/styles/campaigns.css";
+import {
+  KeyboardDatePicker,
+  KeyboardTimePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
+import "date-fns";
+import DateFnsUtils from "@date-io/date-fns";
+import NumericInput from "material-ui-numeric-input";
+import NotFound from "./NotFound";
 
 export default class Campaigns extends Component {
   constructor(props) {
@@ -16,6 +25,10 @@ export default class Campaigns extends Component {
       comercials: [],
       campaignType: "single",
       postOrStory: "post",
+      selectedTime: new Date(),
+      selectedFromDate: new Date(),
+      selectedToDate: new Date(),
+      selectedNumber: 1,
       checkedItems: [],
       isCampaignModalDialogOpen: false,
     };
@@ -24,6 +37,50 @@ export default class Campaigns extends Component {
   }
 
   componentDidMount() {}
+
+  handleNumberChange = (number) => {
+    this.setState(
+      {
+        selectedNumber: number,
+      },
+      () => {
+        console.log(this.state.selectedNumber);
+      }
+    );
+  };
+
+  handleTimeChange = (time) => {
+    this.setState(
+      {
+        selectedTime: time,
+      },
+      () => {
+        console.log(this.state.selectedTime);
+      }
+    );
+  };
+
+  handleFromDateChange = (date) => {
+    this.setState(
+      {
+        selectedFromDate: date,
+      },
+      () => {
+        console.log(this.state.selectedFromDate);
+      }
+    );
+  };
+
+  handleToDateChange = (date) => {
+    this.setState(
+      {
+        selectedToDate: date,
+      },
+      () => {
+        console.log(this.state.selectedToDate);
+      }
+    );
+  };
 
   handleCampaignTypeChange = (event) => {
     this.setState(
@@ -58,6 +115,11 @@ export default class Campaigns extends Component {
       isCampaignModalDialogOpen: false,
       campaignType: "single",
       postOrStory: "post",
+      selectedTime: new Date(),
+      selectedFromDate: new Date(),
+      selectedToDate: new Date(),
+      selectedNumber: 1,
+      checkedItems: [],
     });
   };
 
@@ -114,7 +176,7 @@ export default class Campaigns extends Component {
         show={this.state.isCampaignModalDialogOpen}
         onHide={this.closeCampaignModal}
         centered
-        style={{ marginTop: "25px" }}
+        style={{ marginTop: "28px" }}
       >
         <Modal.Header
           closeButton
@@ -137,9 +199,10 @@ export default class Campaigns extends Component {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            overflow: "auto",
           }}
         >
-          <div>
+          <div style={{ height: "480px" }}>
             <div className="form-group">
               <RadioGroup
                 label="Campaign type"
@@ -159,7 +222,71 @@ export default class Campaigns extends Component {
                   label="Repeatable"
                 />
               </RadioGroup>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                {(() => {
+                  if (this.state.campaignType === "single") {
+                    return (
+                      <div>
+                        <KeyboardTimePicker
+                          margin="normal"
+                          id="time-picker"
+                          label="Select time"
+                          value={this.state.selectedTime}
+                          onChange={this.handleTimeChange}
+                          KeyboardButtonProps={{
+                            "aria-label": "change time",
+                          }}
+                        />
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div>
+                        <KeyboardDatePicker
+                          margin="normal"
+                          id="date-picker-dialog"
+                          label="Select from date"
+                          format="MM/dd/yyyy"
+                          value={this.state.selectedFromDate}
+                          onChange={this.handleFromDateChange}
+                          minDate={this.state.selectedFromDate}
+                          KeyboardButtonProps={{
+                            "aria-label": "change date",
+                          }}
+                        />
+                        <br />
+                        <KeyboardDatePicker
+                          margin="normal"
+                          id="date-picker-dialog"
+                          label="Select to date"
+                          format="MM/dd/yyyy"
+                          value={this.state.selectedToDate}
+                          onChange={this.handleToDateChange}
+                          minDate={this.state.selectedFromDate}
+                          KeyboardButtonProps={{
+                            "aria-label": "change date",
+                          }}
+                        />
+
+                        <div>
+                          <br />
+                          <NumericInput
+                            style={{ maxWidth: "50px" }}
+                            value={this.state.selectedNumber}
+                            name="example"
+                            label="Daily repeat"
+                            precision="0"
+                            onChange={this.handleNumberChange}
+                            variant="outlined"
+                          />
+                        </div>
+                      </div>
+                    );
+                  }
+                })()}
+              </MuiPickersUtilsProvider>
               <RadioGroup
+                style={{ marginTop: "18px" }}
                 label="Post or story"
                 name="postOrStory"
                 onChange={this.handlePostOrStoryChange}
@@ -210,117 +337,175 @@ export default class Campaigns extends Component {
       </Modal>
     );
 
-    return (
-      <div>
-        {addCampaignModalDialog}
-        <div class="graph-star-rating-footer text-center ">
-          <h2
-            style={{
-              textAlign: "center",
-              color: "#74767a",
-              marginTop: "5px",
-              marginLeft: "155px",
-              paddingBottom: "15px",
-              fontSize: "34px",
-            }}
-          >
-            Campaigns
-            <button
-              type="button"
-              class="btn btn-outline-primary btn-sm"
+    if (localStorage.getItem("userRole") !== "Agent") {
+      return <NotFound />;
+    } else {
+      return (
+        <div>
+          {addCampaignModalDialog}
+          <div class="graph-star-rating-footer text-center ">
+            <h2
               style={{
-                width: "140px",
-                fontSize: "17px",
-                float: "right",
-                marginRight: "20px",
+                textAlign: "center",
+                color: "#74767a",
+                marginTop: "5px",
+                marginLeft: "155px",
+                paddingBottom: "15px",
+                fontSize: "34px",
               }}
-              onClick={this.openCampaignModal}
             >
-              New campaign
-            </button>
-          </h2>
-        </div>
-        <div class="container">
-          <div class="row">
-            <div class="col-md-6 col-lg-4 g-mb-30">
-              <article
-                class="u-shadow-v18 g-bg-white text-center rounded g-px-20 g-py-40 g-mb-5"
-                style={{ border: "1px solid black" }}
+              Campaigns
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                style={{
+                  width: "140px",
+                  fontSize: "17px",
+                  float: "right",
+                  marginRight: "20px",
+                }}
+                onClick={this.openCampaignModal}
               >
-                <Carousel
-                  interval={null}
-                  nextIcon={
-                    <span
-                      aria-hidden="true"
-                      class="carousel-control-next-icon"
-                    />
-                  }
+                New campaign
+              </button>
+            </h2>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-md-6 col-lg-4 g-mb-30">
+                <article
+                  class="u-shadow-v18 g-bg-white text-center rounded g-px-20 g-py-40 g-mb-5"
+                  style={{ border: "1px solid black" }}
                 >
-                  <Carousel.Item>
-                    <img
-                      class="d-inline-block img-fluid mb-4"
-                      src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                      alt="Image Description"
-                    />
-                  </Carousel.Item>
-                  <Carousel.Item>
-                    <img
-                      class="d-inline-block img-fluid mb-4"
-                      src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                      alt="Image Description"
-                    />
-                  </Carousel.Item>
-                </Carousel>
-                <h4 class="h5 g-color-black g-font-weight-600 g-mb-10">
-                  Single campaign
-                </h4>
-                <p>At 13:00</p>
-                <p>One time</p>
-                <span class="d-block g-color-primary g-font-size-16">
-                  Story
-                </span>
-              </article>
-            </div>
-            <div class="col-md-6 col-lg-4 g-mb-30">
-              <article
-                class="u-shadow-v18 g-bg-white text-center rounded g-px-20 g-py-40 g-mb-5"
-                style={{ border: "1px solid black" }}
-              >
-                <Carousel
-                  interval={null}
-                  nextIcon={
-                    <span
-                      aria-hidden="true"
-                      class="carousel-control-next-icon"
-                    />
-                  }
+                  <Carousel
+                    interval={null}
+                    nextIcon={
+                      <span
+                        aria-hidden="true"
+                        class="carousel-control-next-icon"
+                      />
+                    }
+                  >
+                    <Carousel.Item>
+                      <img
+                        class="d-inline-block img-fluid mb-4"
+                        src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                        alt="Image Description"
+                      />
+                    </Carousel.Item>
+                    <Carousel.Item>
+                      <img
+                        class="d-inline-block img-fluid mb-4"
+                        src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                        alt="Image Description"
+                      />
+                    </Carousel.Item>
+                  </Carousel>
+                  <h4 class="h5 g-color-black g-font-weight-600 g-mb-10">
+                    Single campaign
+                  </h4>
+                  <p>At 13:00</p>
+                  <p>Once per day</p>
+                  <span class="d-block g-color-primary g-font-size-16">
+                    Story
+                  </span>
+                  <a
+                    href="javascript:void(0)"
+                    class="text-info mr-4"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title=""
+                    data-original-title="Edit"
+                    style={{ fontSize: "20px", float: "left" }}
+                  >
+                    <i class="fa fa-pencil"></i>
+                  </a>
+                  <a
+                    href="javascript:void(0)"
+                    class="text-danger mr-4"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title=""
+                    data-original-title="Edit"
+                    style={{
+                      fontSize: "20px",
+                      float: "left",
+                      marginLeft: "-10px",
+                    }}
+                  >
+                    <i class="fa fa-trash"></i>
+                  </a>
+                </article>
+              </div>
+              <div class="col-md-6 col-lg-4 g-mb-30">
+                <article
+                  class="u-shadow-v18 g-bg-white text-center rounded g-px-20 g-py-40 g-mb-5"
+                  style={{ border: "1px solid black" }}
                 >
-                  <Carousel.Item>
-                    <img
-                      class="d-inline-block img-fluid mb-4"
-                      src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                      alt="Image Description"
-                    />
-                  </Carousel.Item>
-                  <Carousel.Item>
-                    <img
-                      class="d-inline-block img-fluid mb-4"
-                      src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                      alt="Image Description"
-                    />
-                  </Carousel.Item>
-                </Carousel>
-                <h4 class="h5 g-color-black g-font-weight-600 g-mb-10">
-                  Repeatable campaign
-                </h4>
-                <p>01.07.20201. - 05.07.20201.</p>
-                <p>3 times a day</p>
-                <span class="d-block g-color-primary g-font-size-16">Post</span>
-              </article>
+                  <Carousel
+                    interval={null}
+                    nextIcon={
+                      <span
+                        aria-hidden="true"
+                        class="carousel-control-next-icon"
+                      />
+                    }
+                  >
+                    <Carousel.Item>
+                      <img
+                        class="d-inline-block img-fluid mb-4"
+                        src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                        alt="Image Description"
+                      />
+                    </Carousel.Item>
+                    <Carousel.Item>
+                      <img
+                        class="d-inline-block img-fluid mb-4"
+                        src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                        alt="Image Description"
+                      />
+                    </Carousel.Item>
+                  </Carousel>
+                  <h4 class="h5 g-color-black g-font-weight-600 g-mb-10">
+                    Repeatable campaign
+                  </h4>
+                  <p>01.07.20201. - 05.07.20201.</p>
+                  <p>3 times a day</p>
+                  <span class="d-block g-color-primary g-font-size-16">
+                    Post
+                  </span>
+                  <a
+                    href="javascript:void(0)"
+                    class="text-info mr-4"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title=""
+                    data-original-title="Edit"
+                    style={{ fontSize: "20px", float: "left" }}
+                  >
+                    <i class="fa fa-pencil"></i>
+                  </a>
+                  <a
+                    href="javascript:void(0)"
+                    class="text-danger mr-4"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title=""
+                    data-original-title="Edit"
+                    style={{
+                      fontSize: "20px",
+                      float: "left",
+                      marginLeft: "-10px",
+                    }}
+                  >
+                    <i class="fa fa-trash"></i>
+                  </a>
+                </article>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
 }
