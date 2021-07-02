@@ -9,13 +9,17 @@ import {
 import MainLayout from "./components/MainLayout";
 import NotFound from "./pages/NotFound";
 import "bootstrap/dist/css/bootstrap.min.css";
+import UserLayout from "./components/UserLayout";
+import { UserRoute } from "./helpers/UserRoute";
 
 function App() {
   return (
     <Router>
       <Switch>
         {/* <Redirect exact from="/" to="/app" /> */}
-        <Route path="/" component={MainLayout} />
+        <Redirect exact from="/" to="/app" />
+        <Route path="/app" component={MainLayout} />
+        <UserRoute path="/user" component={UserLayout} />
         <Route path="/*" component={NotFound} />
       </Switch>
     </Router>

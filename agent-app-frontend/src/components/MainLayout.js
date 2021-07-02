@@ -39,26 +39,22 @@ export default function MainLayout({ routes }) {
         <div style={MainLayoutContainer}>
           <div style={MainLayoutContent}>
             <Switch>
-              <Route path="/login">
+              <Route path="/app/login">
                 <Login />
               </Route>
-              <Route path="/register">
+              <Route path="/app/register">
                 <Register />
               </Route>
-              <Route exact path="/products">
-                <NotFound />
-                sadasd
-              </Route>
-              <Route exact path="/admin/products">
+              <Route path="/app/admin/products">
                 <AdminProducts />
               </Route>
-              <Route path="/">
+              <Route path="/app">
                 <NotFound />
               </Route>
-              <Route path="/404">
+              <Route path="/app/404">
                 <NotFound />
               </Route>
-              <Redirect to="/404" />
+              <Redirect to="/app/404" />
             </Switch>
           </div>
         </div>

@@ -1,9 +1,12 @@
 import React from "react";
-import UserNavbar from "./UserNavbar";
+import MainNavbar from "./MainNavbar";
 import { Switch, Route, Redirect } from "react-router-dom";
-import UserHomePage from "../pages/UserHomePage";
 import NotFound from "../pages/NotFound";
-import Campaigns from "../pages/Campaigns";
+import Register from "../pages/Register";
+import Login from "../pages/Login";
+import Products from "./Products";
+import ShoppingCart from "./ShoppingCart";
+import UserNavbar from "./UserNavbar";
 
 const MainLayoutRoot = {
   height: "100%",
@@ -15,7 +18,7 @@ const MainLayoutWrapper = {
   display: "flex",
   flex: "1 1 auto",
   overflow: "hidden",
-  paddingTop: "5%",
+  paddingTop: "6%",
 };
 
 const MainLayoutContainer = {
@@ -30,7 +33,7 @@ const MainLayoutContent = {
   overflow: "auto",
 };
 
-export default function AgentLayout({ routes }) {
+export default function UserLayout({ routes }) {
   return (
     <div style={MainLayoutRoot}>
       <UserNavbar />
@@ -38,19 +41,16 @@ export default function AgentLayout({ routes }) {
         <div style={MainLayoutContainer}>
           <div style={MainLayoutContent}>
             <Switch>
-              <Route path="/agent/campaigns">
-                <Campaigns />
+              <Route path="/user/products">
+                <Products />
               </Route>
-              <Route path="/agent/*">
+              <Route path="/user/shoppingCart">
+                <ShoppingCart />
+              </Route>
+              <Route path="/user/404">
                 <NotFound />
               </Route>
-              <Route path="/agent">
-                <UserHomePage />
-              </Route>
-              <Route path="/agent/404">
-                <NotFound />
-              </Route>
-              <Redirect to="/agent/404" />
+              <Redirect to="/user/404" />
             </Switch>
           </div>
         </div>
