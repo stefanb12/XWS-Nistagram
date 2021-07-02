@@ -14,6 +14,7 @@ import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import {
+  CardTravel,
   ExitToApp,
   FavoriteBorder,
   Home,
@@ -272,6 +273,10 @@ export default function UserNavbar() {
     setHomeIcon(<Home />);
     setChatIcon(<ChatOutlinedIcon />);
     history.push("/user");
+  };
+
+  const navigateToCampaigns = () => {
+    history.push("/agent/campaigns");
   };
 
   const navigateToProfile = () => {
@@ -891,6 +896,20 @@ export default function UserNavbar() {
             >
               <Badge color="secondary">{exploreIcon}</Badge>
             </IconButton>
+            {(() => {
+              if (localStorage.getItem("userRole") === "Agent") {
+                return (
+                  <IconButton
+                    aria-label="show 12 new notifications"
+                    color="inherit"
+                  >
+                    <Badge color="secondary" onClick={navigateToCampaigns}>
+                      <CardTravel />
+                    </Badge>
+                  </IconButton>
+                );
+              }
+            })()}
             <IconButton
               aria-label="show 12 new notifications"
               color="inherit"
