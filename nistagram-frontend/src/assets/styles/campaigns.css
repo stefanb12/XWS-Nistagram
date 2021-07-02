@@ -1,0 +1,56 @@
+@media (min-width: 0) {
+  .g-mb-30 {
+    margin-bottom: 2.14286rem !important;
+  }
+}
+
+@media (min-width: 0) {
+  .g-py-40 {
+    padding-top: 2.85714rem !important;
+    padding-bottom: 2.85714rem !important;
+  }
+}
+
+@media (min-width: 0) {
+  .g-px-20 {
+    padding-left: 1.42857rem !important;
+    padding-right: 1.42857rem !important;
+  }
+}
+@media (min-width: 0) {
+  .g-mb-5 {
+    margin-bottom: 0.35714rem !important;
+  }
+}
+
+.g-bg-white {
+  background-color: #fff !important;
+}
+
+.u-shadow-v18 {
+  box-shadow: 0 5px 10px -6px rgba(0, 0, 0, 0.15);
+}
+
+.g-color-primary {
+  color: #72c02c !important;
+}
+
+.g-font-size-16 {
+  font-size: 1.14286rem !important;
+}
+
+.g-mb-10 {
+  margin-bottom: 0.71429rem !important;
+}
+
+.g-mb-10 {
+  margin-bottom: 0.71429rem !important;
+}
+
+.g-color-black {
+  color: #000 !important;
+}
+
+.g-font-weight-600 {
+  font-weight: 600 !important;
+}

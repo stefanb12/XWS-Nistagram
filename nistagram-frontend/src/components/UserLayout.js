@@ -7,6 +7,7 @@ import UserHomePage from "../pages/UserHomePage";
 import NotFound from "../pages/NotFound";
 import UserSearchResultPage from "../pages/UserSearchResultPage";
 import HomePage from "../pages/HomePage";
+import Campaigns from "../pages/Campaigns";
 
 const MainLayoutRoot = {
   height: "100%",
@@ -43,6 +44,9 @@ export default function UserLayout({ routes }) {
             <Switch>
               <Route path="/user/profile">
                 <UserProfile />
+              </Route>
+              <Route path="/user/campaigns">
+                <Campaigns />
               </Route>
               <Route path="/user/settings">
                 <UserProfileSettings />

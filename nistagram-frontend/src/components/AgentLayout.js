@@ -1,13 +1,9 @@
 import React from "react";
 import UserNavbar from "./UserNavbar";
 import { Switch, Route, Redirect } from "react-router-dom";
-import UserProfile from "../pages/UserProfile";
-import UserProfileSettings from "../pages/UserProfileSettings";
 import UserHomePage from "../pages/UserHomePage";
 import NotFound from "../pages/NotFound";
-import UserSearchResultPage from "../pages/UserSearchResultPage";
-import HomePage from "../pages/HomePage";
-import { AgentRoute } from "../helpers/AgentRoute";
+import Campaigns from "../pages/Campaigns";
 
 const MainLayoutRoot = {
   height: "100%",
@@ -42,8 +38,8 @@ export default function AgentLayout({ routes }) {
         <div style={MainLayoutContainer}>
           <div style={MainLayoutContent}>
             <Switch>
-              <Route path="/agent/explore">
-                <HomePage />
+              <Route path="/agent/campaigns">
+                <Campaigns />
               </Route>
               <Route path="/agent/*">
                 <NotFound />
@@ -54,7 +50,7 @@ export default function AgentLayout({ routes }) {
               <Route path="/agent/404">
                 <NotFound />
               </Route>
-              <Redirect to="/user/404" />
+              <Redirect to="/agent/404" />
             </Switch>
           </div>
         </div>
