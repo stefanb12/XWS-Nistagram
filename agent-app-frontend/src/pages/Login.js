@@ -47,8 +47,12 @@ const Login = () => {
           localStorage.setItem("userToken", result.token);
           localStorage.setItem("userRole", userRole);
 
+          // shopping cart
+          var shoppingCart = [];
+          localStorage.setItem("shoppingCart", JSON.stringify(shoppingCart));
+
           if (result.userRole === 0) {
-            history.push("/user");
+            history.push("/user/products");
           } else if (result.userRole === 1) {
             history.push("/user"); // agent
           } else if (result.userRole === 2) {

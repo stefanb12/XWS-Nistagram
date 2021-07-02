@@ -6,6 +6,7 @@ import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Products from "./Products";
 import ShoppingCart from "./ShoppingCart";
+import UserNavbar from "./UserNavbar";
 
 const MainLayoutRoot = {
   height: "100%",
@@ -32,27 +33,24 @@ const MainLayoutContent = {
   overflow: "auto",
 };
 
-export default function MainLayout({ routes }) {
+export default function UserLayout({ routes }) {
   return (
     <div style={MainLayoutRoot}>
-      <MainNavbar />
+      <UserNavbar />
       <div style={MainLayoutWrapper}>
         <div style={MainLayoutContainer}>
           <div style={MainLayoutContent}>
             <Switch>
-              <Route path="/app/login">
-                <Login />
+              <Route path="/user/products">
+                <Products />
               </Route>
-              <Route path="/app/register">
-                <Register />
+              <Route path="/user/shoppingCart">
+                <ShoppingCart />
               </Route>
-              <Route path="/app">
+              <Route path="/user/404">
                 <NotFound />
               </Route>
-              <Route path="/app/404">
-                <NotFound />
-              </Route>
-              <Redirect to="/app/404" />
+              <Redirect to="/user/404" />
             </Switch>
           </div>
         </div>

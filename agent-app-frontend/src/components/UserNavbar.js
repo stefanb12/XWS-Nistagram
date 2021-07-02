@@ -17,6 +17,7 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import StorefrontOutlinedIcon from "@material-ui/icons/StorefrontOutlined";
 import { useHistory } from "react-router-dom";
 import { TableCell, TableRow, withStyles } from "@material-ui/core";
+import AuthService from "../services/AuthService";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -105,7 +106,7 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-export default function MainNavbar() {
+export default function UserNavbar() {
   const history = useHistory();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -136,12 +137,14 @@ export default function MainNavbar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const navigateToLogin = () => {
+  const signOut = () => {
+    AuthService.logout();
     history.push("/app/login");
+    handleMenuClose();
   };
 
   const navigateToRegister = () => {
-    history.push("/app/register");
+    history.push("/register");
   };
 
   const navigateToHome = () => {
@@ -251,20 +254,8 @@ export default function MainNavbar() {
 
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={navigateToLogin}
-            >
-              Sign in
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={navigateToRegister}
-              className={classes.buttonMargin}
-            >
-              Register
+            <Button variant="contained" color="primary" onClick={signOut}>
+              Sign out
             </Button>
           </div>
           <div className={classes.sectionMobile}>
