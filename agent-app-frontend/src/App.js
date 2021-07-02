@@ -11,6 +11,8 @@ import NotFound from "./pages/NotFound";
 import "bootstrap/dist/css/bootstrap.min.css";
 import UserLayout from "./components/UserLayout";
 import { UserRoute } from "./helpers/UserRoute";
+import { AdminRoute } from "./helpers/AdminRoute";
+import AdminLayout from "./components/AdminLayout";
 
 function App() {
   return (
@@ -20,6 +22,7 @@ function App() {
         <Redirect exact from="/" to="/app" />
         <Route path="/app" component={MainLayout} />
         <UserRoute path="/user" component={UserLayout} />
+        <AdminRoute path="/admin" component={AdminLayout} />
         <Route path="/*" component={NotFound} />
       </Switch>
     </Router>

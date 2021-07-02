@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import AuthService from "../services/AuthService";
 
-export const UserRoute = ({ component: Component, roles, ...rest }) => (
+export const AdminRoute = ({ component: Component, roles, ...rest }) => (
   <Route
     {...rest}
     render={(props) => {
@@ -18,11 +18,11 @@ export const UserRoute = ({ component: Component, roles, ...rest }) => (
         );
       }
 
-      if (userRole === "Admin") {
+      if (userRole === "User") {
         return (
           <Redirect
             to={{
-              pathname: "/admin/products",
+              pathname: "/user/products",
               state: { from: props.location },
             }}
           />

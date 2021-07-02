@@ -1,9 +1,8 @@
 import React from "react";
-import MainNavbar from "./MainNavbar";
 import { Switch, Route, Redirect } from "react-router-dom";
+import AdminNavbar from "./AdminNavbar";
+import AdminProducts from "../pages/AdminProducts";
 import NotFound from "../pages/NotFound";
-import Register from "../pages/Register";
-import Login from "../pages/Login";
 
 const MainLayoutRoot = {
   height: "100%",
@@ -30,27 +29,21 @@ const MainLayoutContent = {
   overflow: "auto",
 };
 
-export default function MainLayout({ routes }) {
+export default function AdminLayout({ routes }) {
   return (
     <div style={MainLayoutRoot}>
-      <MainNavbar />
+      <AdminNavbar />
       <div style={MainLayoutWrapper}>
         <div style={MainLayoutContainer}>
           <div style={MainLayoutContent}>
             <Switch>
-              <Route path="/app/login">
-                <Login />
+              <Route path="/admin/products">
+                <AdminProducts />
               </Route>
-              <Route path="/app/register">
-                <Register />
-              </Route>
-              <Route path="/app">
+              <Route path="/user/404">
                 <NotFound />
               </Route>
-              <Route path="/app/404">
-                <NotFound />
-              </Route>
-              <Redirect to="/app/404" />
+              <Redirect to="/user/404" />
             </Switch>
           </div>
         </div>

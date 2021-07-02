@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace WebShop.Model
+namespace WebShop.Dto
 {
-    public class Product
+    public class ProductDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -13,10 +11,9 @@ namespace WebShop.Model
         public string Description { get; set; }
         public int AvailableBalance { get; set; }
         public bool Deleted { get; set; }
-        public virtual List<Content> Contents { get; set; }
+        public List<IFormFile> ImageFiles { get; set; }
+        public List<string> ImagesSrc { get; set; }
 
-        public Product()
-        {
-        }
+        public ProductDto() { }
     }
 }

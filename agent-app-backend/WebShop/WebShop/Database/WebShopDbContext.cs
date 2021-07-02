@@ -46,11 +46,11 @@ namespace WebShop.Database
             );
 
             modelBuilder.Entity<Product>().HasData(
-                new Product { Id = 1, Name = "trenerka", Picture = null, Price = 2500.23, Description = "Siva trenerka", AvailableBalance = 10 },
-                new Product { Id = 2, Name = "patike", Picture = null, Price = 6700.89, Description = "Bele patike", AvailableBalance = 30 },
-                new Product { Id = 3, Name = "lopta", Picture = null, Price = 2500.23, Description = "Siva trenerka", AvailableBalance = 10 },
-                new Product { Id = 4, Name = "dres", Picture = null, Price = 6700.89, Description = "Bele patike", AvailableBalance = 30 },
-                new Product { Id = 5, Name = "kacket", Picture = null, Price = 2500.23, Description = "Siva trenerka", AvailableBalance = 10 }
+                new Product { Id = 1, Name = "trenerka", Price = 2500.23, Description = "Siva trenerka", AvailableBalance = 10, Deleted = false },
+                new Product { Id = 2, Name = "patike", Price = 6700.89, Description = "Bele patike", AvailableBalance = 30, Deleted = false },
+                new Product { Id = 3, Name = "lopta", Price = 2500.23, Description = "Siva trenerka", AvailableBalance = 10, Deleted = false },
+                new Product { Id = 4, Name = "dres", Price = 6700.89, Description = "Bele patike", AvailableBalance = 30, Deleted = false },
+                new Product { Id = 5, Name = "kacket", Price = 2500.23, Description = "Siva trenerka", AvailableBalance = 10, Deleted = false }
             );
 
             modelBuilder.Entity<ItemToPurchase>().HasData(

@@ -21,6 +21,19 @@ namespace WebShop.Service
             return await _productRepository.GetById(id);
         }
 
+        public async Task<List<Product>> GetAllNotIncludingDeletedProducts()
+        {
+            List<Product> products = new List<Product>();
+            foreach (Product product in await _productRepository.GetAll())
+            {
+                if (!product.Deleted)
+                {
+                    products.Add(product);
+                }
+            }
+            return products;   
+        }
+
         public async Task<IEnumerable<Product>> GetAll()
         {
             return await _productRepository.GetAll();

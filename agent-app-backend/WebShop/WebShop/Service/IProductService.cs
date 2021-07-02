@@ -8,5 +8,6 @@ namespace WebShop.Service
 {
     public interface IProductService : IService<Product>
     {
+        Task<List<Product>> GetAllNotIncludingDeletedProducts();
     }
 }

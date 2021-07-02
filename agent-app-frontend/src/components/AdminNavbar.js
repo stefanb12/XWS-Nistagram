@@ -7,7 +7,6 @@ import Typography from "@material-ui/core/Typography";
 import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import AccountCircle from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
@@ -16,6 +15,8 @@ import { useHistory } from "react-router-dom";
 import { TableCell, TableRow, Tooltip, withStyles } from "@material-ui/core";
 import AuthService from "../services/AuthService";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+
+import AccountCircle from "@material-ui/icons/AccountCircle";
 import LocalMallOutlinedIcon from "@material-ui/icons/LocalMallOutlined";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
 
@@ -154,7 +155,7 @@ export default function UserNavbar() {
 
   const navigateToProducts = () => {
     setProductsIcon(<LocalMallIcon />);
-    history.push("/user/products");
+    history.push("/admin/products");
   };
 
   const navigateToHome = () => {

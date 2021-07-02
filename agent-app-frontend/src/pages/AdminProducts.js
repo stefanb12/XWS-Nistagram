@@ -3,6 +3,7 @@ import { Button, Modal } from "react-bootstrap";
 import { Grid, Snackbar } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import UploadImages from "../components/UploadImages";
+import ProductService from "../services/ProductService";
 
 export default class AdminProducts extends Component {
   constructor(props) {
@@ -14,7 +15,7 @@ export default class AdminProducts extends Component {
       isOpenChangeProductModal: false,
       isOpenImageModal: false,
       isProductDeletingModal: false,
-      imageSrcs: [],
+      imagesSrc: [],
       currentChosenImageFiles: [],
       open: false,
       message: "",
@@ -68,42 +69,42 @@ export default class AdminProducts extends Component {
         productAvailableBalance: false,
       },
       isSubmitting: false,
-      imageSrcs: [],
+      imagesSrc: [],
       currentChosenImageFiles: [],
     });
   };
 
   getProducts = () => {
-    // ProductService.getProducts()
-    //   .then((res) => {
-    //     return res.json();
-    //   })
-    //   .then((data) => {
-    //     this.setState({ products: data });
-    //   });
-    this.setState({
-      products: [
-        {
-          id: 1,
-          name: "Proizvod",
-          description: "Opis",
-          price: "111",
-          availableBalance: "1",
-          imageSrcs: [
-            "https://bootdey.com/img/Content/avatar/avatar1.png",
-            "https://bootdey.com/img/Content/avatar/avatar1.png",
-          ],
-        },
-        {
-          id: 2,
-          name: "Proizvod 2",
-          description: "Opis 2",
-          price: "222",
-          availableBalance: "3",
-          imageSrcs: ["https://bootdey.com/img/Content/avatar/avatar1.png"],
-        },
-      ],
-    });
+    ProductService.getAllIncludingDeletedProducts()
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        this.setState({ products: data });
+      });
+    // this.setState({
+    //   products: [
+    //     {
+    //       id: 1,
+    //       name: "Proizvod",
+    //       description: "Opis",
+    //       price: "111",
+    //       availableBalance: "1",
+    //       imagesSrc: [
+    //         "https://bootdey.com/img/Content/avatar/avatar1.png",
+    //         "https://bootdey.com/img/Content/avatar/avatar1.png",
+    //       ],
+    //     },
+    //     {
+    //       id: 2,
+    //       name: "Proizvod 2",
+    //       description: "Opis 2",
+    //       price: "222",
+    //       availableBalance: "3",
+    //       imagesSrc: ["https://bootdey.com/img/Content/avatar/avatar1.png"],
+    //     },
+    //   ],
+    // });
   };
 
   getUploadedImages = (images) => {
@@ -171,7 +172,7 @@ export default class AdminProducts extends Component {
         productPrice: product.price,
         productAvailableBalance: product.availableBalance,
       },
-      imageSrcs: product.imageSrcs,
+      imagesSrc: product.imagesSrc,
     });
   };
 
@@ -201,10 +202,10 @@ export default class AdminProducts extends Component {
     });
   };
 
-  openImageModal = (imageSrcs) => {
+  openImageModal = (imagesSrc) => {
     this.setState({
       isOpenImageModal: true,
-      imageSrcs: imageSrcs,
+      imagesSrc: imagesSrc,
     });
   };
 
@@ -298,7 +299,7 @@ export default class AdminProducts extends Component {
         this.setState({
           isSubmitting: false,
           currentChosenImageFiles: [],
-          imageSrcs: [],
+          imagesSrc: [],
         });
       } else {
         this.setState({ isSubmitting: false });
@@ -346,7 +347,7 @@ export default class AdminProducts extends Component {
             <button
               type="button"
               onClick={() => {
-                this.openImageModal(product.imageSrcs);
+                this.openImageModal(product.imagesSrc);
               }}
               class="btn btn-outline-primary btn-sm"
               style={{
@@ -504,7 +505,7 @@ export default class AdminProducts extends Component {
                   <div className="form-group">
                     <UploadImages
                       uploadedImages={this.getUploadedImages.bind(this)}
-                      valueFromParent={this.state.imageSrcs}
+                      valueFromParent={this.state.imagesSrc}
                     />
                   </div>
                 </Grid>
@@ -621,7 +622,7 @@ export default class AdminProducts extends Component {
                   <div className="form-group">
                     <UploadImages
                       uploadedImages={this.getUploadedImages.bind(this)}
-                      valueFromParent={this.state.imageSrcs}
+                      valueFromParent={this.state.imagesSrc}
                     />
                   </div>
                 </Grid>
@@ -707,7 +708,7 @@ export default class AdminProducts extends Component {
               height: "400px",
             }}
           >
-            {this.state.imageSrcs.map((imageSrc, key) => {
+            {this.state.imagesSrc.map((imageSrc, key) => {
               return (
                 <div key={key}>
                   <img
