@@ -16,6 +16,8 @@ import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import NumericInput from "material-ui-numeric-input";
 import NotFound from "./NotFound";
+import CommercialService from "../services/CommercialService";
+import AuthService from "../services/AuthService";
 
 export default class Campaigns extends Component {
   constructor(props) {
@@ -36,7 +38,15 @@ export default class Campaigns extends Component {
     this.handlePostOrStoryChange = this.handlePostOrStoryChange.bind(this);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    CommercialService.getCommercialsForAgent(AuthService.getCurrentUser().id)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        this.setState({ comercials: data });
+      });
+  }
 
   handleNumberChange = (number) => {
     this.setState(
@@ -140,7 +150,7 @@ export default class Campaigns extends Component {
             control={
               <Checkbox
                 key={commercial.id}
-                checked={this.checkIfStoryIsChecked(commercial.id)}
+                checked={this.checkIfCommercialIsChecked(commercial.id)}
                 onChange={(event) => {
                   let list = this.state.checkedItems;
                   if (event.target.checked) {

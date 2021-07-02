@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CampaignMicroservice.Database;
+using CampaignMicroservice.Repository;
+using CampaignMicroservice.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +35,12 @@ namespace CampaignMicroservice
 
             services.AddDbContext<CampaignDbContext>(options =>
                options.UseMySql(CreateConnectionStringFromEnvironment()).UseLazyLoadingProxies(), ServiceLifetime.Transient);
+
+            services.AddScoped<ICommercialRepository, CommercialRepository>();
+            services.AddScoped<ICampaignRepository, CampaignRepository>();
+
+            services.AddScoped<ICommercialService, CommercialService>();
+            services.AddScoped<ICampaignService, CampaignService>();
         }
 
         private string CreateConnectionStringFromEnvironment()
@@ -53,6 +61,8 @@ namespace CampaignMicroservice
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseStaticFiles();
 
             app.UseRouting();
 
