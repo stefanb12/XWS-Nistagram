@@ -43,12 +43,14 @@ class Stories extends Component {
       currentStoryPublishingDate: null,
       currentTimeout: null,
       currentProfileStories: null,
+      isCurrentStoryCommercial: false,
       timeCounter: 0,
       timeCounterMultiplier: 1,
       currentStoryNumber: 0,
       numberOfStoriesForCurrentProfile: 0,
       currentProfileImage: null,
       forCloseFriends: false,
+      currentStoryWebsiteLink: ""
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -265,6 +267,8 @@ class Stories extends Component {
       currentProfileStories: profileStories,
       currentProfileImage: profileStories.imageSrc,
       forCloseFriends: profileStories.stories[storyNumber].forCloseFriends,
+      isCurrentStoryCommercial: profileStories.stories[storyNumber].isCommercial,
+      currentStoryWebsiteLink: profileStories.stories[storyNumber].websiteLink
     });
     if (profileStories.stories[storyNumber].imageSrc.endsWith(".mp4")) {
       this.setState({
@@ -470,11 +474,17 @@ class Stories extends Component {
               marginTop: "13px",
             }}
           >
-            {moment(
-              moment(this.state.currentStoryPublishingDate).format(
-                "YYYY-MM-DD HH:mm:ss"
-              )
-            ).fromNow()}
+            {(() => {
+              if (this.state.isCurrentStoryCommercial) {
+                return ("Sponsored");
+              } else {
+                return (moment(
+                  moment(this.state.currentStoryPublishingDate).format(
+                    "YYYY-MM-DD HH:mm:ss"
+                  )
+                ).fromNow());
+              }
+            })()}
           </small>
           <div
             class="dropdown"
@@ -549,6 +559,34 @@ class Stories extends Component {
                   />
                 );
               } else {
+                if (this.state.isCurrentStoryCommercial) {
+                  return (
+                    <div class="commercial">
+                      <img
+                      style={{
+                        float: "left",
+                        maxWidth: "320px",
+                        maxHeight: "360px",
+                      }}
+                      src={this.state.currentStoryContent}
+                      class="img-thumbnail commercial-img"
+                    />
+                    <div class="middle">
+                      <div
+                        class="website-link"
+                        onClick={() => {
+                          window.open(
+                            this.state.currentStoryWebsiteLink
+                          );
+                        }}
+                      >
+                        Visit Website
+                      </div>
+                    </div>
+                    </div>
+                    
+                  );
+                }
                 return (
                   <img
                     style={{

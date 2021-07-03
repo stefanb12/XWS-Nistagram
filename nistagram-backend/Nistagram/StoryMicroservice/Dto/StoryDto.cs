@@ -11,6 +11,8 @@ namespace StoryMicroservice.Dto
         public string Id { get; set; }
         public bool ForCloseFriends { get; set; }
         public DateTime PublishingDate { get; set; }
+        public string WebsiteLink { get; set; }
+        public bool IsCommercial { get; set; }
         public string ImageName { get; set; }
         public string ImageSrc { get; set; }
         public string PublisherImageSrc { get; set; }
