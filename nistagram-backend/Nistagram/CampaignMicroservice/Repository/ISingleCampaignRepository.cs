@@ -2,7 +2,7 @@
 
 namespace CampaignMicroservice.Repository
 {
-    public interface ICampaignRepository : IRepository<Campaign>
+    public interface ISingleCampaignRepository : IRepository<SingleCampaign>
     {
     }
 }

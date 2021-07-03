@@ -2,7 +2,7 @@
 
 namespace CampaignMicroservice.Service
 {
-    public interface ICampaignService : IService<Campaign>
+    public interface IRepeatableCampaignService : IService<RepeatableCampaign>
     {
     }
 }

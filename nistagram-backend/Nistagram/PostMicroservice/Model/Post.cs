@@ -20,9 +20,11 @@ namespace PostMicroservice.Model
         public virtual List<PostFavorite> Favorites { get; set; }
         public virtual List<Content> Contents { get; set; }
         public bool Deleted { get; set; }
+        public bool IsCommercial { get; set; }
 
         public Post()
         {
+            IsCommercial = false;
         }
     }
 }
