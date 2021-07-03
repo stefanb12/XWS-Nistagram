@@ -13,7 +13,7 @@ namespace CampaignMicroservice.Mapper
             singleCampaign.IsPost = dto.IsPost;
             singleCampaign.AgentId = dto.AgentId;
             singleCampaign.PostId = 1;
-            singleCampaign.StoryId = 1;
+            singleCampaign.StoryId = "";
             if (dto.IsPost)
             {
                 singleCampaign.PostId = dto.PostId;
@@ -24,13 +24,14 @@ namespace CampaignMicroservice.Mapper
             }
             singleCampaign.BroadcastTime = dto.BroadcastTime;
 
-            List<CampaignCommercial>campaignCommercials = new List<CampaignCommercial>();
+            List<CampaignCommercial> campaignCommercials = new List<CampaignCommercial>();
             foreach(CommercialDto commercial in dto.Commercials)
             {
                 CampaignCommercial campaignCommercial = new CampaignCommercial();
                 campaignCommercial.CommercialId = commercial.Id;
                 campaignCommercials.Add(campaignCommercial);
             }
+            singleCampaign.Commercials = campaignCommercials;
 
             return singleCampaign;
         }
@@ -41,7 +42,7 @@ namespace CampaignMicroservice.Mapper
             repeatableCampaign.IsPost = dto.IsPost;
             repeatableCampaign.AgentId = dto.AgentId;
             repeatableCampaign.PostId = 1;
-            repeatableCampaign.StoryId = 1;
+            repeatableCampaign.StoryId = "";
             if(dto.IsPost)
             {
                 repeatableCampaign.PostId = dto.PostId;
@@ -61,6 +62,7 @@ namespace CampaignMicroservice.Mapper
                 campaignCommercial.CommercialId = commercial.Id;
                 campaignCommercials.Add(campaignCommercial);
             }
+            repeatableCampaign.Commercials = campaignCommercials;
 
             return repeatableCampaign;
         }

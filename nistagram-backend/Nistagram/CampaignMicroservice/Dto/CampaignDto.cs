@@ -12,9 +12,8 @@ namespace CampaignMicroservice.Dto
         public bool IsPost { get; set; }
         public List<CommercialDto> Commercials { get; set; }
         public int AgentId { get; set; }
-        public virtual Profile Agent { get; set; }
         public int PostId { get; set; }
-        public int StoryId { get; set; }
+        public string StoryId { get; set; }
         public DateTime BroadcastTime { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

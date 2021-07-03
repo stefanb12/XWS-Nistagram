@@ -485,7 +485,7 @@ export default class Campaigns extends Component {
         <div class="col-md-6 col-lg-4 g-mb-30">
           <article
             class="u-shadow-v18 g-bg-white text-center rounded g-px-20 g-py-40 g-mb-5"
-            style={{ border: "1px solid black" }}
+            style={{ border: "1px solid black", height: "420px" }}
           >
             {(() => {
               if (campaign.commercials.length === 1) {
@@ -494,6 +494,7 @@ export default class Campaigns extends Component {
                     class="d-inline-block img-fluid mb-4"
                     src={campaign.commercials[0].imageSrc}
                     alt="Image Description"
+                    style={{ height: "160px" }}
                   />
                 );
               } else {
@@ -506,6 +507,7 @@ export default class Campaigns extends Component {
                         class="carousel-control-next-icon"
                       />
                     }
+                    style={{ paddingBottom: "23px" }}
                   >
                     {(() => {
                       return campaign.commercials.map((commercial) => {
@@ -515,6 +517,7 @@ export default class Campaigns extends Component {
                               className="d-block w-100"
                               src={commercial.imageSrc}
                               alt="First slide"
+                              style={{ height: "160px" }}
                             />
                           </Carousel.Item>
                         );
@@ -569,12 +572,27 @@ export default class Campaigns extends Component {
 
             <a
               href="javascript:void(0)"
+              class="text-success mr-4"
+              data-toggle="tooltip"
+              data-placement="top"
+              title=""
+              data-original-title="Edit"
+              style={{
+                fontSize: "19px",
+                float: "left",
+                marginTop: "1px",
+              }}
+            >
+              <i class="fa fa-envelope"></i>
+            </a>
+            <a
+              href="javascript:void(0)"
               class="text-info mr-4"
               data-toggle="tooltip"
               data-placement="top"
               title=""
               data-original-title="Edit"
-              style={{ fontSize: "20px", float: "left" }}
+              style={{ fontSize: "20px", float: "left", marginLeft: "-8px" }}
             >
               <i class="fa fa-pencil"></i>
             </a>
