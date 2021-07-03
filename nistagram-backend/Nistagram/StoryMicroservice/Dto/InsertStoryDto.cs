@@ -9,10 +9,11 @@ namespace StoryMicroservice.Dto
     public class InsertStoryDto
     {
         public int Id { get; set; }
+        public bool IsCommercial { get; set; }
         public bool ForCloseFriends { get; set; }
         public DateTime PublishingDate { get; set; }
         public ProfileDto Publisher { get; set; }
         public List<IFormFile> ImageFiles { get; set; }
-
+        public List<CommercialDto> Commercials { get; set; }
     }
 }

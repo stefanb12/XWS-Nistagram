@@ -22,6 +22,7 @@ import CommercialService from "../services/CommercialService";
 import AuthService from "../services/AuthService";
 import PostService from "../services/PostService";
 import CampaignService from "../services/CampaignService";
+import StoryService from "../services/StoryService";
 
 export default class Campaigns extends Component {
   constructor(props) {
@@ -119,7 +120,61 @@ export default class Campaigns extends Component {
           });
       }
     } else {
-      // Story
+      if (this.selectedNumber === 0) {
+        this.handleClickSnackBar("Daily repeat number cannot be zero", "error");
+      } else {
+        let agent = AuthService.getCurrentUser();
+        let commercialsImages = [];
+        for (let i = 0; i < this.state.checkedCommercials.length; i++) {
+          let commercial = {
+            imageName: this.state.checkedCommercials[i].imageName,
+            websiteLink: this.state.checkedCommercials[i].websiteLink,
+          };
+          commercialsImages.push(commercial);
+        }
+
+        let resStatus = 0;
+        StoryService.addStoryCampaign(
+          commercialsImages,
+          false,
+          agent
+        )
+          .then((res) => {
+            resStatus = res.status;
+            return res.json();
+          })
+          .then((result) => {
+            if (resStatus === 200) {
+              CampaignService.insertCampaign(
+                this.state.campaignType === "single" ? true : false,
+                this.state.postOrStory === "post" ? true : false,
+                this.state.checkedCommercials,
+                AuthService.getCurrentUser().id,
+                result.id,
+                1,
+                this.state.selectedTime,
+                this.state.selectedFromDate,
+                this.state.selectedToDate,
+                this.state.selectedNumber
+              )
+                .then((res) => {
+                  resStatus = res.status;
+                  return res.json();
+                })
+                .then((result) => {
+                  if (resStatus === 200) {
+                    this.handleClickSnackBar(
+                      "Successfully created campaign",
+                      "success"
+                    );
+                    this.closeCampaignModal();
+                  }
+                  return result;
+                });
+            }
+            return result;
+          });
+      }
     }
   };
 
