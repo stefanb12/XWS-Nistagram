@@ -753,7 +753,6 @@ class PostCard extends Component {
                                                               </div>
                                                             </div>
                                                           </div>
-                                                          ;
                                                         </Carousel.Item>
                                                       );
                                                     }

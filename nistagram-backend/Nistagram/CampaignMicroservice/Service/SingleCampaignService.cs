@@ -16,6 +16,19 @@ namespace CampaignMicroservice.Service
             _singleCampaignRepository = singleCampaignRepository;
         }
 
+        public async Task<List<SingleCampaign>> GetSingleCampaignsForAgent(int agentId)
+        {
+            List<SingleCampaign> singleCampaigns = new List<SingleCampaign>();
+            foreach (SingleCampaign singleCampaign in await GetAll())
+            {
+                if (singleCampaign.AgentId == agentId)
+                {
+                    singleCampaigns.Add(singleCampaign);
+                }
+            }
+            return singleCampaigns;
+        }
+
         public async Task<SingleCampaign> GetById(int id)
         {
             return await _singleCampaignRepository.GetById(id);

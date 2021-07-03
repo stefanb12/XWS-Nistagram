@@ -16,6 +16,19 @@ namespace CampaignMicroservice.Service
             _repeatableCampaignRepository = repeatableCampaignRepository;
         }
 
+        public async Task<List<RepeatableCampaign>> GetRepeatableCampaignsForAgent(int agentId)
+        {
+            List<RepeatableCampaign> repeatableCampaigns = new List<RepeatableCampaign>();
+            foreach (RepeatableCampaign repeatableCampaign in await GetAll())
+            {
+                if (repeatableCampaign.AgentId == agentId)
+                {
+                    repeatableCampaigns.Add(repeatableCampaign);
+                }
+            }
+            return repeatableCampaigns;
+        }
+
         public async Task<RepeatableCampaign> GetById(int id)
         {
             return await _repeatableCampaignRepository.GetById(id);

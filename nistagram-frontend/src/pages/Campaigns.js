@@ -22,6 +22,8 @@ import CommercialService from "../services/CommercialService";
 import AuthService from "../services/AuthService";
 import PostService from "../services/PostService";
 import CampaignService from "../services/CampaignService";
+import { ArrowForwardIosTwoTone } from "@material-ui/icons";
+import dateFormat from "dateformat";
 import StoryService from "../services/StoryService";
 
 export default class Campaigns extends Component {
@@ -46,13 +48,35 @@ export default class Campaigns extends Component {
     this.handlePostOrStoryChange = this.handlePostOrStoryChange.bind(this);
   }
 
-  componentDidMount() {
-    CommercialService.getCommercialsForAgent(AuthService.getCurrentUser().id)
+  async componentDidMount() {
+    await CommercialService.getCommercialsForAgent(
+      AuthService.getCurrentUser().id
+    )
       .then((res) => {
         return res.json();
       })
       .then((data) => {
         this.setState({ commercials: data });
+      });
+
+    await CampaignService.getSingleCampaignsForAgent(
+      AuthService.getCurrentUser().id
+    )
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        let allCampaings = data;
+        CampaignService.getRepeatableCampaignsForAgent(
+          AuthService.getCurrentUser().id
+        )
+          .then((res) => {
+            return res.json();
+          })
+          .then((result) => {
+            allCampaings.push.apply(allCampaings, result);
+            this.setState({ campaings: allCampaings });
+          });
       });
   }
 
@@ -60,8 +84,11 @@ export default class Campaigns extends Component {
     if (this.state.checkedCommercials.length == 0) {
       this.handleClickSnackBar("You must select commercials", "error");
     } else if (this.state.postOrStory === "post") {
-      if (this.selectedNumber === 0) {
-        this.handleClickSnackBar("Daily repeat number cannot be zero", "error");
+      if (this.state.selectedNumber === 0) {
+        this.handleClickSnackBar(
+          "Daily repeat number can not be zero",
+          "error"
+        );
       } else {
         let agent = AuthService.getCurrentUser();
         let commercialsImages = [];
@@ -120,7 +147,7 @@ export default class Campaigns extends Component {
           });
       }
     } else {
-      if (this.selectedNumber === 0) {
+      if (this.state.selectedNumber === 0) {
         this.handleClickSnackBar("Daily repeat number cannot be zero", "error");
       } else {
         let agent = AuthService.getCurrentUser();
@@ -134,11 +161,7 @@ export default class Campaigns extends Component {
         }
 
         let resStatus = 0;
-        StoryService.addStoryCampaign(
-          commercialsImages,
-          false,
-          agent
-        )
+        StoryService.addStoryCampaign(commercialsImages, false, agent)
           .then((res) => {
             resStatus = res.status;
             return res.json();
@@ -457,6 +480,142 @@ export default class Campaigns extends Component {
       </Modal>
     );
 
+    let campaignCards = this.state.campaings.map((campaign) => {
+      return (
+        <div class="col-md-6 col-lg-4 g-mb-30">
+          <article
+            class="u-shadow-v18 g-bg-white text-center rounded g-px-20 g-py-40 g-mb-5"
+            style={{ border: "1px solid black", height: "420px" }}
+          >
+            {(() => {
+              if (campaign.commercials.length === 1) {
+                return (
+                  <img
+                    class="d-inline-block img-fluid mb-4"
+                    src={campaign.commercials[0].imageSrc}
+                    alt="Image Description"
+                    style={{ height: "160px" }}
+                  />
+                );
+              } else {
+                return (
+                  <Carousel
+                    interval={null}
+                    nextIcon={
+                      <span
+                        aria-hidden="true"
+                        class="carousel-control-next-icon"
+                      />
+                    }
+                    style={{ paddingBottom: "23px" }}
+                  >
+                    {(() => {
+                      return campaign.commercials.map((commercial) => {
+                        return (
+                          <Carousel.Item>
+                            <img
+                              className="d-block w-100"
+                              src={commercial.imageSrc}
+                              alt="First slide"
+                              style={{ height: "160px" }}
+                            />
+                          </Carousel.Item>
+                        );
+                      });
+                    })()}
+                  </Carousel>
+                );
+              }
+            })()}
+            {(() => {
+              if (campaign.isSingleCampaign) {
+                return (
+                  <div>
+                    <h4 class="h5 g-color-black g-font-weight-600 g-mb-10">
+                      Single campaign
+                    </h4>
+                    <p>At {dateFormat(campaign.broadcastTime, "h:MM TT")}</p>
+                    <p>Once per day</p>
+                  </div>
+                );
+              } else {
+                return (
+                  <div>
+                    <h4 class="h5 g-color-black g-font-weight-600 g-mb-10">
+                      Repeatable campaign
+                    </h4>
+                    <p>
+                      {dateFormat(campaign.startTime, "dd.mm.yyyy.")} -
+                      {dateFormat(campaign.endTime, "dd.mm.yyyy.")}
+                    </p>
+                    <p>{campaign.numberOfRepeats} times a day</p>
+                  </div>
+                );
+              }
+            })()}
+
+            {(() => {
+              if (campaign.isPost) {
+                return (
+                  <span class="d-block g-color-primary g-font-size-16">
+                    Post
+                  </span>
+                );
+              } else {
+                return (
+                  <span class="d-block g-color-primary g-font-size-16">
+                    Story
+                  </span>
+                );
+              }
+            })()}
+
+            <a
+              href="javascript:void(0)"
+              class="text-success mr-4"
+              data-toggle="tooltip"
+              data-placement="top"
+              title=""
+              data-original-title="Edit"
+              style={{
+                fontSize: "19px",
+                float: "left",
+                marginTop: "1px",
+              }}
+            >
+              <i class="fa fa-envelope"></i>
+            </a>
+            <a
+              href="javascript:void(0)"
+              class="text-info mr-4"
+              data-toggle="tooltip"
+              data-placement="top"
+              title=""
+              data-original-title="Edit"
+              style={{ fontSize: "20px", float: "left", marginLeft: "-8px" }}
+            >
+              <i class="fa fa-pencil"></i>
+            </a>
+            <a
+              href="javascript:void(0)"
+              class="text-danger mr-4"
+              data-toggle="tooltip"
+              data-placement="top"
+              title=""
+              data-original-title="Edit"
+              style={{
+                fontSize: "20px",
+                float: "left",
+                marginLeft: "-10px",
+              }}
+            >
+              <i class="fa fa-trash"></i>
+            </a>
+          </article>
+        </div>
+      );
+    });
+
     if (localStorage.getItem("userRole") !== "Agent") {
       return <NotFound />;
     } else {
@@ -482,7 +641,6 @@ export default class Campaigns extends Component {
               style={{
                 textAlign: "center",
                 color: "#74767a",
-                marginTop: "5px",
                 marginLeft: "155px",
                 paddingBottom: "15px",
                 fontSize: "34px",
@@ -506,136 +664,14 @@ export default class Campaigns extends Component {
           </div>
           <div class="container">
             <div class="row">
-              <div class="col-md-6 col-lg-4 g-mb-30">
-                <article
-                  class="u-shadow-v18 g-bg-white text-center rounded g-px-20 g-py-40 g-mb-5"
-                  style={{ border: "1px solid black" }}
-                >
-                  <Carousel
-                    interval={null}
-                    nextIcon={
-                      <span
-                        aria-hidden="true"
-                        class="carousel-control-next-icon"
-                      />
-                    }
-                  >
-                    <Carousel.Item>
-                      <img
-                        class="d-inline-block img-fluid mb-4"
-                        src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                        alt="Image Description"
-                      />
-                    </Carousel.Item>
-                    <Carousel.Item>
-                      <img
-                        class="d-inline-block img-fluid mb-4"
-                        src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                        alt="Image Description"
-                      />
-                    </Carousel.Item>
-                  </Carousel>
-                  <h4 class="h5 g-color-black g-font-weight-600 g-mb-10">
-                    Single campaign
-                  </h4>
-                  <p>At 13:00</p>
-                  <p>Once per day</p>
-                  <span class="d-block g-color-primary g-font-size-16">
-                    Story
-                  </span>
-                  <a
-                    href="javascript:void(0)"
-                    class="text-info mr-4"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title=""
-                    data-original-title="Edit"
-                    style={{ fontSize: "20px", float: "left" }}
-                  >
-                    <i class="fa fa-pencil"></i>
-                  </a>
-                  <a
-                    href="javascript:void(0)"
-                    class="text-danger mr-4"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title=""
-                    data-original-title="Edit"
-                    style={{
-                      fontSize: "20px",
-                      float: "left",
-                      marginLeft: "-10px",
-                    }}
-                  >
-                    <i class="fa fa-trash"></i>
-                  </a>
-                </article>
-              </div>
-              <div class="col-md-6 col-lg-4 g-mb-30">
-                <article
-                  class="u-shadow-v18 g-bg-white text-center rounded g-px-20 g-py-40 g-mb-5"
-                  style={{ border: "1px solid black" }}
-                >
-                  <Carousel
-                    interval={null}
-                    nextIcon={
-                      <span
-                        aria-hidden="true"
-                        class="carousel-control-next-icon"
-                      />
-                    }
-                  >
-                    <Carousel.Item>
-                      <img
-                        class="d-inline-block img-fluid mb-4"
-                        src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                        alt="Image Description"
-                      />
-                    </Carousel.Item>
-                    <Carousel.Item>
-                      <img
-                        class="d-inline-block img-fluid mb-4"
-                        src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                        alt="Image Description"
-                      />
-                    </Carousel.Item>
-                  </Carousel>
-                  <h4 class="h5 g-color-black g-font-weight-600 g-mb-10">
-                    Repeatable campaign
-                  </h4>
-                  <p>01.07.20201. - 05.07.20201.</p>
-                  <p>3 times a day</p>
-                  <span class="d-block g-color-primary g-font-size-16">
-                    Post
-                  </span>
-                  <a
-                    href="javascript:void(0)"
-                    class="text-info mr-4"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title=""
-                    data-original-title="Edit"
-                    style={{ fontSize: "20px", float: "left" }}
-                  >
-                    <i class="fa fa-pencil"></i>
-                  </a>
-                  <a
-                    href="javascript:void(0)"
-                    class="text-danger mr-4"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title=""
-                    data-original-title="Edit"
-                    style={{
-                      fontSize: "20px",
-                      float: "left",
-                      marginLeft: "-10px",
-                    }}
-                  >
-                    <i class="fa fa-trash"></i>
-                  </a>
-                </article>
-              </div>
+              {campaignCards}
+              {/* {(() => {
+                if (this.state.campaings.length === 0) {
+                  return <div>Doesn't exist campaigns yet</div>;
+                } else {
+                  return <div>{campaignCards}</div>;
+                }
+              })()} */}
             </div>
           </div>
         </div>

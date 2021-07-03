@@ -16,9 +16,7 @@ namespace CampaignMicroservice.Model
         public int AgentId { get; set; }
         public virtual Profile Agent { get; set; }
         public int PostId { get; set; }
-        public virtual Post Post { get; set; }
-        public int StoryId { get; set; }
-        public virtual Story Story { get; set; }
+        public string StoryId { get; set; }
 
         public Campaign()
         {

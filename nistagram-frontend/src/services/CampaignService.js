@@ -37,5 +37,26 @@ class CampaignService {
 
     return fetch(API_URL + "campaign", requestOptions);
   }
+
+  getSingleCampaignsForAgent(agentId) {
+    const requestOptions = {
+      method: "GET",
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
+    };
+
+    return fetch(API_URL + "campaign/single/agent/" + agentId, requestOptions);
+  }
+
+  getRepeatableCampaignsForAgent(agentId) {
+    const requestOptions = {
+      method: "GET",
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
+    };
+
+    return fetch(
+      API_URL + "campaign/repeatable/agent/" + agentId,
+      requestOptions
+    );
+  }
 }
 export default new CampaignService();

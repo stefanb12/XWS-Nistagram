@@ -37,6 +37,39 @@ namespace CampaignMicroservice.Controllers
             }
         }
 
+        [HttpGet("single/agent/{id}")]
+        public async Task<IActionResult> GetSingleCampaignsForAgent(int id)
+        {
+            List<CampaignDto> result = new List<CampaignDto>();
+            foreach(SingleCampaign singleCampaign in await _singlecampaignService.GetSingleCampaignsForAgent(id))
+            {
+                result.Add(CampaignMapper.CampaignToCampaignDto(singleCampaign, null));
+            }
+
+            if (!result.Any())
+            {
+                return NoContent();
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("repeatable/agent/{id}")]
+        public async Task<IActionResult> GetRepeatableCampaignsForAgent(int id)
+        {
+            List<CampaignDto> result = new List<CampaignDto>();
+            foreach (RepeatableCampaign repeatableCampaign in await _repeatablecampaignService.GetRepeatableCampaignsForAgent(id))
+            {
+                result.Add(CampaignMapper.CampaignToCampaignDto(null, repeatableCampaign));
+            }
+
+            if (!result.Any())
+            {
+                return NoContent();
+            }
+
+            return Ok(result);
+        }
 
     }
 }
