@@ -10,6 +10,8 @@ namespace StoryMicroservice.Model
     {
         public bool ForCloseFriends { get; set; }
         public DateTime PublishingDate { get; set; }
+        public string WebsiteLink { get; set; }
+        public bool IsCommercial { get; set; }
         public int PublisherId { get; set; }
         [BsonIgnore]
         public Profile Publisher { get; set; }
@@ -23,6 +25,7 @@ namespace StoryMicroservice.Model
         public Story()
         {
             Id = ObjectId.GenerateNewId().ToString();
+            IsCommercial = false;
         }
     }
 }

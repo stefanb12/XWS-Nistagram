@@ -3,11 +3,12 @@ using CampaignMicroservice.Model;
 
 namespace CampaignMicroservice.Repository
 {
-    public class CampaignRepository : MySqlRepository<Campaign>, ICampaignRepository
+    public class SingleCampaignRepository : MySqlRepository<SingleCampaign>, ISingleCampaignRepository
     {
-        public CampaignRepository(CampaignDbContext context)
+        public SingleCampaignRepository(CampaignDbContext context)
                : base(context)
         {
         }
     }
 }
+

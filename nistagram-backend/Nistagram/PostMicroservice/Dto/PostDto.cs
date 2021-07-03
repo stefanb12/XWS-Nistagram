@@ -14,12 +14,16 @@ namespace PostMicroservice.Dto
         public ProfileDto Publisher { get; set; }
         public List<CommentDto> Comments { get; set; }
         public List<IFormFile> ImageFiles { get; set; }
-        public List<string> ImagesSrc { get; set; }
+        public List<CommercialDto> ImagesSrc { get; set; }
         public List<ProfileDto> Dislikes { get; set; }
         public List<ProfileDto> Likes { get; set; }
         public List<ProfileDto> Favorites { get; set; }
         public bool Deleted { get; set; }
+        public bool IsCommercial { get; set; }
 
-        public PostDto() {}
+        public PostDto()
+        {
+            IsCommercial = false;
+        }
     }
 }

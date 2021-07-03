@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace PostMicroservice.Model
+namespace CampaignMicroservice.Dto
 {
-    public class Content
+    public class CommercialDto
     {
         public int Id { get; set; }
         public string WebsiteLink { get; set; }
@@ -12,9 +16,8 @@ namespace PostMicroservice.Model
         public IFormFile ImageFile { get; set; }
         [NotMapped]
         public string ImageSrc { get; set; }
-        public int PostId { get; set; }
-        public virtual Post Post { get; set; }
+        public int AgentId { get; set; }
 
-        public Content() {}
+        public CommercialDto() { }
     }
 }

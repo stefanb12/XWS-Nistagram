@@ -37,10 +37,12 @@ namespace CampaignMicroservice
                options.UseMySql(CreateConnectionStringFromEnvironment()).UseLazyLoadingProxies(), ServiceLifetime.Transient);
 
             services.AddScoped<ICommercialRepository, CommercialRepository>();
-            services.AddScoped<ICampaignRepository, CampaignRepository>();
+            services.AddScoped<ISingleCampaignRepository, SingleCampaignRepository>();
+            services.AddScoped<IRepeatableCampaignRepository, RepeatableCampaignRepository>();
 
             services.AddScoped<ICommercialService, CommercialService>();
-            services.AddScoped<ICampaignService, CampaignService>();
+            services.AddScoped<ISingleCampaignService, SingleCampaignService>();
+            services.AddScoped<IRepeatableCampaignService, RepeatableCampaignService>();
         }
 
         private string CreateConnectionStringFromEnvironment()

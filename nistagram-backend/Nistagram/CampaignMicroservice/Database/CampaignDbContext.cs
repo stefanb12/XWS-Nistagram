@@ -44,14 +44,14 @@ namespace CampaignMicroservice.Database
             modelBuilder.Entity<CampaignCommercial>().HasKey(cc => new { cc.CommercialId, cc.CampaignId });
             modelBuilder.Entity<CampaignCommercial>()
                 .HasOne(cc => cc.Campaign)
-                .WithMany(c => c.CampaignCommercials)
+                .WithMany(c => c.Commercials)
                 .HasForeignKey(cc => cc.CampaignId);
 
-            modelBuilder.Entity<TargetGroupProfile>().HasKey(tgp => new { tgp.ProfileId, tgp.CampaignId });
+            /*modelBuilder.Entity<TargetGroupProfile>().HasKey(tgp => new { tgp.ProfileId, tgp.CampaignId });
             modelBuilder.Entity<TargetGroupProfile>()
                 .HasOne(tgp => tgp.Campaign)
                 .WithMany(c => c.TargetGroup)
-                .HasForeignKey(tgp => tgp.CampaignId);
+                .HasForeignKey(tgp => tgp.CampaignId);*/
 
             modelBuilder.Entity<Profile>().HasData(
                 new Profile { Id = 1, OriginalId = 1, Username = "stefanb", ImageName = "user1213352029.jpg" },
@@ -76,7 +76,28 @@ namespace CampaignMicroservice.Database
             );
 
             modelBuilder.Entity<Commercial>().HasData(
-                new Commercial { Id = 1, AgentId = 4, ImageName = "1213352229.jpg" }
+                new Commercial { Id = 1, AgentId = 4, ImageName = "1213352229.jpg", WebsiteLink = "link" },
+                new Commercial { Id = 2, AgentId = 4, ImageName = "1213352333.jpg", WebsiteLink = "link" }
+            );
+
+            modelBuilder.Entity<SingleCampaign>().HasData(
+                new SingleCampaign { Id = 1, AgentId = 4, IsPost = true, PostId = 1, StoryId = "", BroadcastTime = new DateTime(2021, 7, 5) }
+            );
+
+            modelBuilder.Entity<RepeatableCampaign>().HasData(
+                new RepeatableCampaign { Id = 2, AgentId = 4, IsPost = true, PostId = 2, StoryId = "", StartDate = new DateTime(2021, 7, 5), EndDate = new DateTime(2021, 7, 7), LastModification = new DateTime(2021, 7, 5), NumberOfRepeats = 2 }
+            );
+
+            // CampaignCommercials
+            modelBuilder.Entity<CampaignCommercial>().HasKey(t => new { t.CampaignId, t.CommercialId });
+            modelBuilder.Entity<CampaignCommercial>()
+                .HasOne(pt => pt.Campaign)
+                .WithMany(p => p.Commercials)
+                .HasForeignKey(pt => pt.CampaignId);
+
+            modelBuilder.Entity<CampaignCommercial>().HasData(
+                new CampaignCommercial { CampaignId = 1, CommercialId = 1 },
+                new CampaignCommercial { CampaignId = 2, CommercialId = 2 }
             );
         }
         }
