@@ -10,7 +10,7 @@ namespace CampaignMicroservice.Dto
     {
         public bool IsSingleCampaign { get; set; }
         public bool IsPost { get; set; }
-        public List<Commercial> Commercials { get; set; }
+        public List<CommercialDto> Commercials { get; set; }
         public int AgentId { get; set; }
         public virtual Profile Agent { get; set; }
         public int PostId { get; set; }
@@ -21,6 +21,9 @@ namespace CampaignMicroservice.Dto
         public int NumberOfRepeats { get; set; }
         public DateTime LastModification { get; set; }
 
-        public CampaignDto() { }
+        public CampaignDto()
+        {
+            Commercials = new List<CommercialDto>();
+        }
     }
 }

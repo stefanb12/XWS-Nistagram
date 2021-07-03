@@ -25,7 +25,7 @@ namespace CampaignMicroservice.Mapper
             singleCampaign.BroadcastTime = dto.BroadcastTime;
 
             List<CampaignCommercial>campaignCommercials = new List<CampaignCommercial>();
-            foreach(Commercial commercial in dto.Commercials)
+            foreach(CommercialDto commercial in dto.Commercials)
             {
                 CampaignCommercial campaignCommercial = new CampaignCommercial();
                 campaignCommercial.CommercialId = commercial.Id;
@@ -55,7 +55,7 @@ namespace CampaignMicroservice.Mapper
             repeatableCampaign.LastModification = DateTime.Now;
 
             List<CampaignCommercial> campaignCommercials = new List<CampaignCommercial>();
-            foreach (Commercial commercial in dto.Commercials)
+            foreach (CommercialDto commercial in dto.Commercials)
             {
                 CampaignCommercial campaignCommercial = new CampaignCommercial();
                 campaignCommercial.CommercialId = commercial.Id;
@@ -63,6 +63,42 @@ namespace CampaignMicroservice.Mapper
             }
 
             return repeatableCampaign;
+        }
+
+        public static CampaignDto CampaignToCampaignDto(SingleCampaign singleCampaign, RepeatableCampaign repeatableCampaign)
+        {
+            CampaignDto dto = new CampaignDto();
+            if (singleCampaign != null)
+            {
+                dto.IsSingleCampaign = true;
+                dto.IsPost = singleCampaign.IsPost;
+                dto.AgentId = singleCampaign.AgentId;
+                dto.BroadcastTime = singleCampaign.BroadcastTime;
+                foreach (CampaignCommercial campaignCommercial in singleCampaign.Commercials)
+                {
+                    CommercialDto commercialDto = new CommercialDto();
+                    commercialDto.WebsiteLink = campaignCommercial.Commercial.WebsiteLink;
+                    commercialDto.ImageSrc = String.Format("http://localhost:56000/{0}", campaignCommercial.Commercial.ImageName);
+                    dto.Commercials.Add(commercialDto);
+                }
+            } else // RepeatableCampaign
+            {
+                dto.IsSingleCampaign = false;
+                dto.IsPost = repeatableCampaign.IsPost;
+                dto.AgentId = repeatableCampaign.AgentId;
+                dto.StartDate = repeatableCampaign.StartDate;
+                dto.EndDate = repeatableCampaign.EndDate;
+                dto.NumberOfRepeats = repeatableCampaign.NumberOfRepeats;
+                foreach (CampaignCommercial campaignCommercial in repeatableCampaign.Commercials)
+                {
+                    CommercialDto commercialDto = new CommercialDto();
+                    commercialDto.WebsiteLink = campaignCommercial.Commercial.WebsiteLink;
+                    commercialDto.ImageSrc = String.Format("http://localhost:56000/{0}", campaignCommercial.Commercial.ImageName);
+                    dto.Commercials.Add(commercialDto);
+                }
+            }
+
+            return dto;
         }
     }
 }
