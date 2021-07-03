@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
+import ReactPlayer from "react-player";
 
 const styles = (theme) => ({
   root: {
@@ -72,17 +73,57 @@ class UploadImages extends Component {
         {this.state.files.map((file, key) => {
           return (
             <div key={key}>
-              <img
-                style={{
-                  float: "left",
-                  width: "300px",
-                  height: "auto",
-                  marginLeft: "70px",
-                }}
-                src={this.isObject(file) ? URL.createObjectURL(file) : file}
-                alt={this.isObject(file) ? file.name : ""}
-                class="img-thumbnail"
-              />
+              {(() => {
+                if (this.isObject(file)) {
+                  if (file.name.endsWith(".mp4")) {
+                    return (
+                      <ReactPlayer
+                        className="d-block w-100"
+                        url={URL.createObjectURL(file)}
+                        controls={true}
+                      />
+                    );
+                  } else {
+                    return (
+                      <img
+                        style={{
+                          float: "left",
+                          width: "300px",
+                          height: "auto",
+                          marginLeft: "70px",
+                        }}
+                        src={URL.createObjectURL(file)}
+                        alt={file.name}
+                        class="img-thumbnail"
+                      />
+                    );
+                  }
+                } else {
+                  if (file.endsWith(".mp4")) {
+                    return (
+                      <ReactPlayer
+                        className="d-block w-100"
+                        url={file}
+                        controls={true}
+                      />
+                    );
+                  } else {
+                    return (
+                      <img
+                        style={{
+                          float: "left",
+                          width: "300px",
+                          height: "auto",
+                          marginLeft: "70px",
+                        }}
+                        src={file}
+                        alt={""}
+                        class="img-thumbnail"
+                      />
+                    );
+                  }
+                }
+              })()}
             </div>
           );
         })}

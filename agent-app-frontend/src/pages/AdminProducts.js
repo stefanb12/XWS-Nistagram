@@ -4,6 +4,7 @@ import { Grid, Snackbar } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import UploadImages from "../components/UploadImages";
 import ProductService from "../services/ProductService";
+import ReactPlayer from "react-player";
 
 export default class AdminProducts extends Component {
   constructor(props) {
@@ -719,16 +720,30 @@ export default class AdminProducts extends Component {
             {this.state.imagesSrc.map((imageSrc, key) => {
               return (
                 <div key={key}>
-                  <img
-                    style={{
-                      float: "left",
-                      width: "400px",
-                      height: "auto",
-                      marginLeft: "30px",
-                    }}
-                    src={imageSrc}
-                    class="img-thumbnail"
-                  />
+                  {(() => {
+                    if (imageSrc.endsWith(".mp4")) {
+                      return (
+                        <ReactPlayer
+                          className="d-block w-100"
+                          url={imageSrc}
+                          controls={true}
+                        />
+                      );
+                    } else {
+                      return (
+                        <img
+                          style={{
+                            float: "left",
+                            width: "400px",
+                            height: "auto",
+                            marginLeft: "30px",
+                          }}
+                          src={imageSrc}
+                          class="img-thumbnail"
+                        />
+                      );
+                    }
+                  })()}
                 </div>
               );
             })}
