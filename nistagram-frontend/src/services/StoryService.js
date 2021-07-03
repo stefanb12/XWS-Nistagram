@@ -13,6 +13,37 @@ class StoryService {
     }
 
     formData.append("forCloseFriends", isForCloseFriendsOnly);
+    formData.append("isCommercial", false);
+
+
+    const requestOptions = {
+      method: "POST",
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
+      body: formData,
+    };
+
+    return fetch(API_URL + "story", requestOptions);
+  }
+
+  addStoryCampaign(commercialImages, isForCloseFriendsOnly, publisher) {
+    const formData = new FormData();
+
+    for (var i = 0; i < commercialImages.length; i++) {
+      formData.append(
+        "commercials[" + i + "].websiteLink",
+        commercialImages[i].websiteLink
+      );
+      formData.append(
+        "commercials[" + i + "].imageName",
+        commercialImages[i].imageName
+      );
+    }
+
+    formData.append("publisher[id]", publisher.id);
+    formData.append("publisher[username]", publisher.username);
+
+    formData.append("forCloseFriends", isForCloseFriendsOnly);
+    formData.append("isCommercial", true);
 
     const requestOptions = {
       method: "POST",

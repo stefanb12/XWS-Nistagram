@@ -144,3 +144,43 @@
 .stories-group > .row > .col-md-2 {
   display: inline-block;
 }
+
+.commercial {
+  position: relative;
+  width: 100%;
+}
+
+.commercial-img {
+  opacity: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: 0.5s ease;
+  backface-visibility: hidden;
+}
+
+.middle {
+  transition: 0.5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.commercial:hover .commercial-img {
+  opacity: 0.6;
+}
+
+.commercial:hover .middle {
+  opacity: 1;
+}
+
+.website-link {
+  background-color: #434244;
+  color: white;
+  font-size: 16px;
+  padding: 10px 22px;
+}
