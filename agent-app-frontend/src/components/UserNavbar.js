@@ -4,20 +4,20 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import InputBase from "@material-ui/core/InputBase";
 import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import Button from "@material-ui/core/Button";
-import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import StorefrontOutlinedIcon from "@material-ui/icons/StorefrontOutlined";
 import { useHistory } from "react-router-dom";
-import { TableCell, TableRow, withStyles } from "@material-ui/core";
+import { TableCell, TableRow, Tooltip, withStyles } from "@material-ui/core";
 import AuthService from "../services/AuthService";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import LocalMallOutlinedIcon from "@material-ui/icons/LocalMallOutlined";
+import LocalMallIcon from "@material-ui/icons/LocalMall";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -106,12 +106,21 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
+const MyTooltip = withStyles({
+  tooltip: {
+    fontSize: "14px",
+    color: "black",
+    backgroundColor: "#caf0f8",
+  },
+})(Tooltip);
+
 export default function UserNavbar() {
   const history = useHistory();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [mounted, setMounted] = React.useState(false);
+  const [productsIcon, setProductsIcon] = React.useState(<LocalMallIcon />);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -143,8 +152,9 @@ export default function UserNavbar() {
     handleMenuClose();
   };
 
-  const navigateToRegister = () => {
-    history.push("/register");
+  const navigateToProducts = () => {
+    setProductsIcon(<LocalMallIcon />);
+    history.push("/user/products");
   };
 
   const navigateToHome = () => {
@@ -237,26 +247,28 @@ export default function UserNavbar() {
             Web Shop
           </Typography>
 
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              autoFocus
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": "search" }}
-            />
-          </div>
-
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <Button variant="contained" color="primary" onClick={signOut}>
-              Sign out
-            </Button>
+            <MyTooltip title="Products overview">
+              <IconButton
+                aria-label="Products overview"
+                color="inherit"
+                onClick={navigateToProducts}
+              >
+                <Badge color="secondary">{productsIcon}</Badge>
+              </IconButton>
+            </MyTooltip>
+            <MyTooltip title="Log out">
+              <IconButton
+                aria-label="log out"
+                color="inherit"
+                onClick={signOut}
+              >
+                <Badge color="secondary">
+                  <ExitToAppIcon />
+                </Badge>
+              </IconButton>
+            </MyTooltip>
           </div>
           <div className={classes.sectionMobile}>
             <IconButton

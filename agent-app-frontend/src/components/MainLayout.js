@@ -4,8 +4,6 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import NotFound from "../pages/NotFound";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
-import Products from "./Products";
-import ShoppingCart from "./ShoppingCart";
 
 const MainLayoutRoot = {
   height: "100%",

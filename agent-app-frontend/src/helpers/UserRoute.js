@@ -22,7 +22,7 @@ export const UserRoute = ({ component: Component, roles, ...rest }) => (
         return (
           <Redirect
             to={{
-              pathname: "/admin/profileVerificationRequests",
+              pathname: "/admin/products",
               state: { from: props.location },
             }}
           />
