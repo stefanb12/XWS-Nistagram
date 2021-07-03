@@ -5,7 +5,9 @@ import {
   FormControlLabel,
   RadioGroup,
   Radio,
+  Snackbar,
 } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 import "../assets/styles/campaigns.css";
 import {
   KeyboardDatePicker,
@@ -18,21 +20,26 @@ import NumericInput from "material-ui-numeric-input";
 import NotFound from "./NotFound";
 import CommercialService from "../services/CommercialService";
 import AuthService from "../services/AuthService";
+import PostService from "../services/PostService";
+import CampaignService from "../services/CampaignService";
 
 export default class Campaigns extends Component {
   constructor(props) {
     super(props);
     this.state = {
       campaings: [],
-      comercials: [],
+      commercials: [],
       campaignType: "single",
       postOrStory: "post",
       selectedTime: new Date(),
       selectedFromDate: new Date(),
       selectedToDate: new Date(),
       selectedNumber: 1,
-      checkedItems: [],
+      checkedCommercials: [],
       isCampaignModalDialogOpen: false,
+      snackBarOpen: false,
+      snackBarMessage: "",
+      snackBarType: "",
     };
     this.handleCampaignTypeChange = this.handleCampaignTypeChange.bind(this);
     this.handlePostOrStoryChange = this.handlePostOrStoryChange.bind(this);
@@ -44,74 +51,112 @@ export default class Campaigns extends Component {
         return res.json();
       })
       .then((data) => {
-        this.setState({ comercials: data });
+        this.setState({ commercials: data });
       });
   }
 
-  handleNumberChange = (number) => {
-    this.setState(
-      {
-        selectedNumber: number,
-      },
-      () => {
-        console.log(this.state.selectedNumber);
+  createCampaign = () => {
+    if (this.state.checkedCommercials.length == 0) {
+      this.handleClickSnackBar("You must select commercials", "error");
+    } else if (this.state.postOrStory === "post") {
+      if (this.selectedNumber === 0) {
+        this.handleClickSnackBar("Daily repeat number cannot be zero", "error");
+      } else {
+        let agent = AuthService.getCurrentUser();
+        let commercialsImages = [];
+        for (let i = 0; i < this.state.checkedCommercials.length; i++) {
+          let commercial = {
+            imageName: this.state.checkedCommercials[i].imageName,
+            websiteLink: this.state.checkedCommercials[i].websiteLink,
+          };
+          commercialsImages.push(commercial);
+        }
+
+        let resStatus = 0;
+        PostService.insertCampaignPost(
+          commercialsImages,
+          "",
+          "",
+          "",
+          [],
+          "",
+          agent
+        )
+          .then((res) => {
+            resStatus = res.status;
+            return res.json();
+          })
+          .then((result) => {
+            if (resStatus === 200) {
+              CampaignService.insertCampaign(
+                this.state.campaignType === "single" ? true : false,
+                this.state.postOrStory === "post" ? true : false,
+                this.state.checkedCommercials,
+                AuthService.getCurrentUser().id,
+                result.id,
+                1,
+                this.state.selectedTime,
+                this.state.selectedFromDate,
+                this.state.selectedToDate,
+                this.state.selectedNumber
+              )
+                .then((res) => {
+                  resStatus = res.status;
+                  return res.json();
+                })
+                .then((result) => {
+                  if (resStatus === 200) {
+                    this.handleClickSnackBar(
+                      "Successfully created campaign",
+                      "success"
+                    );
+                    this.closeCampaignModal();
+                  }
+                  return result;
+                });
+            }
+            return result;
+          });
       }
-    );
+    } else {
+      // Story
+    }
+  };
+
+  handleNumberChange = (number) => {
+    this.setState({
+      selectedNumber: number,
+    });
   };
 
   handleTimeChange = (time) => {
-    this.setState(
-      {
-        selectedTime: time,
-      },
-      () => {
-        console.log(this.state.selectedTime);
-      }
-    );
+    this.setState({
+      selectedTime: time,
+    });
   };
 
   handleFromDateChange = (date) => {
-    this.setState(
-      {
-        selectedFromDate: date,
-      },
-      () => {
-        console.log(this.state.selectedFromDate);
-      }
-    );
+    this.setState({
+      selectedFromDate: date,
+    });
   };
 
   handleToDateChange = (date) => {
-    this.setState(
-      {
-        selectedToDate: date,
-      },
-      () => {
-        console.log(this.state.selectedToDate);
-      }
-    );
+    this.setState({
+      selectedToDate: date,
+    });
   };
 
   handleCampaignTypeChange = (event) => {
-    this.setState(
-      {
-        campaignType: event.target.value,
-      },
-      () => {
-        console.log(this.state.campaignType);
-      }
-    );
+    this.setState({
+      campaignType: event.target.value,
+    });
   };
 
   handlePostOrStoryChange = (event) => {
-    this.setState(
-      {
-        postOrStory: event.target.value,
-      },
-      () => {
-        console.log(this.state.postOrStory);
-      }
-    );
+    this.setState({
+      postOrStory: event.target.value,
+    });
   };
 
   openCampaignModal = () => {
@@ -129,13 +174,28 @@ export default class Campaigns extends Component {
       selectedFromDate: new Date(),
       selectedToDate: new Date(),
       selectedNumber: 1,
-      checkedItems: [],
+      checkedCommercials: [],
     });
   };
 
-  checkIfCommercialIsChecked = (commercialId) => {
-    for (let id of this.state.checkedItems) {
-      if (id === commercialId) {
+  handleClickSnackBar = (message, type) => {
+    this.setState({
+      snackBarMessage: message,
+      snackBarType: type,
+      snackBarOpen: true,
+    });
+  };
+
+  handleCloseSnackBar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ snackBarOpen: false });
+  };
+
+  checkIfCommercialIsChecked = (commercial) => {
+    for (let c of this.state.checkedCommercials) {
+      if (c.id === commercial.id) {
         return true;
       }
     }
@@ -143,23 +203,23 @@ export default class Campaigns extends Component {
   };
 
   render() {
-    let commercialsForCampaignModalDialog = this.state.comercials.map(
+    let commercialsForCampaignModalDialog = this.state.commercials.map(
       (commercial) => {
         return (
           <FormControlLabel
             control={
               <Checkbox
                 key={commercial.id}
-                checked={this.checkIfCommercialIsChecked(commercial.id)}
+                checked={this.checkIfCommercialIsChecked(commercial)}
                 onChange={(event) => {
-                  let list = this.state.checkedItems;
+                  let list = this.state.checkedCommercials;
                   if (event.target.checked) {
-                    list.push(commercial.id);
+                    list.push(commercial);
                   } else {
-                    list.splice(list.indexOf(commercial.id), 1);
+                    list.splice(list.indexOf(commercial), 1);
                   }
                   this.setState({
-                    checkedItems: list,
+                    checkedCommercials: list,
                   });
                 }}
               >
@@ -335,12 +395,7 @@ export default class Campaigns extends Component {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="success"
-            onClick={() => {
-              console.log("Add campaign");
-            }}
-          >
+          <Button variant="success" onClick={this.createCampaign}>
             Create
           </Button>
         </Modal.Footer>
@@ -353,6 +408,20 @@ export default class Campaigns extends Component {
       return (
         <div>
           {addCampaignModalDialog}
+          <Snackbar
+            open={this.state.snackBarOpen}
+            autoHideDuration={2000}
+            onClose={this.handleCloseSnackBar}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <Alert
+              onClose={this.handleCloseSnackBar}
+              severity={this.state.snackBarType}
+            >
+              {this.state.snackBarMessage}
+            </Alert>
+          </Snackbar>
+          ;
           <div class="graph-star-rating-footer text-center ">
             <h2
               style={{

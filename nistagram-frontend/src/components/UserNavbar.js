@@ -933,7 +933,7 @@ export default function UserNavbar() {
                 <FavoriteBorder />
               </Badge>
             </IconButton>
-            <IconButton aria-label="show 12 new notifications" color="inherit">
+            {/* <IconButton aria-label="show 12 new notifications" color="inherit">
               <Badge
                 color="secondary"
                 onClick={() =>
@@ -942,7 +942,7 @@ export default function UserNavbar() {
               >
                 {chatIcon}
               </Badge>
-            </IconButton>
+            </IconButton> */}
             <IconButton
               edge="end"
               aria-label="account of current user"

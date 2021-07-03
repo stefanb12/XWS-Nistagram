@@ -1338,6 +1338,25 @@
 
     // CampaignMicroservice
     {
+      "DownstreamPathTemplate": "/api/campaign",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 56000
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/campaign",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Key",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "UserRole": "Agent"
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/commercial/agent/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
