@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.IO;
 using WebShop.Dto;
 using WebShop.Model;
 
@@ -18,14 +19,22 @@ namespace WebShop.Mapper
             product.Deleted = false;
 
             List<Content> contents = new List<Content>();
-            foreach (IFormFile file in dto.ImageFiles)
+            if (dto.ImageFiles != null)
             {
-                Content content = new Content();
-                content.ImageFile = file;
-                contents.Add(content);
-            }
+                foreach (IFormFile file in dto.ImageFiles)
+                {
+                    Content content = new Content();
+                    content.ImageFile = file;
+                    contents.Add(content);
+                }
+            } 
             product.Contents = contents;
-
+            
+            if (dto.Id != 0)
+            {
+                product.Id = dto.Id;
+            }
+            
             return product;
         }
 
@@ -33,6 +42,7 @@ namespace WebShop.Mapper
         {
             ProductDto dto = new ProductDto();
 
+            dto.Id = product.Id;
             dto.Name = product.Name;
             dto.Price = product.Price;
             dto.Description = product.Description;

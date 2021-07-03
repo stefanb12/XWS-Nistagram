@@ -57,5 +57,40 @@ namespace WebShop.Controllers
 
             return Ok(dtos);
         }
+
+        [HttpPut]
+        public async Task<IActionResult> Update([FromForm] ProductDto productDto)
+        {
+            Product product = await _productService.UpdateProduct(ProductMapper.ProductDtoToProduct(productDto));
+            if (product == null)
+            {
+                return BadRequest();
+            }
+            return Ok(product);
+        }
+
+        [HttpPut("delete/{productId}")]
+        public async Task<IActionResult> DeleteProduct(int productId)
+        {
+            Product product = await _productService.GetById(productId);
+            if (product == null)
+            {
+                BadRequest();
+            }
+
+            product.Deleted = true;
+            return Ok(ProductMapper.ProductToProductDto(await _productService.Update(product)));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Insert([FromForm] ProductDto productDto)
+        {
+            Product product = await _productService.Insert(ProductMapper.ProductDtoToProduct(productDto));
+            if (product == null)
+            {
+                return BadRequest();
+            }
+            return Ok(product);
+        }
     }
 }

@@ -25,14 +25,14 @@ export default class AdminProducts extends Component {
       formValues: {
         productName: "",
         productDescription: "",
-        productPrice: "",
-        productAvailableBalance: "",
+        productPrice: 0.0,
+        productAvailableBalance: 0,
       },
       formErrors: {
         productName: "",
         productDescription: "",
-        productPrice: "",
-        productAvailableBalance: "",
+        productPrice: 0.0,
+        productAvailableBalance: 0,
       },
       formValidity: {
         productName: false,
@@ -53,14 +53,14 @@ export default class AdminProducts extends Component {
       formValues: {
         productName: "",
         productDescription: "",
-        productPrice: "",
-        productAvailableBalance: "",
+        productPrice: 0.0,
+        productAvailableBalance: 0,
       },
       formErrors: {
         productName: "",
         productDescription: "",
-        productPrice: "",
-        productAvailableBalance: "",
+        productPrice: 0.0,
+        productAvailableBalance: 0,
       },
       formValidity: {
         productName: false,
@@ -82,29 +82,6 @@ export default class AdminProducts extends Component {
       .then((data) => {
         this.setState({ products: data });
       });
-    // this.setState({
-    //   products: [
-    //     {
-    //       id: 1,
-    //       name: "Proizvod",
-    //       description: "Opis",
-    //       price: "111",
-    //       availableBalance: "1",
-    //       imagesSrc: [
-    //         "https://bootdey.com/img/Content/avatar/avatar1.png",
-    //         "https://bootdey.com/img/Content/avatar/avatar1.png",
-    //       ],
-    //     },
-    //     {
-    //       id: 2,
-    //       name: "Proizvod 2",
-    //       description: "Opis 2",
-    //       price: "222",
-    //       availableBalance: "3",
-    //       imagesSrc: ["https://bootdey.com/img/Content/avatar/avatar1.png"],
-    //     },
-    //   ],
-    // });
   };
 
   getUploadedImages = (images) => {
@@ -113,46 +90,19 @@ export default class AdminProducts extends Component {
     });
   };
 
-  deleteProduct = (productId) => {
-    // ProductService.deleteProduct(productId)
-    //   .then((res) => {
-    //     this.getProducts();
-    //     this.handleClickSnackBar("Product is deleted", "info");
-    //     return res.json();
-    //   })
-    //   .then((data) => {});
-  };
-
-  addProduct = () => {
-    // ProductService.saveProduct(
-    //     // podaci
-    // )
-    //   .then((res) => {
-    //     this.getProducts();
-    //     return res.json();
-    //   })
-    //   .then((data) => {
-    //     this.closeNewProductModal();
-    //     this.handleClickSnackBar("New product is successfully added", "success");
-    //   });
-  };
-
-  changeProduct = () => {
-    // ProductService.changeProduct(
-    //   // podaci
-    // )
-    //   .then((res) => {
-    //     this.getProducts();
-    //     return res.json();
-    //   })
-    //   .then((data) => {
-    //     this.closeChangeProductModal();
-    //     this.handleClickSnackBar("Product is successfully changed", "success");
-    //   });
+  deleteProduct = () => {
+    ProductService.deleteProduct(this.state.chosenProduct.id)
+      .then((res) => {
+        this.getProducts();
+        this.handleClickSnackBar("Product is deleted", "info");
+        this.closeProductDeletingModal();
+        return res.json();
+      })
+      .then((data) => {});
   };
 
   openNewProductModal = () => {
-    this.setState({ isOpenNewProductModal: true });
+    this.setState({ isOpenNewProductModal: true, isUpdate: false });
   };
 
   closeNewProductModal = () => {
@@ -165,6 +115,7 @@ export default class AdminProducts extends Component {
   openChangeProductModal = (product) => {
     this.setState({
       isOpenChangeProductModal: true,
+      chosenProduct: product,
       isUpdate: true,
       formValues: {
         productName: product.name,
@@ -215,6 +166,7 @@ export default class AdminProducts extends Component {
     this.setState({
       isProductDeletingModal: true,
       chosenProduct: product,
+      isUpdate: false,
     });
   };
 
@@ -289,18 +241,80 @@ export default class AdminProducts extends Component {
     }
 
     if (Object.values(formValidity).every(Boolean)) {
-      // pozovi metodu iz servisa
-      // moras znati da li je update ili ne
       if (
         this.state.currentChosenImageFiles.length > 0 ||
         this.state.isUpdate
       ) {
-        this.handleClickSnackBar("Submitting the product...", "success");
-        this.setState({
-          isSubmitting: false,
-          currentChosenImageFiles: [],
-          imagesSrc: [],
-        });
+        if (this.state.isUpdate) {
+          let resStatus = 0;
+          ProductService.update(
+            this.state.chosenProduct.id,
+            formValues.productName,
+            formValues.productPrice,
+            formValues.productDescription,
+            formValues.productAvailableBalance,
+            this.state.currentChosenImageFiles
+          )
+            .then((res) => {
+              resStatus = res.status;
+              return res.json();
+            })
+            .then((res) => {
+              if (resStatus === 200) {
+                this.getProducts();
+                this.handleClickSnackBar("Product is changed", "success");
+                this.closeChangeProductModal();
+                this.setState({
+                  isSubmitting: false,
+                  currentChosenImageFiles: [],
+                  imagesSrc: [],
+                });
+              } else {
+                this.handleClickSnackBar(
+                  "You have already had product with entered name",
+                  "error"
+                );
+                this.setState({ isSubmitting: false });
+              }
+
+              return res;
+            })
+            .then((data) => {});
+        } else {
+          let resStatus = 0;
+          ProductService.insert(
+            formValues.productName,
+            formValues.productPrice,
+            formValues.productDescription,
+            formValues.productAvailableBalance,
+            this.state.currentChosenImageFiles
+          )
+            .then((res) => {
+              resStatus = res.status;
+              return res.json();
+            })
+            .then((res) => {
+              if (resStatus === 200) {
+                this.getProducts();
+                this.handleClickSnackBar("New product is added", "success");
+                this.closeNewProductModal();
+                this.setState({
+                  isSubmitting: false,
+                  currentChosenImageFiles: [],
+                  imagesSrc: [],
+                });
+              } else {
+                this.handleClickSnackBar(
+                  "You have already had product with entered name",
+                  "error"
+                );
+                this.setState({ isSubmitting: false });
+              }
+
+              return res;
+            })
+            .then((data) => {});
+        }
       } else {
         this.setState({ isSubmitting: false });
         this.handleClickSnackBar("You have to choose image", "error");
@@ -341,7 +355,9 @@ export default class AdminProducts extends Component {
         <tr id={key}>
           <td style={{ textAlign: "center" }}>{product.name}</td>
           <td style={{ textAlign: "center" }}>{product.description}</td>
-          <td style={{ textAlign: "center" }}>{product.price}</td>
+          <td style={{ textAlign: "center" }}>
+            {product.price.toString().split(".")[0]}
+          </td>
           <td style={{ textAlign: "center" }}>{product.availableBalance}</td>
           <td style={{ textAlign: "center" }}>
             <button
@@ -471,9 +487,9 @@ export default class AdminProducts extends Component {
                     </div>
                   </div>
                   <div className="form-group">
-                    <label>Product price:</label>
+                    <label>Product price (RSD):</label>
                     <input
-                      type="text"
+                      type="number"
                       name="productPrice"
                       className={`form-control ${
                         formErrors.productPrice ? "is-invalid" : ""
@@ -489,7 +505,7 @@ export default class AdminProducts extends Component {
                   <div className="form-group">
                     <label>Product available balance:</label>
                     <input
-                      type="text"
+                      type="number"
                       name="productAvailableBalance"
                       className={`form-control ${
                         formErrors.productAvailableBalance ? "is-invalid" : ""
@@ -513,12 +529,8 @@ export default class AdminProducts extends Component {
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <Button
-              variant="success"
-              type="submit"
-              disabled={isSubmitting} /*onClick={this.changeProduct}*/
-            >
-              {isSubmitting ? "Please wait..." : "Change"}
+            <Button variant="success" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Please wait..." : "Add"}
             </Button>
             <Button variant="secondary" onClick={this.closeNewProductModal}>
               Close
@@ -588,9 +600,9 @@ export default class AdminProducts extends Component {
                     </div>
                   </div>
                   <div className="form-group">
-                    <label>Product price:</label>
+                    <label>Product price (RSD):</label>
                     <input
-                      type="text"
+                      type="number"
                       name="productPrice"
                       className={`form-control ${
                         formErrors.productPrice ? "is-invalid" : ""
@@ -606,7 +618,7 @@ export default class AdminProducts extends Component {
                   <div className="form-group">
                     <label>Product available balance:</label>
                     <input
-                      type="text"
+                      type="number"
                       name="productAvailableBalance"
                       className={`form-control ${
                         formErrors.productAvailableBalance ? "is-invalid" : ""
@@ -630,11 +642,7 @@ export default class AdminProducts extends Component {
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <Button
-              variant="success"
-              type="submit"
-              disabled={isSubmitting} /*onClick={this.changeProduct}*/
-            >
+            <Button variant="success" type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Please wait..." : "Change"}
             </Button>
             <Button variant="secondary" onClick={this.closeChangeProductModal}>
@@ -786,7 +794,7 @@ export default class AdminProducts extends Component {
                             Description
                           </th>
                           <th scope="col" style={{ textAlign: "center" }}>
-                            Price
+                            Price (RSD)
                           </th>
                           <th scope="col" style={{ textAlign: "center" }}>
                             Available Balance

@@ -52,7 +52,7 @@ class UploadImages extends Component {
     return (
       <div className={classes.root}>
         <input
-          accept="image/*"
+          accept="image/*, video/mp4"
           className={classes.input}
           id="icon-button-file"
           type="file"
