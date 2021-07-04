@@ -48,11 +48,14 @@ namespace CampaignMicroservice
             services.AddScoped<ICommercialRepository, CommercialRepository>();
             services.AddScoped<ISingleCampaignRepository, SingleCampaignRepository>();
             services.AddScoped<IRepeatableCampaignRepository, RepeatableCampaignRepository>();
+            services.AddScoped<ICampaignRequestRepository, CampaignRequestRepository>();
 
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<ICommercialService, CommercialService>();
             services.AddScoped<ISingleCampaignService, SingleCampaignService>();
             services.AddScoped<IRepeatableCampaignService, RepeatableCampaignService>();
+            services.AddScoped<ICampaignRequestService, CampaignRequestService>();
+
 
             services.AddHostedService<ProfileCreatedMessageReceiver>();
             services.AddHostedService<ProfileUpdatedMessageReceiver>();

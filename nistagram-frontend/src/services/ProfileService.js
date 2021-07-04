@@ -114,6 +114,18 @@ class ProfileService {
     );
   }
 
+  getFollowingInfluencers(profileId) {
+    const requestOptions = {
+      method: "GET",
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
+    };
+
+    return fetch(
+      API_URL + "profile/" + profileId + "/followingInfluencers",
+      requestOptions
+    );
+  }
+
   getAllUsers() {
     const requestOptions = {
       method: "GET",
