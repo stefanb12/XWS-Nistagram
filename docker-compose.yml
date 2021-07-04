@@ -60,6 +60,25 @@ services:
     networks:
       - public_net
 
+  mysql-campaign-microservice:
+    image: mysql:latest
+    container_name: mysql-campaign-microservice
+    volumes:
+        - mysql-db-campaign:/var/lib/mysql
+        - sql-campaign:/docker-entrypoint-initdb.d/
+    restart: always
+    environment:
+      MYSQL_DATABASE: "CampaignMicroserviceDb"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "user"
+      MYSQL_ROOT_PASSWORD: "root"
+    expose:
+      - '3306'
+    ports:
+      - '3310:3306'
+    networks:
+      - public_net
+
   mysql-post-microservice:
     image: mysql:latest
     container_name: mysql-post-microservice
@@ -75,7 +94,7 @@ services:
     expose:
       - '3306'
     ports:
-      - '3310:3306'
+      - '3311:3306'
     networks:
       - public_net
 
@@ -166,6 +185,33 @@ services:
       - public_net
     volumes:
       - sql-inappropriatecontent:/app/sql-inappropriatecontent
+
+  campaign-microservice:
+    build: 
+      context: .
+      dockerfile: nistagram-backend/Nistagram/CampaignMicroservice/Dockerfile
+    image: campaignmicroservice:latest
+    restart: on-failure
+    environment:
+      DATABASE_USERNAME: "user"
+      DATABASE_PASSWORD: "user"
+      DATABASE_HOST: "mysql-campaign-microservice"
+      DATABASE_SCHEMA: "CampaignMicroserviceDb"
+      STATIC_FILES: "false"
+      HOSTED_SERVICE: "false"
+      RABBITMQ_HOST_NAME: "rabbitmq"
+    depends_on:
+      - mysql-campaign-microservice
+      - rabbitmq
+    expose: 
+      - "80"
+    ports:
+      - "56000:80"
+    networks:
+      - public_net
+    volumes:
+      - sql-campaign:/app/sql-campaign
+      # - wwwroot:/nistagram-backend/Nistagram/UserMicroservice/wwwroot
 
   post-microservice:
     build: 
@@ -268,7 +314,64 @@ services:
       - "3000:3000"
     networks:
       - public_net
+
+  # Agent-app
+  webshop-frontend:
+    build: 
+      context: .
+      dockerfile: agent-app-frontend/Dockerfile
+    image: webshopfrontend:latest
+    restart: on-failure
+    expose: 
+      - "3000"
+    ports:
+      - "3001:3000"
+    networks:
+      - public_net
+
+  mysql-web-shop:
+    image: mysql:latest
+    container_name: mysql-web-shop
+    volumes:
+        - mysql-db-web-shop:/var/lib/mysql
+        - sql-web-shop:/docker-entrypoint-initdb.d/
+    restart: always
+    environment:
+      MYSQL_DATABASE: "WebShopMicroserviceDb"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "user"
+      MYSQL_ROOT_PASSWORD: "root"
+    expose:
+      - '3306'
+    ports:
+      - '3312:3306'
+    networks:
+      - public_net
       
+  web-shop:
+    build: 
+      context: .
+      dockerfile: agent-app-backend/WebShop/WebShop/Dockerfile
+    image: webshop:latest
+    restart: on-failure
+    environment:
+      DATABASE_USERNAME: "user"
+      DATABASE_PASSWORD: "user"
+      DATABASE_HOST: "mysql-web-shop"
+      DATABASE_SCHEMA: "WebShopMicroserviceDb"
+      STATIC_FILES: "false"
+    depends_on:
+      - mysql-user-microservice
+    expose: 
+      - "80"
+    ports:
+      - "37424:80"
+    networks:
+      - public_net
+    volumes:
+      - sql-web-shop:/app/sql-web-shop
+      # - wwwroot:/nistagram-backend/Nistagram/UserMicroservice/wwwroot
+
 networks:
   public_net:
     driver: bridge
@@ -278,8 +381,12 @@ volumes:
   mysql-db-user:
   mysql-db-notification:
   mysql-db-inappropriatecontent:
+  mysql-db-campaign:
   mysql-db-post:
+  mysql-db-web-shop:
   sql-user:
   sql-notification:
   sql-inappropriatecontent:
+  sql-campaign:
   sql-post:
+  sql-web-shop:
