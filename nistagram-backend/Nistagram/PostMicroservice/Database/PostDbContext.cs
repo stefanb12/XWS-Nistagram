@@ -69,15 +69,15 @@ namespace PostMicroservice.Database
             );
 
             modelBuilder.Entity<Post>().HasData( // "Dodaj tagove"
-               new Post { Id = 1, PublisherId = 1, Description = "Nature", PublishingDate = new DateTime(2021, 05, 01, 11, 01, 01), LocationId = 1, Deleted = false },
-               new Post { Id = 2, PublisherId = 2, Description = "Waterfall", PublishingDate = new DateTime(2021, 06, 01, 19, 10, 10), LocationId = 2, Deleted = false },
-               new Post { Id = 3, PublisherId = 4, Description = "Vacation", PublishingDate = new DateTime(2021, 01, 01, 18, 10, 10), LocationId = 3, Deleted = false }
+               new Post { Id = 1, PublisherId = 1, Description = "Nature", PublishingDate = new DateTime(2021, 05, 01, 11, 01, 01), LocationId = 1, Deleted = false, IsCommercial = false },
+               new Post { Id = 2, PublisherId = 2, Description = "Waterfall", PublishingDate = new DateTime(2021, 06, 01, 19, 10, 10), LocationId = 2, Deleted = false, IsCommercial = false },
+               new Post { Id = 3, PublisherId = 4, Description = "Vacation", PublishingDate = new DateTime(2021, 01, 01, 18, 10, 10), LocationId = 3, Deleted = false, IsCommercial = false }
             );
 
             modelBuilder.Entity<Content>().HasData(
-                new Content { Id = 1, ImageName = "2212424861.png", PostId = 1 },
-                new Content { Id = 2, ImageName = "2212424862.png", PostId = 2 },
-                new Content { Id = 3, ImageName = "2212424862.png", PostId = 3 }
+                new Content { Id = 1, ImageName = "2212424861.png", PostId = 1, WebsiteLink = "" },
+                new Content { Id = 2, ImageName = "2212424862.png", PostId = 2, WebsiteLink = "" },
+                new Content { Id = 3, ImageName = "2212424862.png", PostId = 3, WebsiteLink = "" }
             );
 
             modelBuilder.Entity<Comment>().HasData(

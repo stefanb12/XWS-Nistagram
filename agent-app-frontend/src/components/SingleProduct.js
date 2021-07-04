@@ -1,5 +1,4 @@
 import { Component } from "react";
-import "../assets/styles/singleProduct.css";
 import Carousel from "react-bootstrap/Carousel";
 import { withRouter } from "react-router-dom";
 import ProductService from "../services/ProductService";

@@ -3,6 +3,7 @@ using StoryMicroservice.Dto;
 using StoryMicroservice.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,17 +15,48 @@ namespace StoryMicroservice.Mapper
         {
             List<Story> stories = new List<Story>();
 
-            foreach (IFormFile image in dto.ImageFiles)
+            if (dto.IsCommercial)
             {
-                Story story = new Story();
-                story.ForCloseFriends = dto.ForCloseFriends;
-                story.ImageFile = image;
-                story.PublisherId = dto.Publisher.Id;
-                story.Publisher = new Profile();
-                story.Publisher.OriginalId = dto.Publisher.Id;
-                story.Publisher.Username = dto.Publisher.Username;
+                foreach (CommercialDto commercial in dto.Commercials)
+                {
+                    var filePath = Path.GetFullPath(commercial.ImageName).Replace("StoryMicroservice", "CampaignMicroservice\\wwwroot");
+                    var fileBytes = File.ReadAllBytes(filePath);
+                    var ms = new MemoryStream(fileBytes);
+                    var formFile = new FormFile(ms, 0, ms.Length, null, Path.GetFileName(filePath))
+                    {
+                        Headers = new HeaderDictionary(),
+                        ContentType = "image"
+                    };
+                    Story story = new Story
+                    {
+                        ForCloseFriends = dto.ForCloseFriends,
+                        ImageFile = formFile,
+                        WebsiteLink = commercial.WebsiteLink,
+                        IsCommercial = true,
+                        PublisherId = dto.Publisher.Id,
+                        Publisher = new Profile
+                        {
+                            OriginalId = dto.Publisher.Id,
+                            Username = dto.Publisher.Username
+                        }
+                    };
+                    stories.Add(story);
+                }
+            }
+            else 
+            {
+                foreach (IFormFile image in dto.ImageFiles)
+                {
+                    Story story = new Story();
+                    story.ForCloseFriends = dto.ForCloseFriends;
+                    story.ImageFile = image;
+                    story.PublisherId = dto.Publisher.Id;
+                    story.Publisher = new Profile();
+                    story.Publisher.OriginalId = dto.Publisher.Id;
+                    story.Publisher.Username = dto.Publisher.Username;
 
-                stories.Add(story);
+                    stories.Add(story);
+                }
             }
 
             return stories;
@@ -37,6 +69,8 @@ namespace StoryMicroservice.Mapper
             dto.Id = story.Id;
             dto.PublishingDate = story.PublishingDate;
             dto.ForCloseFriends = story.ForCloseFriends;
+            dto.WebsiteLink = story.WebsiteLink;
+            dto.IsCommercial = story.IsCommercial;
             dto.ImageName = story.ImageName;
             dto.ImageSrc = String.Format("http://localhost:55996/{0}", story.ImageName);
 

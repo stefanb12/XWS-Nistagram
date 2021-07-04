@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,10 +45,12 @@ namespace WebShop
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+            services.AddScoped<IContentRepository, ContentRepository>();
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IShoppingCartService, ShoppingCartService>();
+            services.AddScoped<IContentService, ContentService>();
 
             // JWT Token
             var appSettingsSection = Configuration.GetSection("AppSettings");
@@ -103,6 +107,18 @@ namespace WebShop
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            string staticFiles = Environment.GetEnvironmentVariable("STATIC_FILES") ?? "true";
+            if (staticFiles == "true")
+            {
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "wwwroot")),
+                    RequestPath = "/wwwroot"
+                });
+            }
+
+            app.UseStaticFiles();
 
             app.UseHttpsRedirection();
 

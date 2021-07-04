@@ -581,6 +581,8 @@ class PostCard extends Component {
                                                 {post.location.country}{" "}
                                               </div>
                                             );
+                                          } else if (post.isCommercial) {
+                                            return <div>Sponsored</div>;
                                           } else {
                                             return <div></div>;
                                           }
@@ -701,27 +703,59 @@ class PostCard extends Component {
                                               return post.imagesSrc.map(
                                                 (fileUrl, key) => {
                                                   if (
-                                                    fileUrl.endsWith(".mp4")
+                                                    fileUrl.imageSrc.endsWith(
+                                                      ".mp4"
+                                                    )
                                                   ) {
                                                     return (
                                                       <Carousel.Item>
                                                         <ReactPlayer
                                                           className="d-block w-100"
-                                                          url={fileUrl}
+                                                          url={fileUrl.imageSrc}
                                                           controls={true}
                                                         />
                                                       </Carousel.Item>
                                                     );
                                                   } else {
-                                                    return (
-                                                      <Carousel.Item>
-                                                        <img
-                                                          className="d-block w-100"
-                                                          src={fileUrl}
-                                                          alt="First slide"
-                                                        />
-                                                      </Carousel.Item>
-                                                    );
+                                                    if (!post.isCommercial) {
+                                                      return (
+                                                        <Carousel.Item>
+                                                          <img
+                                                            className="d-block w-100"
+                                                            src={
+                                                              fileUrl.imageSrc
+                                                            }
+                                                            alt="First slide"
+                                                          />
+                                                        </Carousel.Item>
+                                                      );
+                                                    } else {
+                                                      return (
+                                                        <Carousel.Item>
+                                                          <div class="commercial">
+                                                            <img
+                                                              src={
+                                                                fileUrl.imageSrc
+                                                              }
+                                                              alt="First slide"
+                                                              class="commercial-img"
+                                                            />
+                                                            <div class="middle">
+                                                              <div
+                                                                class="website-link"
+                                                                onClick={() => {
+                                                                  window.open(
+                                                                    fileUrl.websiteLink
+                                                                  );
+                                                                }}
+                                                              >
+                                                                Visit Website
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                        </Carousel.Item>
+                                                      );
+                                                    }
                                                   }
                                                 }
                                               );
@@ -730,23 +764,52 @@ class PostCard extends Component {
                                         );
                                       } else {
                                         if (
-                                          post.imagesSrc[0].endsWith(".mp4")
+                                          post.imagesSrc[0].imageSrc.endsWith(
+                                            ".mp4"
+                                          )
                                         ) {
                                           return (
                                             <ReactPlayer
                                               className="d-block w-100"
-                                              url={post.imagesSrc[0]}
+                                              url={post.imagesSrc[0].imageSrc}
                                               controls={true}
                                             />
                                           );
                                         } else {
-                                          return (
-                                            <img
-                                              className="d-block w-100"
-                                              src={post.imagesSrc[0]}
-                                              alt="First slide"
-                                            />
-                                          );
+                                          if (!post.isCommercial) {
+                                            return (
+                                              <img
+                                                className="d-block w-100"
+                                                src={post.imagesSrc[0].imageSrc}
+                                                alt="First slide"
+                                              />
+                                            );
+                                          } else {
+                                            return (
+                                              <div class="commercial">
+                                                <img
+                                                  src={
+                                                    post.imagesSrc[0].imageSrc
+                                                  }
+                                                  alt="First slide"
+                                                  class="commercial-img"
+                                                />
+                                                <div class="middle">
+                                                  <div
+                                                    class="website-link"
+                                                    onClick={() => {
+                                                      window.open(
+                                                        post.imagesSrc[0]
+                                                          .websiteLink
+                                                      );
+                                                    }}
+                                                  >
+                                                    Visit Website
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            );
+                                          }
                                         }
                                       }
                                     })()}

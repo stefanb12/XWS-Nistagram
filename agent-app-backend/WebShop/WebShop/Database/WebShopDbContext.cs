@@ -46,11 +46,17 @@ namespace WebShop.Database
             );
 
             modelBuilder.Entity<Product>().HasData(
-                new Product { Id = 1, Name = "trenerka", Picture = null, Price = 2500.23, Description = "Siva trenerka", AvailableBalance = 10 },
-                new Product { Id = 2, Name = "patike", Picture = null, Price = 6700.89, Description = "Bele patike", AvailableBalance = 30 },
-                new Product { Id = 3, Name = "lopta", Picture = null, Price = 2500.23, Description = "Siva trenerka", AvailableBalance = 10 },
-                new Product { Id = 4, Name = "dres", Picture = null, Price = 6700.89, Description = "Bele patike", AvailableBalance = 30 },
-                new Product { Id = 5, Name = "kacket", Picture = null, Price = 2500.23, Description = "Siva trenerka", AvailableBalance = 10 }
+                new Product { Id = 1, Name = "t-shirt", Price = 2500.23, Description = "T-shirt", AvailableBalance = 10, Deleted = false },
+                new Product { Id = 2, Name = "sneakers", Price = 6700.89, Description = "Sneakers", AvailableBalance = 30, Deleted = false },
+                new Product { Id = 3, Name = "ball", Price = 2500.23, Description = "Ball", AvailableBalance = 10, Deleted = false },
+                new Product { Id = 4, Name = "cap", Price = 6700.89, Description = "Cap", AvailableBalance = 30, Deleted = false }
+            );
+
+            modelBuilder.Entity<Content>().HasData(
+                new Content { Id = 1, ImageName = "tShirt.png", ProductId = 1 },
+                new Content { Id = 2, ImageName = "sneakers.png", ProductId = 2 },
+                new Content { Id = 3, ImageName = "ball.png", ProductId = 3 },
+                new Content { Id = 4, ImageName = "cap.png", ProductId = 4 }
             );
 
             modelBuilder.Entity<ItemToPurchase>().HasData(

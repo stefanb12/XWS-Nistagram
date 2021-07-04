@@ -6,6 +6,7 @@ namespace PostMicroservice.Model
     public class Content
     {
         public int Id { get; set; }
+        public string WebsiteLink { get; set; }
         public string ImageName { get; set; }
         [NotMapped]
         public IFormFile ImageFile { get; set; }

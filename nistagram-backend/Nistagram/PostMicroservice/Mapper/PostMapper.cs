@@ -3,6 +3,7 @@ using PostMicroservice.Dto;
 using PostMicroservice.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace PostMicroservice.Mapper
 {
@@ -29,16 +30,39 @@ namespace PostMicroservice.Mapper
             post.Location.City = dto.Location.City;
             post.Location.Country = dto.Location.Country;
             post.PublisherId = publisher.Id;
-           
+
             List<Content> contents = new List<Content>();
-            foreach(IFormFile file in dto.ImageFiles)
+            if (dto.IsCommercial)
             {
-                Content content = new Content();
-                content.ImageFile = file;
-                contents.Add(content);
+                foreach (CommercialDto commercialDto in dto.ImagesSrc)
+                {
+                    var filePath = Path.GetFullPath(commercialDto.ImageName).Replace("PostMicroservice", "CampaignMicroservice\\wwwroot");
+                    var fileBytes = File.ReadAllBytes(filePath);
+                    var ms = new MemoryStream(fileBytes);
+                    var formFile = new FormFile(ms, 0, ms.Length, null, Path.GetFileName(filePath))
+                    {
+                        Headers = new HeaderDictionary(),
+                        ContentType = "image"
+                    };
+
+                    Content content = new Content();
+                    content.ImageFile = formFile;
+                    content.WebsiteLink = commercialDto.WebsiteLink;
+                    contents.Add(content);
+                }              
+            } else
+            {
+                foreach (IFormFile file in dto.ImageFiles)
+                {
+                    Content content = new Content();
+                    content.ImageFile = file;
+                    contents.Add(content);
+                }
             }
+            
             post.Contents = contents;
             post.Deleted = dto.Deleted;
+            post.IsCommercial = dto.IsCommercial;
 
             return post;
         }
@@ -124,12 +148,16 @@ namespace PostMicroservice.Mapper
                 dto.Comments = commentsDto;
             }
 
-            dto.ImagesSrc = new List<string>();
+            dto.ImagesSrc = new List<CommercialDto>();
             for (int i = 0; i < post.Contents.Count; i++)
             {
-                dto.ImagesSrc.Add(post.Contents[i].ImageSrc);
+                CommercialDto commercialDto = new CommercialDto();
+                commercialDto.ImageSrc = post.Contents[i].ImageSrc;
+                commercialDto.WebsiteLink = post.Contents[i].WebsiteLink;
+                dto.ImagesSrc.Add(commercialDto);
             }
             dto.Deleted = post.Deleted;
+            dto.IsCommercial = post.IsCommercial;
 
             return dto;
         }

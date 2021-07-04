@@ -5,7 +5,9 @@ import {
   FormControlLabel,
   RadioGroup,
   Radio,
+  Snackbar,
 } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 import "../assets/styles/campaigns.css";
 import {
   KeyboardDatePicker,
@@ -18,100 +20,221 @@ import NumericInput from "material-ui-numeric-input";
 import NotFound from "./NotFound";
 import CommercialService from "../services/CommercialService";
 import AuthService from "../services/AuthService";
+import PostService from "../services/PostService";
+import CampaignService from "../services/CampaignService";
+import { ArrowForwardIosTwoTone } from "@material-ui/icons";
+import dateFormat from "dateformat";
+import StoryService from "../services/StoryService";
 
 export default class Campaigns extends Component {
   constructor(props) {
     super(props);
     this.state = {
       campaings: [],
-      comercials: [],
+      commercials: [],
       campaignType: "single",
       postOrStory: "post",
       selectedTime: new Date(),
       selectedFromDate: new Date(),
       selectedToDate: new Date(),
       selectedNumber: 1,
-      checkedItems: [],
+      checkedCommercials: [],
       isCampaignModalDialogOpen: false,
+      snackBarOpen: false,
+      snackBarMessage: "",
+      snackBarType: "",
     };
     this.handleCampaignTypeChange = this.handleCampaignTypeChange.bind(this);
     this.handlePostOrStoryChange = this.handlePostOrStoryChange.bind(this);
   }
 
-  componentDidMount() {
-    CommercialService.getCommercialsForAgent(AuthService.getCurrentUser().id)
+  async componentDidMount() {
+    await CommercialService.getCommercialsForAgent(
+      AuthService.getCurrentUser().id
+    )
       .then((res) => {
         return res.json();
       })
       .then((data) => {
-        this.setState({ comercials: data });
+        this.setState({ commercials: data });
+      });
+
+    await CampaignService.getSingleCampaignsForAgent(
+      AuthService.getCurrentUser().id
+    )
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        let allCampaings = data;
+        CampaignService.getRepeatableCampaignsForAgent(
+          AuthService.getCurrentUser().id
+        )
+          .then((res) => {
+            return res.json();
+          })
+          .then((result) => {
+            allCampaings.push.apply(allCampaings, result);
+            this.setState({ campaings: allCampaings });
+          });
       });
   }
 
-  handleNumberChange = (number) => {
-    this.setState(
-      {
-        selectedNumber: number,
-      },
-      () => {
-        console.log(this.state.selectedNumber);
+  createCampaign = () => {
+    if (this.state.checkedCommercials.length == 0) {
+      this.handleClickSnackBar("You must select commercials", "error");
+    } else if (this.state.postOrStory === "post") {
+      if (this.state.selectedNumber === 0) {
+        this.handleClickSnackBar(
+          "Daily repeat number can not be zero",
+          "error"
+        );
+      } else {
+        let agent = AuthService.getCurrentUser();
+        let commercialsImages = [];
+        for (let i = 0; i < this.state.checkedCommercials.length; i++) {
+          let commercial = {
+            imageName: this.state.checkedCommercials[i].imageName,
+            websiteLink: this.state.checkedCommercials[i].websiteLink,
+          };
+          commercialsImages.push(commercial);
+        }
+
+        let resStatus = 0;
+        PostService.insertCampaignPost(
+          commercialsImages,
+          "",
+          "",
+          "",
+          [],
+          "",
+          agent
+        )
+          .then((res) => {
+            resStatus = res.status;
+            return res.json();
+          })
+          .then((result) => {
+            if (resStatus === 200) {
+              CampaignService.insertCampaign(
+                this.state.campaignType === "single" ? true : false,
+                this.state.postOrStory === "post" ? true : false,
+                this.state.checkedCommercials,
+                AuthService.getCurrentUser().id,
+                result.id,
+                1,
+                this.state.selectedTime,
+                this.state.selectedFromDate,
+                this.state.selectedToDate,
+                this.state.selectedNumber
+              )
+                .then((res) => {
+                  resStatus = res.status;
+                  return res.json();
+                })
+                .then((result) => {
+                  if (resStatus === 200) {
+                    this.handleClickSnackBar(
+                      "Successfully created campaign",
+                      "success"
+                    );
+                    this.closeCampaignModal();
+                  }
+                  return result;
+                });
+            }
+            return result;
+          });
       }
-    );
+    } else {
+      if (this.state.selectedNumber === 0) {
+        this.handleClickSnackBar("Daily repeat number cannot be zero", "error");
+      } else {
+        let agent = AuthService.getCurrentUser();
+        let commercialsImages = [];
+        for (let i = 0; i < this.state.checkedCommercials.length; i++) {
+          let commercial = {
+            imageName: this.state.checkedCommercials[i].imageName,
+            websiteLink: this.state.checkedCommercials[i].websiteLink,
+          };
+          commercialsImages.push(commercial);
+        }
+
+        let resStatus = 0;
+        StoryService.addStoryCampaign(commercialsImages, false, agent)
+          .then((res) => {
+            resStatus = res.status;
+            return res.json();
+          })
+          .then((result) => {
+            if (resStatus === 200) {
+              CampaignService.insertCampaign(
+                this.state.campaignType === "single" ? true : false,
+                this.state.postOrStory === "post" ? true : false,
+                this.state.checkedCommercials,
+                AuthService.getCurrentUser().id,
+                result.id,
+                1,
+                this.state.selectedTime,
+                this.state.selectedFromDate,
+                this.state.selectedToDate,
+                this.state.selectedNumber
+              )
+                .then((res) => {
+                  resStatus = res.status;
+                  return res.json();
+                })
+                .then((result) => {
+                  if (resStatus === 200) {
+                    this.handleClickSnackBar(
+                      "Successfully created campaign",
+                      "success"
+                    );
+                    this.closeCampaignModal();
+                  }
+                  return result;
+                });
+            }
+            return result;
+          });
+      }
+    }
+  };
+
+  handleNumberChange = (number) => {
+    this.setState({
+      selectedNumber: number,
+    });
   };
 
   handleTimeChange = (time) => {
-    this.setState(
-      {
-        selectedTime: time,
-      },
-      () => {
-        console.log(this.state.selectedTime);
-      }
-    );
+    this.setState({
+      selectedTime: time,
+    });
   };
 
   handleFromDateChange = (date) => {
-    this.setState(
-      {
-        selectedFromDate: date,
-      },
-      () => {
-        console.log(this.state.selectedFromDate);
-      }
-    );
+    this.setState({
+      selectedFromDate: date,
+    });
   };
 
   handleToDateChange = (date) => {
-    this.setState(
-      {
-        selectedToDate: date,
-      },
-      () => {
-        console.log(this.state.selectedToDate);
-      }
-    );
+    this.setState({
+      selectedToDate: date,
+    });
   };
 
   handleCampaignTypeChange = (event) => {
-    this.setState(
-      {
-        campaignType: event.target.value,
-      },
-      () => {
-        console.log(this.state.campaignType);
-      }
-    );
+    this.setState({
+      campaignType: event.target.value,
+    });
   };
 
   handlePostOrStoryChange = (event) => {
-    this.setState(
-      {
-        postOrStory: event.target.value,
-      },
-      () => {
-        console.log(this.state.postOrStory);
-      }
-    );
+    this.setState({
+      postOrStory: event.target.value,
+    });
   };
 
   openCampaignModal = () => {
@@ -129,13 +252,28 @@ export default class Campaigns extends Component {
       selectedFromDate: new Date(),
       selectedToDate: new Date(),
       selectedNumber: 1,
-      checkedItems: [],
+      checkedCommercials: [],
     });
   };
 
-  checkIfCommercialIsChecked = (commercialId) => {
-    for (let id of this.state.checkedItems) {
-      if (id === commercialId) {
+  handleClickSnackBar = (message, type) => {
+    this.setState({
+      snackBarMessage: message,
+      snackBarType: type,
+      snackBarOpen: true,
+    });
+  };
+
+  handleCloseSnackBar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ snackBarOpen: false });
+  };
+
+  checkIfCommercialIsChecked = (commercial) => {
+    for (let c of this.state.checkedCommercials) {
+      if (c.id === commercial.id) {
         return true;
       }
     }
@@ -143,23 +281,23 @@ export default class Campaigns extends Component {
   };
 
   render() {
-    let commercialsForCampaignModalDialog = this.state.comercials.map(
+    let commercialsForCampaignModalDialog = this.state.commercials.map(
       (commercial) => {
         return (
           <FormControlLabel
             control={
               <Checkbox
                 key={commercial.id}
-                checked={this.checkIfCommercialIsChecked(commercial.id)}
+                checked={this.checkIfCommercialIsChecked(commercial)}
                 onChange={(event) => {
-                  let list = this.state.checkedItems;
+                  let list = this.state.checkedCommercials;
                   if (event.target.checked) {
-                    list.push(commercial.id);
+                    list.push(commercial);
                   } else {
-                    list.splice(list.indexOf(commercial.id), 1);
+                    list.splice(list.indexOf(commercial), 1);
                   }
                   this.setState({
-                    checkedItems: list,
+                    checkedCommercials: list,
                   });
                 }}
               >
@@ -335,17 +473,148 @@ export default class Campaigns extends Component {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="success"
-            onClick={() => {
-              console.log("Add campaign");
-            }}
-          >
+          <Button variant="success" onClick={this.createCampaign}>
             Create
           </Button>
         </Modal.Footer>
       </Modal>
     );
+
+    let campaignCards = this.state.campaings.map((campaign) => {
+      return (
+        <div class="col-md-6 col-lg-4 g-mb-30">
+          <article
+            class="u-shadow-v18 g-bg-white text-center rounded g-px-20 g-py-40 g-mb-5"
+            style={{ border: "1px solid black", height: "420px" }}
+          >
+            {(() => {
+              if (campaign.commercials.length === 1) {
+                return (
+                  <img
+                    class="d-inline-block img-fluid mb-4"
+                    src={campaign.commercials[0].imageSrc}
+                    alt="Image Description"
+                    style={{ height: "160px" }}
+                  />
+                );
+              } else {
+                return (
+                  <Carousel
+                    interval={null}
+                    nextIcon={
+                      <span
+                        aria-hidden="true"
+                        class="carousel-control-next-icon"
+                      />
+                    }
+                    style={{ paddingBottom: "23px" }}
+                  >
+                    {(() => {
+                      return campaign.commercials.map((commercial) => {
+                        return (
+                          <Carousel.Item>
+                            <img
+                              className="d-block w-100"
+                              src={commercial.imageSrc}
+                              alt="First slide"
+                              style={{ height: "160px" }}
+                            />
+                          </Carousel.Item>
+                        );
+                      });
+                    })()}
+                  </Carousel>
+                );
+              }
+            })()}
+            {(() => {
+              if (campaign.isSingleCampaign) {
+                return (
+                  <div>
+                    <h4 class="h5 g-color-black g-font-weight-600 g-mb-10">
+                      Single campaign
+                    </h4>
+                    <p>At {dateFormat(campaign.broadcastTime, "h:MM TT")}</p>
+                    <p>Once per day</p>
+                  </div>
+                );
+              } else {
+                return (
+                  <div>
+                    <h4 class="h5 g-color-black g-font-weight-600 g-mb-10">
+                      Repeatable campaign
+                    </h4>
+                    <p>
+                      {dateFormat(campaign.startTime, "dd.mm.yyyy.")} -
+                      {dateFormat(campaign.endTime, "dd.mm.yyyy.")}
+                    </p>
+                    <p>{campaign.numberOfRepeats} times a day</p>
+                  </div>
+                );
+              }
+            })()}
+
+            {(() => {
+              if (campaign.isPost) {
+                return (
+                  <span class="d-block g-color-primary g-font-size-16">
+                    Post
+                  </span>
+                );
+              } else {
+                return (
+                  <span class="d-block g-color-primary g-font-size-16">
+                    Story
+                  </span>
+                );
+              }
+            })()}
+
+            <a
+              href="javascript:void(0)"
+              class="text-success mr-4"
+              data-toggle="tooltip"
+              data-placement="top"
+              title=""
+              data-original-title="Edit"
+              style={{
+                fontSize: "19px",
+                float: "left",
+                marginTop: "1px",
+              }}
+            >
+              <i class="fa fa-envelope"></i>
+            </a>
+            <a
+              href="javascript:void(0)"
+              class="text-info mr-4"
+              data-toggle="tooltip"
+              data-placement="top"
+              title=""
+              data-original-title="Edit"
+              style={{ fontSize: "20px", float: "left", marginLeft: "-8px" }}
+            >
+              <i class="fa fa-pencil"></i>
+            </a>
+            <a
+              href="javascript:void(0)"
+              class="text-danger mr-4"
+              data-toggle="tooltip"
+              data-placement="top"
+              title=""
+              data-original-title="Edit"
+              style={{
+                fontSize: "20px",
+                float: "left",
+                marginLeft: "-10px",
+              }}
+            >
+              <i class="fa fa-trash"></i>
+            </a>
+          </article>
+        </div>
+      );
+    });
 
     if (localStorage.getItem("userRole") !== "Agent") {
       return <NotFound />;
@@ -353,12 +622,25 @@ export default class Campaigns extends Component {
       return (
         <div>
           {addCampaignModalDialog}
+          <Snackbar
+            open={this.state.snackBarOpen}
+            autoHideDuration={2000}
+            onClose={this.handleCloseSnackBar}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <Alert
+              onClose={this.handleCloseSnackBar}
+              severity={this.state.snackBarType}
+            >
+              {this.state.snackBarMessage}
+            </Alert>
+          </Snackbar>
+          ;
           <div class="graph-star-rating-footer text-center ">
             <h2
               style={{
                 textAlign: "center",
                 color: "#74767a",
-                marginTop: "5px",
                 marginLeft: "155px",
                 paddingBottom: "15px",
                 fontSize: "34px",
@@ -382,136 +664,14 @@ export default class Campaigns extends Component {
           </div>
           <div class="container">
             <div class="row">
-              <div class="col-md-6 col-lg-4 g-mb-30">
-                <article
-                  class="u-shadow-v18 g-bg-white text-center rounded g-px-20 g-py-40 g-mb-5"
-                  style={{ border: "1px solid black" }}
-                >
-                  <Carousel
-                    interval={null}
-                    nextIcon={
-                      <span
-                        aria-hidden="true"
-                        class="carousel-control-next-icon"
-                      />
-                    }
-                  >
-                    <Carousel.Item>
-                      <img
-                        class="d-inline-block img-fluid mb-4"
-                        src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                        alt="Image Description"
-                      />
-                    </Carousel.Item>
-                    <Carousel.Item>
-                      <img
-                        class="d-inline-block img-fluid mb-4"
-                        src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                        alt="Image Description"
-                      />
-                    </Carousel.Item>
-                  </Carousel>
-                  <h4 class="h5 g-color-black g-font-weight-600 g-mb-10">
-                    Single campaign
-                  </h4>
-                  <p>At 13:00</p>
-                  <p>Once per day</p>
-                  <span class="d-block g-color-primary g-font-size-16">
-                    Story
-                  </span>
-                  <a
-                    href="javascript:void(0)"
-                    class="text-info mr-4"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title=""
-                    data-original-title="Edit"
-                    style={{ fontSize: "20px", float: "left" }}
-                  >
-                    <i class="fa fa-pencil"></i>
-                  </a>
-                  <a
-                    href="javascript:void(0)"
-                    class="text-danger mr-4"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title=""
-                    data-original-title="Edit"
-                    style={{
-                      fontSize: "20px",
-                      float: "left",
-                      marginLeft: "-10px",
-                    }}
-                  >
-                    <i class="fa fa-trash"></i>
-                  </a>
-                </article>
-              </div>
-              <div class="col-md-6 col-lg-4 g-mb-30">
-                <article
-                  class="u-shadow-v18 g-bg-white text-center rounded g-px-20 g-py-40 g-mb-5"
-                  style={{ border: "1px solid black" }}
-                >
-                  <Carousel
-                    interval={null}
-                    nextIcon={
-                      <span
-                        aria-hidden="true"
-                        class="carousel-control-next-icon"
-                      />
-                    }
-                  >
-                    <Carousel.Item>
-                      <img
-                        class="d-inline-block img-fluid mb-4"
-                        src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                        alt="Image Description"
-                      />
-                    </Carousel.Item>
-                    <Carousel.Item>
-                      <img
-                        class="d-inline-block img-fluid mb-4"
-                        src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                        alt="Image Description"
-                      />
-                    </Carousel.Item>
-                  </Carousel>
-                  <h4 class="h5 g-color-black g-font-weight-600 g-mb-10">
-                    Repeatable campaign
-                  </h4>
-                  <p>01.07.20201. - 05.07.20201.</p>
-                  <p>3 times a day</p>
-                  <span class="d-block g-color-primary g-font-size-16">
-                    Post
-                  </span>
-                  <a
-                    href="javascript:void(0)"
-                    class="text-info mr-4"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title=""
-                    data-original-title="Edit"
-                    style={{ fontSize: "20px", float: "left" }}
-                  >
-                    <i class="fa fa-pencil"></i>
-                  </a>
-                  <a
-                    href="javascript:void(0)"
-                    class="text-danger mr-4"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title=""
-                    data-original-title="Edit"
-                    style={{
-                      fontSize: "20px",
-                      float: "left",
-                      marginLeft: "-10px",
-                    }}
-                  >
-                    <i class="fa fa-trash"></i>
-                  </a>
-                </article>
-              </div>
+              {campaignCards}
+              {/* {(() => {
+                if (this.state.campaings.length === 0) {
+                  return <div>Doesn't exist campaigns yet</div>;
+                } else {
+                  return <div>{campaignCards}</div>;
+                }
+              })()} */}
             </div>
           </div>
         </div>
