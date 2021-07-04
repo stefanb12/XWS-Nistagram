@@ -1,1420 +1,1478 @@
 {
-  "Routes": [
-    // UserMicroservice
-    {
-      "DownstreamPathTemplate": "/api/auth/login",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+<<<<<<< HEAD
+    "Routes": [
+        // UserMicroservice
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/auth/login",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/registration",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/auth/login",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/auth/login",
+            "UpstreamHttpMethod": [ "POST" ]
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/registration",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/getAll",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/registration",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/registration",
+            "UpstreamHttpMethod": [ "POST" ]
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/getAll",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/getAllWithoutBlocked/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/getAll",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/getAll",
+            "UpstreamHttpMethod": [ "GET" ]
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/getAllWithoutBlocked/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/getAllWithoutBlocked/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/getAllWithoutBlocked/{id}",
+            "UpstreamHttpMethod": [ "GET" ]
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{id}",
-      "UpstreamHttpMethod": [ "GET" ]
-      /*"AuthenticationOptions": {
+            "DownstreamPathTemplate": "/api/profile/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{id}",
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User , Agent"
             }*/
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{id}/followers",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{id}/followers",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{id}/following",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{id}/followers",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{id}/followers",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{id}/following",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{profileId}/follow/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{id}/following",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{id}/following",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{profileId}/follow/{id}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{profileId}/unfollow/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{id}/followingInfluencers",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{id}/followingInfluencers",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{profileId}/unfollow/{id}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/followRequest",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{profileId}/follow/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{profileId}/follow/{id}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/followRequest",
-      "UpstreamHttpMethod": [ "POST", "DELETE" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/followRequest/{receiverId}/{senderId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{profileId}/unfollow/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{profileId}/unfollow/{id}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/followRequest/{receiverId}/{senderId}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/update",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/followRequest",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/followRequest",
+            "UpstreamHttpMethod": [ "POST", "DELETE" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/update",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{id}/profileForUpdating",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/followRequest/{receiverId}/{senderId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/followRequest/{receiverId}/{senderId}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{id}/profileForUpdating",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profileVerificationRequest",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/update",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/update",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profileVerificationRequest",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profileVerificationRequest/getAll",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{id}/profileForUpdating",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{id}/profileForUpdating",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profileVerificationRequest/getAll",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Admin"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profileVerificationRequest/accept/{requestId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profileVerificationRequest",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profileVerificationRequest",
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profileVerificationRequest/accept/{requestId}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Admin"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profileVerificationRequest/reject/{requestId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profileVerificationRequest/getAll",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profileVerificationRequest/getAll",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profileVerificationRequest/reject/{requestId}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Admin"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{id}/muted",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profileVerificationRequest/accept/{requestId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profileVerificationRequest/accept/{requestId}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{id}/muted",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{profileId}/mute/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profileVerificationRequest/reject/{requestId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profileVerificationRequest/reject/{requestId}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{profileId}/mute/{id}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{profileId}/unmute/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{id}/muted",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{id}/muted",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{profileId}/unmute/{id}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{id}/blocked",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{profileId}/mute/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{profileId}/mute/{id}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{id}/blocked",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{profileId}/block/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{profileId}/unmute/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{profileId}/unmute/{id}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{profileId}/block/{id}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{profileId}/unblock/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{id}/blocked",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{id}/blocked",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{profileId}/unblock/{id}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/deactivate/{profileId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{profileId}/block/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{profileId}/block/{id}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/deactivate/{profileId}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Admin"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{id}/closeFriends",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{profileId}/unblock/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{profileId}/unblock/{id}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{id}/closeFriends",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{profileId}/addCloseFriends/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/deactivate/{profileId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/deactivate/{profileId}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{profileId}/addCloseFriends/{id}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{profileId}/removeCloseFriends/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{id}/closeFriends",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{id}/closeFriends",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{profileId}/removeCloseFriends/{id}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{id}/getProfilePrivacy",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{profileId}/addCloseFriends/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{profileId}/addCloseFriends/{id}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{id}/getProfilePrivacy",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/updateProfilePrivacy",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{profileId}/removeCloseFriends/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{profileId}/removeCloseFriends/{id}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/updateProfilePrivacy",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{id}/notificationProfiles",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{id}/getProfilePrivacy",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{id}/getProfilePrivacy",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{id}/notificationProfiles",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{profileId}/addNotificationProfile/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/updateProfilePrivacy",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/updateProfilePrivacy",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{profileId}/addNotificationProfile/{id}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/profile/{profileId}/removeNotificationProfile/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{id}/notificationProfiles",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{id}/notificationProfiles",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/profile/{profileId}/removeNotificationProfile/{id}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/registrationRequest/getAll",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{profileId}/addNotificationProfile/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{profileId}/addNotificationProfile/{id}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/RegistrationRequest/getAll",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Admin"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/registrationRequest/acceptRequest/{requestId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/profile/{profileId}/removeNotificationProfile/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/profile/{profileId}/removeNotificationProfile/{id}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/RegistrationRequest/acceptRequest/{requestId}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Admin"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/registrationRequest/rejectRequest/{requestId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/registrationRequest/getAll",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/RegistrationRequest/getAll",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55988
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/RegistrationRequest/rejectRequest/{requestId}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Admin"
-      }
-    },
+            "DownstreamPathTemplate": "/api/registrationRequest/acceptRequest/{requestId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/RegistrationRequest/acceptRequest/{requestId}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/registrationRequest/rejectRequest/{requestId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55988
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/RegistrationRequest/rejectRequest/{requestId}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
 
-    // PostMicroservice
-    {
-      "DownstreamPathTemplate": "/api/post",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        // PostMicroservice
         {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/post",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/post",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post",
+            "UpstreamHttpMethod": [ "GET" ]
+        },
         {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/post/profile/{profileId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/post",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post",
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post/profile/{profileId}",
-      "UpstreamHttpMethod": [ "GET" ]
-      /*"AuthenticationOptions": {
+            "DownstreamPathTemplate": "/api/post/profile/{profileId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/profile/{profileId}",
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User , Agent"
             }*/
-    },
-    {
-      "DownstreamPathTemplate": "/api/post/favorites/{profileId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        },
         {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post/favorites/{profileId}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/post/delete/{postId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/post/favorites/{profileId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/favorites/{profileId}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post/delete/{postId}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Admin"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/post/likedAndDislikedPosts/{profileId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/post/delete/{postId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/delete/{postId}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post/likedAndDislikedPosts/{profileId}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/post/public/{profileId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/post/likedAndDislikedPosts/{profileId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/likedAndDislikedPosts/{profileId}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post/public/{profileId}",
-      "UpstreamHttpMethod": [ "GET" ]
-    },
-    {
-      "DownstreamPathTemplate": "/api/post/postsFromFollowedProfiles/{profileId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/post/public/{profileId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/public/{profileId}",
+            "UpstreamHttpMethod": [ "GET" ]
+        },
         {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post/postsFromFollowedProfiles/{profileId}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/post/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/post/postsFromFollowedProfiles/{profileId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/postsFromFollowedProfiles/{profileId}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post/{id}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent , Admin"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/post/newComment",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/post/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/{id}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent , Admin"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post/newComment",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/post/like",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/post/newComment",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/newComment",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post/like",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/post/dislike",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/post/like",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/like",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post/dislike",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/post/favorite",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/post/dislike",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/dislike",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post/favorite",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/post/search/{searchParam}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/post/favorite",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/favorite",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post/search/{searchParam}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/post/{searchParam}/searchWithoutBlockedAndMuted/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/post/search/{searchParam}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/search/{searchParam}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55993
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/post/{searchParam}/searchWithoutBlockedAndMuted/{id}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
+            "DownstreamPathTemplate": "/api/post/{searchParam}/searchWithoutBlockedAndMuted/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55993
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/post/{searchParam}/searchWithoutBlockedAndMuted/{id}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
 
-    // NotificationMicroservice
-    {
-      "DownstreamPathTemplate": "/api/notification/like",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        // NotificationMicroservice
         {
-          "Host": "localhost",
-          "Port": 56002
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/notification/like",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/notification/dislike",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/notification/like",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 56002
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/notification/like",
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 56002
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/notification/dislike",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/notification/comment",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/notification/dislike",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 56002
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/notification/dislike",
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 56002
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/notification/comment",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/notification/follow",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/notification/comment",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 56002
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/notification/comment",
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 56002
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/notification/follow",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/notification/followRequest",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/notification/follow",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 56002
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/notification/follow",
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 56002
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/notification/followRequest",
-      "UpstreamHttpMethod": [ "POST", "DELETE" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/notification/profile/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/notification/followRequest",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 56002
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/notification/followRequest",
+            "UpstreamHttpMethod": [ "POST", "DELETE" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 56002
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/notification/profile/{id}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/notification/seen/{profileId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/notification/profile/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 56002
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/notification/profile/{id}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 56002
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/notification/seen/{profileId}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/notification/post",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/notification/seen/{profileId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 56002
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/notification/seen/{profileId}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 56002
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/notification/post",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/notification/story",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/notification/post",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 56002
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/notification/post",
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 56002
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/notification/story",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
+            "DownstreamPathTemplate": "/api/notification/story",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 56002
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/notification/story",
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
 
-    //StoryMicroservice
-    {
-      "DownstreamPathTemplate": "/api/story",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        //StoryMicroservice
         {
-          "Host": "localhost",
-          "Port": 55996
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/story",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/story/active/profile/{profileId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/story",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55996
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/story",
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55996
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/story/active/profile/{profileId}",
-      "UpstreamHttpMethod": [ "GET" ]
-      /*"AuthenticationOptions": {
+            "DownstreamPathTemplate": "/api/story/active/profile/{profileId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55996
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/story/active/profile/{profileId}",
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User , Agent"
             }*/
-    },
-    {
-      "DownstreamPathTemplate": "/api/story/profile/{profileId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        },
         {
-          "Host": "localhost",
-          "Port": 55996
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/story/profile/{profileId}",
-      "UpstreamHttpMethod": [ "GET" ]
-      /*"AuthenticationOptions": {
+            "DownstreamPathTemplate": "/api/story/profile/{profileId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55996
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/story/profile/{profileId}",
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User , Agent"
             }*/
-    },
-    {
-      "DownstreamPathTemplate": "/api/story/getAllProfileStories/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        },
         {
-          "Host": "localhost",
-          "Port": 55996
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/story/getAllProfileStories/{id}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/story/highlight",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/story/getAllProfileStories/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55996
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/story/getAllProfileStories/{id}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55996
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/story/highlight",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/story/highlight/profile/{profileId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/story/highlight",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55996
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/story/highlight",
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55996
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/story/highlight/profile/{profileId}",
-      "UpstreamHttpMethod": [ "GET" ]
-      /*"AuthenticationOptions": {
+            "DownstreamPathTemplate": "/api/story/highlight/profile/{profileId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55996
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/story/highlight/profile/{profileId}",
+            "UpstreamHttpMethod": [ "GET" ]
+            /*"AuthenticationOptions": {
                 "AuthenticationProviderKey": "Key",
                 "AllowedScopes": []
             },
             "RouteClaimsRequirement": {
                 "UserRole": "User , Agent"
             }*/
-    },
-    {
-      "DownstreamPathTemplate": "/api/story/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        },
         {
-          "Host": "localhost",
-          "Port": 55996
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/story/{id}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Admin"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/story/delete/{storyId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/story/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55996
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/story/{id}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55996
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/story/delete/{storyId}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Admin"
-      }
-    },
+            "DownstreamPathTemplate": "/api/story/delete/{storyId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55996
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/story/delete/{storyId}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
 
-    // InappropriateContentMicroservice
-    {
-      "DownstreamPathTemplate": "/api/inappropriateContent",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        // InappropriateContentMicroservice
         {
-          "Host": "localhost",
-          "Port": 55997
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/inappropriateContent",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User , Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/inappropriateContent/getAll",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/inappropriateContent",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55997
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/inappropriateContent",
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "User , Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55997
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/inappropriateContent/getAll",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Admin"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/inappropriateContent/delete/{inappropriateContentId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/inappropriateContent/getAll",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55997
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/inappropriateContent/getAll",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55997
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/inappropriateContent/delete/{inappropriateContentId}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Admin"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/inappropriateContent/reject/{inappropriateContentId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/inappropriateContent/delete/{inappropriateContentId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55997
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/inappropriateContent/delete/{inappropriateContentId}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55997
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/inappropriateContent/reject/{inappropriateContentId}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Admin"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/inappropriateContent/deactivate/{inappropriateContentId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/inappropriateContent/reject/{inappropriateContentId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55997
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/inappropriateContent/reject/{inappropriateContentId}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 55997
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/inappropriateContent/deactivate/{inappropriateContentId}",
-      "UpstreamHttpMethod": [ "PUT" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Admin"
-      }
-    },
+            "DownstreamPathTemplate": "/api/inappropriateContent/deactivate/{inappropriateContentId}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 55997
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/inappropriateContent/deactivate/{inappropriateContentId}",
+            "UpstreamHttpMethod": [ "PUT" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Admin"
+            }
+        },
 
-    // CampaignMicroservice
-    {
-      "DownstreamPathTemplate": "/api/campaign",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+        // CampaignMicroservice
         {
-          "Host": "localhost",
-          "Port": 56000
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/campaign",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/campaign/single/agent/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/campaign",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 56000
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/campaign",
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 56000
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/campaign/single/agent/{id}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/campaign/repeatable/agent/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/campaign/single/agent/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 56000
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/campaign/single/agent/{id}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 56000
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/campaign/repeatable/agent/{id}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Agent"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/api/commercial/agent/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
+            "DownstreamPathTemplate": "/api/campaign/repeatable/agent/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 56000
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/campaign/repeatable/agent/{id}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Agent"
+            }
+        },
         {
-          "Host": "localhost",
-          "Port": 56000
+            "DownstreamPathTemplate": "/api/commercial/agent/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 56000
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/commercial/agent/{id}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Agent"
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/campaign/sendCampaignRequest",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 56000
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/campaign/sendCampaignRequest",
+            "UpstreamHttpMethod": [ "POST" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Agent"
+            }
+        },
+        {
+            "DownstreamPathTemplate": "/api/campaign/getCampaignRequestForCampaign/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 56000
+                }
+            ],
+            "UpstreamPathTemplate": "/gateway/campaign/getCampaignRequestForCampaign/{id}",
+            "UpstreamHttpMethod": [ "GET" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "Key",
+                "AllowedScopes": []
+            },
+            "RouteClaimsRequirement": {
+                "UserRole": "Agent"
+            }
         }
-      ],
-      "UpstreamPathTemplate": "/gateway/commercial/agent/{id}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Agent"
-      }
-    }
 
-  ],
+    ],
     "GlobalConfiguration": {
         "BaseUrl": "http://localhost:58809"
     }

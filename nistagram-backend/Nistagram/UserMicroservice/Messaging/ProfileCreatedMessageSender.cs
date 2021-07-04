@@ -37,7 +37,8 @@ namespace UserMicroservice.Messaging
                 id = profile.Id,
                 username = profile.Username,
                 isPrivate = profile.IsPrivate,
-                profileImage = profile.ImageName
+                profileImage = profile.ImageName,
+                userRole = profile.UserRole
             });
 
             var body = Encoding.UTF8.GetBytes(integrationEventData);

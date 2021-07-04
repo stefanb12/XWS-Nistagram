@@ -16,11 +16,14 @@ namespace CampaignMicroservice.Controllers
     {
         private readonly ISingleCampaignService _singlecampaignService;
         private readonly IRepeatableCampaignService _repeatablecampaignService;
+        private readonly ICampaignRequestService _campaignRequestService;
 
-        public CampaignController(IRepeatableCampaignService repeatableCampaignService, ISingleCampaignService singlecampaignService)
+        public CampaignController(IRepeatableCampaignService repeatableCampaignService, ISingleCampaignService singlecampaignService,
+            ICampaignRequestService campaignRequestService)
         {
             _repeatablecampaignService = repeatableCampaignService;
             _singlecampaignService = singlecampaignService;
+            _campaignRequestService = campaignRequestService;
         }
 
         [HttpPost]
@@ -71,5 +74,24 @@ namespace CampaignMicroservice.Controllers
             return Ok(result);
         }
 
+        [HttpPost("sendCampaignRequest")]
+        public async Task<IActionResult> SendCampaignRequest(CampaignRequestDto dto)
+        {
+            CampaignRequest campaignRequest = 
+                await _campaignRequestService.Insert(CampaignRequestMapper.CampaignRequestDtoToCampaignRequest(dto));
+            return Ok(campaignRequest);
+        }
+
+        [HttpGet("getCampaignRequestForCampaign/{id}")]
+        public async Task<IActionResult> GetCampaignRequestForCampaign(int id)
+        {
+            List<CampaignRequest> requests = await _campaignRequestService.GetCampaignRequestsForCampaign(id);
+            List<CampaignRequestDto> dtos = new List<CampaignRequestDto>();
+            foreach(CampaignRequest request in requests)
+            {
+                dtos.Add(CampaignRequestMapper.CampaignRequestToCampaignRequestDto(request));
+            }
+            return Ok(requests);
+        }
     }
 }

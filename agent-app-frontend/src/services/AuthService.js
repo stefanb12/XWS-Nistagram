@@ -11,7 +11,7 @@ class AuthService {
     return fetch(API_URL + "auth/login", requestOptions);
   }
 
-  registerUser(fullName, username, email, password, gender) {
+  registerUser(fullName, username, email, password) {
     let userRole = 0;
     var requestOptions = {
       method: "POST",
@@ -21,12 +21,11 @@ class AuthService {
         username,
         email,
         password,
-        gender,
         userRole,
       }),
     };
 
-    return fetch(API_URL + "profile/registration", requestOptions);
+    return fetch(API_URL + "user/registration", requestOptions);
   }
 
   logout() {

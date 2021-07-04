@@ -18,7 +18,7 @@ namespace ProfileMicroservice.Model
         public string MobilePhone { get; set; }
         public DateTime DateOfBirth { get; set; }
         public Gender Gender { get; set; }
-        public UserRole UserRole{ get; set; }
+        public UserRole UserRole { get; set; }
 
         [NotMapped]
         public string Token { get; set; }

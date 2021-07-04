@@ -8,6 +8,7 @@ namespace CampaignMicroservice.Dto
 {
     public class CampaignDto
     {
+        public int Id { get; set; }
         public bool IsSingleCampaign { get; set; }
         public bool IsPost { get; set; }
         public List<CommercialDto> Commercials { get; set; }

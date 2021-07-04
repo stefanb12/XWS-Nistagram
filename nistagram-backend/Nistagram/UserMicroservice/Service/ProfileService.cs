@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using UserMicroservice.Email;
 using UserMicroservice.Messaging;
 using UserMicroservice.Model;
+using UserMicroservice.Model.Enum;
 using UserMicroservice.Repository;
 
 namespace UserMicroservice.Service
@@ -25,8 +26,8 @@ namespace UserMicroservice.Service
         private IProfileUpdatedMessageSender _profileUpdatedSender;
         private IEmailSender _emailSender;
 
-        public ProfileService(IProfileRepository userRepository, IProfileSettingsRepository profileSettingsRepository, 
-                              IProfileCreatedMessageSender profileCreatedSender, IProfileUpdatedMessageSender profileUpdatedSender, 
+        public ProfileService(IProfileRepository userRepository, IProfileSettingsRepository profileSettingsRepository,
+                              IProfileCreatedMessageSender profileCreatedSender, IProfileUpdatedMessageSender profileUpdatedSender,
                               IEmailSender emailSender)
         {
             _profileRepository = userRepository;
@@ -56,7 +57,7 @@ namespace UserMicroservice.Service
             {
                 followingProfiles.Add(profileFollowing.Following);
             }
-                
+
             return followingProfiles;
         }
 
@@ -158,7 +159,7 @@ namespace UserMicroservice.Service
 
         public async Task<Profile> UpdateWithImage(Profile entity, IFormFile imageFile)
         {
-            if(imageFile != null)
+            if (imageFile != null)
             {
                 entity.ImageName = await SaveImage(imageFile);
             }
@@ -287,7 +288,7 @@ namespace UserMicroservice.Service
             profileBlockedProfile.BlockedProfileId = blockProfile.Id;
             profileBlockedProfile.ProfileSettingsId = profile.Id;
             profile.BlockedProfiles.Add(profileBlockedProfile);
-            if(await DoesExistInFollowing(profileId, id))
+            if (await DoesExistInFollowing(profileId, id))
             {
                 await UnfollowAnotherProfile(profileId, id);
             }
@@ -301,7 +302,7 @@ namespace UserMicroservice.Service
         private async Task<bool> DoesExistInFollowing(int profileId, int id)
         {
             Profile profile = await GetById(profileId);
-            if(profile.Following.Exists(pf => pf.FollowingId == id))
+            if (profile.Following.Exists(pf => pf.FollowingId == id))
             {
                 return true;
             }
@@ -458,6 +459,37 @@ namespace UserMicroservice.Service
                 await imageFile.CopyToAsync(fileStream);
             }
             return imageName;
+        }
+
+        public async Task<Profile> GenerateAPITokenForCampaigns(string agentUsername, byte[] secretKey)
+        {
+            var users = await _profileRepository.GetAll();
+            Profile user = users.ToList().SingleOrDefault(user => user.Username == agentUsername);
+
+            if (user == null || user.UserRole != UserRole.Agent)
+            {
+                return null;
+            }
+
+            if (!user.Deactivated)
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = secretKey;
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
+                    new Claim(ClaimTypes.Name, user.Id.ToString()),
+                    new Claim("AgentUsername", user.Username.ToString())
+                    }),
+                    //Expires = DateTime.UtcNow.AddHours(3),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                user.Token = tokenHandler.WriteToken(token);
+            }
+
+            return user;
         }
     }
 }

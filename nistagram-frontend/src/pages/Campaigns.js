@@ -22,7 +22,10 @@ import CommercialService from "../services/CommercialService";
 import AuthService from "../services/AuthService";
 import PostService from "../services/PostService";
 import CampaignService from "../services/CampaignService";
+import ProfileService from "../services/ProfileService";
 import { ArrowForwardIosTwoTone } from "@material-ui/icons";
+import AddCircleOutline from "@material-ui/icons/AddCircleOutline";
+import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import dateFormat from "dateformat";
 import StoryService from "../services/StoryService";
 
@@ -43,6 +46,10 @@ export default class Campaigns extends Component {
       snackBarOpen: false,
       snackBarMessage: "",
       snackBarType: "",
+      isHireInfluencerDialogOpen: false,
+      following: [],
+      selectedCampaignId: 0,
+      campaignRequestsForSelectedCampaign: []
     };
     this.handleCampaignTypeChange = this.handleCampaignTypeChange.bind(this);
     this.handlePostOrStoryChange = this.handlePostOrStoryChange.bind(this);
@@ -67,6 +74,7 @@ export default class Campaigns extends Component {
       })
       .then((data) => {
         let allCampaings = data;
+        this.setState({ campaings: allCampaings });
         CampaignService.getRepeatableCampaignsForAgent(
           AuthService.getCurrentUser().id
         )
@@ -78,6 +86,29 @@ export default class Campaigns extends Component {
             this.setState({ campaings: allCampaings });
           });
       });
+  }
+
+  hireInfluencer = (campaignId) => {
+    CampaignService.getCampaignRequestForCampaign(campaignId)
+    .then((res) => res.json())
+    .then((result) => {
+      this.setState({
+        campaignRequestsForSelectedCampaign: result
+      })
+      ProfileService.getFollowingInfluencers(AuthService.getCurrentUser().id)
+      .then((res) => res.json())
+      .then((result) => {
+        this.setState({
+          following: result
+        });
+      });
+    })
+    
+  
+    this.setState({
+      isHireInfluencerDialogOpen : true,
+      selectedCampaignId: campaignId
+    })
   }
 
   createCampaign = () => {
@@ -256,6 +287,12 @@ export default class Campaigns extends Component {
     });
   };
 
+  closeHireInfluencerModal = () => {
+    this.setState({
+      isHireInfluencerDialogOpen: false,
+    });
+  };
+
   handleClickSnackBar = (message, type) => {
     this.setState({
       snackBarMessage: message,
@@ -279,6 +316,40 @@ export default class Campaigns extends Component {
     }
     return false;
   };
+
+  sendInfluencerHiringRequest = (influencerId) => {
+    CampaignService.sendCampaignRequest(this.state.selectedCampaignId, influencerId)
+    .then((res) => {
+      if (res.status == 200) {
+        CampaignService.getCampaignRequestForCampaign(this.state.selectedCampaignId)
+        .then((res) => res.json())
+        .then((result) => {
+          this.setState({
+            campaignRequestsForSelectedCampaign : result,
+            snackBarOpen: true,
+            snackBarMessage: "Campaign request sent",
+            snackBarType: "success"
+          });
+        });
+      }
+      return res.json();
+    })
+  }
+
+  isRegistrationRequestForInfluencerAlreadySent(influencerId) {
+    for (let request of this.state.campaignRequestsForSelectedCampaign) {
+      if (request.influencerId === influencerId) {
+        if (!request.processed) {
+          return 1;
+        } else if (request.accepted) {
+          return 2;
+        } else {
+          return 3;
+        }
+      }
+    }
+    return 0;
+  }
 
   render() {
     let commercialsForCampaignModalDialog = this.state.commercials.map(
@@ -317,6 +388,84 @@ export default class Campaigns extends Component {
           />
         );
       }
+    );
+
+    var hireInfuencerModal = (
+      <Modal
+        show={this.state.isHireInfluencerDialogOpen}
+        onHide={this.closeHireInfluencerModal}
+        style={{ marginTop: "120px", maxHeight: "500px", overflow: "hidden" }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Hire influencer</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div style={{ overflow: "auto", maxHeight: "300px" }}>
+            {this.state.following.map((profile) => {
+              return (
+                <div class="list-group-item d-flex align-items-center">
+                  <img
+                    src={profile.imageSrc}
+                    alt=""
+                    width="50px"
+                    class="rounded-sm ml-n2"
+                  />
+                  <div class="flex-fill pl-3 pr-3">
+                    <div>
+                      <a href="#" class="text-dark font-weight-600">
+                        {profile.username}
+                      </a>
+                    </div>
+                    {/* <div class="text-muted fs-13px">{follower.fullName}</div> */}
+                  </div>
+                  {(() => {
+                    if (this.isRegistrationRequestForInfluencerAlreadySent(profile.id) == 0) {
+                      return (<Button
+                        onClick={() => { this.sendInfluencerHiringRequest(profile.id); }}>
+                        Hire
+                      </Button>);
+                    } else if (this.isRegistrationRequestForInfluencerAlreadySent(profile.id) == 1) {
+                      return (<div>
+                        {" "}
+                        <b
+                          class="text-regular mr-4"
+                          style={{ marginLeft: "25px" }}
+                        >
+                          {" "}
+                          Request sent
+                        </b>
+                      </div>)
+                    } else if (this.isRegistrationRequestForInfluencerAlreadySent(profile.id) == 2) {
+                      return (<div>
+                        {" "}
+                        <b
+                          class="text-success mr-4"
+                          style={{ marginLeft: "25px" }}
+                        >
+                          {" "}
+                          Accepted
+                        </b>
+                      </div>)
+                    } else {
+                      return (<div>
+                        {" "}
+                        <b
+                          class="text-danger mr-4"
+                          style={{ marginLeft: "25px" }}
+                        >
+                          {" "}
+                          Rejected
+                        </b>
+                      </div>)
+                    }
+                  })()
+                }
+                </div>
+              );
+            })}
+          </div>
+        </Modal.Body>
+      </Modal>
     );
 
     var addCampaignModalDialog = (
@@ -582,6 +731,9 @@ export default class Campaigns extends Component {
                 float: "left",
                 marginTop: "1px",
               }}
+              onClick={() => {
+                this.hireInfluencer(campaign.id);
+              }}
             >
               <i class="fa fa-envelope"></i>
             </a>
@@ -622,6 +774,7 @@ export default class Campaigns extends Component {
       return (
         <div>
           {addCampaignModalDialog}
+          {hireInfuencerModal}
           <Snackbar
             open={this.state.snackBarOpen}
             autoHideDuration={2000}

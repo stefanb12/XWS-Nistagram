@@ -101,6 +101,25 @@ namespace UserMicroservice.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id}/followingInfluencers")]
+        public async Task<IActionResult> GetFollowingInfluencers(int id)
+        {
+            List<Profile> followingProfiles = await _profileService.GetFollowingProfiles(id);
+
+            List<ProfileDto> result = new List<ProfileDto>();
+            foreach (Profile followingProfile in followingProfiles)
+            {
+                if (followingProfile.Category == ProfileMicroservice.Model.Enum.UserCategory.Influencer)
+                {
+                    ProfileDto dto = ProfileMapper.ProfileToProfileDto(followingProfile);
+                    dto.Id = followingProfile.Id;
+                    dto.ImageSrc = String.Format("http://localhost:55988/{0}", followingProfile.ImageName);
+                    result.Add(dto);
+                }
+            }
+            return Ok(result);
+        }
+
         [HttpPut("{profileId}/follow/{id}")]
         public async Task<IActionResult> FollowAnotherProfile(int profileId, int id)
         {

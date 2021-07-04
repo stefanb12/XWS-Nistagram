@@ -58,5 +58,31 @@ class CampaignService {
       requestOptions
     );
   }
+
+  sendCampaignRequest(campaignId, influencerId) {
+    console.log(campaignId)
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
+      body: JSON.stringify({
+        campaignId,
+        influencerId
+      })
+    };
+
+    return fetch(API_URL + "campaign/sendCampaignRequest", requestOptions);
+  }
+
+  getCampaignRequestForCampaign(campaignId) {
+    const requestOptions = {
+      method: "GET",
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
+    };
+
+    return fetch(API_URL + "campaign/getCampaignRequestForCampaign/" + campaignId, requestOptions);
+  }
 }
 export default new CampaignService();

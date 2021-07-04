@@ -1,7 +1,10 @@
 ﻿using CampaignMicroservice.Model;
 using CampaignMicroservice.Repository;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CampaignMicroservice.Service
@@ -41,6 +44,7 @@ namespace CampaignMicroservice.Service
 
         public async Task<Commercial> Insert(Commercial entity)
         {
+            entity.ImageName = await SaveImage(entity.ImageFile);
             return await _commercialRepository.Insert(entity);
         }
 
@@ -53,6 +57,18 @@ namespace CampaignMicroservice.Service
         public async Task Delete(Commercial entity)
         {
             await _commercialRepository.Delete(entity);
+        }
+
+        public async Task<string> SaveImage(IFormFile imageFile)
+        {
+            string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray()).Replace(' ', '-');
+            imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(imageFile.FileName);
+            var imagePath = Path.Combine("wwwroot", imageName);
+            using (var fileStream = new FileStream(imagePath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(fileStream);
+            }
+            return imageName;
         }
     }
 }

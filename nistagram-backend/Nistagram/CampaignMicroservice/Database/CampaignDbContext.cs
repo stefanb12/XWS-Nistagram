@@ -1,4 +1,5 @@
 ﻿using CampaignMicroservice.Model;
+using CampaignMicroservice.Model.Enum;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -54,11 +55,11 @@ namespace CampaignMicroservice.Database
                 .HasForeignKey(tgp => tgp.CampaignId);*/
 
             modelBuilder.Entity<Profile>().HasData(
-                new Profile { Id = 1, OriginalId = 1, Username = "stefanb", ImageName = "user1213352029.jpg" },
-                new Profile { Id = 2, OriginalId = 2, Username = "matijam", ImageName = "user2213352029.jpg" },
-                new Profile { Id = 3, OriginalId = 3, Username = "aleksai", ImageName = "user3213352029.png" },
-                new Profile { Id = 4, OriginalId = 4, Username = "stefans", ImageName = "user4213352029.png" },
-                new Profile { Id = 5, OriginalId = 5, Username = "majam", ImageName = "user5213352029.jpg" }
+                new Profile { Id = 1, OriginalId = 1, Username = "stefanb", ImageName = "user1213352029.jpg", UserRole = UserRole.User },
+                new Profile { Id = 2, OriginalId = 2, Username = "matijam", ImageName = "user2213352029.jpg", UserRole = UserRole.User },
+                new Profile { Id = 3, OriginalId = 3, Username = "aleksai", ImageName = "user3213352029.png", UserRole = UserRole.Agent },
+                new Profile { Id = 4, OriginalId = 4, Username = "stefans", ImageName = "user4213352029.png", UserRole = UserRole.Agent },
+                new Profile { Id = 5, OriginalId = 5, Username = "majam", ImageName = "user5213352029.jpg", UserRole = UserRole.Agent }
             );
 
             modelBuilder.Entity<Post>().HasData(
@@ -77,7 +78,8 @@ namespace CampaignMicroservice.Database
 
             modelBuilder.Entity<Commercial>().HasData(
                 new Commercial { Id = 1, AgentId = 4, ImageName = "1213352229.jpg", WebsiteLink = "link" },
-                new Commercial { Id = 2, AgentId = 4, ImageName = "1213352333.jpg", WebsiteLink = "link" }
+                new Commercial { Id = 2, AgentId = 4, ImageName = "1213352333.jpg", WebsiteLink = "link" },
+                new Commercial { Id = 3, AgentId = 3, ImageName = "1213352333.jpg", WebsiteLink = "link" }
             );
 
             modelBuilder.Entity<SingleCampaign>().HasData(
