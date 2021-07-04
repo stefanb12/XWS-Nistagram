@@ -34,5 +34,6 @@ namespace UserMicroservice.Service
         Task<ProfileSettings> GetProfileSettingsById(int id);
         Task<ProfileSettings> UpdateProfileSettings(ProfileSettings entity, int profileId);
         Task<Profile> ActivateAgentProfile(int agentProfileId);
+        Task<Profile> GenerateAPITokenForCampaigns(string agentUsername, byte[] secretKey);
     }
 }

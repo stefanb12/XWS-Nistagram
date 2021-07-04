@@ -24,8 +24,8 @@ namespace UserMicroservice.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] AuthenticateDto model)
         {
-            Profile user = (Profile) await _profileService.Authenticate(model.Username, model.Password, Encoding.ASCII.GetBytes(_appSettings.Secret));
-            
+            Profile user = (Profile)await _profileService.Authenticate(model.Username, model.Password, Encoding.ASCII.GetBytes(_appSettings.Secret));
+
             if (user == null)
             {
                 return BadRequest();
@@ -36,6 +36,19 @@ namespace UserMicroservice.Controllers
             }
 
             return Ok(user);
+        }
+
+        [HttpGet("apiTokenForCampaigns/{agentUsername}")]
+        public async Task<IActionResult> GenerateAPITokenForCampaigns(string agentUsername)
+        {
+            Profile agent = await _profileService.GenerateAPITokenForCampaigns(agentUsername, Encoding.ASCII.GetBytes(_appSettings.Secret));
+
+            if (agent == null || agent.Token.Equals(""))
+            {
+                return BadRequest();
+            }
+
+            return Ok(agent);
         }
     }
 }

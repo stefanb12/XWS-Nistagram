@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CampaignMicroservice.Database;
+using CampaignMicroservice.Messaging;
 using CampaignMicroservice.Repository;
 using CampaignMicroservice.Service;
 using Microsoft.AspNetCore.Builder;
@@ -36,13 +37,25 @@ namespace CampaignMicroservice
             services.AddDbContext<CampaignDbContext>(options =>
                options.UseMySql(CreateConnectionStringFromEnvironment()).UseLazyLoadingProxies(), ServiceLifetime.Transient);
 
+            var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
+            if (hostName == "rabbitmq")
+            {
+                services.AddScoped<IMessageReceiver, ProfileCreatedMessageReceiver>();
+                services.AddScoped<IMessageReceiver, ProfileUpdatedMessageReceiver>();
+            }
+
+            services.AddScoped<IProfileRepository, ProfileRepository>();
             services.AddScoped<ICommercialRepository, CommercialRepository>();
             services.AddScoped<ISingleCampaignRepository, SingleCampaignRepository>();
             services.AddScoped<IRepeatableCampaignRepository, RepeatableCampaignRepository>();
 
+            services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<ICommercialService, CommercialService>();
             services.AddScoped<ISingleCampaignService, SingleCampaignService>();
             services.AddScoped<IRepeatableCampaignService, RepeatableCampaignService>();
+
+            services.AddHostedService<ProfileCreatedMessageReceiver>();
+            services.AddHostedService<ProfileUpdatedMessageReceiver>();
         }
 
         private string CreateConnectionStringFromEnvironment()

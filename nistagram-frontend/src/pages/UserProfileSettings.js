@@ -7,6 +7,8 @@ import UserAccount from "../components/profile-settings/UserAccount";
 import UserPassword from "../components/profile-settings/UserPassword";
 import UserPrivacy from "../components/profile-settings/UserPrivacy";
 import VerifyProfile from "../components/profile-settings/VerifyProfile";
+import APIToken from "../components/profile-settings/APIToken";
+import AuthService from "../services/AuthService";
 
 export default class UserProfileSettings extends Component {
   state = {
@@ -19,8 +21,6 @@ export default class UserProfileSettings extends Component {
   }*/
 
   activateLasers = (content) => {
-    //console.log(content);
-    //this.state.contentActive = 9;
     this.setState({ contentActive: content });
   };
 
@@ -34,6 +34,8 @@ export default class UserProfileSettings extends Component {
       contentForShowing = <UserPrivacy />;
     } else if (this.state.contentActive === 3) {
       contentForShowing = <VerifyProfile />;
+    } else if (this.state.contentActive === 4) {
+      contentForShowing = <APIToken />;
     }
 
     return (
@@ -71,6 +73,23 @@ export default class UserProfileSettings extends Component {
                   Verify Profile
                 </Button>
               </ListGroup.Item>
+              {(() => {
+                if (localStorage.getItem("userRole") === "Agent") {
+                  return (
+                    <ListGroup.Item>
+                      <Button
+                        variant={
+                          this.state.contentActive === 4 ? "primary" : "light"
+                        }
+                        style={{ width: "100%" }}
+                        onClick={() => this.activateLasers(4)}
+                      >
+                        API token
+                      </Button>
+                    </ListGroup.Item>
+                  );
+                }
+              })()}
               <ListGroup.Item>
                 <Button
                   variant={this.state.contentActive === 1 ? "primary" : "light"}
