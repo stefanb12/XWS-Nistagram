@@ -16,7 +16,8 @@ namespace CampaignMicroservice.Dto
         public IFormFile ImageFile { get; set; }
         [NotMapped]
         public string ImageSrc { get; set; }
-        public int AgentId { get; set; }
+        public int AgentId { get; set; } 
+        public string APIToken { get; set; }
 
         public CommercialDto() { }
     }

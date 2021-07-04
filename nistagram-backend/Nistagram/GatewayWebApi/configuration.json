@@ -14,6 +14,25 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/api/auth/apiTokenForCampaigns/{agentUsername}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55988
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/auth/apiTokenForCampaigns/{agentUsername}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Key",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "UserRole": "Agent"
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/profile/registration",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -1386,6 +1405,25 @@
       ],
       "UpstreamPathTemplate": "/gateway/campaign/repeatable/agent/{id}",
       "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Key",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "UserRole": "Agent"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/commercial",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 56000
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/commercial",
+      "UpstreamHttpMethod": [ "POST" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Key",
         "AllowedScopes": []

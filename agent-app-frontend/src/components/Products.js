@@ -3,11 +3,12 @@ import "../assets/styles/products.css";
 import ProductService from "../services/ProductService";
 import Alert from "@material-ui/lab/Alert";
 import { Button, Snackbar, withStyles } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 class Products extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       products: [],
       shoppingCart: [],
@@ -49,6 +50,10 @@ class Products extends Component {
     });
   };
 
+  viewProduct = (product) => {
+    
+  };
+
   render() {
     return (
       <div>
@@ -74,7 +79,7 @@ class Products extends Component {
                       <div class="col-md-7 col-sm-12 col-xs-12">
                         <div class="product-deatil">
                           <h5 class="name">
-                            <a href="#">
+                            <a href={"/user/singleProduct/" + product.id}>
                               {product.name} <span>Category</span>
                             </a>
                           </h5>
@@ -90,11 +95,11 @@ class Products extends Component {
                           <div class="row">
                             <div class="col-md-6 col-sm-6 col-xs-6">
                               <a
-                                href="javascript:void(0);"
+                                href={"/user/singleProduct/" + product.id}
                                 class="btn btn-success"
-                                onClick={() => this.AddToCart(product)}
+                                onClick={this.viewProduct(product)}
                               >
-                                Add to cart
+                                View product
                               </a>
                             </div>
                           </div>
