@@ -26,12 +26,21 @@ namespace WebShop.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            if (await _productService.GetAllNotIncludingDeletedProducts() == null)
+            List<Product> products = new List<Product>();
+            foreach(Product product in await _productService.GetAllNotIncludingDeletedProducts())
+            {
+                for (int i = 0; i < product.Contents.Count; i++)
+                {
+                    product.Contents[i].ImageSrc = String.Format("http://localhost:37424/{0}", product.Contents[i].ImageName);
+                }
+                products.Add(product);
+            }
+            if (products == null)
             {
                 return NoContent();
             }
 
-            return Ok(await _productService.GetAllNotIncludingDeletedProducts());
+            return Ok(products);
         }
 
         [HttpGet("includingDeleted")]
@@ -97,6 +106,10 @@ namespace WebShop.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             Product product = await _productService.GetById(id);
+            for (int i = 0; i < product.Contents.Count; i++)
+            {
+                product.Contents[i].ImageSrc = String.Format("http://localhost:37424/{0}", product.Contents[i].ImageName);
+            }
 
             if (product == null)
             {

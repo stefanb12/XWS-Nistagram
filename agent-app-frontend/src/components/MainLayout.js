@@ -4,6 +4,8 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import NotFound from "../pages/NotFound";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
+import Products from "./Products";
+import SingleProduct from "./SingleProduct";
 
 const MainLayoutRoot = {
   height: "100%",
@@ -43,6 +45,12 @@ export default function MainLayout({ routes }) {
               </Route>
               <Route path="/app/register">
                 <Register />
+              </Route>
+              <Route path="/app/products">
+                <Products />
+              </Route>
+              <Route path="/app/singleProduct/:id">
+                <SingleProduct />
               </Route>
               <Route path="/app">
                 <NotFound />

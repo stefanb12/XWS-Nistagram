@@ -14,16 +14,23 @@ namespace WebShop.Controllers
     public class ShoppingCartController : ControllerBase
     {
         private readonly IShoppingCartService _shoppingCartService;
+        private readonly IProductService _productService;
 
-        public ShoppingCartController(IShoppingCartService shoppingCartService)
+        public ShoppingCartController(IShoppingCartService shoppingCartService, IProductService productService)
         {
             _shoppingCartService = shoppingCartService;
+            _productService = productService;
         }
 
         [HttpPost]
         public async Task<IActionResult> GetAll(ShoppingCart shoppingCart)
         {
-            await _shoppingCartService.Insert(shoppingCart);
+            ShoppingCart newShoppingCart = await _shoppingCartService.Insert(shoppingCart);
+            foreach(ItemToPurchase itemToPurchase in newShoppingCart.ItemsToPurchase) {
+                Product product = await _productService.GetById(itemToPurchase.ProductId);
+                product.AvailableBalance = product.AvailableBalance - itemToPurchase.Quantity;
+                await _productService.Update(product);
+            }
 
             return Ok();
         }

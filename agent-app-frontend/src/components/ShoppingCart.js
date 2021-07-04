@@ -3,6 +3,7 @@ import AuthService from "../services/AuthService";
 import Alert from "@material-ui/lab/Alert";
 import { Button, Snackbar, withStyles } from "@material-ui/core";
 import ShoppingCartService from "../services/ShoppingCartService";
+import { EventSeat } from "@material-ui/icons";
 
 class ShoppingCart extends Component {
   constructor(props) {
@@ -21,9 +22,11 @@ class ShoppingCart extends Component {
       snackBarOpen: false,
       snackBarMessage: "",
       snackBarSeverity: "",
+      quantityInput: 1,
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.quantityOnChange = this.quantityOnChange.bind(this);
   }
 
   componentDidMount() {
@@ -37,12 +40,6 @@ class ShoppingCart extends Component {
         fullname: AuthService.getCurrentUser().name,
         email: AuthService.getCurrentUser().email,
         mobilePhone: AuthService.getCurrentUser().mobilePhone,
-        address:
-          AuthService.getCurrentUser().location.address +
-          ", " +
-          AuthService.getCurrentUser().location.city +
-          ", " +
-          AuthService.getCurrentUser().location.country,
       },
       () => {
         console.log(this.state.loggedUser);
@@ -58,6 +55,7 @@ class ShoppingCart extends Component {
         name: shoppingCartItems[i].name,
         quantity: 1,
         price: shoppingCartItems[i].price,
+        contents: shoppingCartItems[i].contents,
       };
       shoppingCartTemp.push(item);
     }
@@ -72,6 +70,9 @@ class ShoppingCart extends Component {
   };
 
   quantityOnChange = (product, event) => {
+    this.setState({
+      quantityInput: event.target.value,
+    });
     console.log(event.target.value);
     for (let i = 0; i < this.state.shoppingCart.length; i++) {
       if (this.state.shoppingCart[i].name == product.name) {
@@ -280,7 +281,6 @@ class ShoppingCart extends Component {
             <input
               name="address"
               type="text"
-              value={this.state.address}
               onChange={this.handleInputChange}
               className="form-control"
               id="inputFirstName"
@@ -351,7 +351,7 @@ class ShoppingCart extends Component {
                           <td class="p-4">
                             <div class="media align-items-center">
                               <img
-                                src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                                src={product.contents[0].imageSrc}
                                 height="50px"
                                 class="d-block ui-w-40 ui-bordered mr-4"
                                 alt=""
@@ -378,11 +378,13 @@ class ShoppingCart extends Component {
                               onChange={(event) =>
                                 this.quantityOnChange(product, event)
                               }
+                              value={this.state.quantityInput}
                               min="1"
                             />
                           </td>
                           <td class="text-center align-middle px-0">
                             <a
+                              href="javascript:void(0)"
                               class="shop-tooltip close float-none text-danger"
                               title=""
                               data-original-title="Remove"
@@ -412,12 +414,6 @@ class ShoppingCart extends Component {
               </div>
 
               <div class="float-right">
-                <button
-                  type="button"
-                  class="btn btn-lg btn-default md-btn-flat mt-2 mr-3"
-                >
-                  Back to shopping
-                </button>
                 <button
                   type="button"
                   class="btn btn-lg btn-primary mt-2"

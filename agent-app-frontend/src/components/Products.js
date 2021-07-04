@@ -5,6 +5,7 @@ import Alert from "@material-ui/lab/Alert";
 import { Button, Snackbar, withStyles } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { withRouter } from "react-router-dom";
+import AuthService from "../services/AuthService";
 
 class Products extends Component {
   constructor(props) {
@@ -50,9 +51,7 @@ class Products extends Component {
     });
   };
 
-  viewProduct = (product) => {
-    
-  };
+  viewProduct = (product) => {};
 
   render() {
     return (
@@ -70,16 +69,15 @@ class Products extends Component {
                       <div class="col-md-4 col-sm-12 col-xs-12">
                         <div class="product-image">
                           <img
-                            src="https://via.placeholder.com/194x228/87CEFA"
-                            alt="194x228"
-                            class="img-responsive"
+                            src={product.contents[0].imageSrc}
+                            width="100%"
                           />
                         </div>
                       </div>
                       <div class="col-md-7 col-sm-12 col-xs-12">
                         <div class="product-deatil">
                           <h5 class="name">
-                            <a href={"/user/singleProduct/" + product.id}>
+                            <a>
                               {product.name} <span>Category</span>
                             </a>
                           </h5>
@@ -94,13 +92,29 @@ class Products extends Component {
                         <div class="product-info smart-form">
                           <div class="row">
                             <div class="col-md-6 col-sm-6 col-xs-6">
-                              <a
-                                href={"/user/singleProduct/" + product.id}
-                                class="btn btn-success"
-                                onClick={this.viewProduct(product)}
-                              >
-                                View product
-                              </a>
+                              {(() => {
+                                if (AuthService.getCurrentUser() == undefined) {
+                                  return (
+                                    <a
+                                      href={"/app/singleProduct/" + product.id}
+                                      class="btn btn-success"
+                                      onClick={this.viewProduct(product)}
+                                    >
+                                      View product
+                                    </a>
+                                  );
+                                } else {
+                                  return (
+                                    <a
+                                      href={"/user/singleProduct/" + product.id}
+                                      class="btn btn-success"
+                                      onClick={this.viewProduct(product)}
+                                    >
+                                      View product
+                                    </a>
+                                  );
+                                }
+                              })()}
                             </div>
                           </div>
                         </div>
