@@ -5,6 +5,7 @@ import Alert from "@material-ui/lab/Alert";
 import UploadImages from "../components/UploadImages";
 import ProductService from "../services/ProductService";
 import ReactPlayer from "react-player";
+import CommercialService from "../services/CommercialService";
 
 export default class AdminProducts extends Component {
   constructor(props) {
@@ -16,12 +17,14 @@ export default class AdminProducts extends Component {
       isOpenChangeProductModal: false,
       isOpenImageModal: false,
       isProductDeletingModal: false,
+      isOpenCommercialModal: false,
       imagesSrc: [],
       currentChosenImageFiles: [],
       open: false,
       message: "",
       snackbarType: "success",
       isUpdate: false,
+      token: "",
       // form
       formValues: {
         productName: "",
@@ -43,6 +46,8 @@ export default class AdminProducts extends Component {
       },
       isSubmitting: false,
     };
+
+    this.handleTokenInputChange = this.handleTokenInputChange.bind(this);
   }
 
   componentDidMount() {
@@ -100,6 +105,50 @@ export default class AdminProducts extends Component {
         return res.json();
       })
       .then((data) => {});
+  };
+
+  sendCommercial = () => {
+    if (!this.state.chosenProduct.deleted) {
+      if (this.state.token !== "") {
+        var websiteLink =
+          "http://localhost:3001/user/singleProduct/" +
+          this.state.chosenProduct.id;
+
+        let resStatus = 0;
+        CommercialService.sendCommercial(
+          websiteLink,
+          this.state.chosenProduct.imagesSrc[0],
+          this.state.token
+        )
+          .then((res) => {
+            resStatus = res.status;
+            return res.json();
+          })
+          .then((result) => {
+            if (resStatus === 200) {
+              this.handleClickSnackBar(
+                "Product is successfully sent",
+                "success"
+              );
+              this.closeCommercialModal();
+            } else {
+              this.handleClickSnackBar("Unsuccessfully sending", "error");
+            }
+            return result;
+          })
+          .catch((error) => {
+            if (resStatus === 401) {
+              this.handleClickSnackBar("Invalid token", "error");
+            } else {
+              this.handleClickSnackBar("Unsuccessfully sending", "error");
+            }
+          });
+      } else {
+        this.handleClickSnackBar("You must enter a token", "error");
+      }
+    } else {
+      this.handleClickSnackBar("Product was deleted", "error");
+    }
   };
 
   openNewProductModal = () => {
@@ -161,7 +210,13 @@ export default class AdminProducts extends Component {
     });
   };
 
-  closeImageModal = () => this.setState({ isOpenImageModal: false });
+  closeImageModal = () =>
+    this.setState({
+      isOpenImageModal: false,
+      chosenProduct: null,
+      currentChosenImageFiles: [],
+      imagesSrc: [],
+    });
 
   openProductDeletingModal = (product) => {
     this.setState({
@@ -175,6 +230,20 @@ export default class AdminProducts extends Component {
     this.setState({
       isProductDeletingModal: false,
       chosenProduct: null,
+    });
+
+  openCommercialModal = (product) => {
+    this.setState({
+      isOpenCommercialModal: true,
+      chosenProduct: product,
+    });
+  };
+
+  closeCommercialModal = () =>
+    this.setState({
+      isOpenCommercialModal: false,
+      chosenProduct: null,
+      token: "",
     });
 
   handleChange = ({ target }) => {
@@ -332,6 +401,12 @@ export default class AdminProducts extends Component {
     }
   };
 
+  handleTokenInputChange(event) {
+    this.setState({
+      token: event.target.value,
+    });
+  }
+
   render() {
     const { formValues, formErrors, isSubmitting } = this.state;
 
@@ -372,7 +447,22 @@ export default class AdminProducts extends Component {
                 fontSize: "17px",
               }}
             >
-              Show images
+              Show
+            </button>
+          </td>
+          <td style={{ textAlign: "center" }}>
+            <button
+              type="button"
+              onClick={() => {
+                this.openCommercialModal(product);
+              }}
+              class="btn btn-outline-primary btn-sm"
+              style={{
+                width: "120px",
+                fontSize: "17px",
+              }}
+            >
+              Send
             </button>
           </td>
           <td style={{ textAlign: "center" }}>
@@ -703,11 +793,11 @@ export default class AdminProducts extends Component {
         <Modal.Header closeButton>
           <Modal.Title
             style={{
-              marginLeft: "155px",
+              marginLeft: "135px",
               color: "#74767a",
             }}
           >
-            Product images
+            Product contents
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -757,12 +847,56 @@ export default class AdminProducts extends Component {
       </Modal>
     );
 
+    const commercialModal = (
+      <Modal
+        show={this.state.isOpenCommercialModal}
+        onHide={this.closeCommercialModal}
+        style={{
+          marginTop: "200px",
+          height: "300px",
+          overflow: "hidden",
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title style={{ marginLeft: "115px", color: "#74767a" }}>
+            Sending commercial
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div
+            style={{
+              textAlign: "center",
+            }}
+          >
+            <input
+              name="tokenName"
+              type="text"
+              value={this.state.token}
+              onChange={this.handleTokenInputChange}
+              className="form-control"
+              id="inputTokenName"
+              placeholder="Enter the token generated on Nistagram"
+            />
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={this.sendCommercial}>
+            Send
+          </Button>
+          <Button variant="secondary" onClick={this.closeCommercialModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+
     return (
       <div>
         {newProductModalDialog}
         {changeProductModalDialog}
         {deleteProductModalDialog}
         {imageModal}
+        {commercialModal}
         {snackbar}
         <div class="container" style={{ maxWidth: "90%", marginTop: "20px" }}>
           <div class="row">
@@ -815,7 +949,13 @@ export default class AdminProducts extends Component {
                             Available Balance
                           </th>
                           <th scope="col" style={{ textAlign: "center" }}>
-                            Image
+                            Contents
+                          </th>
+                          <th
+                            scope="col"
+                            style={{ minWidth: "130px", textAlign: "center" }}
+                          >
+                            Sending commerical
                           </th>
                           <th scope="col" style={{ textAlign: "center" }}>
                             Action

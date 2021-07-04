@@ -11,6 +11,18 @@ class AuthService {
     return fetch(API_URL + "auth/login", requestOptions);
   }
 
+  generateToken(agentUsername) {
+    const requestOptions = {
+      method: "GET",
+      headers: { Authorization: "Bearer " + this.getUserToken() },
+    };
+
+    return fetch(
+      API_URL + "auth/apiTokenForCampaigns/" + agentUsername,
+      requestOptions
+    );
+  }
+
   registerUser(fullName, username, email, password, gender, isAgent, website) {
     let userRole;
     var requestOptions;
@@ -19,14 +31,29 @@ class AuthService {
       requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullName, username, email, password, gender, userRole, website }),
+        body: JSON.stringify({
+          fullName,
+          username,
+          email,
+          password,
+          gender,
+          userRole,
+          website,
+        }),
       };
     } else {
       userRole = 0;
       requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullName, username, email, password, gender, userRole}),
+        body: JSON.stringify({
+          fullName,
+          username,
+          email,
+          password,
+          gender,
+          userRole,
+        }),
       };
     }
 
@@ -44,8 +71,6 @@ class AuthService {
   }
 
   getUserToken() {
-    // var user = JSON.parse(localStorage.getItem("currentUser"));
-    // return user.token;
     return localStorage.getItem("userToken");
   }
 }

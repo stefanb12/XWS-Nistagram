@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebShop.Dto;
+using WebShop.Mapper;
 using WebShop.Model;
 using WebShop.Service;
 
@@ -31,6 +33,18 @@ namespace WebShop.Controllers
             }
 
             return Ok(user);
+        }
+
+        [HttpPost("registration")]
+        public async Task<IActionResult> RegisterUser(RegistrationDto registrationDto)
+        {
+            User user = await _userService.Insert(RegistrationMapper.RegistrationDtoToUser(registrationDto));
+
+            if (user != null)
+            {
+                return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
+            }
+            return BadRequest();
         }
     }
 }
