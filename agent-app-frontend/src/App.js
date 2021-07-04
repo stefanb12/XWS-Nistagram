@@ -19,7 +19,7 @@ function App() {
     <Router>
       <Switch>
         {/* <Redirect exact from="/" to="/app" /> */}
-        <Redirect exact from="/" to="/app" />
+        <Redirect exact from="/" to="/app/products" />
         <Route path="/app" component={MainLayout} />
         <UserRoute path="/user" component={UserLayout} />
         <AdminRoute path="/admin" component={AdminLayout} />

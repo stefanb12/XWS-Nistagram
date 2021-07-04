@@ -4,6 +4,7 @@ import { withRouter } from "react-router-dom";
 import ProductService from "../services/ProductService";
 import { Button, Snackbar, withStyles } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
+import AuthService from "../services/AuthService";
 
 class SingleProducts extends Component {
   constructor(props) {
@@ -12,6 +13,8 @@ class SingleProducts extends Component {
     this.state = {
       productId: 0,
       product: [],
+      contents: [],
+      firstImg: [],
       snackBarOpen: false,
       snackBarMessage: "",
       snackBarSeverity: "",
@@ -25,12 +28,28 @@ class SingleProducts extends Component {
     ProductService.getProduct(params.id)
       .then((res) => res.json())
       .then((result) => {
-        this.setState({
-          product: result,
-        });
+        this.setState(
+          {
+            product: result,
+            contents: result.contents,
+            firstImg: result.contents[0],
+          },
+          () => {
+            console.log(this.state.contents);
+          }
+        );
       });
   }
+
   AddToCart = () => {
+    if (AuthService.getCurrentUser() == undefined) {
+      this.setState({
+        snackBarOpen: true,
+        snackBarMessage: "Login to add product to cart",
+        snackBarSeverity: "info",
+      });
+      return;
+    }
     var shoppingCart = [];
     shoppingCart = JSON.parse(localStorage.getItem("shoppingCart"));
     for (let i = 0; i < shoppingCart.length; i++) {
@@ -53,6 +72,76 @@ class SingleProducts extends Component {
   };
 
   render() {
+    var imgs;
+    if (this.state.contents.length > 1) {
+      imgs = (
+        <div
+          style={{
+            height: "40%",
+            width: "30%",
+            marginLeft: "6%",
+            float: "left",
+          }}
+        >
+          <Carousel>
+            {this.state.contents.map((content) => {
+              return (
+                <Carousel.Item>
+                  <img width="100%" src={content.imageSrc} alt="First slide" />
+                </Carousel.Item>
+              );
+            })}
+          </Carousel>
+        </div>
+      );
+    } else {
+      imgs = (
+        <div
+          style={{
+            height: "40%",
+            width: "30%",
+            marginLeft: "6%",
+            float: "left",
+          }}
+        >
+          <img width="100%" src={this.state.firstImg.imageSrc} />
+        </div>
+      );
+    }
+
+    const images = (
+      <div
+        style={{
+          height: "40%",
+          width: "30%",
+          marginLeft: "6%",
+          float: "left",
+        }}
+      >
+        {() => {
+          if (this.state.contents.length > 1) {
+            return (
+              <Carousel>
+                {this.state.contents.map((content) => {
+                  return (
+                    <Carousel.Item>
+                      <img
+                        width="100%"
+                        src={content.imageSrc}
+                        alt="First slide"
+                      />
+                    </Carousel.Item>
+                  );
+                })}
+              </Carousel>
+            );
+          } else {
+            return <img width="100%" src={this.state.contents[0].imageSrc} />;
+          }
+        }}
+      </div>
+    );
+
     return (
       <div>
         <div
@@ -64,31 +153,7 @@ class SingleProducts extends Component {
             float: "left",
           }}
         >
-          <div
-            style={{
-              height: "40%",
-              width: "30%",
-              marginLeft: "6%",
-              float: "left",
-            }}
-          >
-            <Carousel>
-              <Carousel.Item>
-                <img
-                  width="100%"
-                  src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                  alt="First slide"
-                />
-              </Carousel.Item>
-              <Carousel.Item>
-                <img
-                  width="100%"
-                  src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                  alt="First slide"
-                />
-              </Carousel.Item>
-            </Carousel>
-          </div>
+          {imgs}
           <h2
             style={{
               width: "40%",

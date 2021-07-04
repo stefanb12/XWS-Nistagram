@@ -18,6 +18,8 @@ import AuthService from "../services/AuthService";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import LocalMallOutlinedIcon from "@material-ui/icons/LocalMallOutlined";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
+import ShoppingCartOutlinedIcon from "@material-ui/icons/ShoppingCartOutlined";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -121,6 +123,9 @@ export default function UserNavbar() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [mounted, setMounted] = React.useState(false);
   const [productsIcon, setProductsIcon] = React.useState(<LocalMallIcon />);
+  const [shoppingCartIcon, setShoppingCartIcon] = React.useState(
+    <ShoppingCartOutlinedIcon />
+  );
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -153,12 +158,19 @@ export default function UserNavbar() {
   };
 
   const navigateToProducts = () => {
+    setShoppingCartIcon(<ShoppingCartOutlinedIcon />);
     setProductsIcon(<LocalMallIcon />);
     history.push("/user/products");
   };
 
+  const navigateToShoppingCart = () => {
+    setShoppingCartIcon(<ShoppingCartIcon />);
+    setProductsIcon(<LocalMallOutlinedIcon />);
+    history.push("/user/shoppingCart");
+  };
+
   const navigateToHome = () => {
-    history.push("/");
+    history.push("/user/products");
   };
 
   const menuId = "primary-search-account-menu";
@@ -256,6 +268,15 @@ export default function UserNavbar() {
                 onClick={navigateToProducts}
               >
                 <Badge color="secondary">{productsIcon}</Badge>
+              </IconButton>
+            </MyTooltip>
+            <MyTooltip title="Shopping cart">
+              <IconButton
+                aria-label="Shopping cart"
+                color="inherit"
+                onClick={navigateToShoppingCart}
+              >
+                <Badge color="secondary">{shoppingCartIcon}</Badge>
               </IconButton>
             </MyTooltip>
             <MyTooltip title="Log out">
