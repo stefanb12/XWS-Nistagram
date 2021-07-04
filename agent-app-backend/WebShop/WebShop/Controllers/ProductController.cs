@@ -92,5 +92,18 @@ namespace WebShop.Controllers
             }
             return Ok(product);
         }
+
+        [HttpGet("getProduct/{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            Product product = await _productService.GetById(id);
+
+            if (product == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(product);
+        }
     }
 }

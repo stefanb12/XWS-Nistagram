@@ -44,10 +44,12 @@ namespace WebShop
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
             services.AddScoped<IContentRepository, ContentRepository>();
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IShoppingCartService, ShoppingCartService>();
             services.AddScoped<IContentService, ContentService>();
 
             // JWT Token

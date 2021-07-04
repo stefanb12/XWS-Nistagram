@@ -7,6 +7,7 @@ import Login from "../pages/Login";
 import Products from "./Products";
 import ShoppingCart from "./ShoppingCart";
 import UserNavbar from "./UserNavbar";
+import SingleProduct from "./SingleProduct";
 
 const MainLayoutRoot = {
   height: "100%",
@@ -46,6 +47,9 @@ export default function UserLayout({ routes }) {
               </Route>
               <Route path="/user/shoppingCart">
                 <ShoppingCart />
+              </Route>
+              <Route path="/user/singleProduct/:id">
+                <SingleProduct />
               </Route>
               <Route path="/user/404">
                 <NotFound />
