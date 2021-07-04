@@ -22,37 +22,23 @@ const Register = () => {
   const [snackBarMessage, setSnackBarMessage] = React.useState(false);
   const [alertSeverity, setAlertSeverity] = React.useState("success");
 
-  const handleRegistration = async (
-    fullName,
-    username,
-    email,
-    password,
-    gender,
-    isAgent,
-    websiteLink
-  ) => {
+  const handleRegistration = async (fullName, username, email, password) => {
     let resStatus = false;
-    await AuthService.registerUser(
-      fullName,
-      username,
-      email,
-      password,
-      gender,
-      isAgent,
-      websiteLink
-    ).then((result) => {
-      if (result.status === 201) {
-        setSnackBarMessage("Registration successful!");
-        setAlertSeverity("success");
-        setShowSnackbar(true);
-        resStatus = true;
-      } else if (result.status === 400) {
-        setSnackBarMessage("Profile with entered username already exists!");
-        setAlertSeverity("error");
-        setShowSnackbar(true);
-        resStatus = false;
+    await AuthService.registerUser(fullName, username, email, password).then(
+      (result) => {
+        if (result.status === 201) {
+          setSnackBarMessage("Registration successful!");
+          setAlertSeverity("success");
+          setShowSnackbar(true);
+          resStatus = true;
+        } else if (result.status === 400) {
+          setSnackBarMessage("Profile with entered username already exists!");
+          setAlertSeverity("error");
+          setShowSnackbar(true);
+          resStatus = false;
+        }
       }
-    });
+    );
     return resStatus;
   };
 
@@ -82,7 +68,7 @@ const Register = () => {
           justifyContent: "center",
         }}
       >
-        <Container maxWidth="sm">
+        <Container maxWidth="sm" style={{ marginTop: "50px" }}>
           <Formik
             initialValues={{
               username: "",
@@ -197,24 +183,8 @@ const Register = () => {
                   value={values.password}
                   variant="outlined"
                 />
-                <RadioGroup
-                  label="Password"
-                  name="gender"
-                  onChange={handleChange}
-                  value={values.gender}
-                  row
-                >
-                  <FormControlLabel
-                    value="male"
-                    control={<Radio />}
-                    label="Male"
-                  />
-                  <FormControlLabel
-                    value="female"
-                    control={<Radio />}
-                    label="Female"
-                  />
-                </RadioGroup>
+                <br />
+                <br />
                 <Box sx={{ py: 2 }}>
                   <Button
                     color="primary"

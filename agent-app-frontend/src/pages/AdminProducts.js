@@ -210,7 +210,13 @@ export default class AdminProducts extends Component {
     });
   };
 
-  closeImageModal = () => this.setState({ isOpenImageModal: false });
+  closeImageModal = () =>
+    this.setState({
+      isOpenImageModal: false,
+      chosenProduct: null,
+      currentChosenImageFiles: [],
+      imagesSrc: [],
+    });
 
   openProductDeletingModal = (product) => {
     this.setState({

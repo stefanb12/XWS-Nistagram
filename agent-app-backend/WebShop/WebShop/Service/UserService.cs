@@ -32,12 +32,12 @@ namespace WebShop.Service
         public async Task<User> Insert(User entity)
         {
             IEnumerable<User> users = await GetAll();
-            if (!users.ToList().Any(u => u.Name.Equals(entity.Name))) 
+            if (!users.ToList().Any(u => u.Username.Equals(entity.Username))) 
             {
                 User user = await _userRepository.Insert(entity);
                 return user;
             }
-            throw null;
+            return null;
         }
 
         public async Task<User> Update(User entity)
