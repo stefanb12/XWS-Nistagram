@@ -77,7 +77,8 @@ namespace CampaignMicroservice.Database
 
             modelBuilder.Entity<Commercial>().HasData(
                 new Commercial { Id = 1, AgentId = 4, ImageName = "1213352229.jpg", WebsiteLink = "link" },
-                new Commercial { Id = 2, AgentId = 4, ImageName = "1213352333.jpg", WebsiteLink = "link" }
+                new Commercial { Id = 2, AgentId = 4, ImageName = "1213352333.jpg", WebsiteLink = "link" },
+                new Commercial { Id = 3, AgentId = 3, ImageName = "1213352333.jpg", WebsiteLink = "link" }
             );
 
             modelBuilder.Entity<SingleCampaign>().HasData(

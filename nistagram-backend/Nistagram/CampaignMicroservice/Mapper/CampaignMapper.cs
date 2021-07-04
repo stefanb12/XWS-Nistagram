@@ -72,6 +72,7 @@ namespace CampaignMicroservice.Mapper
             CampaignDto dto = new CampaignDto();
             if (singleCampaign != null)
             {
+                dto.Id = singleCampaign.Id;
                 dto.IsSingleCampaign = true;
                 dto.IsPost = singleCampaign.IsPost;
                 dto.AgentId = singleCampaign.AgentId;
@@ -85,6 +86,7 @@ namespace CampaignMicroservice.Mapper
                 }
             } else // RepeatableCampaign
             {
+                dto.Id = singleCampaign.Id;
                 dto.IsSingleCampaign = false;
                 dto.IsPost = repeatableCampaign.IsPost;
                 dto.AgentId = repeatableCampaign.AgentId;
