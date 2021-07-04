@@ -113,7 +113,8 @@ export default class AdminProducts extends Component {
         var websiteLink =
           "http://localhost:3001/user/singleProduct/" +
           this.state.chosenProduct.id;
-        var resStatus = 0;
+
+        let resStatus = 0;
         CommercialService.sendCommercial(
           websiteLink,
           this.state.chosenProduct.imagesSrc[0],
@@ -123,13 +124,21 @@ export default class AdminProducts extends Component {
             resStatus = res.status;
             return res.json();
           })
-          .then((data) => {
+          .then((result) => {
             if (resStatus === 200) {
               this.handleClickSnackBar(
                 "Product is successfully sent",
                 "success"
               );
               this.closeCommercialModal();
+            } else {
+              this.handleClickSnackBar("Unsuccessfully sending", "error");
+            }
+            return result;
+          })
+          .catch((error) => {
+            if (resStatus === 401) {
+              this.handleClickSnackBar("Invalid token", "error");
             } else {
               this.handleClickSnackBar("Unsuccessfully sending", "error");
             }

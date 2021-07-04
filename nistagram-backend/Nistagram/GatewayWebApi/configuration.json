@@ -1423,14 +1423,7 @@
         }
       ],
       "UpstreamPathTemplate": "/gateway/commercial",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "Agent"
-      }
+      "UpstreamHttpMethod": [ "POST" ]
     },
     {
       "DownstreamPathTemplate": "/api/commercial/agent/{id}",

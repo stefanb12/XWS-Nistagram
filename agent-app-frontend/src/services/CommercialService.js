@@ -6,9 +6,9 @@ class CommercialService {
   sendCommercial(WebsiteLink, ImageSrc, APIToken) {
     const formData = new FormData();
 
-    formData.append("WebsiteLink", WebsiteLink);
-    formData.append("ImageSrc", ImageSrc);
-    formData.append("APIToken", APIToken);
+    formData.append("websiteLink", WebsiteLink);
+    formData.append("imageSrc", ImageSrc);
+    formData.append("aPIToken", APIToken);
 
     const requestOptions = {
       method: "POST",
