@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CampaignMicroservice.Model.Enum;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CampaignMicroservice.Model
@@ -8,6 +9,7 @@ namespace CampaignMicroservice.Model
         public int Id { get; set; }
         public int OriginalId { get; set; }
         public string Username { get; set; }
+        public UserRole UserRole { get; set; }
         public string ImageName { get; set; }
         [NotMapped]
         public IFormFile ImageFile { get; set; }
