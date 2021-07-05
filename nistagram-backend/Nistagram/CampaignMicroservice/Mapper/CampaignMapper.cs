@@ -82,6 +82,7 @@ namespace CampaignMicroservice.Mapper
                     CommercialDto commercialDto = new CommercialDto();
                     commercialDto.WebsiteLink = campaignCommercial.Commercial.WebsiteLink;
                     commercialDto.ImageSrc = String.Format("http://localhost:56000/{0}", campaignCommercial.Commercial.ImageName);
+                    commercialDto.ImageName = campaignCommercial.Commercial.ImageName;
                     dto.Commercials.Add(commercialDto);
                 }
             } else // RepeatableCampaign
@@ -98,6 +99,7 @@ namespace CampaignMicroservice.Mapper
                     CommercialDto commercialDto = new CommercialDto();
                     commercialDto.WebsiteLink = campaignCommercial.Commercial.WebsiteLink;
                     commercialDto.ImageSrc = String.Format("http://localhost:56000/{0}", campaignCommercial.Commercial.ImageName);
+                    commercialDto.ImageName = campaignCommercial.Commercial.ImageName;
                     dto.Commercials.Add(commercialDto);
                 }
             }

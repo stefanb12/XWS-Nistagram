@@ -22,6 +22,34 @@ namespace CampaignMicroservice.Service
             return campaignRequsests.Where(cr => cr.CampaignId == campaignId).ToList();
         }
 
+        public async Task<CampaignRequest> AcceptCampaignRequest(int campaignId, int influencerId)
+        {
+            foreach (CampaignRequest campaignRequest in await GetAll())
+            {
+                if(campaignRequest.CampaignId == campaignId && campaignRequest.InfluencerId == influencerId)
+                {
+                    campaignRequest.Processed = true;
+                    campaignRequest.Accepted = true;
+                    return await Update(campaignRequest);
+                }
+            }
+            return null;
+        }
+
+        public async Task<CampaignRequest> RejectCampaignRequest(int campaignId, int influencerId)
+        {
+            foreach (CampaignRequest campaignRequest in await GetAll())
+            {
+                if (campaignRequest.CampaignId == campaignId && campaignRequest.InfluencerId == influencerId)
+                {
+                    campaignRequest.Processed = true;
+                    campaignRequest.Accepted = false;
+                    return await Update(campaignRequest);
+                }
+            }
+            return null;
+        }
+
         public async Task<CampaignRequest> GetById(int id)
         {
             return await _campaignRequestRepository.GetById(id);

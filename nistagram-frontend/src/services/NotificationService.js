@@ -81,6 +81,32 @@ class NotificationService {
     return fetch(API_URL + "notification/followRequest", requestOptions);
   }
 
+  sendCampaignRequestNotification(receiverId, senderId, campaignId) {
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
+      body: JSON.stringify({ receiverId, senderId, campaignId }),
+    };
+
+    return fetch(API_URL + "notification/campaignRequest", requestOptions);
+  }
+
+  deleteCampaignRequestNotification(receiverId, senderId) {
+    const requestOptions = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
+      body: JSON.stringify({ receiverId, senderId }),
+    };
+
+    return fetch(API_URL + "notification/campaignRequest", requestOptions);
+  }
+
   sendPostNotification(receiverId, senderId) {
     const requestOptions = {
       method: "POST",

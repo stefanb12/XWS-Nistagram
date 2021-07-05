@@ -131,6 +131,25 @@ namespace NotificationMicroservice.Controllers
             return Ok();
         }
 
+        [HttpPost("campaignRequest")]
+        public async Task<IActionResult> SendCampaignRequestNotification([FromBody] NotificationDto dto)
+        {
+            Notification notification = NotificationMapper.NotificationDtoToNotification(dto, null);
+            Profile sender = await _profileService.GetById(dto.SenderId);
+            notification.Content = sender.Username + " wants to hire you.";
+            notification.CampaignRequest = true;
+            notification.CampaignId = dto.CampaignId;
+            return Ok(await _notificationService.Insert(notification));
+        }
+
+        [HttpDelete("campaignRequest")]
+        public async Task<IActionResult> DeleteCampaignRequestNotification([FromBody] NotificationDto dto)
+        {
+            Notification notification = await _notificationService.FindCampaignRequestNotification(dto.ReceiverId, dto.SenderId);
+            await _notificationService.Delete(notification);
+            return Ok();
+        }
+
         [HttpPut("seen/{profileId}")]
         public async Task<IActionResult> UpdateSeenNotifications(int profileId)
         {

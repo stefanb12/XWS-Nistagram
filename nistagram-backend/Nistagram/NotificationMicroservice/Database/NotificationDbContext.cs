@@ -54,15 +54,15 @@ namespace NotificationMicroservice.Database
             );
 
             modelBuilder.Entity<Notification>().HasData(
-                new Notification { Id = 1, Time = new DateTime(2021, 06, 05), Content = "majam wants to follow you.", Seen = false, FollowRequest = true, ReceiverId = 2, SenderId = 5, PostId = 1 },
-                new Notification { Id = 2, Time = new DateTime(2021, 06, 05), Content = "majam wants to follow you.", Seen = false, FollowRequest = true, ReceiverId = 3, SenderId = 5, PostId = 1 },
-                new Notification { Id = 3, Time = new DateTime(2021, 06, 03), Content = "matijam started following you.", Seen = false, FollowRequest = false, ReceiverId = 1, SenderId = 2, PostId = 1 },
-                new Notification { Id = 4, Time = new DateTime(2021, 06, 04), Content = "aleksai started following you.", Seen = false, FollowRequest = false, ReceiverId = 1, SenderId = 3, PostId = 1 },
-                new Notification { Id = 5, Time = new DateTime(2021, 06, 05), Content = "stefanb started following you.", Seen = false, FollowRequest = false, ReceiverId = 2, SenderId = 1, PostId = 1 },
-                new Notification { Id = 6, Time = new DateTime(2021, 06, 03), Content = "aleksai started following you.", Seen = false, FollowRequest = false, ReceiverId = 2, SenderId = 3, PostId = 1 },
-                new Notification { Id = 7, Time = new DateTime(2021, 06, 04), Content = "stefanb started following you.", Seen = false, FollowRequest = false, ReceiverId = 3, SenderId = 1, PostId = 1 },
-                new Notification { Id = 8, Time = new DateTime(2021, 06, 05), Content = "matijam started following you.", Seen = false, FollowRequest = false, ReceiverId = 4, SenderId = 2, PostId = 1 },
-                new Notification { Id = 9, Time = new DateTime(2021, 06, 04), Content = "stefanb started following you.", Seen = false, FollowRequest = false, ReceiverId = 5, SenderId = 1, PostId = 1 }
+                new Notification { Id = 1, Time = new DateTime(2021, 06, 05), Content = "majam wants to follow you.", Seen = false, FollowRequest = true, CampaignRequest = false, ReceiverId = 2, SenderId = 5, PostId = 1, CampaignId = 1 },
+                new Notification { Id = 2, Time = new DateTime(2021, 06, 05), Content = "majam wants to follow you.", Seen = false, FollowRequest = true, CampaignRequest = false, ReceiverId = 3, SenderId = 5, PostId = 1, CampaignId = 1 },
+                new Notification { Id = 3, Time = new DateTime(2021, 06, 03), Content = "matijam started following you.", Seen = false, FollowRequest = false, CampaignRequest = false, ReceiverId = 1, SenderId = 2, PostId = 1, CampaignId = 1 },
+                new Notification { Id = 4, Time = new DateTime(2021, 06, 04), Content = "aleksai started following you.", Seen = false, FollowRequest = false, CampaignRequest = false, ReceiverId = 1, SenderId = 3, PostId = 1, CampaignId = 1 },
+                new Notification { Id = 5, Time = new DateTime(2021, 06, 05), Content = "stefanb started following you.", Seen = false, FollowRequest = false, CampaignRequest = false, ReceiverId = 2, SenderId = 1, PostId = 1, CampaignId = 1 },
+                new Notification { Id = 6, Time = new DateTime(2021, 06, 03), Content = "aleksai started following you.", Seen = false, FollowRequest = false, CampaignRequest = false, ReceiverId = 2, SenderId = 3, PostId = 1, CampaignId = 1 },
+                new Notification { Id = 7, Time = new DateTime(2021, 06, 04), Content = "stefanb started following you.", Seen = false, FollowRequest = false, CampaignRequest = false, ReceiverId = 3, SenderId = 1, PostId = 1, CampaignId = 1 },
+                new Notification { Id = 8, Time = new DateTime(2021, 06, 05), Content = "matijam started following you.", Seen = false, FollowRequest = false, CampaignRequest = false, ReceiverId = 4, SenderId = 2, PostId = 1, CampaignId = 1 },
+                new Notification { Id = 9, Time = new DateTime(2021, 06, 04), Content = "stefanb started following you.", Seen = false, FollowRequest = false, CampaignRequest = false, ReceiverId = 5, SenderId = 1, PostId = 1, CampaignId = 1 }
             );
 
             // MutedProfiles
