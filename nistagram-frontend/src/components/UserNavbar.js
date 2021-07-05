@@ -272,6 +272,8 @@ export default function UserNavbar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const navigateToCampaignRequests = () => {};
+
   const navigateToHome = () => {
     setExploreIcon(<ExploreOutlinedIcon />);
     setHomeIcon(<Home />);
@@ -469,6 +471,42 @@ export default function UserNavbar() {
                 }}
               >
                 Delete
+              </button>
+            </div>
+          </div>
+          <span class="ml-auto mb-auto">
+            <div class="text-right text-muted pt-1">
+              {moment(
+                moment(notification.time).format("YYYY-MM-DD HH:mm:ss")
+              ).fromNow()}
+            </div>
+          </span>
+        </StyledMenuItem>
+      );
+    } else if (notification.campaignRequest === true) {
+      let imgSrc = "http://localhost:55988/" + notification.sender.imageName;
+      return (
+        <StyledMenuItem>
+          <div class="dropdown-list-image mr-3">
+            <img class="img-xs rounded-circle" src={imgSrc} alt="" />
+          </div>
+          <div class="font-weight mr-3">
+            <div>
+              {" "}
+              {notification.content}
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                style={{ marginLeft: "8px" }}
+                onClick={() => {
+                  handleNotificationListClose();
+                  history.push({
+                    pathname: "/user/campaignRequests",
+                    state: { campaignId: notification.campaignId },
+                  });
+                }}
+              >
+                View campaign
               </button>
             </div>
           </div>

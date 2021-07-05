@@ -11,5 +11,6 @@ namespace NotificationMicroservice.Service
         Task<List<Notification>> UpdateSeenNotifications(int profileId);
         Task<List<Notification>> FindNotificationsForProfile(int profileId);
         Task<Notification> FindFollowRequestNotification(int receiverId, int senderId);
+        Task<Notification> FindCampaignRequestNotification(int receiverId, int senderId);
     }
 }

@@ -77,6 +77,13 @@ namespace NotificationMicroservice.Service
             return notification;
         }
 
+        public async Task<Notification> FindCampaignRequestNotification(int receiverId, int senderId)
+        {
+            IEnumerable<Notification> notifications = await GetAll();
+            Notification notification = notifications.Where(notification => notification.ReceiverId == receiverId && notification.SenderId == senderId && notification.CampaignRequest == true).SingleOrDefault();
+            return notification;
+        }
+
         public async Task<Notification> GetById(int id)
         {
             return await _notificationRepository.GetById(id);

@@ -60,7 +60,7 @@ class CampaignService {
   }
 
   sendCampaignRequest(campaignId, influencerId) {
-    console.log(campaignId)
+    console.log(campaignId);
     const requestOptions = {
       method: "POST",
       headers: {
@@ -69,8 +69,8 @@ class CampaignService {
       },
       body: JSON.stringify({
         campaignId,
-        influencerId
-      })
+        influencerId,
+      }),
     };
 
     return fetch(API_URL + "campaign/sendCampaignRequest", requestOptions);
@@ -82,7 +82,51 @@ class CampaignService {
       headers: { Authorization: "Bearer " + AuthService.getUserToken() },
     };
 
-    return fetch(API_URL + "campaign/getCampaignRequestForCampaign/" + campaignId, requestOptions);
+    return fetch(
+      API_URL + "campaign/getCampaignRequestForCampaign/" + campaignId,
+      requestOptions
+    );
+  }
+
+  acceptCampaignRequest(campaignId, influencerId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
+    };
+
+    return fetch(
+      API_URL +
+        "campaign/acceptCampaignRequest/" +
+        campaignId +
+        "/" +
+        influencerId,
+      requestOptions
+    );
+  }
+
+  rejectCampaignRequest(campaignId, influencerId) {
+    const requestOptions = {
+      method: "PUT",
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
+    };
+
+    return fetch(
+      API_URL +
+        "campaign/rejectCampaignRequest/" +
+        campaignId +
+        "/" +
+        influencerId,
+      requestOptions
+    );
+  }
+
+  getCampaign(campaignId) {
+    const requestOptions = {
+      method: "GET",
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
+    };
+
+    return fetch(API_URL + "campaign/" + campaignId, requestOptions);
   }
 }
 export default new CampaignService();

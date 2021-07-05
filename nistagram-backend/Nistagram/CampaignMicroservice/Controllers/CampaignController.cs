@@ -93,5 +93,45 @@ namespace CampaignMicroservice.Controllers
             }
             return Ok(requests);
         }
+
+        [HttpPut("acceptCampaignRequest/{campaignId}/{influencerId}")]
+        public async Task<IActionResult> AcceptCampaignRequest(int campaignId, int influencerId)
+        {
+            CampaignRequest campaignRequest = await _campaignRequestService.AcceptCampaignRequest(campaignId, influencerId);
+
+            if(campaignRequest == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(campaignRequest);
+        }
+
+        [HttpPut("rejectCampaignRequest/{campaignId}/{influencerId}")]
+        public async Task<IActionResult> RejectCampaignRequest(int campaignId, int influencerId)
+        {
+            CampaignRequest campaignRequest = await _campaignRequestService.RejectCampaignRequest(campaignId, influencerId);
+
+            if (campaignRequest == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(campaignRequest);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCampaign(int id)
+        {
+            SingleCampaign singleCampaign = await _singlecampaignService.GetById(id);
+            if(singleCampaign != null)
+            {
+                return Ok(CampaignMapper.CampaignToCampaignDto(singleCampaign, null));
+            } else
+            {
+                RepeatableCampaign repeatableCampaign = await _repeatablecampaignService.GetById(id);
+                return Ok(CampaignMapper.CampaignToCampaignDto(null, repeatableCampaign));
+            }
+        }
     }
 }

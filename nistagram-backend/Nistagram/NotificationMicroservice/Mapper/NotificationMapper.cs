@@ -17,6 +17,8 @@ namespace NotificationMicroservice.Mapper
             notification.Content = "";
             notification.Seen = false;
             notification.FollowRequest = false;
+            notification.CampaignRequest = false;
+            notification.CampaignId = dto.CampaignId;
             notification.ReceiverId = dto.ReceiverId;
             notification.SenderId = dto.SenderId;
             notification.PostId = 1;

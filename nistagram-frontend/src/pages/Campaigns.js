@@ -28,6 +28,7 @@ import AddCircleOutline from "@material-ui/icons/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import dateFormat from "dateformat";
 import StoryService from "../services/StoryService";
+import NotificationService from "../services/NotificationService";
 
 export default class Campaigns extends Component {
   constructor(props) {
@@ -328,6 +329,13 @@ export default class Campaigns extends Component {
       influencerId
     ).then((res) => {
       if (res.status == 200) {
+        NotificationService.sendCampaignRequestNotification(
+          influencerId,
+          AuthService.getCurrentUser().id,
+          this.state.selectedCampaignId
+        )
+          .then((res) => res.json())
+          .then((result) => {});
         CampaignService.getCampaignRequestForCampaign(
           this.state.selectedCampaignId
         )
