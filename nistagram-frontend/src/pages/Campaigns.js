@@ -49,7 +49,7 @@ export default class Campaigns extends Component {
       isHireInfluencerDialogOpen: false,
       following: [],
       selectedCampaignId: 0,
-      campaignRequestsForSelectedCampaign: []
+      campaignRequestsForSelectedCampaign: [],
     };
     this.handleCampaignTypeChange = this.handleCampaignTypeChange.bind(this);
     this.handlePostOrStoryChange = this.handlePostOrStoryChange.bind(this);
@@ -66,6 +66,10 @@ export default class Campaigns extends Component {
         this.setState({ commercials: data });
       });
 
+    await this.getCampaignsForAgent();
+  }
+
+  getCampaignsForAgent = async () => {
     await CampaignService.getSingleCampaignsForAgent(
       AuthService.getCurrentUser().id
     )
@@ -86,30 +90,29 @@ export default class Campaigns extends Component {
             this.setState({ campaings: allCampaings });
           });
       });
-  }
+  };
 
   hireInfluencer = (campaignId) => {
     CampaignService.getCampaignRequestForCampaign(campaignId)
-    .then((res) => res.json())
-    .then((result) => {
-      this.setState({
-        campaignRequestsForSelectedCampaign: result
-      })
-      ProfileService.getFollowingInfluencers(AuthService.getCurrentUser().id)
       .then((res) => res.json())
       .then((result) => {
         this.setState({
-          following: result
+          campaignRequestsForSelectedCampaign: result,
         });
+        ProfileService.getFollowingInfluencers(AuthService.getCurrentUser().id)
+          .then((res) => res.json())
+          .then((result) => {
+            this.setState({
+              following: result,
+            });
+          });
       });
-    })
-    
-  
+
     this.setState({
-      isHireInfluencerDialogOpen : true,
-      selectedCampaignId: campaignId
-    })
-  }
+      isHireInfluencerDialogOpen: true,
+      selectedCampaignId: campaignId,
+    });
+  };
 
   createCampaign = () => {
     if (this.state.checkedCommercials.length == 0) {
@@ -165,6 +168,7 @@ export default class Campaigns extends Component {
                 })
                 .then((result) => {
                   if (resStatus === 200) {
+                    this.getCampaignsForAgent();
                     this.handleClickSnackBar(
                       "Successfully created campaign",
                       "success"
@@ -217,6 +221,7 @@ export default class Campaigns extends Component {
                 })
                 .then((result) => {
                   if (resStatus === 200) {
+                    this.getCampaignsForAgent();
                     this.handleClickSnackBar(
                       "Successfully created campaign",
                       "success"
@@ -318,23 +323,27 @@ export default class Campaigns extends Component {
   };
 
   sendInfluencerHiringRequest = (influencerId) => {
-    CampaignService.sendCampaignRequest(this.state.selectedCampaignId, influencerId)
-    .then((res) => {
+    CampaignService.sendCampaignRequest(
+      this.state.selectedCampaignId,
+      influencerId
+    ).then((res) => {
       if (res.status == 200) {
-        CampaignService.getCampaignRequestForCampaign(this.state.selectedCampaignId)
-        .then((res) => res.json())
-        .then((result) => {
-          this.setState({
-            campaignRequestsForSelectedCampaign : result,
-            snackBarOpen: true,
-            snackBarMessage: "Campaign request sent",
-            snackBarType: "success"
+        CampaignService.getCampaignRequestForCampaign(
+          this.state.selectedCampaignId
+        )
+          .then((res) => res.json())
+          .then((result) => {
+            this.setState({
+              campaignRequestsForSelectedCampaign: result,
+              snackBarOpen: true,
+              snackBarMessage: "Campaign request sent",
+              snackBarType: "success",
+            });
           });
-        });
       }
       return res.json();
-    })
-  }
+    });
+  };
 
   isRegistrationRequestForInfluencerAlreadySent(influencerId) {
     for (let request of this.state.campaignRequestsForSelectedCampaign) {
@@ -419,47 +428,69 @@ export default class Campaigns extends Component {
                     {/* <div class="text-muted fs-13px">{follower.fullName}</div> */}
                   </div>
                   {(() => {
-                    if (this.isRegistrationRequestForInfluencerAlreadySent(profile.id) == 0) {
-                      return (<Button
-                        onClick={() => { this.sendInfluencerHiringRequest(profile.id); }}>
-                        Hire
-                      </Button>);
-                    } else if (this.isRegistrationRequestForInfluencerAlreadySent(profile.id) == 1) {
-                      return (<div>
-                        {" "}
-                        <b
-                          class="text-regular mr-4"
-                          style={{ marginLeft: "25px" }}
+                    if (
+                      this.isRegistrationRequestForInfluencerAlreadySent(
+                        profile.id
+                      ) == 0
+                    ) {
+                      return (
+                        <Button
+                          onClick={() => {
+                            this.sendInfluencerHiringRequest(profile.id);
+                          }}
                         >
+                          Hire
+                        </Button>
+                      );
+                    } else if (
+                      this.isRegistrationRequestForInfluencerAlreadySent(
+                        profile.id
+                      ) == 1
+                    ) {
+                      return (
+                        <div>
                           {" "}
-                          Request sent
-                        </b>
-                      </div>)
-                    } else if (this.isRegistrationRequestForInfluencerAlreadySent(profile.id) == 2) {
-                      return (<div>
-                        {" "}
-                        <b
-                          class="text-success mr-4"
-                          style={{ marginLeft: "25px" }}
-                        >
+                          <b
+                            class="text-regular mr-4"
+                            style={{ marginLeft: "25px" }}
+                          >
+                            {" "}
+                            Request sent
+                          </b>
+                        </div>
+                      );
+                    } else if (
+                      this.isRegistrationRequestForInfluencerAlreadySent(
+                        profile.id
+                      ) == 2
+                    ) {
+                      return (
+                        <div>
                           {" "}
-                          Accepted
-                        </b>
-                      </div>)
+                          <b
+                            class="text-success mr-4"
+                            style={{ marginLeft: "25px" }}
+                          >
+                            {" "}
+                            Accepted
+                          </b>
+                        </div>
+                      );
                     } else {
-                      return (<div>
-                        {" "}
-                        <b
-                          class="text-danger mr-4"
-                          style={{ marginLeft: "25px" }}
-                        >
+                      return (
+                        <div>
                           {" "}
-                          Rejected
-                        </b>
-                      </div>)
+                          <b
+                            class="text-danger mr-4"
+                            style={{ marginLeft: "25px" }}
+                          >
+                            {" "}
+                            Rejected
+                          </b>
+                        </div>
+                      );
                     }
-                  })()
-                }
+                  })()}
                 </div>
               );
             })}

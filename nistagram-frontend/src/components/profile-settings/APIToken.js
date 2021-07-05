@@ -15,21 +15,30 @@ class APIToken extends Component {
     };
   }
 
+  componentDidMount() {
+    if (localStorage.getItem("APItoken") !== null) {
+      this.setState({ apiToken: localStorage.getItem("APItoken") });
+    }
+  }
+
   generateToken = () => {
     var resStatus;
-    AuthService.generateToken(AuthService.getCurrentUser().username)
-      .then((res) => {
-        resStatus = res.status;
-        return res.json();
-      })
-      .then((result) => {
-        if (resStatus == 200) {
-          this.setState({ apiToken: result.token });
-        } else {
-          this.handleClickSnackBar("Generatin API token error", "error");
-        }
-        return result;
-      });
+    if (localStorage.getItem("APItoken") !== null) {
+      this.handleClickSnackBar("You already have generated token", "error");
+    } else {
+      AuthService.generateToken(AuthService.getCurrentUser().username)
+        .then((res) => {
+          resStatus = res.status;
+          return res.json();
+        })
+        .then((result) => {
+          if (resStatus == 200) {
+            localStorage.setItem("APItoken", result.token);
+            this.setState({ apiToken: result.token });
+          }
+          return result;
+        });
+    }
   };
 
   handleClickSnackBar = (message, type) => {
