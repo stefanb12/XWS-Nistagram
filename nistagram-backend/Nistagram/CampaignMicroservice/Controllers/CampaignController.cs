@@ -49,10 +49,10 @@ namespace CampaignMicroservice.Controllers
                 result.Add(CampaignMapper.CampaignToCampaignDto(singleCampaign, null));
             }
 
-            if (!result.Any())
+            /*if (!result.Any())
             {
                 return NoContent();
-            }
+            }*/
 
             return Ok(result);
         }
@@ -66,10 +66,10 @@ namespace CampaignMicroservice.Controllers
                 result.Add(CampaignMapper.CampaignToCampaignDto(null, repeatableCampaign));
             }
 
-            if (!result.Any())
+            /*if (!result.Any())
             {
                 return NoContent();
-            }
+            }*/
 
             return Ok(result);
         }
@@ -132,6 +132,22 @@ namespace CampaignMicroservice.Controllers
                 RepeatableCampaign repeatableCampaign = await _repeatablecampaignService.GetById(id);
                 return Ok(CampaignMapper.CampaignToCampaignDto(null, repeatableCampaign));
             }
+        }
+
+        [HttpPut("deleteCampaign")]
+        public async Task<IActionResult> DeleteCampaign(DeleteCampaignDto dto)
+        {
+            Campaign campaign;
+            if (dto.IsSingleCampaign)
+            {
+                campaign = await _singlecampaignService.DeleteSingleCampaign(dto.Id);
+            }
+            else
+            {
+                campaign = await _repeatablecampaignService.DeleteRepetableCampaign(dto.Id);
+            }
+
+            return Ok(campaign);
         }
     }
 }

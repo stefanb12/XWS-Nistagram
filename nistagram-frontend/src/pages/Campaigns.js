@@ -368,6 +368,20 @@ export default class Campaigns extends Component {
     return 0;
   }
 
+  deleteCampaign = async (campaign) => {
+    CampaignService.deleteCampaign(campaign.id, campaign.isSingleCampaign)
+      .then((res) => {
+        if (res.status == 200) {
+          this.setState({
+            snackBarMessage: "Campaign successfully deleted",
+            snackBarOpen: true,
+            snackBarType: "success"
+          })
+          this.getCampaignsForAgent();
+        }
+      });
+  }
+
   render() {
     let commercialsForCampaignModalDialog = this.state.commercials.map(
       (commercial) => {
@@ -798,6 +812,9 @@ export default class Campaigns extends Component {
                 fontSize: "20px",
                 float: "left",
                 marginLeft: "-10px",
+              }}
+              onClick={() => {
+                this.deleteCampaign(campaign);
               }}
             >
               <i class="fa fa-trash"></i>

@@ -120,6 +120,22 @@ class CampaignService {
     );
   }
 
+  deleteCampaign(id, isSingleCampaign) {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
+      body: JSON.stringify({
+        id,
+        isSingleCampaign
+      }),
+    };
+
+    return fetch(API_URL + "campaign/deleteCampaign", requestOptions);
+  }
+
   getCampaign(campaignId) {
     const requestOptions = {
       method: "GET",

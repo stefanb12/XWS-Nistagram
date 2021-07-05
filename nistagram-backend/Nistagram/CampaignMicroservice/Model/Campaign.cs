@@ -12,6 +12,7 @@ namespace CampaignMicroservice.Model
         public int NumberOfCampaignClicks { get; set; }
         public virtual List<TargetGroupProfile> TargetGroup { get; set; }*/
         public bool IsPost { get; set; }
+        public bool Deleted { get; set; }
         public virtual List<CampaignCommercial> Commercials { get; set; } 
         public int AgentId { get; set; }
         public virtual Profile Agent { get; set; }
@@ -20,6 +21,7 @@ namespace CampaignMicroservice.Model
 
         public Campaign()
         {
+            Deleted = false;
         }
     }
 }

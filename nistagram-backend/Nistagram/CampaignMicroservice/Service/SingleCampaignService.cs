@@ -21,12 +21,20 @@ namespace CampaignMicroservice.Service
             List<SingleCampaign> singleCampaigns = new List<SingleCampaign>();
             foreach (SingleCampaign singleCampaign in await GetAll())
             {
-                if (singleCampaign.AgentId == agentId)
+                if (singleCampaign.AgentId == agentId && !singleCampaign.Deleted)
                 {
                     singleCampaigns.Add(singleCampaign);
                 }
             }
             return singleCampaigns;
+        }
+
+        public async Task<SingleCampaign> DeleteSingleCampaign(int campaignId)
+        {
+            SingleCampaign campaign = await _singleCampaignRepository.GetById(campaignId);
+            campaign.Deleted = true;
+            await _singleCampaignRepository.Update(campaign);
+            return campaign;
         }
 
         public async Task<SingleCampaign> GetById(int id)

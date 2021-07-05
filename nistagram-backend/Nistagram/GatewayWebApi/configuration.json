@@ -1559,23 +1559,42 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/campaign/{id}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 56000
+        "DownstreamPathTemplate": "/api/campaign/{id}",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+            {
+                "Host": "localhost",
+                "Port": 56000
+            }
+        ],
+        "UpstreamPathTemplate": "/gateway/campaign/{id}",
+        "UpstreamHttpMethod": [ "GET" ],
+        "AuthenticationOptions": {
+            "AuthenticationProviderKey": "Key",
+            "AllowedScopes": []
+        },
+        "RouteClaimsRequirement": {
+            "UserRole": "User"
         }
-      ],
-      "UpstreamPathTemplate": "/gateway/campaign/{id}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Key",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "UserRole": "User"
-      }
+    },
+    {
+        "DownstreamPathTemplate": "/api/campaign/deleteCampaign",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+            {
+                "Host": "localhost",
+                "Port": 56000
+            }
+        ],
+        "UpstreamPathTemplate": "/gateway/campaign/deleteCampaign",
+        "UpstreamHttpMethod": [ "PUT" ],
+        "AuthenticationOptions": {
+            "AuthenticationProviderKey": "Key",
+            "AllowedScopes": []
+        },
+        "RouteClaimsRequirement": {
+            "UserRole": "Agent"
+        }
     }
 
   ],
