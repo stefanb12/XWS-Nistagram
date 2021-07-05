@@ -32,6 +32,7 @@ class AuthService {
     localStorage.removeItem("currentUser");
     localStorage.removeItem("userToken");
     localStorage.removeItem("userRole");
+    localStorage.removeItem("shoppingCart");
   }
 
   getCurrentUser() {

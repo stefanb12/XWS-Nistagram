@@ -111,7 +111,7 @@ export default class AdminProducts extends Component {
     if (!this.state.chosenProduct.deleted) {
       if (this.state.token !== "") {
         var websiteLink =
-          "http://localhost:3001/user/singleProduct/" +
+          "http://localhost:3001/app/singleProduct/" +
           this.state.chosenProduct.id;
 
         let resStatus = 0;
