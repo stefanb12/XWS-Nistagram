@@ -369,17 +369,22 @@ export default class Campaigns extends Component {
   }
 
   deleteCampaign = async (campaign) => {
-    CampaignService.deleteCampaign(campaign.id, campaign.isSingleCampaign)
-      .then((res) => {
-        if (res.status == 200) {
-          this.setState({
-            snackBarMessage: "Campaign successfully deleted",
-            snackBarOpen: true,
-            snackBarType: "success"
-          })
-          this.getCampaignsForAgent();
-        }
-      });
+    PostService.deletePost(campaign.postId)
+    .then((res) => {
+      if (res.status == 200) {
+        CampaignService.deleteCampaign(campaign.id, campaign.isSingleCampaign)
+        .then((res) => {
+          if (res.status == 200) {
+            this.setState({
+              snackBarMessage: "Campaign successfully deleted",
+              snackBarOpen: true,
+              snackBarType: "success"
+            })
+            this.getCampaignsForAgent();
+          }
+        });
+      }
+    });
   }
 
   render() {
