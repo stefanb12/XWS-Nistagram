@@ -679,6 +679,18 @@
 
     // PostMicroservice
     {
+      "DownstreamPathTemplate": "/api/post/saveImage",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55993
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/post/saveImage",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/post",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -1143,6 +1155,18 @@
     },
 
     //StoryMicroservice
+    {
+      "DownstreamPathTemplate": "/api/story/saveImage",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 55996
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/story/saveImage",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
     {
       "DownstreamPathTemplate": "/api/story",
       "DownstreamScheme": "http",

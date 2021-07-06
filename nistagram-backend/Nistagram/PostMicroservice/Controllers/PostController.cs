@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using PostMicroservice.Dto;
 using PostMicroservice.Mapper;
 using PostMicroservice.Model;
 using PostMicroservice.Service;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace PostMicroservice.Controllers
@@ -285,6 +287,13 @@ namespace PostMicroservice.Controllers
         public async Task<IActionResult> Delete(Post post)
         {
             await _postService.Delete(post.Id);
+            return Ok();
+        }
+
+        [HttpPost("saveImage")]
+        public async Task<IActionResult> SaveImage([FromForm] PostDto dto)
+        {
+            await _postService.SaveImageSrc(dto.ImageSrc);
             return Ok();
         }
     }

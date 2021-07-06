@@ -21,5 +21,7 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
 WORKDIR /app/publish
+COPY "nistagram-backend/Nistagram/CampaignMicroservice/wwwroot" .
+COPY "agent-app-backend/WebShop/WebShop/wwwroot" .
 VOLUME /app/sql-post
 CMD ASPNETCORE_URLS=http://:$PORT dotnet PostMicroservice.dll

@@ -19,5 +19,6 @@ namespace PostMicroservice.Service
         Task<List<Post>> GetSearchResult(string searchParam);
         Task<Post> SavePostAsFavorite(Post post, Profile profile);
         Task<List<Post>> GetSearchResultWithoutBlockedAndMuted(string searchParam, int id);
+        Task SaveImageSrc(string imageSrc);
     }
 }
