@@ -75,6 +75,7 @@ namespace CampaignMicroservice.Mapper
                 dto.Id = singleCampaign.Id;
                 dto.IsSingleCampaign = true;
                 dto.IsPost = singleCampaign.IsPost;
+                dto.PostId = singleCampaign.PostId;
                 dto.AgentId = singleCampaign.AgentId;
                 dto.BroadcastTime = singleCampaign.BroadcastTime;
                 foreach (CampaignCommercial campaignCommercial in singleCampaign.Commercials)
@@ -90,6 +91,7 @@ namespace CampaignMicroservice.Mapper
                 dto.Id = repeatableCampaign.Id;
                 dto.IsSingleCampaign = false;
                 dto.IsPost = repeatableCampaign.IsPost;
+                dto.PostId = repeatableCampaign.PostId;
                 dto.AgentId = repeatableCampaign.AgentId;
                 dto.StartDate = repeatableCampaign.StartDate;
                 dto.EndDate = repeatableCampaign.EndDate;
