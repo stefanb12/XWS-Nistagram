@@ -16,6 +16,7 @@ namespace CampaignMicroservice.Database
         public DbSet<Post> Posts { get; set; }
         public DbSet<Story> Stories { get; set; }
         public DbSet<Profile> Profiles { get; set; }
+        public DbSet<RepeatableCampaignEdit> RepeatableCampaignEdits { get; set; }
         public CampaignDbContext() : base() { }
 
         public CampaignDbContext(DbContextOptions<CampaignDbContext> options) : base(options) { }
@@ -83,11 +84,11 @@ namespace CampaignMicroservice.Database
             );
 
             modelBuilder.Entity<SingleCampaign>().HasData(
-                new SingleCampaign { Id = 1, AgentId = 4, IsPost = true, PostId = 1, StoryId = "", BroadcastTime = new DateTime(2021, 7, 5) }
+                new SingleCampaign { Id = 1, Deleted = false, AgentId = 4, IsPost = true, PostId = 1, StoryId = "", BroadcastTime = new DateTime(2021, 7, 5) }
             );
 
             modelBuilder.Entity<RepeatableCampaign>().HasData(
-                new RepeatableCampaign { Id = 2, AgentId = 4, IsPost = true, PostId = 2, StoryId = "", StartDate = new DateTime(2021, 7, 5), EndDate = new DateTime(2021, 7, 7), LastModification = new DateTime(2021, 7, 5), NumberOfRepeats = 2 }
+                new RepeatableCampaign { Id = 2, Deleted = false, AgentId = 4, IsPost = true, PostId = 2, StoryId = "", StartDate = new DateTime(2021, 7, 5), EndDate = new DateTime(2021, 7, 7), LastModification = new DateTime(2021, 7, 5), NumberOfRepeats = 2 }
             );
 
             // CampaignCommercials

@@ -7,6 +7,8 @@ namespace CampaignMicroservice.Service
     public interface ISingleCampaignService : IService<SingleCampaign>
     {
         Task<List<SingleCampaign>> GetSingleCampaignsForAgent(int agentId);
+
+        Task<SingleCampaign> DeleteSingleCampaign(int campaignId);
     }
 }
 
