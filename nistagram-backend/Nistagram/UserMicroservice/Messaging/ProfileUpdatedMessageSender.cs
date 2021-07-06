@@ -41,6 +41,15 @@ namespace UserMicroservice.Messaging
                 }
             }
 
+            List<int> followersIds = new List<int>();
+            if (profile.Followers != null)
+            {
+                foreach (ProfileFollower follower in profile.Followers)
+                {
+                    followersIds.Add(follower.FollowerId);
+                }
+            }
+
             List<int> closeFriendsIds = new List<int>();
             if (profile.CloseFriends != null)
             {
@@ -85,6 +94,7 @@ namespace UserMicroservice.Messaging
                 deactivated = profile.Deactivated,
                 profileImage = profile.ImageName,
                 following = followingIds,
+                followers = followersIds,
                 closeFriends = closeFriendsIds,
                 blockedProfiles = blockedProfilesIds,
                 mutedProfiles = mutedProfilesIds,

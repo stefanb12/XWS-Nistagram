@@ -102,6 +102,40 @@ namespace CampaignMicroservice.Database
                 new CampaignCommercial { CampaignId = 1, CommercialId = 1 },
                 new CampaignCommercial { CampaignId = 2, CommercialId = 2 }
             );
+
+            // Followers
+            modelBuilder.Entity<ProfileFollower>().HasKey(t => new { t.ProfileId, t.FollowerId });
+            modelBuilder.Entity<ProfileFollower>()
+                .HasOne(pt => pt.Profile)
+                .WithMany(p => p.Followers)
+                .HasForeignKey(pt => pt.ProfileId);
+
+            modelBuilder.Entity<ProfileFollower>().HasData(
+                new ProfileFollower { ProfileId = 1, FollowerId = 2 },
+                new ProfileFollower { ProfileId = 1, FollowerId = 3 },
+                new ProfileFollower { ProfileId = 2, FollowerId = 1 },
+                new ProfileFollower { ProfileId = 2, FollowerId = 3 },
+                new ProfileFollower { ProfileId = 3, FollowerId = 1 },
+                new ProfileFollower { ProfileId = 4, FollowerId = 2 },
+                new ProfileFollower { ProfileId = 5, FollowerId = 1 }
+            );
+
+            // Following
+            modelBuilder.Entity<ProfileFollowing>().HasKey(t => new { t.ProfileId, t.FollowingId });
+            modelBuilder.Entity<ProfileFollowing>()
+                .HasOne(pt => pt.Profile)
+                .WithMany(p => p.Following)
+                .HasForeignKey(pt => pt.ProfileId);
+
+            modelBuilder.Entity<ProfileFollowing>().HasData(
+                new ProfileFollowing { ProfileId = 2, FollowingId = 1 },
+                new ProfileFollowing { ProfileId = 3, FollowingId = 1 },
+                new ProfileFollowing { ProfileId = 1, FollowingId = 2 },
+                new ProfileFollowing { ProfileId = 3, FollowingId = 2 },
+                new ProfileFollowing { ProfileId = 1, FollowingId = 3 },
+                new ProfileFollowing { ProfileId = 2, FollowingId = 4 },
+                new ProfileFollowing { ProfileId = 1, FollowingId = 5 }
+            );
         }
         }
 }

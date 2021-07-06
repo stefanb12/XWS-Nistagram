@@ -42,6 +42,12 @@ namespace ProfileMicroservice
             services.AddDbContext<UserDbContext>(options =>
                   options.UseMySql(CreateConnectionStringFromEnvironment()).UseLazyLoadingProxies(), ServiceLifetime.Transient);
 
+            var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST_NAME") ?? "localhost";
+            if (hostName == "rabbitmq")
+            {
+                services.AddSingleton<IMessageReceiver, MuteProfileErrorMesssageReceiver>();
+            }
+
             services.AddScoped<IProfileCreatedMessageSender, ProfileCreatedMessageSender>();
             services.AddScoped<IProfileUpdatedMessageSender, ProfileUpdatedMessageSender>();
 
@@ -57,6 +63,8 @@ namespace ProfileMicroservice
             services.AddScoped<IFollowRequestService, FollowRequestService>();
             services.AddScoped<IProfileVerificationRequestService, ProfileVerificationRequestService>();
             services.AddScoped<IRegistrationRequestService, RegistrationRequestService>();
+
+            services.AddHostedService<MuteProfileErrorMesssageReceiver>();
 
             // JWT Token
             var appSettingsSection = Configuration.GetSection("AppSettings");

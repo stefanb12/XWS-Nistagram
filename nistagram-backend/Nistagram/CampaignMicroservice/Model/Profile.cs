@@ -1,5 +1,6 @@
 ﻿using CampaignMicroservice.Model.Enum;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CampaignMicroservice.Model
@@ -10,6 +11,8 @@ namespace CampaignMicroservice.Model
         public int OriginalId { get; set; }
         public string Username { get; set; }
         public UserRole UserRole { get; set; }
+        public virtual List<ProfileFollowing> Following { get; set; }
+        public virtual List<ProfileFollower> Followers { get; set; }
         public string ImageName { get; set; }
         [NotMapped]
         public IFormFile ImageFile { get; set; }

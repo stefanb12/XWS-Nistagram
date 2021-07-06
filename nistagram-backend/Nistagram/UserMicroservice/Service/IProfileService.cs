@@ -23,6 +23,7 @@ namespace UserMicroservice.Service
         Task<List<Profile>> GetBlockedProfiles(int id);
         Task<ProfileMutedProfile> MuteProfile(int profileId, int id);
         Task<ProfileMutedProfile> UnmuteProfile(int profileId, int id);
+        Task<ProfileMutedProfile> MuteRollback(int profileId, int id);
         Task<ProfileBlockedProfile> BlockProfile(int profileId, int id);
         Task<ProfileBlockedProfile> UnBlockProfile(int profileId, int id);
         Task<List<Profile>> GetCloseFriends(int id);

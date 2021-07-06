@@ -96,7 +96,8 @@ namespace PostMicroservice.Messaging
                     Deactivated = data["deactivated"].Value<bool>(),
                     Following = following,
                     MutedProfiles = mutedProfiles,
-                    BlockedProfiles = blockedProfiles
+                    MutedProfilesIds = data["mutedProfiles"].ToObject<List<int>>(),
+                    BlockedProfiles = blockedProfiles,
                 });
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);

@@ -264,6 +264,22 @@ namespace UserMicroservice.Service
             return profileMutedProfile;
         }
 
+        public async Task<ProfileMutedProfile> MuteRollback(int profileId, int id)
+        {
+            ProfileSettings profile = await _profileSettingsRepository.GetById(profileId);
+            ProfileSettings muteProfile = await _profileSettingsRepository.GetById(id);
+            if (profile == null || muteProfile == null)
+            {
+                return null;
+            }
+            ProfileMutedProfile profileMutedProfile = profile.MutedProfiles.Where(ps =>
+                ps.MutedProfileId == muteProfile.Id).SingleOrDefault();
+            profile.MutedProfiles.Remove(profileMutedProfile);
+            await _profileSettingsRepository.Update(profile);
+
+            return profileMutedProfile;
+        }
+
         public async Task<List<Profile>> GetBlockedProfiles(int id)
         {
             ProfileSettings profileSettings = await _profileSettingsRepository.GetById(id);

@@ -50,6 +50,7 @@ namespace PostMicroservice
                 services.AddScoped<IMessageReceiver, ProfileUpdatedMessageReceiver>();
             }
 
+            services.AddSingleton<IMuteProfileErrorMesssageSender, MuteProfileErrorMesssageSender>();
             services.AddScoped<IPostCreatedMessageSender, PostCreatedMessageSender>();
 
             services.AddScoped<IProfileRepository, ProfileRepository>();

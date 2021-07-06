@@ -1,4 +1,5 @@
-﻿using PostMicroservice.Model;
+﻿using PostMicroservice.Messaging;
+using PostMicroservice.Model;
 using PostMicroservice.Repository;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,12 @@ namespace PostMicroservice.Service
     public class ProfileService : IProfileService
     {
         private IProfileRepository _profileRepository;
+        private IMuteProfileErrorMesssageSender _muteProfileErrorMesssageSender;
 
-        public ProfileService(IProfileRepository profileRepository)
+        public ProfileService(IProfileRepository profileRepository, IMuteProfileErrorMesssageSender muteProfileErrorMesssageSender)
         {
             _profileRepository = profileRepository;
+            _muteProfileErrorMesssageSender = muteProfileErrorMesssageSender;
         }
 
         public async Task<List<Profile>> GetAllPublicProfiles()
@@ -58,12 +61,21 @@ namespace PostMicroservice.Service
 
         public async Task<Profile> Update(Profile entity)
         {
+            bool muteError = false;
             var profiles = await GetAll();
             Profile profile = profiles.FirstOrDefault(p => p.OriginalId == entity.OriginalId);
-            return await _profileRepository.Update(UpdateProfileAttributes(profile, entity));
+            foreach (int mutedProfileId in entity.MutedProfilesIds)
+            {
+                if (await GetProfileByOriginalId(mutedProfileId) == null)
+                {
+                    _muteProfileErrorMesssageSender.SendMuteProfileError(entity.OriginalId, mutedProfileId);
+                    muteError = true;
+                }
+            }
+            return await _profileRepository.Update(UpdateProfileAttributes(profile, entity, muteError));
         }
 
-        private Profile UpdateProfileAttributes(Profile profile, Profile entity)
+        private Profile UpdateProfileAttributes(Profile profile, Profile entity, bool muteError)
         {
             profile.Username = entity.Username;
             profile.IsPrivate = entity.IsPrivate;
@@ -71,8 +83,11 @@ namespace PostMicroservice.Service
             profile.ImageName = entity.ImageName;
             profile.Following.Clear();
             profile.Following = entity.Following;
-            profile.MutedProfiles.Clear();
-            profile.MutedProfiles = entity.MutedProfiles;
+            if(!muteError)
+            {
+                profile.MutedProfiles.Clear();
+                profile.MutedProfiles = entity.MutedProfiles;
+            }
             profile.BlockedProfiles.Clear();
             profile.BlockedProfiles = entity.BlockedProfiles;
             return profile;
