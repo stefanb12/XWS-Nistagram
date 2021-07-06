@@ -16,6 +16,7 @@ namespace CampaignMicroservice.Database
         public DbSet<Post> Posts { get; set; }
         public DbSet<Story> Stories { get; set; }
         public DbSet<Profile> Profiles { get; set; }
+        public DbSet<RepeatableCampaignEdit> RepeatableCampaignEdits { get; set; }
         public CampaignDbContext() : base() { }
 
         public CampaignDbContext(DbContextOptions<CampaignDbContext> options) : base(options) { }

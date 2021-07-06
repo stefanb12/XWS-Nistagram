@@ -1595,6 +1595,44 @@
         "RouteClaimsRequirement": {
             "UserRole": "Agent"
         }
+    },
+    {
+        "DownstreamPathTemplate": "/api/campaign/editCampaign",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+            {
+                "Host": "localhost",
+                "Port": 56000
+            }
+        ],
+        "UpstreamPathTemplate": "/gateway/campaign/editCampaign",
+        "UpstreamHttpMethod": [ "PUT" ],
+        "AuthenticationOptions": {
+            "AuthenticationProviderKey": "Key",
+            "AllowedScopes": []
+        },
+        "RouteClaimsRequirement": {
+            "UserRole": "Agent"
+        }
+    },
+    {
+        "DownstreamPathTemplate": "/api/campaign/editRepeatableCampaign",
+        "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+            {
+                "Host": "localhost",
+                "Port": 56000
+            }
+        ],
+        "UpstreamPathTemplate": "/gateway/campaign/editRepeatableCampaign",
+        "UpstreamHttpMethod": [ "PUT" ],
+        "AuthenticationOptions": {
+            "AuthenticationProviderKey": "Key",
+            "AllowedScopes": []
+        },
+        "RouteClaimsRequirement": {
+            "UserRole": "Agent"
+        }
     }
 
   ],

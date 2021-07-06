@@ -10,10 +10,12 @@ namespace CampaignMicroservice.Service
     public class RepeatableCampaignService : IRepeatableCampaignService
     {
         private IRepeatableCampaignRepository _repeatableCampaignRepository;
+        private IRepeatableCampaignEditService _repeatableCampaignEditService;
 
-        public RepeatableCampaignService(IRepeatableCampaignRepository repeatableCampaignRepository)
+        public RepeatableCampaignService(IRepeatableCampaignRepository repeatableCampaignRepository, IRepeatableCampaignEditService repeatableCampaignEditService)
         {
             _repeatableCampaignRepository = repeatableCampaignRepository;
+            _repeatableCampaignEditService = repeatableCampaignEditService;
         }
 
         public async Task<List<RepeatableCampaign>> GetRepeatableCampaignsForAgent(int agentId)
@@ -23,10 +25,29 @@ namespace CampaignMicroservice.Service
             {
                 if (repeatableCampaign.AgentId == agentId && !repeatableCampaign.Deleted)
                 {
+                    RepeatableCampaignEdit repeatableCampaignEdit =
+                        await _repeatableCampaignEditService.GetRepeatableCampaignEditByCampaignId(repeatableCampaign.Id);
+                    if (repeatableCampaignEdit != null)
+                    {
+                        CopyEditCampaignContentToCampaign(repeatableCampaign, repeatableCampaignEdit);
+                        if (repeatableCampaignEdit.ModificationDate.AddHours(24) < DateTime.Now)
+                        {
+                            await Update(repeatableCampaign);
+                            await _repeatableCampaignEditService.Delete(repeatableCampaignEdit);
+                        }
+                    }
                     repeatableCampaigns.Add(repeatableCampaign);
                 }
             }
             return repeatableCampaigns;
+        }
+
+        private void CopyEditCampaignContentToCampaign(RepeatableCampaign repeatableCampaign, 
+            RepeatableCampaignEdit repeatableCampaignEdit)
+        {
+            repeatableCampaign.StartDate = repeatableCampaignEdit.StartDate;
+            repeatableCampaign.EndDate = repeatableCampaignEdit.EndDate;
+            repeatableCampaign.NumberOfRepeats = repeatableCampaignEdit.NumberOfRepeats;
         }
 
         public async Task<RepeatableCampaign> DeleteRepetableCampaign(int campaignId)
@@ -35,6 +56,16 @@ namespace CampaignMicroservice.Service
             campaign.Deleted = true;
             await _repeatableCampaignRepository.Update(campaign);
             return campaign;
+        }
+
+        public async Task<RepeatableCampaign> EditRepetableCampaign(RepeatableCampaign campaign)
+        {
+            RepeatableCampaign entity = await _repeatableCampaignRepository.GetById(campaign.Id);
+            entity.StartDate = campaign.StartDate;
+            entity.EndDate = campaign.EndDate;
+            entity.NumberOfRepeats = campaign.NumberOfRepeats;
+            await _repeatableCampaignRepository.Update(entity);
+            return entity;
         }
 
         public async Task<RepeatableCampaign> GetById(int id)

@@ -9,5 +9,7 @@ namespace CampaignMicroservice.Service
         Task<List<RepeatableCampaign>> GetRepeatableCampaignsForAgent(int agentId);
 
         Task<RepeatableCampaign> DeleteRepetableCampaign(int campaignId);
+
+        Task<RepeatableCampaign> EditRepetableCampaign(RepeatableCampaign campaign);
     }
 }

@@ -136,6 +136,24 @@ class CampaignService {
     return fetch(API_URL + "campaign/deleteCampaign", requestOptions);
   }
 
+  editRepeatableCampaign(id, startDate, endDate, numberOfRepeats) {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + AuthService.getUserToken(),
+      },
+      body: JSON.stringify({
+        id,
+        startDate,
+        endDate,
+        numberOfRepeats
+      }),
+    };
+
+    return fetch(API_URL + "campaign/editRepeatableCampaign", requestOptions);
+  }
+
   getCampaign(campaignId) {
     const requestOptions = {
       method: "GET",

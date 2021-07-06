@@ -17,13 +17,15 @@ namespace CampaignMicroservice.Controllers
         private readonly ISingleCampaignService _singlecampaignService;
         private readonly IRepeatableCampaignService _repeatablecampaignService;
         private readonly ICampaignRequestService _campaignRequestService;
+        private readonly IRepeatableCampaignEditService _repeatablecampaignEditService;
 
         public CampaignController(IRepeatableCampaignService repeatableCampaignService, ISingleCampaignService singlecampaignService,
-            ICampaignRequestService campaignRequestService)
+            ICampaignRequestService campaignRequestService, IRepeatableCampaignEditService repeatablecampaignEditService)
         {
             _repeatablecampaignService = repeatableCampaignService;
             _singlecampaignService = singlecampaignService;
             _campaignRequestService = campaignRequestService;
+            _repeatablecampaignEditService = repeatablecampaignEditService;
         }
 
         [HttpPost]
@@ -135,7 +137,7 @@ namespace CampaignMicroservice.Controllers
         }
 
         [HttpPut("deleteCampaign")]
-        public async Task<IActionResult> DeleteCampaign(DeleteCampaignDto dto)
+        public async Task<IActionResult> DeleteCampaign(EditCampaignDto dto)
         {
             Campaign campaign;
             if (dto.IsSingleCampaign)
@@ -148,6 +150,21 @@ namespace CampaignMicroservice.Controllers
             }
 
             return Ok(campaign);
+        }
+
+        [HttpPut("editCampaign")]
+        public async Task<IActionResult> EditCampaign(EditCampaignDto dto)
+        {
+            RepeatableCampaign campaign = await _repeatablecampaignService.EditRepetableCampaign(EditCampaignMapper.EditCampaignDtoToCampaign(dto));
+            return Ok(campaign);
+        }
+
+
+        [HttpPut("editRepeatableCampaign")]
+        public async Task<IActionResult> EditRepeatableCampaign(EditCampaignDto dto)
+        {
+            RepeatableCampaignEdit campaignEdit = await _repeatablecampaignEditService.Insert(EditCampaignMapper.EditCampaignDtoToCampaignEdit(dto));
+            return Ok(campaignEdit);
         }
     }
 }

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Carousel, Modal, Button } from "react-bootstrap";
 import {
+  Box,
   Checkbox,
   FormControlLabel,
   RadioGroup,
@@ -15,8 +16,10 @@ import {
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import "date-fns";
+import { spacing } from '@material-ui/system';
 import DateFnsUtils from "@date-io/date-fns";
 import NumericInput from "material-ui-numeric-input";
+import Grid from '@material-ui/core/Grid';
 import NotFound from "./NotFound";
 import CommercialService from "../services/CommercialService";
 import AuthService from "../services/AuthService";
@@ -51,6 +54,11 @@ export default class Campaigns extends Component {
       following: [],
       selectedCampaignId: 0,
       campaignRequestsForSelectedCampaign: [],
+      isEditCampaignModalDialogOpen: false,
+      currentlyEditedCampaignStartDate: null,
+      currentlyEditedCampaignEndDate: null,
+      currentlyEditedCampaignDailyRepeats: 0,
+      currentlyEditedCampaign: null
     };
     this.handleCampaignTypeChange = this.handleCampaignTypeChange.bind(this);
     this.handlePostOrStoryChange = this.handlePostOrStoryChange.bind(this);
@@ -299,6 +307,12 @@ export default class Campaigns extends Component {
     });
   };
 
+  closeEditCampaignModal = () => {
+    this.setState({
+      isEditCampaignModalDialogOpen: false
+    });
+  };
+
   handleClickSnackBar = (message, type) => {
     this.setState({
       snackBarMessage: message,
@@ -387,6 +401,58 @@ export default class Campaigns extends Component {
     });
   }
 
+  editCampaign = () => {
+    if (this.state.currentlyEditedCampaignDailyRepeats === 0) {
+      this.setState({
+        snackBarMessage: "Campaign daily repeats must be bigger than zero",
+        snackBarOpen: true,
+        snackBarType: "error"
+      })
+      return;
+    }
+    CampaignService.editRepeatableCampaign(this.state.currentlyEditedCampaign.id,
+      this.state.currentlyEditedCampaignStartDate, this.state.currentlyEditedCampaignEndDate, this.state.currentlyEditedCampaignDailyRepeats)
+      .then((res) => {
+        if (res.status == 200) {
+          this.setState({
+            snackBarMessage: "Campaign successfully edited",
+            snackBarOpen: true,
+            snackBarType: "success",
+            isEditCampaignModalDialogOpen: false
+          })
+          this.getCampaignsForAgent();
+        }
+      });
+  }
+
+  handleEditCampaignStartDate = (date) => {
+    this.setState({
+      currentlyEditedCampaignStartDate : date
+    })
+  }
+
+  handleEditCampaignEndDate = (date) => {
+    this.setState({
+      currentlyEditedCampaignEndDate : date
+    })
+  }
+
+  handleEditCampaignDailyRepeats = (numberOfRepeats) => {
+    this.setState({
+      currentlyEditedCampaignDailyRepeats : numberOfRepeats
+    })
+  }
+
+  openEditCampaign = (campaign) => {
+    this.setState({
+      isEditCampaignModalDialogOpen: true,
+      currentlyEditedCampaign: campaign,
+      currentlyEditedCampaignStartDate: campaign.startDate,
+      currentlyEditedCampaignEndDate: campaign.endDate,
+      currentlyEditedCampaignDailyRepeats: campaign.numberOfRepeats
+    })
+  }
+
   render() {
     let commercialsForCampaignModalDialog = this.state.commercials.map(
       (commercial) => {
@@ -426,13 +492,74 @@ export default class Campaigns extends Component {
       }
     );
 
+    var editCampaignModal = (
+      <Modal
+        show={this.state.isEditCampaignModalDialogOpen}
+        onHide={this.closeEditCampaignModal}
+        style={{ marginTop: "120px", maxHeight: "700px"}}
+      >
+        <Modal.Header 
+          closeButton
+          >
+          <Modal.Title>Edit campaign</Modal.Title>
+        </Modal.Header>
+          <Modal.Body>
+            <div class="form-group">
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <Grid container justify="space-around">
+                  <Box pb={1}>
+                    <KeyboardDatePicker
+                    disableToolbar
+                    variant="inline"
+                    format="MM/dd/yyyy"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="Select from date"
+                    value={this.state.currentlyEditedCampaignStartDate}
+                    onChange={this.handleEditCampaignStartDate}
+                    />
+                  </Box>
+                  <Box p={3}>
+                    <KeyboardDatePicker
+                      disableToolbar
+                      variant="inline"
+                      format="MM/dd/yyyy"
+                      margin="normal"
+                      id="date-picker-inline"
+                      label="Select to date"
+                      value={this.state.currentlyEditedCampaignEndDate}
+                      onChange={this.handleEditCampaignEndDate}
+                    />
+                  </Box>
+                  <NumericInput
+                      value={this.state.currentlyEditedCampaignDailyRepeats}
+                      name="example"
+                      label="Daily repeat"
+                      precision="0"
+                      onChange={this.handleEditCampaignDailyRepeats}
+                      variant="outlined"
+                    />
+                </Grid>
+              </MuiPickersUtilsProvider>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="success" onClick={this.editCampaign}>
+              Edit
+            </Button>
+          </Modal.Footer>
+      </Modal>
+    )
+
     var hireInfuencerModal = (
       <Modal
         show={this.state.isHireInfluencerDialogOpen}
         onHide={this.closeHireInfluencerModal}
         style={{ marginTop: "120px", maxHeight: "500px", overflow: "hidden" }}
       >
-        <Modal.Header closeButton>
+        <Modal.Header 
+          closeButton
+          >
           <Modal.Title>Hire influencer</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -752,8 +879,8 @@ export default class Campaigns extends Component {
                       Repeatable campaign
                     </h4>
                     <p>
-                      {dateFormat(campaign.startTime, "dd.mm.yyyy.")} -
-                      {dateFormat(campaign.endTime, "dd.mm.yyyy.")}
+                      {dateFormat(campaign.startDate, "dd.mm.yyyy.")} - {" "}
+                      {dateFormat(campaign.endDate, "dd.mm.yyyy.")}
                     </p>
                     <p>{campaign.numberOfRepeats} times a day</p>
                   </div>
@@ -795,7 +922,7 @@ export default class Campaigns extends Component {
             >
               <i class="fa fa-envelope"></i>
             </a>
-            <a
+            {!campaign.isSingleCampaign ? <a
               href="javascript:void(0)"
               class="text-info mr-4"
               data-toggle="tooltip"
@@ -803,9 +930,13 @@ export default class Campaigns extends Component {
               title=""
               data-original-title="Edit"
               style={{ fontSize: "20px", float: "left", marginLeft: "-8px" }}
+              onClick={() => {
+                this.openEditCampaign(campaign);
+              }}
             >
               <i class="fa fa-pencil"></i>
-            </a>
+            </a> : <div></div>}
+            
             <a
               href="javascript:void(0)"
               class="text-danger mr-4"
@@ -834,6 +965,7 @@ export default class Campaigns extends Component {
     } else {
       return (
         <div>
+          {editCampaignModal}
           {addCampaignModalDialog}
           {hireInfuencerModal}
           <Snackbar
