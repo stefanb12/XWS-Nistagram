@@ -54,6 +54,7 @@ namespace StoryMicroservice
                 services.AddSingleton<IMessageReceiver, ProfileUpdatedMessageReceiver>();
             }
 
+            services.AddSingleton<IMuteProfileErrorMesssageSender, MuteProfileErrorMesssageSender>();
             services.AddSingleton<IStoryCreatedMessageSender, StoryCreatedMessageSender>();
 
             services.AddSingleton<IStoryRepository, StoryRepository>();

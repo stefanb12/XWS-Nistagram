@@ -1,26 +1,24 @@
-﻿using CampaignMicroservice.Model;
-using CampaignMicroservice.Service;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UserMicroservice.Dto;
+using UserMicroservice.Service;
 
-namespace CampaignMicroservice.Messaging
+namespace UserMicroservice.Messaging
 {
-    public class ProfileUpdatedMessageReceiver : IHostedService, IMessageReceiver
+    public class MuteProfileErrorMesssageReceiver : IHostedService, IMessageReceiver
     {
         private IConnection _connection;
         private IModel _channel;
         public IServiceProvider Services;
 
-        public ProfileUpdatedMessageReceiver(IServiceProvider services)
+        public MuteProfileErrorMesssageReceiver(IServiceProvider services)
         {
             Services = services;
             InitRabbitMQ();
@@ -43,14 +41,14 @@ namespace CampaignMicroservice.Messaging
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
-            _channel.ExchangeDeclare(exchange: "profile.updated", type: ExchangeType.Fanout);
-            _channel.QueueDeclare(queue: "campaign.profile.updated",
+            _channel.ExchangeDeclare(exchange: "profile.mute.error", type: ExchangeType.Fanout);
+            _channel.QueueDeclare(queue: "profile.profile.mute.error",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: false,
                                   arguments: null);
-            _channel.QueueBind(queue: "campaign.profile.updated",
-                              exchange: "profile.updated",
+            _channel.QueueBind(queue: "profile.profile.mute.error",
+                              exchange: "profile.mute.error",
                               routingKey: "");
         }
 
@@ -70,31 +68,15 @@ namespace CampaignMicroservice.Messaging
                     scope.ServiceProvider
                         .GetRequiredService<IProfileService>();
 
-                List<ProfileFollowing> following = new List<ProfileFollowing>();
-                foreach (int followingId in data["following"].ToObject<List<int>>())
-                {
-                    following.Add(new ProfileFollowing() { ProfileId = data["id"].Value<int>(), FollowingId = followingId });
-                }
-
-                List<ProfileFollower> followers = new List<ProfileFollower>();
-                foreach (int followerId in data["followers"].ToObject<List<int>>())
-                {
-                    followers.Add(new ProfileFollower() { ProfileId = data["id"].Value<int>(), FollowerId = followerId });
-                }
-
-                scopedProcessingService.Update(new Profile()
-                {
-                    OriginalId = data["id"].Value<int>(),
-                    Username = data["username"].Value<string>(),
-                    ImageName = data["profileImage"].Value<string>(),
-                    Following = following,
-                    Followers = followers
-                });
+                scopedProcessingService.MuteRollback(
+                    data["profileId"].Value<int>(),
+                    data["muteProfileId"].Value<int>()
+                );
 
                 _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };
 
-            _channel.BasicConsume(queue: "campaign.profile.updated",
+            _channel.BasicConsume(queue: "profile.profile.mute.error",
                                   autoAck: false,
                                   consumer: consumer);
         }

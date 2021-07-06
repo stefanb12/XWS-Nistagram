@@ -1,4 +1,5 @@
-﻿using StoryMicroservice.Model;
+﻿using StoryMicroservice.Messaging;
+using StoryMicroservice.Model;
 using StoryMicroservice.Repository;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,13 @@ namespace StoryMicroservice.Service
     {
         private IProfileRepository _profileRepository;
         private IStoryRepository _storyRepository;
+        private IMuteProfileErrorMesssageSender _muteProfileErrorMesssageSender;
 
-        public ProfileService(IProfileRepository profileRepository, IStoryRepository storyRepository)
+        public ProfileService(IProfileRepository profileRepository, IStoryRepository storyRepository, IMuteProfileErrorMesssageSender muteProfileErrorMesssageSender)
         {
             _profileRepository = profileRepository;
             _storyRepository = storyRepository;
+            _muteProfileErrorMesssageSender = muteProfileErrorMesssageSender;
         }
 
         public async Task<Profile> GetById(string id)
@@ -35,11 +38,20 @@ namespace StoryMicroservice.Service
 
         public async Task<Profile> Update(Profile entity)
         {
+            bool muteError = false;
             Profile profile = await GetProfileByOriginalId(entity.OriginalId);
-            return await _profileRepository.Update(UpdateProfileAttributes(profile, entity));
+            foreach(int mutedProfileId in entity.MutedProfiles)
+            {
+                if(await GetProfileByOriginalId(mutedProfileId) == null)
+                {
+                    _muteProfileErrorMesssageSender.SendMuteProfileError(entity.OriginalId, mutedProfileId);
+                    muteError = true;
+                }
+            }
+            return await _profileRepository.Update(UpdateProfileAttributes(profile, entity, muteError));
         }
 
-        private Profile UpdateProfileAttributes(Profile profile, Profile entity)
+        private Profile UpdateProfileAttributes(Profile profile, Profile entity, bool muteError)
         {
             profile.Username = entity.Username;
             profile.IsPrivate = entity.IsPrivate;
@@ -47,7 +59,10 @@ namespace StoryMicroservice.Service
             profile.Deactivated = entity.Deactivated;
             profile.Following = entity.Following;
             profile.CloseFriends = entity.CloseFriends;
-            profile.MutedProfiles = entity.MutedProfiles;
+            if(!muteError)
+            {
+                profile.MutedProfiles = entity.MutedProfiles;
+            }
             return profile;
         }
 
