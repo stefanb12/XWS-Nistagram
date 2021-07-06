@@ -161,5 +161,12 @@ namespace StoryMicroservice.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost("saveImage")]
+        public async Task<IActionResult> SaveImage([FromForm] StoryDto dto)
+        {
+            await _storyService.SaveImageSrc(dto.ImageSrc);
+            return Ok();
+        }
     }
 }

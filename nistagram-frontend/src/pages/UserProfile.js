@@ -437,9 +437,12 @@ class UserProfile extends Component {
       .then(() => {
         NotificationService.sendFollowRequestNotification(
           followerId,
-          followingId,
-          ""
-        );
+          followingId
+        )
+          .then((res) => {
+            return res.json();
+          })
+          .then((result) => {});
         this.setState({
           doesFollowRequestExist: true,
         });
@@ -453,7 +456,11 @@ class UserProfile extends Component {
         NotificationService.deleteFollowRequestNotification(
           followerId,
           followingId
-        );
+        )
+          .then((res) => {
+            return res.json();
+          })
+          .then((result) => {});
         this.setState({
           doesFollowRequestExist: false,
         });

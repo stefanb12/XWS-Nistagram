@@ -134,7 +134,7 @@ services:
       - public_net
     volumes:
       - sql-user:/app/sql-user
-      # - wwwroot:/nistagram-backend/Nistagram/UserMicroservice/wwwroot
+      # - /user-microservice-wwwroot:/nistagram-backend/Nistagram/UserMicroservice/wwwroot
 
   notification-microservice:
     build: 
@@ -211,7 +211,7 @@ services:
       - public_net
     volumes:
       - sql-campaign:/app/sql-campaign
-      # - wwwroot:/nistagram-backend/Nistagram/UserMicroservice/wwwroot
+      # - campaign-microservice-wwwroot:/nistagram-backend/Nistagram/CampaignMicroservice/wwwroot
 
   post-microservice:
     build: 
@@ -238,7 +238,7 @@ services:
       - public_net
     volumes:
       - sql-post:/app/sql-post
-      # - wwwroot:/nistagram-backend/Nistagram/UserMicroservice/wwwroot
+      # - /post-microservice-wwwroot:/nistagram-backend/Nistagram/PostMicroservice/wwwroot
 
   story-microservice:
     build: 
@@ -262,7 +262,7 @@ services:
     networks:
       - public_net
     # volumes:
-    #   - wwwroot:/nistagram-backend/Nistagram/StoryMicroservice/wwwroot
+    #   - /story-microservice-wwwroot:/nistagram-backend/Nistagram/StoryMicroservice/wwwroot
 
   # RabbitMQ
   rabbitmq:
@@ -370,7 +370,7 @@ services:
       - public_net
     volumes:
       - sql-web-shop:/app/sql-web-shop
-      # - wwwroot:/nistagram-backend/Nistagram/UserMicroservice/wwwroot
+      # - /web-shop-wwwroot:/agent-app-backend/WebShop/WebShop/wwwroot
 
 networks:
   public_net:
@@ -390,3 +390,8 @@ volumes:
   sql-campaign:
   sql-post:
   sql-web-shop:
+  # user-microservice-wwwroot:
+  # campaign-microservice-wwwroot:
+  # post-microservice-wwwroot:
+  # story-microservice-wwwroot:
+  # web-shop-wwwroot:

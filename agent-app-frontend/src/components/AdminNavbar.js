@@ -159,7 +159,7 @@ export default function UserNavbar() {
   };
 
   const navigateToHome = () => {
-    history.push("/");
+    history.push("/admin/products");
   };
 
   const menuId = "primary-search-account-menu";

@@ -13,5 +13,6 @@ namespace StoryMicroservice.Service
         Task<List<Story>> GetActiveStoriesForProfile(int profileId);
         public Task<string> SaveImage(IFormFile imageFile);
         public Task<List<StoryProfile>> GetAllStoryProfiles();
+        Task SaveImageSrc(string imageSrc);
     }
 }

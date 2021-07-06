@@ -18,4 +18,6 @@ RUN dotnet publish "StoryMicroservice.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY "nistagram-backend/Nistagram/CampaignMicroservice/wwwroot" .
+COPY "agent-app-backend/WebShop/WebShop/wwwroot" .
 CMD ASPNETCORE_URLS=http://*:$PORT dotnet StoryMicroservice.dll

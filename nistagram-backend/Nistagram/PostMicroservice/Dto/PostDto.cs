@@ -20,6 +20,7 @@ namespace PostMicroservice.Dto
         public List<ProfileDto> Favorites { get; set; }
         public bool Deleted { get; set; }
         public bool IsCommercial { get; set; }
+        public string ImageSrc { get; set; }
 
         public PostDto()
         {

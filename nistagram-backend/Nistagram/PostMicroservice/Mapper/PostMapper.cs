@@ -36,7 +36,16 @@ namespace PostMicroservice.Mapper
             {
                 foreach (CommercialDto commercialDto in dto.ImagesSrc)
                 {
-                    var filePath = Path.GetFullPath(commercialDto.ImageName).Replace("PostMicroservice", "CampaignMicroservice\\wwwroot");
+                    string staticFiles = Environment.GetEnvironmentVariable("STATIC_FILES") ?? "true";
+                    string filePath = "";
+                    if (staticFiles == "false")
+                    {
+                        filePath = commercialDto.ImageName;
+                    }
+                    else
+                    {
+                        filePath = Path.GetFullPath(commercialDto.ImageName).Replace("PostMicroservice", "CampaignMicroservice\\wwwroot");
+                    }
                     var fileBytes = File.ReadAllBytes(filePath);
                     var ms = new MemoryStream(fileBytes);
                     var formFile = new FormFile(ms, 0, ms.Length, null, Path.GetFileName(filePath))

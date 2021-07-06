@@ -14,6 +14,25 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/api/auth/apiTokenForCampaigns/{agentUsername}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "user-microservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/auth/apiTokenForCampaigns/{agentUsername}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Key",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "UserRole": "Agent"
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/profile/registration",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -629,6 +648,18 @@
 
     // PostMicroservice
     {
+      "DownstreamPathTemplate": "/api/post/saveImage",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-microservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/post/saveImage",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/post",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -1056,6 +1087,18 @@
 
     //StoryMicroservice
     {
+      "DownstreamPathTemplate": "/api/story/saveImage",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "story-microservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/story/saveImage",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/story",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -1364,18 +1407,6 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/commercial",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "campaign-microservice",
-          "Port": 80
-        }
-      ],
-      "UpstreamPathTemplate": "/gateway/commercial",
-      "UpstreamHttpMethod": [ "POST" ]
-    },
-    {
       "DownstreamPathTemplate": "/api/commercial/agent/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -1392,6 +1423,113 @@
       },
       "RouteClaimsRequirement": {
         "UserRole": "Agent"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/commercial",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "campaign-microservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/commercial",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/campaign/sendCampaignRequest",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "campaign-microservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/campaign/sendCampaignRequest",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Key",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "UserRole": "Agent"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/campaign/getCampaignRequestForCampaign/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "campaign-microservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/campaign/getCampaignRequestForCampaign/{id}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Key",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "UserRole": "Agent, User"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/campaign/acceptCampaignRequest/{campaignId}/{influencerId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "campaign-microservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/campaign/acceptCampaignRequest/{campaignId}/{influencerId}",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Key",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "UserRole": "User"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/campaign/rejectCampaignRequest/{campaignId}/{influencerId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "campaign-microservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/campaign/rejectCampaignRequest/{campaignId}/{influencerId}",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Key",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "UserRole": "User"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/campaign/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "campaign-microservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/campaign/{id}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Key",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "UserRole": "User"
       }
     }
 
