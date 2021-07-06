@@ -19,7 +19,16 @@ namespace StoryMicroservice.Mapper
             {
                 foreach (CommercialDto commercial in dto.Commercials)
                 {
-                    var filePath = Path.GetFullPath(commercial.ImageName).Replace("StoryMicroservice", "CampaignMicroservice\\wwwroot");
+                    string staticFiles = Environment.GetEnvironmentVariable("STATIC_FILES") ?? "true";
+                    string filePath = "";
+                    if (staticFiles == "false")
+                    {
+                        filePath = commercial.ImageName;
+                    }
+                    else
+                    {
+                        filePath = Path.GetFullPath(commercial.ImageName).Replace("StoryMicroservice", "CampaignMicroservice\\wwwroot");
+                    }
                     var fileBytes = File.ReadAllBytes(filePath);
                     var ms = new MemoryStream(fileBytes);
                     var formFile = new FormFile(ms, 0, ms.Length, null, Path.GetFileName(filePath))

@@ -454,6 +454,29 @@ namespace PostMicroservice.Service
                 await imageFile.CopyToAsync(fileStream);
             }
             return imageName;
-        }  
+        }
+
+        public async Task SaveImageSrc(string imageSrc)
+        {
+            string staticFiles = Environment.GetEnvironmentVariable("STATIC_FILES") ?? "true";
+            if (staticFiles == "false")
+            {
+                var filePath = imageSrc.Substring(23);
+                var fileBytes = File.ReadAllBytes(filePath);
+                var ms = new MemoryStream(fileBytes);
+                var formFile = new FormFile(ms, 0, ms.Length, null, Path.GetFileName(filePath))
+                {
+                    Headers = new HeaderDictionary(),
+                    ContentType = "image"
+                };
+                string imageName = new String(Path.GetFileNameWithoutExtension(filePath));
+                imageName = imageName + Path.GetExtension(filePath);
+                var imagePath = Path.Combine("wwwroot", imageName);
+                using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                {
+                    await formFile.CopyToAsync(fileStream);
+                }
+            }
+        }
     }
 }

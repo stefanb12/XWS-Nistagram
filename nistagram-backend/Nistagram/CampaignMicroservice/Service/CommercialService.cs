@@ -1,10 +1,14 @@
 ﻿using CampaignMicroservice.Model;
 using CampaignMicroservice.Repository;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace CampaignMicroservice.Service
@@ -61,8 +65,8 @@ namespace CampaignMicroservice.Service
 
         public async Task<string> SaveImage(IFormFile imageFile)
         {
-            string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray()).Replace(' ', '-');
-            imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(imageFile.FileName);
+            string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName));
+            imageName = imageName + Path.GetExtension(imageFile.FileName);
             var imagePath = Path.Combine("wwwroot", imageName);
             using (var fileStream = new FileStream(imagePath, FileMode.Create))
             {

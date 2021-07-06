@@ -55,14 +55,14 @@ class NotificationService {
     return fetch(API_URL + "notification/follow", requestOptions);
   }
 
-  sendFollowRequestNotification(receiverId, senderId, postId) {
+  sendFollowRequestNotification(receiverId, senderId) {
     const requestOptions = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + AuthService.getUserToken(),
       },
-      body: JSON.stringify({ receiverId, senderId, postId }),
+      body: JSON.stringify({ receiverId, senderId }),
     };
 
     return fetch(API_URL + "notification/followRequest", requestOptions);

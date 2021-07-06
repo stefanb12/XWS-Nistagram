@@ -15,7 +15,16 @@ namespace CampaignMicroservice.Mapper
         {
             Commercial commercial = new Commercial();
 
-            var filePath = Path.GetFullPath(dto.ImageSrc.Substring(23)).Replace("nistagram-backend\\Nistagram\\CampaignMicroservice", "agent-app-backend\\WebShop\\WebShop\\wwwroot");
+            string staticFiles = Environment.GetEnvironmentVariable("STATIC_FILES") ?? "true";
+            string filePath = "";
+            if (staticFiles == "false")
+            {
+                filePath = dto.ImageSrc.Substring(23);
+            }
+            else
+            {
+                filePath = Path.GetFullPath(dto.ImageSrc.Substring(23)).Replace("nistagram-backend\\Nistagram\\CampaignMicroservice", "agent-app-backend\\WebShop\\WebShop\\wwwroot");
+            }
             var fileBytes = File.ReadAllBytes(filePath);
             var ms = new MemoryStream(fileBytes);
             var formFile = new FormFile(ms, 0, ms.Length, null, Path.GetFileName(filePath))

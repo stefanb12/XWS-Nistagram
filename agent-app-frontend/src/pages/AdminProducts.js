@@ -6,6 +6,8 @@ import UploadImages from "../components/UploadImages";
 import ProductService from "../services/ProductService";
 import ReactPlayer from "react-player";
 import CommercialService from "../services/CommercialService";
+import PostService from "../services/PostService";
+import StoryService from "../services/StoryService";
 
 export default class AdminProducts extends Component {
   constructor(props) {
@@ -113,6 +115,7 @@ export default class AdminProducts extends Component {
         var websiteLink =
           "http://localhost:3001/app/singleProduct/" +
           this.state.chosenProduct.id;
+        var chosenImage = this.state.chosenProduct.imagesSrc[0];
 
         let resStatus = 0;
         CommercialService.sendCommercial(
@@ -126,6 +129,20 @@ export default class AdminProducts extends Component {
           })
           .then((result) => {
             if (resStatus === 200) {
+              PostService.saveImage(chosenImage)
+                .then((res) => {
+                  StoryService.saveImage(chosenImage)
+                    .then((res) => {
+                      return res.json();
+                    })
+                    .then((result) => {
+                      return result;
+                    });
+                  return res.json();
+                })
+                .then((result) => {
+                  return result;
+                });
               this.handleClickSnackBar(
                 "Product is successfully sent",
                 "success"
