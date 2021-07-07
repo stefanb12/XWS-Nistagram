@@ -51,11 +51,6 @@ namespace CampaignMicroservice.Controllers
                 result.Add(CampaignMapper.CampaignToCampaignDto(singleCampaign, null));
             }
 
-            /*if (!result.Any())
-            {
-                return NoContent();
-            }*/
-
             return Ok(result);
         }
 
@@ -68,10 +63,29 @@ namespace CampaignMicroservice.Controllers
                 result.Add(CampaignMapper.CampaignToCampaignDto(null, repeatableCampaign));
             }
 
-            /*if (!result.Any())
+            return Ok(result);
+        }
+
+        [HttpGet("single/profile/{id}")]
+        public async Task<IActionResult> GetSingleCampaignsForProfile(int id)
+        {
+            List<CampaignDto> result = new List<CampaignDto>();
+            foreach (SingleCampaign singleCampaign in await _singlecampaignService.GetSingleCampaignsForProfile(id))
             {
-                return NoContent();
-            }*/
+                result.Add(CampaignMapper.CampaignToCampaignDto(singleCampaign, null));
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("repeatable/profile/{id}")]
+        public async Task<IActionResult> GetRepeatableCampaignsForProfile(int id)
+        {
+            List<CampaignDto> result = new List<CampaignDto>();
+            foreach (RepeatableCampaign repeatableCampaign in await _repeatablecampaignService.GetRepeatableCampaignsForProfile(id))
+            {
+                result.Add(CampaignMapper.CampaignToCampaignDto(null, repeatableCampaign));
+            }
 
             return Ok(result);
         }

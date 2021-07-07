@@ -1,4 +1,5 @@
 ﻿using CampaignMicroservice.Model;
+using CampaignMicroservice.Model.Enum;
 using CampaignMicroservice.Repository;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,12 @@ namespace CampaignMicroservice.Service
     public class SingleCampaignService : ISingleCampaignService
     {
         private ISingleCampaignRepository _singleCampaignRepository;
+        private IProfileService _profileService;
 
-        public SingleCampaignService(ISingleCampaignRepository singleCampaignRepository)
+        public SingleCampaignService(ISingleCampaignRepository singleCampaignRepository, IProfileService profileService)
         {
             _singleCampaignRepository = singleCampaignRepository;
+            _profileService = profileService;
         }
 
         public async Task<List<SingleCampaign>> GetSingleCampaignsForAgent(int agentId)
@@ -28,6 +31,49 @@ namespace CampaignMicroservice.Service
             }
             return singleCampaigns;
         }
+
+        public async Task<List<SingleCampaign>> GetSingleCampaignsForProfile(int profileId)
+        {
+            List<SingleCampaign> singleCampaigns = new List<SingleCampaign>();
+
+            Profile profile = await _profileService.GetByOriginalId(profileId);
+            foreach (ProfileFollowing profileFollowing in profile.Following)
+            {
+                if (profileFollowing.Following.UserRole == UserRole.Agent)
+                {
+                    singleCampaigns.AddRange(GetCampaignAfterDefinedTime(await GetSingleCampaignsForAgent(profileFollowing.FollowingId)));
+                }
+
+                foreach (ProfileFollowing pf in profileFollowing.Following.Following)
+                {
+                    if (pf.Following.UserRole == UserRole.Agent && profileFollowing.FollowingId != pf.FollowingId)
+                    {
+                        singleCampaigns.AddRange(GetCampaignAfterDefinedTime(await GetSingleCampaignsForAgent(pf.FollowingId)));
+                    }
+                }
+            }
+
+            if (!singleCampaigns.Any())
+            {
+                IEnumerable<SingleCampaign> campaigns = await GetAll();
+                singleCampaigns.AddRange(GetCampaignAfterDefinedTime(campaigns.ToList()));
+            }
+
+            return singleCampaigns;
+        }
+
+        private List<SingleCampaign> GetCampaignAfterDefinedTime(List<SingleCampaign> campaigns)
+        {
+            List<SingleCampaign> result = new List<SingleCampaign>();
+            foreach (SingleCampaign singleCampaign in campaigns)
+            {
+                if (singleCampaign.BroadcastTime.CompareTo(DateTime.Now) >= 0 /*&& singleCampaign.BroadcastTime.CompareTo(DateTime.Today) == 0*/)
+                {
+                    result.Add(singleCampaign);
+                }
+            }
+            return result;
+        }   
 
         public async Task<SingleCampaign> DeleteSingleCampaign(int campaignId)
         {

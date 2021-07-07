@@ -128,11 +128,14 @@ namespace PostMicroservice.Controllers
             List<PostDto> postsDto = new List<PostDto>();
             foreach (Post post in posts)
             {
-                for (int i = 0; i < post.Contents.Count; i++)
+                if (!post.IsCommercial)
                 {
-                    post.Contents[i].ImageSrc = String.Format("http://localhost:55993/{0}", post.Contents[i].ImageName);
+                    for (int i = 0; i < post.Contents.Count; i++)
+                    {
+                        post.Contents[i].ImageSrc = String.Format("http://localhost:55993/{0}", post.Contents[i].ImageName);
+                    }
+                    postsDto.Add(PostMapper.PostToPostDto(post));
                 }
-                postsDto.Add(PostMapper.PostToPostDto(post));
             }
 
             return Ok(postsDto);

@@ -13,7 +13,7 @@ namespace CampaignMicroservice.Mapper
             singleCampaign.IsPost = dto.IsPost;
             singleCampaign.AgentId = dto.AgentId;
             singleCampaign.PostId = 1;
-            singleCampaign.StoryId = "";
+            singleCampaign.StoryId = "empty";
             if (dto.IsPost)
             {
                 singleCampaign.PostId = dto.PostId;
@@ -42,7 +42,7 @@ namespace CampaignMicroservice.Mapper
             repeatableCampaign.IsPost = dto.IsPost;
             repeatableCampaign.AgentId = dto.AgentId;
             repeatableCampaign.PostId = 1;
-            repeatableCampaign.StoryId = "";
+            repeatableCampaign.StoryId = "empty";
             if(dto.IsPost)
             {
                 repeatableCampaign.PostId = dto.PostId;
@@ -76,6 +76,7 @@ namespace CampaignMicroservice.Mapper
                 dto.IsSingleCampaign = true;
                 dto.IsPost = singleCampaign.IsPost;
                 dto.PostId = singleCampaign.PostId;
+                dto.StoryId = singleCampaign.StoryId;
                 dto.AgentId = singleCampaign.AgentId;
                 dto.BroadcastTime = singleCampaign.BroadcastTime;
                 foreach (CampaignCommercial campaignCommercial in singleCampaign.Commercials)
@@ -92,6 +93,7 @@ namespace CampaignMicroservice.Mapper
                 dto.IsSingleCampaign = false;
                 dto.IsPost = repeatableCampaign.IsPost;
                 dto.PostId = repeatableCampaign.PostId;
+                dto.StoryId = repeatableCampaign.StoryId;
                 dto.AgentId = repeatableCampaign.AgentId;
                 dto.StartDate = repeatableCampaign.StartDate;
                 dto.EndDate = repeatableCampaign.EndDate;

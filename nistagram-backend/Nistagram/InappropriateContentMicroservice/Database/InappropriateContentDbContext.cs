@@ -49,7 +49,11 @@ namespace InappropriateContentMicroservice.Database
             modelBuilder.Entity<Post>().HasData(
                 new Post { Id = 1, OriginalId = 1, ImageName = "2212424861.png" },
                 new Post { Id = 2, OriginalId = 2, ImageName = "2212424862.png" },
-                new Post { Id = 3, OriginalId = 3, ImageName = "2212424862.png" }
+                new Post { Id = 3, OriginalId = 3, ImageName = "2212424862.png" },
+
+                new Post { Id = 4, OriginalId = 4, ImageName = "sneakers.png" },
+                new Post { Id = 5, OriginalId = 5, ImageName = "ball.png" },
+                new Post { Id = 6, OriginalId = 6, ImageName = "cap.png" }
             );
 
             modelBuilder.Entity<Story>().HasData(
@@ -57,7 +61,8 @@ namespace InappropriateContentMicroservice.Database
                 new Story { Id = 2, OriginalId = "60bd70ad107c45e92fd80693", ImageName = "sc1211007001.jpg" },
                 new Story { Id = 3, OriginalId = "60bd70ad107c45e92fd80694", ImageName = "2212424861.jpg" },
                 new Story { Id = 4, OriginalId = "60bd70ad107c45e92fd80695", ImageName = "2212424862.jpg" },
-                new Story { Id = 5, OriginalId = "60bd70ad107c45e92fd80696", ImageName = "2212424863.jpg" }
+                new Story { Id = 5, OriginalId = "60bd70ad107c45e92fd80696", ImageName = "2212424863.jpg" },
+                new Story { Id = 6, OriginalId = "60bd70ad107c45e92fd80697", ImageName = "sneakers.png" }
             );
 
             modelBuilder.Entity<InappropriateContent>().HasData(

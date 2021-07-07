@@ -1,4 +1,5 @@
 ﻿using CampaignMicroservice.Model;
+using CampaignMicroservice.Model.Enum;
 using CampaignMicroservice.Repository;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,13 @@ namespace CampaignMicroservice.Service
     {
         private IRepeatableCampaignRepository _repeatableCampaignRepository;
         private IRepeatableCampaignEditService _repeatableCampaignEditService;
+        private IProfileService _profileService;
 
-        public RepeatableCampaignService(IRepeatableCampaignRepository repeatableCampaignRepository, IRepeatableCampaignEditService repeatableCampaignEditService)
+        public RepeatableCampaignService(IRepeatableCampaignRepository repeatableCampaignRepository, IRepeatableCampaignEditService repeatableCampaignEditService, IProfileService profileService)
         {
             _repeatableCampaignRepository = repeatableCampaignRepository;
             _repeatableCampaignEditService = repeatableCampaignEditService;
+            _profileService = profileService;
         }
 
         public async Task<List<RepeatableCampaign>> GetRepeatableCampaignsForAgent(int agentId)
@@ -40,6 +43,49 @@ namespace CampaignMicroservice.Service
                 }
             }
             return repeatableCampaigns;
+        }
+
+        public async Task<List<RepeatableCampaign>> GetRepeatableCampaignsForProfile(int profileId)
+        {
+            List<RepeatableCampaign> repeatableCampaigns = new List<RepeatableCampaign>();
+
+            Profile profile = await _profileService.GetByOriginalId(profileId);
+            foreach (ProfileFollowing profileFollowing in profile.Following)
+            {
+                if (profileFollowing.Following.UserRole == UserRole.Agent)
+                {
+                    repeatableCampaigns.AddRange(GetCampaignAfterDefinedTime(await GetRepeatableCampaignsForAgent(profileFollowing.FollowingId)));
+                }
+
+                foreach (ProfileFollowing pf in profileFollowing.Following.Following)
+                {
+                    if (pf.Following.UserRole == UserRole.Agent && profileFollowing.FollowingId != pf.FollowingId)
+                    {
+                        repeatableCampaigns.AddRange(GetCampaignAfterDefinedTime(await GetRepeatableCampaignsForAgent(pf.FollowingId)));
+                    }
+                }
+            }
+
+            if (!repeatableCampaigns.Any())
+            {
+                IEnumerable<RepeatableCampaign> campaigns = await GetAll();
+                repeatableCampaigns.AddRange(GetCampaignAfterDefinedTime(campaigns.ToList()));
+            }
+
+            return repeatableCampaigns;
+        }
+
+        private List<RepeatableCampaign> GetCampaignAfterDefinedTime(List<RepeatableCampaign> campaigns)
+        {
+            List<RepeatableCampaign> result = new List<RepeatableCampaign>();
+            foreach (RepeatableCampaign repeatableCampaign in campaigns)
+            {
+                if (repeatableCampaign.StartDate.CompareTo(DateTime.Now) <= 0 && repeatableCampaign.EndDate.CompareTo(DateTime.Now) >= 0)
+                {
+                    result.Add(repeatableCampaign);
+                }
+            }
+            return result;
         }
 
         private void CopyEditCampaignContentToCampaign(RepeatableCampaign repeatableCampaign, 
