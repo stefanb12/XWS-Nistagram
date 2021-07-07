@@ -59,6 +59,30 @@ class CampaignService {
     );
   }
 
+  getSingleCampaignsForProfile(profileId) {
+    const requestOptions = {
+      method: "GET",
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
+    };
+
+    return fetch(
+      API_URL + "campaign/single/profile/" + profileId,
+      requestOptions
+    );
+  }
+
+  getRepeatableCampaignsForProfile(profileId) {
+    const requestOptions = {
+      method: "GET",
+      headers: { Authorization: "Bearer " + AuthService.getUserToken() },
+    };
+
+    return fetch(
+      API_URL + "campaign/repeatable/profile/" + profileId,
+      requestOptions
+    );
+  }
+
   sendCampaignRequest(campaignId, influencerId) {
     console.log(campaignId);
     const requestOptions = {
@@ -129,7 +153,7 @@ class CampaignService {
       },
       body: JSON.stringify({
         id,
-        isSingleCampaign
+        isSingleCampaign,
       }),
     };
 
@@ -147,7 +171,7 @@ class CampaignService {
         id,
         startDate,
         endDate,
-        numberOfRepeats
+        numberOfRepeats,
       }),
     };
 

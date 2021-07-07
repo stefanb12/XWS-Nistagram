@@ -9,6 +9,7 @@ import PostCard from "./PostCard";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import NotificationService from "../../services/NotificationService";
+import CampaignService from "../../services/CampaignService";
 
 export default class Posts extends Component {
   constructor(props) {
@@ -34,6 +35,8 @@ export default class Posts extends Component {
       openSnackSuccess: false,
       messageError: "",
       messageSuccess: "",
+      postsResult: [],
+      tempResultList: [],
     };
     this.handleInputChange = this.handleInputChange.bind(this);
   }
@@ -45,16 +48,81 @@ export default class Posts extends Component {
   }
 
   async componentWillMount() {
+    await this.getPostsWithCampaigns();
+  }
+
+  getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  getPostsWithCampaigns = async () => {
+    var allCampaings = [];
+    var counter = 0;
+
+    await CampaignService.getSingleCampaignsForProfile(
+      AuthService.getCurrentUser().id
+    )
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        allCampaings = data;
+        CampaignService.getRepeatableCampaignsForProfile(
+          AuthService.getCurrentUser().id
+        )
+          .then((res) => {
+            return res.json();
+          })
+          .then((result) => {
+            allCampaings.push.apply(allCampaings, result);
+            counter = this.getRndInteger(0, allCampaings.length - 1);
+          });
+      });
+
     await PostService.getPostsFromFollowedProfiles(
       AuthService.getCurrentUser().id
     )
       .then((res) => res.json())
       .then((result) => {
-        this.setState({
-          posts: result,
-        });
+        if (result.length > 0) {
+          this.setState({
+            postsResult: result,
+          });
+        }
+
+        if (allCampaings.length > 0) {
+          var step = 0;
+          while (step < 4) {
+            if (allCampaings[counter].isPost) {
+              var newList = [];
+              PostService.getById(allCampaings[counter].postId)
+                .then((res) => {
+                  return res.json();
+                })
+                .then((data) => {
+                  newList = this.state.postsResult;
+                  newList.push(data[0]);
+                  this.setState({
+                    postsResult: newList,
+                  });
+                });
+              break;
+            }
+
+            if (counter + 1 <= allCampaings.length - 1) {
+              counter += 1;
+            } else if (counter - 1 >= 0) {
+              counter -= 1;
+            }
+            step += 1;
+          }
+        }
       });
-  }
+
+    await this.setState({
+      posts: this.state.postsResult,
+    });
+  };
 
   toLatinConvert(string) {
     var cyrillic =
@@ -151,7 +219,7 @@ export default class Posts extends Component {
     this.closeLocationAndTagsModal();
   };
 
-  addPost = () => {
+  addPost = async () => {
     if (this.state.imageFiles.length == 0) {
       this.handleClickSnackBarError("You have to choose image first!");
     } else {
@@ -181,19 +249,11 @@ export default class Posts extends Component {
         .then((result) => {
           if (resStatus === 200) {
             this.handleClickSnackBarSuccess("Post is successfully published!");
-            PostService.getPostsFromFollowedProfiles(
+            this.getPostsWithCampaigns();
+            NotificationService.sendPostNotification(
+              1,
               AuthService.getCurrentUser().id
-            )
-              .then((res) => res.json())
-              .then((result) => {
-                NotificationService.sendPostNotification(
-                  1,
-                  AuthService.getCurrentUser().id
-                );
-                this.setState({
-                  posts: result,
-                });
-              });
+            );
           }
           return result;
         });

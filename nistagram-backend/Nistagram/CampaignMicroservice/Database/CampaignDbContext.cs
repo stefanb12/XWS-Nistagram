@@ -78,17 +78,20 @@ namespace CampaignMicroservice.Database
             );
 
             modelBuilder.Entity<Commercial>().HasData(
-                new Commercial { Id = 1, AgentId = 4, ImageName = "1213352229.jpg", WebsiteLink = "link" },
-                new Commercial { Id = 2, AgentId = 4, ImageName = "1213352333.jpg", WebsiteLink = "link" },
-                new Commercial { Id = 3, AgentId = 3, ImageName = "1213352333.jpg", WebsiteLink = "link" }
+                new Commercial { Id = 1, AgentId = 4, ImageName = "tShirt.png", WebsiteLink = "http://localhost:3001/app/singleProduct/1" },
+                new Commercial { Id = 2, AgentId = 4, ImageName = "sneakers.png", WebsiteLink = "http://localhost:3001/app/singleProduct/2" },
+                new Commercial { Id = 3, AgentId = 4, ImageName = "ball.png", WebsiteLink = "http://localhost:3001/app/singleProduct/3" },
+                new Commercial { Id = 4, AgentId = 4, ImageName = "cap.png", WebsiteLink = "http://localhost:3001/app/singleProduct/4" }
             );
 
             modelBuilder.Entity<SingleCampaign>().HasData(
-                new SingleCampaign { Id = 1, Deleted = false, AgentId = 4, IsPost = true, PostId = 1, StoryId = "", BroadcastTime = new DateTime(2021, 7, 5) }
+                new SingleCampaign { Id = 1, Deleted = false, AgentId = 3, IsPost = true, PostId = 4, StoryId = "empty", BroadcastTime = new DateTime(2021, 7, 8) },
+                new SingleCampaign { Id = 2, Deleted = false, AgentId = 4, IsPost = false, PostId = 1, StoryId = "60bd70ad107c45e92fd80697", BroadcastTime = new DateTime(2021, 7, 8) }
             );
 
             modelBuilder.Entity<RepeatableCampaign>().HasData(
-                new RepeatableCampaign { Id = 2, Deleted = false, AgentId = 4, IsPost = true, PostId = 2, StoryId = "", StartDate = new DateTime(2021, 7, 5), EndDate = new DateTime(2021, 7, 7), LastModification = new DateTime(2021, 7, 5), NumberOfRepeats = 2 }
+                new RepeatableCampaign { Id = 3, Deleted = false, AgentId = 4, IsPost = true, PostId = 5, StoryId = "empty", StartDate = new DateTime(2021, 7, 5), EndDate = new DateTime(2021, 7, 11), LastModification = new DateTime(2021, 7, 5), NumberOfRepeats = 2 },
+                new RepeatableCampaign { Id = 4, Deleted = false, AgentId = 4, IsPost = true, PostId = 6, StoryId = "empty", StartDate = new DateTime(2021, 7, 5), EndDate = new DateTime(2021, 7, 11), LastModification = new DateTime(2021, 7, 5), NumberOfRepeats = 2 }
             );
 
             // CampaignCommercials
@@ -99,8 +102,10 @@ namespace CampaignMicroservice.Database
                 .HasForeignKey(pt => pt.CampaignId);
 
             modelBuilder.Entity<CampaignCommercial>().HasData(
-                new CampaignCommercial { CampaignId = 1, CommercialId = 1 },
-                new CampaignCommercial { CampaignId = 2, CommercialId = 2 }
+                new CampaignCommercial { CampaignId = 1, CommercialId = 2 },
+                new CampaignCommercial { CampaignId = 2, CommercialId = 2 },
+                new CampaignCommercial { CampaignId = 3, CommercialId = 3 },
+                new CampaignCommercial { CampaignId = 4, CommercialId = 4 }
             );
 
             // Followers

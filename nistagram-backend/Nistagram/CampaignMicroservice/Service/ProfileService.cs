@@ -33,6 +33,18 @@ namespace CampaignMicroservice.Service
             return await _profileRepository.GetById(id);
         }
 
+        public async Task<Profile> GetByOriginalId(int id)
+        {
+            foreach (Profile profile in await GetAll())
+            {
+                if (profile.OriginalId == id)
+                {
+                    return profile;
+                }
+            }
+            return null;
+        }
+
         public async Task<IEnumerable<Profile>> GetAll()
         {
             return await _profileRepository.GetAll();
