@@ -4,8 +4,10 @@
   },
   "ForCloseFriends": false,
   "PublishingDate": {
-    "$date": "2021-06-22T13:29:59Z"
+    "$date": "2021-07-08T13:29:59Z"
   },
+  "WebsiteLink": null,
+  "IsCommercial": false,
   "PublisherId": 1,
   "ImageName": "sc2210938836.jpg",
   "Deleted": false
@@ -15,8 +17,10 @@
   },
   "ForCloseFriends": false,
   "PublishingDate": {
-    "$date": "2021-06-22T12:59:59Z"
+    "$date": "2021-07-08T12:59:59Z"
   },
+  "WebsiteLink": null,
+  "IsCommercial": false,
   "PublisherId": 2,
   "ImageName": "sc1211007001.jpg",
   "Deleted": false
@@ -26,8 +30,10 @@
   },
   "ForCloseFriends": false,
   "PublishingDate": {
-    "$date": "2021-06-22T10:59:59Z"
+    "$date": "2021-07-08T10:59:59Z"
   },
+  "WebsiteLink": null,
+  "IsCommercial": false,
   "PublisherId": 2,
   "ImageName": "2212424861.png",
   "Deleted": false
@@ -37,8 +43,10 @@
   },
   "ForCloseFriends": false,
   "PublishingDate": {
-    "$date": "2021-06-22T14:59:59Z"
+    "$date": "2021-07-08T13:59:59Z"
   },
+  "WebsiteLink": null,
+  "IsCommercial": false,
   "PublisherId": 3,
   "ImageName": "2212424862.png",
   "Deleted": false
@@ -48,9 +56,24 @@
   },
   "ForCloseFriends": true,
   "PublishingDate": {
-    "$date": "2021-06-22T12:59:59Z"
+    "$date": "2021-07-08T12:59:59Z"
   },
+  "WebsiteLink": null,
+  "IsCommercial": false,
   "PublisherId": 4,
   "ImageName": "2212424863.png",
+  "Deleted": false
+},{
+  "_id": {
+    "$oid": "60bd70ad107c45e92fd80697"
+  },
+  "ForCloseFriends": false,
+  "PublishingDate": {
+    "$date": "2021-07-08T10:59:59Z"
+  },
+  "WebsiteLink": "http://localhost:3001/app/singleProduct/2",
+  "IsCommercial": true,
+  "PublisherId": 4,
+  "ImageName": "sneakers.png",
   "Deleted": false
 }]

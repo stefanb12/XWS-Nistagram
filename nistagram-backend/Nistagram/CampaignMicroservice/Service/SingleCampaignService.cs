@@ -67,7 +67,8 @@ namespace CampaignMicroservice.Service
             List<SingleCampaign> result = new List<SingleCampaign>();
             foreach (SingleCampaign singleCampaign in campaigns)
             {
-                if (singleCampaign.BroadcastTime.CompareTo(DateTime.Now) >= 0 /*&& singleCampaign.BroadcastTime.CompareTo(DateTime.Today) == 0*/)
+                //if (singleCampaign.BroadcastTime.TimeOfDay.CompareTo(DateTime.Now.TimeOfDay) <= 0 && singleCampaign.BroadcastTime.TimeOfDay.CompareTo(DateTime.Now.AddHours(2).TimeOfDay) <= 0)
+                if (DateTime.Now.TimeOfDay.CompareTo(singleCampaign.BroadcastTime.TimeOfDay) >= 0 && DateTime.Now.TimeOfDay.CompareTo(singleCampaign.BroadcastTime.AddHours(2).TimeOfDay) <= 0)
                 {
                     result.Add(singleCampaign);
                 }

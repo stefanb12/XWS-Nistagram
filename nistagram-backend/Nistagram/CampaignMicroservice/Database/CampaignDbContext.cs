@@ -86,7 +86,7 @@ namespace CampaignMicroservice.Database
 
             modelBuilder.Entity<SingleCampaign>().HasData(
                 new SingleCampaign { Id = 1, Deleted = false, AgentId = 3, IsPost = true, PostId = 4, StoryId = "empty", BroadcastTime = new DateTime(2021, 7, 8) },
-                new SingleCampaign { Id = 2, Deleted = false, AgentId = 4, IsPost = false, PostId = 1, StoryId = "60bd70ad107c45e92fd80697", BroadcastTime = new DateTime(2021, 7, 8) }
+                new SingleCampaign { Id = 2, Deleted = false, AgentId = 4, IsPost = false, PostId = 1, StoryId = "60bd70ad107c45e92fd80697", BroadcastTime = new DateTime(2021, 7, 9, 01, 01, 00) }
             );
 
             modelBuilder.Entity<RepeatableCampaign>().HasData(
