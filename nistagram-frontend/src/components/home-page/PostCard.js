@@ -556,7 +556,9 @@ class PostCard extends Component {
                                     <p>
                                       <small>
                                         {(() => {
-                                          if (
+                                          if (post.isCommercial) {
+                                            return <div>Sponsored</div>;
+                                          } else if (
                                             (post.location.address === "" ||
                                               post.location.address == null) &&
                                             post.location.city != null &&
@@ -581,8 +583,6 @@ class PostCard extends Component {
                                                 {post.location.country}{" "}
                                               </div>
                                             );
-                                          } else if (post.isCommercial) {
-                                            return <div>Sponsored</div>;
                                           } else {
                                             return <div></div>;
                                           }

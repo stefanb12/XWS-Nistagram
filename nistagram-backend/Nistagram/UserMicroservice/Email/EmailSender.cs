@@ -35,6 +35,15 @@ namespace UserMicroservice.Email
 
         private MailMessage CreateMailMessage(MailAddress senderEmailAddress, MailAddress recipientEmailAddress, string username)
         {
+            string staticFiles = Environment.GetEnvironmentVariable("STATIC_FILES") ?? "true";
+            if (staticFiles == "false")
+            {
+                return new MailMessage(senderEmailAddress, recipientEmailAddress)
+                {
+                    Subject = "Agent registration request acceptance notification",
+                    Body = File.ReadAllText("wwwroot/html/registrationRequestEmail.html").Replace("#username#", username)
+                };
+            }
             return new MailMessage(senderEmailAddress, recipientEmailAddress)
             {
                 Subject = "Agent registration request acceptance notification",

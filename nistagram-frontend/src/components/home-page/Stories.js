@@ -19,6 +19,7 @@ import { withRouter } from "react-router-dom";
 import ReactPlayer from "react-player";
 import InappropriateContentService from "../../services/InappropriateContentService";
 import NotificationService from "../../services/NotificationService";
+import CampaignService from "../../services/CampaignService";
 
 class Stories extends Component {
   constructor(props) {
@@ -50,23 +51,127 @@ class Stories extends Component {
       numberOfStoriesForCurrentProfile: 0,
       currentProfileImage: null,
       forCloseFriends: false,
-      currentStoryWebsiteLink: ""
+      currentStoryWebsiteLink: "",
+      storiesResult: [],
+      allCampaings: [],
+      counter: 0,
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  componentWillMount() {
+  async componentWillMount() {
     this.timeCounter = 0;
-    StoryService.getAllStories()
+    await this.getStoriesWithCampaigns();
+    // StoryService.getAllStories()
+    //   .then((res) => {
+    //     return res.json();
+    //   })
+    //   .then((data) => {
+    //     this.setState({
+    //       allProfileStories: data,
+    //     });
+    //   });
+  }
+
+  getStoriesWithCampaigns = async () => {
+    await CampaignService.getSingleCampaignsForProfile(
+      AuthService.getCurrentUser().id
+    )
       .then((res) => {
         return res.json();
       })
       .then((data) => {
-        this.setState({
-          allProfileStories: data,
-        });
+        let campaings = data;
+        this.setState({ allCampaings: campaings });
+        CampaignService.getRepeatableCampaignsForProfile(
+          AuthService.getCurrentUser().id
+        )
+          .then((res) => {
+            return res.json();
+          })
+          .then((result) => {
+            campaings.push.apply(campaings, result);
+            let newCounterValue = this.getRndInteger(0, campaings.length - 1);
+            this.setState(
+              {
+                allCampaings: campaings,
+                counter: newCounterValue,
+              },
+              () => {
+                // Push campaign story to list
+                if (this.state.allCampaings.length > 0) {
+                  var step = 0;
+                  while (step < 4) {
+                    if (!this.state.allCampaings[this.state.counter].isPost) {
+                      StoryService.getById(
+                        this.state.allCampaings[this.state.counter].storyId
+                      )
+                        .then((res) => {
+                          return res.json();
+                        })
+                        .then((data) => {
+                          var newList = [];
+                          newList = this.state.storiesResult;
+                          if (data.length !== 0) {
+                            newList.push(data[0]);
+                          }
+                          this.setState({
+                            storiesResult: newList,
+                          });
+                        });
+                      break;
+                    }
+
+                    let newCountValue = this.getRndInteger(
+                      0,
+                      this.state.allCampaings.length - 1
+                    );
+                    let counterStep = 0;
+                    while (counterStep < 5) {
+                      if (newCountValue === this.state.counter) {
+                        newCountValue = this.getRndInteger(
+                          0,
+                          this.state.allCampaings.length - 1
+                        );
+                      } else {
+                        this.setState({
+                          counter: newCountValue,
+                        });
+                        break;
+                      }
+                      counterStep += 1;
+                    }
+                    step += 1;
+                  }
+                }
+              }
+            );
+          });
       });
+
+    await StoryService.getAllStories()
+      .then((res) => {
+        return res.json();
+      })
+      .then((result) => {
+        if (result.length > 0) {
+          var newResult = [];
+          newResult = this.state.storiesResult;
+          newResult.push.apply(newResult, result);
+          this.setState({
+            storiesResult: newResult,
+          });
+        }
+      });
+
+    await this.setState({
+      allProfileStories: this.state.storiesResult,
+    });
+  };
+
+  getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
   handleClick() {
@@ -267,8 +372,9 @@ class Stories extends Component {
       currentProfileStories: profileStories,
       currentProfileImage: profileStories.imageSrc,
       forCloseFriends: profileStories.stories[storyNumber].forCloseFriends,
-      isCurrentStoryCommercial: profileStories.stories[storyNumber].isCommercial,
-      currentStoryWebsiteLink: profileStories.stories[storyNumber].websiteLink
+      isCurrentStoryCommercial:
+        profileStories.stories[storyNumber].isCommercial,
+      currentStoryWebsiteLink: profileStories.stories[storyNumber].websiteLink,
     });
     if (profileStories.stories[storyNumber].imageSrc.endsWith(".mp4")) {
       this.setState({
@@ -476,13 +582,13 @@ class Stories extends Component {
           >
             {(() => {
               if (this.state.isCurrentStoryCommercial) {
-                return ("Sponsored");
+                return "Sponsored";
               } else {
-                return (moment(
+                return moment(
                   moment(this.state.currentStoryPublishingDate).format(
                     "YYYY-MM-DD HH:mm:ss"
                   )
-                ).fromNow());
+                ).fromNow();
               }
             })()}
           </small>
@@ -563,28 +669,25 @@ class Stories extends Component {
                   return (
                     <div class="commercial">
                       <img
-                      style={{
-                        float: "left",
-                        maxWidth: "320px",
-                        maxHeight: "360px",
-                      }}
-                      src={this.state.currentStoryContent}
-                      class="img-thumbnail commercial-img"
-                    />
-                    <div class="middle">
-                      <div
-                        class="website-link"
-                        onClick={() => {
-                          window.open(
-                            this.state.currentStoryWebsiteLink
-                          );
+                        style={{
+                          float: "left",
+                          maxWidth: "320px",
+                          maxHeight: "360px",
                         }}
-                      >
-                        Visit Website
+                        src={this.state.currentStoryContent}
+                        class="img-thumbnail commercial-img"
+                      />
+                      <div class="middle">
+                        <div
+                          class="website-link"
+                          onClick={() => {
+                            window.open(this.state.currentStoryWebsiteLink);
+                          }}
+                        >
+                          Visit Website
+                        </div>
                       </div>
                     </div>
-                    </div>
-                    
                   );
                 }
                 return (

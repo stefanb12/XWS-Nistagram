@@ -36,7 +36,8 @@ export default class Posts extends Component {
       messageError: "",
       messageSuccess: "",
       postsResult: [],
-      tempResultList: [],
+      allCampaings: [],
+      counter: 0,
     };
     this.handleInputChange = this.handleInputChange.bind(this);
   }
@@ -56,9 +57,6 @@ export default class Posts extends Component {
   }
 
   getPostsWithCampaigns = async () => {
-    var allCampaings = [];
-    var counter = 0;
-
     await CampaignService.getSingleCampaignsForProfile(
       AuthService.getCurrentUser().id
     )
@@ -66,7 +64,8 @@ export default class Posts extends Component {
         return res.json();
       })
       .then((data) => {
-        allCampaings = data;
+        let campaings = data;
+        this.setState({ allCampaings: campaings });
         CampaignService.getRepeatableCampaignsForProfile(
           AuthService.getCurrentUser().id
         )
@@ -74,48 +73,77 @@ export default class Posts extends Component {
             return res.json();
           })
           .then((result) => {
-            allCampaings.push.apply(allCampaings, result);
-            counter = this.getRndInteger(0, allCampaings.length - 1);
+            campaings.push.apply(campaings, result);
+            let newCounterValue = this.getRndInteger(0, campaings.length - 1);
+            this.setState(
+              {
+                allCampaings: campaings,
+                counter: newCounterValue,
+              },
+              () => {
+                // Push campaign post to list
+                if (this.state.allCampaings.length > 0) {
+                  var step = 0;
+                  while (step < 4) {
+                    if (this.state.allCampaings[this.state.counter].isPost) {
+                      PostService.getById(
+                        this.state.allCampaings[this.state.counter].postId
+                      )
+                        .then((res) => {
+                          return res.json();
+                        })
+                        .then((data) => {
+                          var newList = [];
+                          newList = this.state.postsResult;
+                          newList.push(data[0]);
+                          this.setState({
+                            postsResult: newList,
+                          });
+                        });
+                      break;
+                    }
+
+                    let newCountValue = this.getRndInteger(
+                      0,
+                      this.state.allCampaings.length - 1
+                    );
+                    let counterStep = 0;
+                    while (counterStep < 5) {
+                      if (newCountValue === this.state.counter) {
+                        newCountValue = this.getRndInteger(
+                          0,
+                          this.state.allCampaings.length - 1
+                        );
+                      } else {
+                        this.setState({
+                          counter: newCountValue,
+                        });
+                        break;
+                      }
+                      counterStep += 1;
+                    }
+                    step += 1;
+                  }
+                }
+              }
+            );
           });
       });
 
     await PostService.getPostsFromFollowedProfiles(
       AuthService.getCurrentUser().id
     )
-      .then((res) => res.json())
+      .then((res) => {
+        return res.json();
+      })
       .then((result) => {
         if (result.length > 0) {
+          var newResult = [];
+          newResult = this.state.postsResult;
+          newResult.push.apply(newResult, result);
           this.setState({
-            postsResult: result,
+            postsResult: newResult,
           });
-        }
-
-        if (allCampaings.length > 0) {
-          var step = 0;
-          while (step < 4) {
-            if (allCampaings[counter].isPost) {
-              var newList = [];
-              PostService.getById(allCampaings[counter].postId)
-                .then((res) => {
-                  return res.json();
-                })
-                .then((data) => {
-                  newList = this.state.postsResult;
-                  newList.push(data[0]);
-                  this.setState({
-                    postsResult: newList,
-                  });
-                });
-              break;
-            }
-
-            if (counter + 1 <= allCampaings.length - 1) {
-              counter += 1;
-            } else if (counter - 1 >= 0) {
-              counter -= 1;
-            }
-            step += 1;
-          }
         }
       });
 

@@ -98,7 +98,18 @@ class CampaignRequests extends Component {
         })
         .then((result) => {
           if (resStatus === 200) {
-            this.checkIfCampaignIsProcessed();
+            CampaignService.acceptCampaignRequest(
+              this.state.campaignId,
+              AuthService.getCurrentUser().id
+            )
+              .then((res) => {
+                resStatus = res.status;
+                return res.json();
+              })
+              .then((result) => {
+                this.checkIfCampaignIsProcessed();
+                return result;
+              });
             this.handleClickSnackBar(
               "Successfully accepted campaign request",
               "success"
@@ -138,9 +149,9 @@ class CampaignRequests extends Component {
                 return res.json();
               })
               .then((result) => {
+                this.checkIfCampaignIsProcessed();
                 return result;
               });
-            this.checkIfCampaignIsProcessed();
             this.handleClickSnackBar(
               "Successfully accepted campaign request",
               "success"
