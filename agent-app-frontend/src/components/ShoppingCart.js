@@ -70,12 +70,11 @@ class ShoppingCart extends Component {
   };
 
   quantityOnChange = (product, event) => {
-    this.setState({
-      quantityInput: event.target.value,
-    });
-    console.log(event.target.value);
+    // this.setState({
+    //   quantityInput: event.target.value,
+    // });
     for (let i = 0; i < this.state.shoppingCart.length; i++) {
-      if (this.state.shoppingCart[i].name == product.name) {
+      if (this.state.shoppingCart[i].name === product.name) {
         product.quantity = event.target.value;
         this.calculateTotalPrice();
       }
@@ -373,12 +372,13 @@ class ShoppingCart extends Component {
                           </td>
                           <td class="align-middle p-4">
                             <input
+                              id={product.id}
                               type="number"
                               class="form-control text-center"
                               onChange={(event) =>
                                 this.quantityOnChange(product, event)
                               }
-                              value={this.state.quantityInput}
+                              value={product.quantity}
                               min="1"
                             />
                           </td>

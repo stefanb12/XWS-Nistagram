@@ -56,7 +56,7 @@ namespace StoryMicroservice.Database
                 {
                     Id = "60bd70ad107c45e92fd80692",
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 07, 08, 15, 29, 59),
+                    PublishingDate = new DateTime(2021, 07, 10, 15, 29, 59),
                     WebsiteLink = null,
                     IsCommercial = false,
                     PublisherId = 1,
@@ -67,7 +67,7 @@ namespace StoryMicroservice.Database
                 {
                     Id = "60bd70ad107c45e92fd80693",
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 07, 08, 14, 59, 59),
+                    PublishingDate = new DateTime(2021, 07, 10, 14, 59, 59),
                     WebsiteLink = null,
                     IsCommercial = false,
                     PublisherId = 2,
@@ -78,7 +78,7 @@ namespace StoryMicroservice.Database
                 {
                     Id = "60bd70ad107c45e92fd80694",
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 07, 08, 12, 59, 59),
+                    PublishingDate = new DateTime(2021, 07, 10, 12, 59, 59),
                     WebsiteLink = null,
                     IsCommercial = false,
                     PublisherId = 2,
@@ -89,7 +89,7 @@ namespace StoryMicroservice.Database
                 {
                     Id = "60bd70ad107c45e92fd80695",
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 07, 08, 15, 59, 59),
+                    PublishingDate = new DateTime(2021, 07, 10, 14, 59, 59),
                     WebsiteLink = null,
                     IsCommercial = false,
                     PublisherId = 3,
@@ -100,7 +100,7 @@ namespace StoryMicroservice.Database
                 {
                     Id = "60bd70ad107c45e92fd80696",
                     ForCloseFriends = true,
-                    PublishingDate = new DateTime(2021, 07, 08, 14, 59, 59),
+                    PublishingDate = new DateTime(2021, 07, 10, 13, 59, 59),
                     WebsiteLink = null,
                     IsCommercial = false,
                     PublisherId = 4,
@@ -111,7 +111,7 @@ namespace StoryMicroservice.Database
                 {
                     Id = "60bd70ad107c45e92fd80697",
                     ForCloseFriends = false,
-                    PublishingDate = new DateTime(2021, 07, 08, 12, 59, 59),
+                    PublishingDate = new DateTime(2021, 07, 10, 12, 59, 59),
                     WebsiteLink = "http://localhost:3001/app/singleProduct/2",
                     IsCommercial = true,
                     PublisherId = 4,
